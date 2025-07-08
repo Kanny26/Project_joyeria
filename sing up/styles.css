@@ -1,0 +1,217 @@
+:root {
+    /* Tipografías */
+    --font-primary: 'Poppins', sans-serif;
+    --font-heading: 'Cormorant Garamond', serif;
+    --font-button:  Cambria, Cochin, Georgia, Times, 'Times New Roman', serif, 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif, sans-serif;
+
+    /* Colores */
+    --color-background: #f5f5f5;
+    --color-panel: #a6a6a6;
+    --color-box: #939393;
+    --color-data: #d9d9d9c5;
+    --color-inputs: #b8b8b8;
+    --color-buttons: #b4b4b4;
+    --color-buttons-hover: #9c9c9c;
+    --color-text: #000;
+
+
+    /* Dimensiones */
+    --panel-width: 600px;
+    --panel-height: 600px;
+}
+
+@import url('../Tipografias/styles.css');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-primary);
+    background-color: var(--color-background);
+    overflow: hidden; 
+}
+
+.container {
+    display: flex;
+    flex-direction: row-reverse;
+}
+
+/* Imagen a la izquierda */
+.container__image__main {
+    width: 800px;
+    height: var(--panel-height);
+    background-image: url('../Imagenes/fondos/Signup_background.jpg');
+    opacity: 0.7;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+}
+
+/* Contenedor principal del formulario */
+.container__signup_data {
+    width: 380px;
+    height: 500px;;
+    background-color: var(--color-data); /* Asegúrate de definir esta variable */
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px 0;
+    margin: 50px auto;
+}
+
+/* Contenido interno del formulario */
+.container__signup_data__content {
+    width: 100%;
+    font-size: 20px;
+    color: var(--color-text); /* Define en tu root */
+    font-family: var(--font-button); /* Define en tu root */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Título */
+.container__signup_data__content h1 {
+    color: black;
+    margin-bottom: 20px;
+}
+
+/* Grupo de input con íconos */
+.input__group {
+    position: relative;
+    width: 80%;
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Input */
+.input__group input {
+    width: 100%;
+    background-color: var(--color-inputs);
+    padding: 10px 40px 10px 40px; /* espacio para íconos */
+    border: none;
+    outline: none;
+    border-radius: 20px;
+    font-family: var(--font-button);
+    font-size: 16px;
+}
+
+/* Ícono a la izquierda (Font Awesome) */
+.input__group i.icon-left {
+    position: absolute;
+    top: 50%;
+    left: 15px;
+    transform: translateY(-50%);
+    font-size: 18px;
+    color: #333;
+    pointer-events: none;
+}
+
+/* Ícono a la derecha (ojito, visible) */
+.input__group i.icon-right {
+    position: absolute;
+    top: 50%;
+    right: 15px;
+    transform: translateY(-50%);
+    font-size: 18px;
+    color: #333;
+    cursor: pointer;
+}
+
+/* Botón de registro */
+.signup__button {
+    margin-top: 30px;
+    padding: 12px 30px;
+    background-color: var(--color-buttons);
+    color: var(--color-text);
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-size: 16px;
+    line-height: 1;
+    font-family: var(--font-button);
+}
+
+/* Efecto hover del botón */
+.signup__button:hover {
+    background-color: var(--color-buttons-hover);
+}
+
+.signup__link {
+    margin-top: 20px;
+    font-size: 16px;
+    color: var(--color-text);
+    font-family: var(--font-button);
+}
+.signup__link a {
+    color: var(--color-text);
+    text-decoration: none;
+    font-weight: bold;
+}
+
+
+/* Panel gris a la derecha */
+.signup-panel {
+    width: var(--panel-width);
+    height: var(--panel-height);
+    background-color: var(--color-panel);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Caja interna con logo y botones */
+.signup-panel__box {
+    width: 480px;
+    height: 550px;
+    background-color: var(--color-box);
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 0;
+}
+
+/* Imagen del logo */
+.signup-panel__logo-image {
+    width: 370px;
+    height: auto;
+    margin-top: -50px;
+}
+
+/* Contenedor de botones */
+.signup-panel__buttons {
+    display: flex;
+    justify-content: space-evenly;
+    width: 100%;
+}
+
+/* Botones */
+.signup-panel__button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.signup-panel__button img {
+    width: 90px;
+    height: 90px;
+}
+
+.signup-panel__button h2 {
+    margin-top: 10px;
+    font-weight: 900;
+    font-size: 20px;
+    color: var(--color-text);
+    font-family: var(--font-button);
+}
