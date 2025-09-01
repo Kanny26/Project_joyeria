@@ -12,7 +12,7 @@
     --color-inputs: #b8b8b8;
     --color-buttons: #b4b4b4;
     --color-buttons-hover: #9c9c9c;
-    --color-text: #000;
+    --color-text: #000000;
 
 
     /* Dimensiones */
@@ -75,7 +75,7 @@ body {
 
 h1{
     /* color: var(--color-text); */
-    color: #000;
+    color: #000000;
     font-family: var(--fuente-titulos);
 }
 

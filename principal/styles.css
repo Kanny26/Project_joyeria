@@ -29,6 +29,10 @@ body {
     overflow: hidden; 
 }
 
+.container_principal{
+    display: flex;
+}
+
 .container {
     display: flex;
 }
