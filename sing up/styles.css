@@ -1,9 +1,4 @@
 :root {
-    /* Tipografías */
-    --fuente-titulos: 'Bevan', serif;            /* Titulos principales */
-    --fuente-subtitulos: 'Besley', serif;        /* Subtitulos */
-    --fuente-descripciones: 'Libre Bodoni', serif; /* Descripciones */
-
     /* Colores */
     --color-background: #f5f5f5;
     --color-panel: #a6a6a6;
@@ -16,8 +11,12 @@
 
 
     /* Dimensiones */
-    --panel-width: 600px;
-    --panel-height: 600px;
+    --panel-izquierdo-width: 500px;
+    --panel-izquierdo-height: 600px;
+
+    --inputs-width: 280px;
+    --inputs-height: 40px;
+
 }
 
 @import url('../Tipografias/styles.css');
@@ -29,20 +28,20 @@
 }
 
 body {
-    font-family: var(--font-primary);
+    font-family: var(--fuente-titulos);
     background-color: var(--color-background);
     overflow: hidden; 
 }
 
 .container {
     display: flex;
-    flex-direction: row-reverse;
+    flex-direction: row;
 }
 
 /* Imagen a la izquierda */
 .container__image__main {
     width: 800px;
-    height: var(--panel-height);
+    /* height: var(--panel-izquierdo-height); */
     background-image: url('../Imagenes/fondos/Signup_background.jpg');
     opacity: 0.7;
     background-repeat: no-repeat;
@@ -77,55 +76,54 @@ h1{
     /* color: var(--color-text); */
     color: #000000;
     font-family: var(--fuente-titulos);
+    font-weight: 700;
 }
 
-/* Grupo de input con íconos */
 .input__group {
-    position: relative;
-    width: 80%;
+    width: var(--inputs-width);
+    height: var(--inputs-height);
     margin-top: 20px;
     display: flex;
-    justify-content: center;
     align-items: center;
+    background-color: var(--color-inputs);
+    border-radius: 20px;
+    padding: 0 15px;
+    position: relative; /* permite posicionar el ojito */
 }
 
 /* Input */
 .input__group input {
-    width: 100%;
-    background-color: var(--color-inputs);
-    padding: 10px 40px 10px 40px; /* espacio para íconos */
+    background-color: transparent;
+    padding: 10px 0;
     border: none;
     outline: none;
-    border-radius: 20px;
     font-family: var(--fuente-subtitulos);
     font-size: 16px;
+    flex: 1;            
+    padding-right: 30px; 
 }
 
-/* Ícono a la izquierda (Font Awesome) */
+/* Ícono a la izquierda (candado) */
 .input__group i.icon-left {
-    position: absolute;
-    top: 50%;
-    left: 15px;
-    transform: translateY(-50%);
     font-size: 18px;
     color: #333;
-    pointer-events: none;
+    margin-right: 10px;
 }
 
-/* Ícono a la derecha (ojito, visible) */
+/* Ícono a la derecha (ojito) */
 .input__group i.icon-right {
     position: absolute;
-    top: 50%;
-    right: 15px;
-    transform: translateY(-50%);
+    right: 15px;        
     font-size: 18px;
     color: #333;
     cursor: pointer;
 }
 
+
 /* Botón de registro */
 .signup__button {
-    margin-top: 30px;
+    display: block;        
+    margin: 20px auto 0;   
     padding: 12px 30px;
     background-color: var(--color-buttons);
     color: var(--color-text);
@@ -133,9 +131,9 @@ h1{
     border-radius: 20px;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    font-size: 16px;
+    font-weight: 700;
     line-height: 1;
-    font-family: var(--font-button);
+    font-family: var(--fuente-subtitulos);
 }
 
 /* Efecto hover del botón */
@@ -143,11 +141,12 @@ h1{
     background-color: var(--color-buttons-hover);
 }
 
+
 .signup__link {
     margin-top: 20px;
-    font-size: 16px;
+    font-size: 13px;
     color: var(--color-text);
-    font-family: var(--font-button);
+    font-family: var(--fuente-subtitulos);
 }
 .signup__link a {
     color: var(--color-text);
@@ -158,8 +157,8 @@ h1{
 
 /* Panel gris a la derecha */
 .signup-panel {
-    width: var(--panel-width);
-    height: var(--panel-height);
+    width: var(--panel-izquierdo-width);
+    height: var(--panel-izquierdo-height);
     background-color: var(--color-panel);
     display: flex;
     justify-content: center;
@@ -168,7 +167,7 @@ h1{
 
 /* Caja interna con logo y botones */
 .signup-panel__box {
-    width: 480px;
+    width: 400px;
     height: 550px;
     background-color: var(--color-box);
     border-radius: 20px;
@@ -180,9 +179,9 @@ h1{
 
 /* Imagen del logo */
 .signup-panel__logo-image {
-    width: 370px;
+    width: 300px;
     height: auto;
-    margin-top: -50px;
+    margin-top: -5px;
 }
 
 /* Contenedor de botones */
@@ -209,8 +208,8 @@ h1{
 
 .signup-panel__button h2 {
     margin-top: 10px;
-    font-weight: 900;
+    font-weight: 700;
     font-size: 20px;
     color: var(--color-text);
-    font-family: var(--font-button);
+    font-family: var(--fuente-titulos);
 }

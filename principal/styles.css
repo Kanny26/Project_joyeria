@@ -1,9 +1,4 @@
 :root {
-    /* Tipografías */
-    --font-primary: 'Poppins', sans-serif;
-    --font-heading: 'Cormorant Garamond', serif;
-    --font-button:  Cambria, Cochin, Georgia, Times, 'Times New Roman', serif, 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif, sans-serif;
-
     /* Colores */
     --color-background: #f5f5f5;
     --color-panel: #a6a6a6;
@@ -24,7 +19,7 @@
 }
 
 body {
-    font-family: var(--font-primary);
+    font-family: var(--fuente-titulos);
     background-color: var(--color-background);
     overflow: hidden; 
 }
@@ -71,9 +66,9 @@ body {
 
 /* Imagen del logo */
 .login-panel__logo-image {
-    width: 370px;
+    width: 300px;
     height: auto;
-    margin-top: -50px;
+    margin-top: -5px;
 }
 
 /* Contenedor de botones */
@@ -100,8 +95,8 @@ body {
 
 .login-panel__button h2 {
     margin-top: 10px;
-    font-weight: 900;
+    font-weight: 700;
     font-size: 20px;
     color: var(--color-text);
-    font-family: var(--font-button);
+    font-family: var(--fuente-titulos);
 }

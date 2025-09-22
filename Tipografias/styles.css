@@ -1,9 +1,10 @@
-/* Importar todas las fuentes (puedes juntarlas en una sola URL también) */
-@import url('https://fonts.googleapis.com/css2?family=Bevan:ital@0;1&family=Besley:ital,wght@0,400..900;1,400..900&family=Libre+Bodoni:ital,wght@0,400..700;1,400..700&display=swap');
+/* Importar todas las fuentes */
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
 
 /* Variables globales de tipografía */
 :root {
-  --fuente-titulos: 'Bevan', serif;            /* Titulos principales */
-  --fuente-subtitulos: 'Besley', serif;        /* Subtitulos */
-  --fuente-descripciones: 'Libre Bodoni', serif; /* Descripciones */
+  --fuente-titulos: 'Lora', serif;        /* Títulos principales */
+  --fuente-subtitulos: 'Rubik', sans-serif;  /* Subtítulos */
+  --fuente-descripciones: 'Rubik', sans-serif; /* Descripciones */
+  --fuente-precios: 'Rubik', sans-serif;     /* Precios */
 }
