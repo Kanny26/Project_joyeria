@@ -15,9 +15,14 @@
     --color-text: #000;
 
 
-    /* Dimensiones */
-    --panel-width: 600px;
-    --panel-height: 600px;
+    /* Dimensiones contenedores externos derechos e izquierdos */
+    --panel-izquierdo-width: 600px;
+    --panel-izquierdo-height: 600px;
+    --img-fondo-derecho-width: 800px;
+
+
+
+
 }
 
 @import url('../Tipografias/styles.css');
@@ -34,24 +39,24 @@ body {
     overflow: hidden; 
 }
 
-.container {
+/*principal*/
+.success {
     display: flex;
-    flex-direction: row-reverse;
+    flex-direction: row;
 }
 
 /* Imagen a la izquierda */
 .container__image__main {
-    width: 800px;
-    height: var(--panel-height);
+    width: var(--img-fondo-derecho-width);
     background-image: url('../Imagenes/fondos/Signup_background.jpg');
-    opacity: 0.2;
+    opacity: 0.7;
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
 }
 
-/* Contenedor principal del formulario */
-.container__signup_data {
+/* Contenedor principal del mensaje */
+.container__success {
     width: 380px;
     height: 500px;;
     background-color: var(--color-data); /* Asegúrate de definir esta variable */
@@ -64,7 +69,7 @@ body {
 }
 
 /* Contenido interno del formulario */
-.container__signup_data__content {
+.container__success__content {
     width: 100%;
     font-size: 20px;
     font-family: var(--font-button); 
@@ -88,7 +93,7 @@ h1{
 }
 
 /* Botón de registro */
-.signup__button {
+.success__button {
     margin-top: 30px;
     padding: 12px 30px;
     background-color: var(--color-buttons);
@@ -103,27 +108,15 @@ h1{
 }
 
 /* Efecto hover del botón */
-.signup__button:hover {
+.success__button:hover {
     background-color: var(--color-buttons-hover);
-}
-
-.signup__link {
-    margin-top: 20px;
-    font-size: 16px;
-    color: var(--color-text);
-    font-family: var(--font-button);
-}
-.signup__link a {
-    color: var(--color-text);
-    text-decoration: none;
-    font-weight: bold;
 }
 
 
 /* Panel gris a la derecha */
-.signup-panel {
-    width: var(--panel-width);
-    height: var(--panel-height);
+.success-panel {
+    width: 600px;
+    height: 600px;
     background-color: var(--color-panel);
     display: flex;
     justify-content: center;
@@ -131,7 +124,7 @@ h1{
 }
 
 /* Caja interna con logo y botones */
-.signup-panel__box {
+.success-panel__box {
     width: 480px;
     height: 550px;
     background-color: var(--color-box);
@@ -143,21 +136,20 @@ h1{
 }
 
 /* Imagen del logo */
-.signup-panel__logo-image {
-    width: 370px;
+.success-panel__logo-image {
+    width: 300px;
     height: auto;
-    margin-top: -50px;
 }
 
 /* Contenedor de botones */
-.signup-panel__buttons {
+.success-panel__buttons {
     display: flex;
     justify-content: space-evenly;
     width: 100%;
 }
 
 /* Botones */
-.signup-panel__button {
+.success-panel__button {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -166,12 +158,12 @@ h1{
     cursor: pointer;
 }
 
-.signup-panel__button img {
+.success-panel__button img {
     width: 90px;
     height: 90px;
 }
 
-.signup-panel__button h2 {
+.success-panel__button h2 {
     margin-top: 10px;
     font-weight: 900;
     font-size: 20px;
