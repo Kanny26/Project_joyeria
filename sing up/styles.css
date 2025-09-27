@@ -27,8 +27,8 @@
     --botones-img-height: 90px;
 
     /* Dimensiones contenedor formulario */
-    --contenedor-ingreso-datos-width:380px;
-    --contenedor-ingreso-datos-height: 500px;
+    --contenedor-mensaje-width:380px;
+    --contenedor-mensaje-height: 500px;
     --contenedor-interno-width: 100%;
     --inputs-width: 280px;
     --inputs-height: 40px;
@@ -68,8 +68,8 @@ body {
 
 /* Contenedor principal del formulario */
 .container__signup_data {
-    width: var(--contenedor-ingreso-datos-width);
-    height: var(--contenedor-ingreso-datos-height);
+    width: var(--contenedor-mensaje-width);
+    height: var(--contenedor-mensaje-height);
     background-color: var(--color-data); 
     border-radius: var(--border-radius);
     display: flex;
