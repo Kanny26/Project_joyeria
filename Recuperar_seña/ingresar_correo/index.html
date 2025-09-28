@@ -1,0 +1,53 @@
+<!DOCTYPE html> 
+<html lang="es"> 
+<head> 
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recuperar contraseña</title>
+    <link rel="stylesheet" href="../../Tipografias/styles.css">
+    <link rel="stylesheet" href="../ingresar_correo/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+    <div class="container"> 
+        <!-- Panel izquierdo -->
+        <aside class="codigo-recuperacion-panel">
+            <div class="codigo-recuperacion-panel__box">
+                <img class="codigo-recuperacion-panel__logo-image" src="../../Imagenes/Logo.png" alt="Logo">
+                <section class="codigo-recuperacion-panel__buttons">
+                    <button class="codigo-recuperacion-panel__button">
+                        <img src="../../Imagenes/iconos/admin.png" alt="Admin Icon">
+                        <h2>ADMIN</h2>
+                    </button>
+                    <button class="codigo-recuperacion-panel__button">
+                        <img src="../../Imagenes/iconos/seller.png" alt="Seller Icon">
+                        <h2>SELLER</h2>
+                    </button>
+                </section>
+            </div>
+        </aside>
+
+        <!-- Panel derecho -->
+        <main class="container__image__main"> 
+            <section class="container__codigo-recuperacion_data"> 
+                <div class="container__codigo-recuperacion_data__content">
+                    <header>
+                        <h1>Recuperar Contraseña</h1>
+                    </header> 
+
+                    <p>Ingresa el correo electrónico con el que te registraste; te enviaremos un código.</p> 
+
+                    <!-- Campo con ícono -->
+                    <div class="input__group"> 
+                        <i class="fas fa-envelope icon-left"></i>
+                        <input type="email" placeholder="correo@gmail.com" required> 
+                    </div> 
+                    
+                    <!-- Botón --> 
+                    <button type="submit" class="codigo-recuperacion__button">Enviar</button> 
+                </div> 
+            </section> 
+        </main> 
+    </div> 
+</body> 
+</html>
