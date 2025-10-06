@@ -5,7 +5,6 @@
     --color-data: #d9d9d9c5;
     --color-inputs: #b8b8b8;
     --color-buttons: #b4b4b4;
-    --colo-cards: #aaa3a3;
     --color-buttons-hover: #9c9c9c;
     --color-text: #000000;
     --color-iconos: #000000;
@@ -20,9 +19,8 @@
     --title-home-font-size: 35px;
     --title-cards-font-size: 35px;
     --cards-contenedor-width: 350px;
-    --cards-contenedor-height: 450px;
-    --img-cards-width: 200px;
-    --img-cards-height: 200px;
+    --cards-contenedor-height: 350px;
+    --img-cards-width-height: 200px;
 
 }
 
@@ -92,88 +90,135 @@ body {
     color: var(--color-iconos);
     cursor: pointer;
 }
-
-/* Cards */
-.cards {
+.admin__icons-right {  
+    position: fixed; 
+    right: 100px; 
+    top: 30%; /* Centrado vertical */
+    transform: translateY(-50%);
     display: flex;
     flex-direction: column;
-    align-items: center;
-    margin-top: 150px;
+    gap: 10px;
+    z-index: 1000; 
 }
 
-.cards__title {
-    font-size: 40px;
-    margin-bottom: 50px;
-    text-align: center;
-}
-
-.cards__contenedor {
+.icon-container {
+    position: relative;
+    width: 50px; 
+    height: 50px;
     display: flex;
-    gap: 30px;
-    flex-wrap: wrap;
+    align-items: center;
     justify-content: center;
-    padding: 20px;
+    cursor: pointer;
 }
 
-.cards__contenedor-content {
-    width: var(--cards-contenedor-width);
-    height: var(--cards-contenedor-height);
-    background-color: var(--color-cards);
-    padding: 20px;
-    border-radius: 25px;
-    text-align: center;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+.icon-container i {
+    font-size: 24px; 
+}
+
+.icon-container .tooltip {
+    position: absolute;
+    left: 50px; 
+    top: 50%;
+    transform: translateY(-50%);
+    background: #333; 
+    color: #fff; 
+    padding: 5px 8px; 
+    border-radius: 4px; 
+    font-size: 14px; 
+    white-space: nowrap; 
+    opacity: 0; 
+    pointer-events: none; 
+    transition: opacity 0.3s, left 0.3s; 
+} 
+
+.icon-container:hover .tooltip { 
+    opacity: 1; 
+} 
+
+.admin__icons-left .icon-container .tooltip { 
+    left: auto; 
+    right: -50px;
+}
+
+
+/* Product card */
+.product-card {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
+    gap: 40px;
+    background-color: white;
+    border-radius: 20px;
+    padding: 30px;
+    margin: 150px auto 50px; /* espacio por navbar */
+    max-width: 900px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
 }
 
-.cards__contenedor-content:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
-}
-
-.cards__contenedor-content img {
-    width: 200px;
-    height: 200px;
+.product-card__image img {
+    width: 250px;
+    height: 250px;
     object-fit: cover;
     border-radius: 15px;
-    margin-bottom: 15px;
 }
 
-/* Títulos dentro de las cards */
-.product__name {
-    font-size: 22px;
-    font-weight: 700;
-    color: var(--color-text);
-    margin-bottom: 8px;
+.product-card__view {
+    text-align: center;
+    margin-top: 10px;
+    font-weight: bold;
+    cursor: pointer;
+    color: #3498db;
 }
 
-.product__category,
-.product__material,
-.product__price,
-.product__stock {
-    font-size: 16px;
-    color: var(--color-contenido);
-    margin: 3px 0;
-}
-
-/* Íconos */
-.iconos {
+.product-card__details {
+    flex: 1;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+}
+
+.product-card__name {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.product-card__category,
+.product-card__material,
+.product-card__price,
+.product-card__stock {
+    font-size: 16px;
+    margin: 5px 0;
+}
+
+.product-card__description {
+    font-size: 14px;
+    margin: 10px 0;
+}
+
+.product-card__ratings {
+    display: flex;
+    align-items: center;
+    gap: 5px;
     margin-top: 10px;
 }
 
-.iconos i {
-    font-size: 20px;
-    margin: 0 8px;
-    cursor: pointer;
-    transition: color 0.3s;
+.product-card__ratings i {
+    color: gold;
 }
 
-.iconos .icon-right:hover { color: var(--icon-hover); }
-.iconos .fa-pen-to-square:hover { color: var(--icon-hover); }
-.iconos .fa-trash:hover { color: var(--icon-hover); }
+.product-card__ratings span {
+    margin-left: 10px;
+    font-size: 14px;
+}
+
+.product-card__actions {
+    display: flex;
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.product-card__actions i {
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.product-card__actions i:hover {
+    color: #e74c3c;
+}
