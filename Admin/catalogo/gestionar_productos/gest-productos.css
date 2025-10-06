@@ -1,0 +1,173 @@
+:root {
+    /* Colores */
+    --color-background: #f0f0f0;
+    --color-panel: rgba(217, 217, 217, 0.9);
+    --color-card: #dbd1d1;
+    --color-text: #000000;
+    --color-contenido: #131212;
+    --color-iconos: #000000;
+    --icon-hover: #635c5c;
+
+    /* Dimensiones */
+    --barra-home-width: 1200px;
+    --barra-home-height: 90px;
+    --circulo-img-admin-width-height: 91px;
+    --img-admin-width-heigh: 70px;
+    --icon-home-font-size: 40px;
+    --title-home-font-size: 35px;
+    --cards-contenedor-width: 300px;
+    --cards-contenedor-height: 420px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--fuente-titulos);
+    background-color: var(--color-background);
+    min-height: 100vh;
+    margin: 0;
+    overflow-y: auto; /* Scroll vertical si hace falta */
+}
+
+/* Navbar fijo */
+.admin {
+    width: var(--barra-home-width);
+    height: var(--barra-home-height);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: fixed; /* Fijo */
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--color-panel);
+    border-radius: 20px;
+    padding: 0 20px;
+    z-index: 20; /* encima del contenido */
+}
+
+.admin__catalogo {
+    width: var(--circulo-img-admin-width-height);
+    height: var(--circulo-img-admin-width-height);
+    border-radius: 50%;
+    background-color: #b4b4b4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.admin__catalogo img {
+    width: var(--img-admin-width-heigh);
+    height: var(--img-admin-width-heigh);
+}
+
+.admin__title {
+    flex: 1;
+    text-align: center;
+    font-size: var(--title-home-font-size);
+    font-weight: 700;
+    color: var(--color-text);
+}
+
+.home__icon {
+    font-size: var(--icon-home-font-size);
+    color: var(--color-iconos);
+    cursor: pointer;
+}
+
+.cards {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 180px; /* espacio para navbar + título */
+}
+
+/* Título fijo debajo del nav */
+.cards__title {
+    position: fixed; /* fijo en pantalla */
+    top: 110px; /* debajo del nav */
+    font-size: 40px;
+    text-align: center;
+    z-index: 15; /* encima de las cards */
+    width: 100%;
+    background-color: var(--color-background); /* opcional: para que no se mezcle con las cards */
+    padding: 10px 0;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* opcional: para destacar */
+}
+
+/* Contenedor de todas las cards */
+.cards__contenedor {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 80px; /* espacio debajo del título fijo */
+    padding: 20px;
+}
+
+.cards__contenedor-content {
+    width: var(--cards-contenedor-width);
+    height: var(--cards-contenedor-height);
+    background-color: var(--color-card);
+    padding: 20px;
+    border-radius: 25px;
+    text-align: center;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.cards__contenedor-content:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+}
+
+.cards__contenedor-content img {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 15px;
+    margin-bottom: 15px;
+}
+
+/* Títulos dentro de las cards */
+.product__name {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--color-text);
+    margin-bottom: 8px;
+}
+
+.product__category,
+.product__material,
+.product__price,
+.product__stock {
+    font-size: 16px;
+    color: var(--color-contenido);
+    margin: 3px 0;
+}
+
+/* Íconos */
+.iconos {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.iconos i {
+    font-size: 20px;
+    margin: 0 8px;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.iconos .icon-right:hover { color: var(--icon-hover); }
+.iconos .fa-pen-to-square:hover { color: var(--icon-hover); }
+.iconos .fa-trash:hover { color: var(--icon-hover); }
