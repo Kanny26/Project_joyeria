@@ -1,11 +1,11 @@
 :root {
     /* Colores */
-    --color-background: #cccccc67;
+    --color-background: #8a828267;
     --color-panel: rgba(217, 217, 217, 0.83); /* d3 ≈ 83% opacidad */
     --color-data: #d9d9d9c5;
     --color-inputs: #b8b8b8;
     --color-buttons: #b4b4b4;
-    --colo-cards: #aaa3a3;
+    --color-cards: #ffffff00;
     --color-buttons-hover: #9c9c9c;
     --color-text: #000000;
     --color-iconos: #000000;
@@ -20,9 +20,9 @@
     --title-home-font-size: 35px;
     --title-cards-font-size: 35px;
     --cards-contenedor-width: 350px;
-    --cards-contenedor-height: 450px;
-    --img-cards-width: 200px;
-    --img-cards-height: 200px;
+    --cards-contenedor-height: 500px;
+    --img-cards-width: 250px;
+    --img-cards-height: 250px;
 
 }
 
@@ -42,7 +42,7 @@ body {
     background-position: center;
     position: relative;
     min-height: var(--fondo-img-min-height);
-    overflow: hidden; 
+    /* overflow: hidden;  */
 }
 .admin {
     width: var(--barra-home-width);
@@ -122,7 +122,7 @@ body {
     padding: 20px;
     border-radius: 25px;
     text-align: center;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.308);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     display: flex;
     flex-direction: column;
@@ -136,8 +136,8 @@ body {
 }
 
 .cards__contenedor-content img {
-    width: 200px;
-    height: 200px;
+    width: var(--img-cards-width);
+    height: var(--img-cards-height);
     object-fit: cover;
     border-radius: 15px;
     margin-bottom: 15px;
@@ -145,7 +145,7 @@ body {
 
 /* Títulos dentro de las cards */
 .product__name {
-    font-size: 22px;
+    font-size: 20px;
     font-weight: 700;
     color: var(--color-text);
     margin-bottom: 8px;
@@ -155,7 +155,7 @@ body {
 .product__material,
 .product__price,
 .product__stock {
-    font-size: 16px;
+    font-size: 15px;
     color: var(--color-contenido);
     margin: 3px 0;
 }
