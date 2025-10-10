@@ -1,13 +1,13 @@
 :root {
     /* Colores */
     --color-background: #f5f5f5;
-    --color-panel: rgba(166, 166, 166, 0.8);
-    --color-box: rgba(147, 147, 147, 0.9);
+    --color-panel: #6d592c;
+    --color-box: #b5b5b5;
     --color-text: #000;
 
     /* Dimensiones */
-    --panel-width: 600px;
-    --panel-height: 600px;
+    --panel-width: 800px;
+    --panel-height: 700px;
 }
 
 @import url('../Tipografias/styles.css');
@@ -20,7 +20,7 @@
 
 body {
     font-family: var(--fuente-titulos);
-    background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)),url(../Imagenes/fondos/fondo_aplicativo2.jpg);
+    background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url(../Imagenes/fondos/fondo_aplicativo2.jpg);
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -28,46 +28,36 @@ body {
     overflow: hidden; 
 }
 
-#video-fondo {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;  /* El video cubre toda la pantalla */
-    z-index: -1;        /* Queda detrás del contenido */
-    filter: brightness(0.5); /* Oscurece un poco para dar contraste (opcional) */
-}
-
 /* Contenedor general */
 .container_principal {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh; /* toda la pantalla */
-    position: relative;
-    z-index: 1;
+    height: 100vh;
+    gap: 1px;
+    
 }
 
-/* Panel izquierdo (puede ser semitransparente si quieres contraste) */
+/* Paneles */
 .panel-izquierdo, .panel-derecho {
     position: relative;
-    z-index: 2;
 }
 
 /* Imagen izquierda */
 .container__image__main {
-    width: 800px;
+    width: 900px;
     height: var(--panel-height);
-    background-image: url('../Imagenes/fondos/Fondo_principal.jpg'); /* puedes usar otra imagen */
+    background-image: url('../Imagenes/fondos/Fondo_principal.jpg');
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
-    border-radius: 20px;
+    border-radius: 30px 0 0 20px;
     box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    z-index: -1;
+    padding: 10px;
 }
 
-/* Panel gris (derecho) */
+/* Panel derecho */
 .login-panel {
     width: var(--panel-width);
     height: var(--panel-height);
@@ -75,27 +65,43 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    border-radius: 20px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    border-radius: 0 20px 30px 0;
+    
 }
 
 /* Caja interna */
 .login-panel__box {
     width: 480px;
-    height: 550px;
+    height: 580px;
     background-color: var(--color-box);
     border-radius: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 20px 0;
+    padding: 25px 0;
+    text-align: center;
 }
 
-/* Imagen del logo */
+/* Logo */
 .login-panel__logo-image {
-    width: 300px;
+    width: 280px;
     height: auto;
-    margin-top: -5px;
+    margin-bottom: -10px;
+}
+
+/* Mensajes */
+.login-panel__welcome {
+    font-size: 38px;
+    margin-top: -81px;
+    margin-bottom: 71px;
+    color: var(--color-text);
+}
+
+.login-panel__rol {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: var(--color-text);
 }
 
 /* Botones */
@@ -103,6 +109,7 @@ body {
     display: flex;
     justify-content: space-evenly;
     width: 100%;
+    margin-top: 15px;
 }
 
 .login-panel__button {
@@ -112,6 +119,12 @@ body {
     background: none;
     border: none;
     cursor: pointer;
+    transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.login-panel__button:hover {
+    transform: scale(1.05);
+    filter: brightness(1.1);
 }
 
 .login-panel__button img {
@@ -124,5 +137,4 @@ body {
     font-weight: 700;
     font-size: 20px;
     color: var(--color-text);
-    font-family: var(--fuente-titulos);
 }
