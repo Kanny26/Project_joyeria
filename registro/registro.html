@@ -1,75 +1,80 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign up</title>
-    <link rel="stylesheet" href="../Tipografias/styles.css" >
+    <title>Registro</title>
+    <link rel="stylesheet" href="../Tipografias/styles.css">
     <link rel="stylesheet" href="registro.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
-    <div class="container"> 
-        <aside class="signup-panel">
-            <div class="signup-panel__box">
-                <img class="signup-panel__logo-image" src="../Imagenes/Logo.png" alt="Logo">
-                <section class="signup-panel__buttons">
-                    <button class="signup-panel__button">
-                        <img src="../Imagenes/iconos/admin.png" alt="Admin Icon">
-                        <h2>ADMIN</h2>
-                    </button>
-                    <button class="signup-panel__button">
-                        <img src="../Imagenes/iconos/seller.png" alt="Seller Icon">
-                        <h2>SELLER</h2>
-                    </button>
-                </section>
+
+<main class="container_principal">
+
+    <!-- Panel izquierdo: logo y selección de rol -->
+    <aside class="panel-izquierdo signup-panel">
+        <div class="signup-panel__box">
+            <img class="signup-panel__logo-image" src="../Imagenes/Logo.png" alt="Logo">
+            <h2 class="signup-panel__rol">Bienvenido</h2>
+            <div class="signup-panel__buttons">
+                <button class="signup-panel__button">
+                    <img src="../Imagenes/iconos/admin.png" alt="Admin Icon">
+                    <span>Administrador</span>
+                </button>
+                <button class="signup-panel__button">
+                    <img src="../Imagenes/iconos/seller.png" alt="Seller Icon">
+                    <span>Vendedor</span>
+                </button>
             </div>
-        </aside>
+        </div>
+    </aside>
 
-        <main class="container__image__main"> 
-            <section class="container__signup_data"> 
-                <div class="container__signup_data__content">
-                    <header>
-                        <h1>Registrate</h1>
-                    </header>
+    <!-- Panel derecho: fondo con formulario encima -->
+    <section class="panel-derecho">
+        <div class="container__signup_data">
+            <div class="container__signup_data__content">
+                <header>
+                    <h1>Regístrate</h1>
+                </header>
+                <form>
+                    <!-- Usuario -->
+                    <div class="input__group">
+                        <i class="fas fa-user icon-left"></i>
+                        <input type="text" placeholder="Nombre de usuario" required>
+                    </div>
 
-                    <form>
-                        <!-- Usuario -->
-                        <div class="input__group">
-                            <i class="fas fa-user icon-left"></i>
-                            <input type="text" placeholder="Nombre de usuario" required>
-                        </div>
+                    <!-- Correo -->
+                    <div class="input__group">
+                        <i class="fas fa-envelope icon-left"></i>
+                        <input type="email" placeholder="Correo electrónico" required>
+                    </div>
 
-                        <!-- Correo -->
-                        <div class="input__group">
-                            <i class="fas fa-envelope icon-left"></i>
-                            <input type="email" placeholder="Correo electrónico" required>
-                        </div>
+                    <!-- Contraseña -->
+                    <div class="input__group">
+                        <i class="fas fa-lock icon-left"></i>
+                        <input type="password" id="password" placeholder="Contraseña" required>
+                        <i class="fas fa-eye icon-right"></i>
+                    </div>
 
-                        <!-- Contraseña -->
-                        <div class="input__group">
-                            <i class="fas fa-lock icon-left"></i>
-                            <input type="password" id="password" placeholder="Contraseña" required>
-                            <i class="fas fa-eye icon-right"></i>
-                        </div>
+                    <!-- Confirmar contraseña -->
+                    <div class="input__group">
+                        <i class="fas fa-lock icon-left"></i>
+                        <input type="password" placeholder="Confirmar contraseña" required>
+                    </div>
 
-                        <!-- Confirmar contraseña -->
-                        <div class="input__group">
-                            <i class="fas fa-lock icon-left"></i>
-                            <input type="password" placeholder="Confirmar contraseña" required>
-                        </div>
+                    <!-- Botón de registro -->
+                    <button type="submit" class="signup__button">Registrarse</button>
+                </form>
 
-                        <!-- Botón de registro -->
-                        <button type="submit" class="signup__button">Registrarse</button>
-                    </form>
-                    
-                    <footer class="signup__link">
-                        <p>¿Ya tienes una cuenta? <a href="../inicio-sesion/inicio-sesion.html">Iniciar sesión</a></p>
-                    </footer>
-                </div>
-            </section>
-        </main>
-    </div>
+                <footer class="signup__link">
+                    <p>¿Ya tienes una cuenta? <a href="../inicio-sesion/inicio-sesion.html">Iniciar sesión</a></p>
+                </footer>
+            </div>
+        </div>
+    </section>
+
+</main>
 
 </body>
 </html>
