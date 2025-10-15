@@ -1,13 +1,47 @@
-:root {
+:root {  
     /* Colores */
-    --color-background: #f5f5f5;
-    --color-panel: #6d592c;
-    --color-box: #b5b5b5;
-    --color-text: #000;
+    --color-text: #000; 
+    --color-box: #D9D6D2;
 
-    /* Dimensiones */
+    /* Gradientes */
+    --gradient-principal: linear-gradient(135deg, #8C6C5A, #A99481, #C9C2BA);
+    --gradient-panel: linear-gradient(135deg, #6D4F3E, #623B25, #653E2F);
+    --gradient-marron: linear-gradient(135deg, #6D4F3E, #8A4F2E, #9C6651);
+    --gradient-suave: radial-gradient(circle, #C9C2BA, #A99481, #8C6C5A);
+    --gradient-dorado: linear-gradient(to right, #D4AF37, #A99481);
+
+    /* Dimensiones Generales */
     --panel-width: 800px;
-    --panel-height: 700px;
+    --panel-height: 800px;
+    --panel-padding: 25px;
+    --box-width: 500px;
+    --box-height: 650px;
+    --logo-width: 350px;
+    --logo-height: 350px;
+
+    /* Bordes / Radios */
+    --border-radius-panel-left: 30px 0 0 20px;
+    --border-radius-panel-right: 0 20px 30px 0;
+    --border-radius-box: 20px;
+
+    /* Sombras */
+    --shadow-box: 0 0 20px rgb(0, 0, 0);
+    --shadow-image: 0 4px 10px rgba(0,0,0,0.2);
+
+    /* Espaciados */
+    --gap-container: 1px;
+    --margin-logo-bottom: 8px;
+    --margin-welcome-top: -81px;
+    --margin-welcome-bottom: 30px;
+    --margin-rol-bottom: 10px;
+    --margin-buttons-top: 12px;
+
+    /* Botones */
+    --button-img-width: 130px;
+    --button-img-height: 130px;
+    --button-font-size: 25px;
+    --button-hover-scale: 1.05;
+    --button-hover-brightness: 1.1;
 }
 
 @import url('../Tipografias/styles.css');
@@ -20,7 +54,7 @@
 
 body {
     font-family: var(--fuente-titulos);
-    background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url(../Imagenes/fondos/fondo_aplicativo2.jpg);
+    background: var(--gradient-principal);
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -34,8 +68,7 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    gap: 1px;
-    
+    gap: var(--gap-container);
 }
 
 /* Paneles */
@@ -47,12 +80,12 @@ body {
 .container__image__main {
     width: 900px;
     height: var(--panel-height);
-    background-image: url('../Imagenes/fondos/Fondo_principal.jpg');
+    background-image: url('../Imagenes/fondos/banner1.jpg');
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
-    border-radius: 30px 0 0 20px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    border-radius: var(--border-radius-panel-left);
+    box-shadow: var(--shadow-image);
     z-index: -1;
     padding: 10px;
 }
@@ -61,47 +94,48 @@ body {
 .login-panel {
     width: var(--panel-width);
     height: var(--panel-height);
-    background-color: var(--color-panel);
+    background: var(--gradient-panel);
     display: flex;
     justify-content: center;
     align-items: center;
-    border-radius: 0 20px 30px 0;
-    
+    border-radius: var(--border-radius-panel-right);
 }
 
 /* Caja interna */
 .login-panel__box {
-    width: 480px;
-    height: 580px;
+    width: var(--box-width);
+    height: var(--box-height);
     background-color: var(--color-box);
-    border-radius: 20px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    border-radius: var(--border-radius-box);
+    box-shadow: var(--shadow-box);
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 25px 0;
+    padding: var(--panel-padding) 0;
     text-align: center;
 }
 
 /* Logo */
 .login-panel__logo-image {
-    width: 280px;
-    height: auto;
-    margin-bottom: -10px;
+    width: var(--logo-width);
+    height: var(--logo-height);
+    margin-bottom: var(--margin-logo-bottom);
 }
 
 /* Mensajes */
 .login-panel__welcome {
-    font-size: 38px;
-    margin-top: -81px;
-    margin-bottom: 71px;
+    font-size: 42px;
+    margin-top: var(--margin-welcome-top);
+    margin-bottom: var(--margin-welcome-bottom);
     color: var(--color-text);
+    font-family: var(--fuente-titulos);
 }
 
 .login-panel__rol {
-    font-size: 24px;
-    margin-bottom: 20px;
+    font-size: 35px;
+    margin-bottom: var(--margin-rol-bottom);
     color: var(--color-text);
+    font-family: var(--fuente-titulos);
 }
 
 /* Botones */
@@ -109,7 +143,7 @@ body {
     display: flex;
     justify-content: space-evenly;
     width: 100%;
-    margin-top: 15px;
+    margin-top: var(--margin-buttons-top);
 }
 
 .login-panel__button {
@@ -123,18 +157,19 @@ body {
 }
 
 .login-panel__button:hover {
-    transform: scale(1.05);
-    filter: brightness(1.1);
+    transform: scale(var(--button-hover-scale));
+    filter: brightness(var(--button-hover-brightness));
 }
 
 .login-panel__button img {
-    width: 90px;
-    height: 90px;
+    width: var(--button-img-width);
+    height: var(--button-img-height);
 }
 
 .login-panel__button h2 {
     margin-top: 10px;
-    font-weight: 700;
-    font-size: 20px;
+    font-weight: 600;
+    font-size: var(--button-font-size);
     color: var(--color-text);
+    font-family: var(--fuente-descripciones);
 }
