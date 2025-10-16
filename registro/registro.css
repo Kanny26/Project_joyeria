@@ -45,7 +45,7 @@
     --signup-button-padding: 12px 30px;
     --signup-button-margin: 20px auto 0;
     --border-radius: 20px;
-    --image-left-opacity: 0.7;
+    --image-left-opacity: 0.9;
 }
 
 @import url('../Tipografias/styles.css');
@@ -154,7 +154,7 @@ body {
     flex-direction: column;
 
     /* Imagen de fondo */
-    background-image: url('../Imagenes/fondos/Signup_background.jpg');
+    background-image: url(../Imagenes/fondos/banner4.jpg);
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -212,6 +212,10 @@ h1 {
     font-size: 16px;
     flex: 1;
     padding-right: 30px;
+}
+
+.input__group input::placeholder {
+    color: var(--color-text);
 }
 
 .input__group i.icon-left {
