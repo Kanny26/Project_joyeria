@@ -4,7 +4,7 @@
 /* Variables globales de tipografía */
 :root {
   --fuente-titulos: 'Lora', serif;        /* Títulos principales */
-  --fuente-subtitulos: 'Rubik', sans-serif;  /* Subtítulos */
+  --fuente-subtitulos: 'Lora', serif;  /* Subtítulos */
   --fuente-descripciones: 'Rubik', sans-serif; /* Descripciones */
   --fuente-precios: 'Rubik', sans-serif;     /* Precios */
 }
