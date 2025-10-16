@@ -177,18 +177,27 @@ body {
 
 /* Botón principal */
 .success__button {
-    padding: var(--button-padding);
+    display: inline-block;
+    padding: 10px 20px; 
+    font-size: 16px; 
+    font-weight: 600;
     background-color: var(--color-button);
-    color: var(--color-text);
     border: none;
-    border-radius: var(--border-radius);
-    cursor: pointer;
-    font-size: var(--button-font-size);
+    border-radius: 20px;
+    color: var(--color-text);
     font-family: var(--fuente-subtitulos);
-    transition: background-color 0.3s ease, transform 0.3s ease;
-    }
+    cursor: pointer;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+    transition: all 0.25s ease;
+}
 
 .success__button:hover {
     background-color: var(--color-button-hover);
-    transform: scale(1.03);
+    transform: translateY(-1.5px);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.18);
+}
+
+.success__button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
 }
