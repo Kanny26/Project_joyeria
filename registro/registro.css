@@ -5,7 +5,8 @@
     --color-text: #000000;
     --color-box: #D9D6D2;
     --color-inputs: #b8b8b8;
-    --color-buttons-hover: #8c8c8c;
+    --color-button: #b4b4b4;
+    --color-button-hover: #9c9c9c;
 
     --gradient-principal: linear-gradient(135deg, #8C6C5A, #A99481, #C9C2BA);
     --gradient-panel: linear-gradient(135deg, #6D4F3E, #623B25, #653E2F);
@@ -233,20 +234,30 @@ h1 {
 }
 
 .signup__button {
-    display: block;
-    margin: var(--signup-button-margin);
-    padding: var(--signup-button-padding);
-    background: var(--gradient-button);
-    color: var(--color-text);
+    display: inline-block;
+    padding: 10px 20px; 
+    margin:14px 80px;
+    font-size: 16px; 
+    font-weight: 600;
+    background-color: var(--color-button);
     border: none;
-    border-radius: var(--border-radius);
+    border-radius: 20px;
+    color: var(--color-text);
+    font-family: var(--fuente-subtitulos);
     cursor: pointer;
-    transition: background 0.3s ease;
-    font-weight: 700;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+    transition: all 0.25s ease;
 }
 
 .signup__button:hover {
-    background-color: var(--color-buttons-hover);
+    background-color: var(--color-button-hover); 
+    transform: translateY(-1.5px);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.18);
+}
+
+.signup__button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
 }
 
 .signup__link {
