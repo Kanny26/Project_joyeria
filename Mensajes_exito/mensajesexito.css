@@ -137,7 +137,7 @@ body {
 .success-message {
     width: var(--panel-derecho-width);
     height: var(--panel-derecho-height);
-    background-image: url(https://i.pinimg.com/736x/31/f9/80/31f9809fad9ec22709d346757e025f7a.jpg);
+    background-image: url(../Imagenes/fondos/banner5.jpg);
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
