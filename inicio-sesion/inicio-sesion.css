@@ -1,39 +1,48 @@
 :root {
-    /* Colores */
-    --color-background: #f5f5f5;
-    --color-panel: #a6a6a6;
-    --color-box: #939393;
-    --color-data: #d9d9d9c5;
-    --color-inputs: #b8b8b8;
-    --color-buttons: #b4b4b4;
-    --color-buttons-hover: #9c9c9c;
+    /*  Colores y gradientes */
     --color-text: #000000;
-    --color-iconos: #333;
+    --color-box: #D9D6D2;
+    --color-inputs: #b8b8b8;
+    --color-buttons-hover: #8c8c8c;
+    --color-icons: #333;
 
+    --gradient-principal: linear-gradient(135deg, #8C6C5A, #A99481, #C9C2BA);
+    --gradient-panel: linear-gradient(135deg, #6D4F3E, #623B25, #653E2F);
 
+    /* Dimensiones generales */
+    --panel-left-width: 500px;
+    --panel-left-height: 600px;
+    --panel-right-width: 700px;
+    --panel-right-height: 600px;
 
-    /* Dimensiones contenedores externos derechos e izquierdos */
-    --panel-izquierdo-width: 600px;
-    --panel-izquierdo-height: 600px;
-    --img-fondo-derecho-width: 800px;
+    --panel-box-width: 400px;
+    --panel-box-height: 530px;
 
-    /*Dimensiones contenedor logo y botones izquierda*/
-    --contenedor-izq-logo-btn-width: 400px; 
-    --contenedor-der-logo-btn-width: 550px;
-    --logo-width: 300px;
+    /*  Logo */
+    --logo-width: 250px;
     --logo-height: auto;
-    --contenedor-botones-width: 100%;
-    --botones-img-width: 90px;
-    --botones-img-height: 90px;
+    --logo-margin-top: -5px;
 
-    /* Dimensiones contenedor formulario */
-    --contenedor-mensaje-width:380px;
-    --contenedor-mensaje-height: 500px;
-    --contenedor-interno-width: 100%;
-    --inputs-width: 280px;
-    --inputs-height: 40px;
+    /* Botones de rol */
+    --button-img-width: 90px;
+    --button-img-height: 90px;
+    --button-hover-scale: 1.05;
+    --button-hover-brightness: 1.1;
+
+    /* Formulario*/
+    --form-container-width: 380px;
+    --form-container-height: 500px;
+    --form-padding: 30px 0;
+    --input-width: 280px;
+    --input-height: 40px;
+    --input-padding: 0 15px;
+    --input-icon-size: 18px;
+
+    --login-button-padding: 8px;
+    --login-button-margin: 15px auto 0;
 
     --border-radius: 20px;
+    --image-opacity: 0.9;
 }
 
 @import url('../Tipografias/styles.css');
@@ -46,177 +55,60 @@
 
 body {
     font-family: var(--fuente-titulos);
-    background-color: var(--color-background);
-    overflow: hidden; 
+    background: var(--gradient-principal);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    overflow: hidden;
 }
 
 .container {
     display: flex;
-    flex-direction: row;
-}
-
-/* Imagen a la izquierda */
-.container__image__main {
-    width: var(--img-fondo-derecho-width);
-    /* height: var(--panel-izquierdo-height); */
-    background-image: url('../Imagenes/fondos/Signup_background.jpg');
-    opacity: 0.7;
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center;
-}
-
-/* Contenedor principal del formulario */
-.container__login_data {
-    width: var(--contenedor-mensaje-width);
-    height: var(--contenedor-mensaje-height);
-    background-color: var(--color-data); 
-    border-radius: var(--border-radius);
-    display: flex;
-    /* flex-direction: column; */
+    justify-content: center;
     align-items: center;
-    padding: 30px 0;
-    margin: 50px auto;
+    min-height: 100vh;
+    gap: 1px;
+    flex-wrap: wrap;
 }
 
-/* Contenido interno del formulario */
-.container__login_data__content {
-    width: var(--contenedor-interno-width);
-    font-size: 20px;
-    font-family: var(--font-button); 
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-h1{
-    /* color: var(--color-text); */
-    color: #000000;
-    font-family: var(--fuente-titulos);
-    font-weight: 700;
-}
-
-.input__group {
-    width: var(--inputs-width);
-    height: var(--inputs-height);
-    margin-top: 20px;
-    display: flex;
-    align-items: center;
-    background-color: var(--color-inputs);
-    border-radius: var(--border-radius);
-    padding: 0 15px;
-    position: relative; /* permite posicionar el ojito */
-}
-
-/* Input */
-.input__group input {
-    background-color: transparent;
-    padding: 10px 0;
-    border: none;
-    outline: none;
-    font-family: var(--fuente-subtitulos);
-    font-size: 16px;
-    flex: 1;            
-    padding-right: 30px; 
-}
-
-/* Ícono a la izquierda (candado) */
-.input__group i.icon-left {
-    font-size: 18px;
-    color: var(--color-iconos);
-    margin-right: 10px;
-}
-
-/* Ícono a la derecha (ojito) */
-.input__group i.icon-right {
-    position: absolute;
-    right: 15px;        
-    font-size: 18px;
-    color: var(--color-iconos);
-    cursor: pointer;
-}
-
-
-/* Botón de registro */
-.login__button {
-    display: block;        
-    margin: 20px auto 0;   
-    padding: 12px 30px;
-    background-color: var(--color-buttons);
-    color: var(--color-text);
-    border: none;
-    border-radius: var(--border-radius);
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    font-weight: 700;
-    line-height: 1;
-    font-family: var(--fuente-subtitulos);
-}
-
-/* Efecto hover del botón */
-.login__button:hover {
-    background-color: var(--color-buttons-hover);
-}
-
-
-.login__link {
-    display: block;       
-    margin-top: 10px;
-    text-align: center;   
-    font-size: 13px;
-    color: var(--color-text);
-    font-family: var(--fuente-subtitulos);
-    text-decoration: none;
-}
-
-.login__link a {
-    margin-top: 10px;
-    text-align: center;
-    font-size: 13px;
-    font-family: var(--fuente-subtitulos);
-    color: var(--color-text);
-    font-weight: bold;
-    text-decoration: none;
-}
-
-
-/* Panel gris a la derecha */
+/* ===== Panel lateral ===== */
 .login-panel {
-    width: var(--panel-izquierdo-width);
-    height: var(--panel-izquierdo-height);
-    background-color: var(--color-panel);
+    width: var(--panel-left-width);
+    height: var(--panel-left-height);
+    background: var(--gradient-panel);
     display: flex;
     justify-content: center;
     align-items: center;
+    border-radius: var(--border-radius) 0 0 var(--border-radius);
 }
 
-/* Caja interna con logo y botones */
 .login-panel__box {
-    width: var(--contenedor-izq-logo-btn-width);
-    height: var(--contenedor-der-logo-btn-width);
+    width: var(--panel-box-width);
+    height: var(--panel-box-height);
     background-color: var(--color-box);
     border-radius: var(--border-radius);
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 20px 0;
+    padding: var(--form-padding);
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
-/* Imagen del logo */
 .login-panel__logo-image {
     width: var(--logo-width);
     height: var(--logo-height);
-    margin-top: -5px;
+    margin-top: var(--logo-margin-top);
 }
 
-/* Contenedor de botones */
 .login-panel__buttons {
     display: flex;
     justify-content: space-evenly;
-    width: var(--contenedor-botones-width);
+    width: 100%;
+    margin-top: 25px;
 }
 
-/* Botones */
 .login-panel__button {
     display: flex;
     flex-direction: column;
@@ -224,17 +116,184 @@ h1{
     background: none;
     border: none;
     cursor: pointer;
+    transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.login-panel__button:hover {
+    transform: scale(var(--button-hover-scale));
+    filter: brightness(var(--button-hover-brightness));
 }
 
 .login-panel__button img {
-    width: var(--botones-img-width);
-    height: var(--botones-img-height);
+    width: var(--button-img-width);
+    height: var(--button-img-height);
 }
 
 .login-panel__button h2 {
     margin-top: 10px;
     font-weight: 700;
-    font-size: 20px;
+    font-size: 18px;
     color: var(--color-text);
     font-family: var(--fuente-titulos);
+}
+
+/* ===== Contenedor del formulario ===== */
+.container__image__main {
+    width: var(--panel-right-width);
+    height: var(--panel-right-height);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background-image: url('../Imagenes/fondos/banner4.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: var(--image-opacity);
+    border-radius: 0 var(--border-radius) var(--border-radius) 0;
+    position: relative;
+}
+
+.container__login_data {
+    width: var(--form-container-width);
+    height: var(--form-container-height);
+    background-color: var(--color-box);
+    border-radius: var(--border-radius);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: var(--form-padding);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    position: relative;
+}
+
+.container__login_data__content {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: var(--fuente-subtitulos);
+}
+
+h1 {
+    color: var(--color-text);
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+/* ===== Inputs ===== */
+.input__group {
+    width: 100%;
+    max-width: var(--input-width);
+    height: var(--input-height);
+    margin: 10px 0; /* Espaciado uniforme entre inputs */
+    display: flex;
+    align-items: center;
+    background-color: var(--color-inputs);
+    border-radius: var(--border-radius);
+    padding: var(--input-padding);
+    position: relative;
+}
+
+.input__group input {
+    background-color: transparent;
+    border: none;
+    outline: none;
+    font-family: var(--fuente-subtitulos);
+    font-size: 16px;
+    flex: 1;
+    padding-right: 30px;
+}
+
+.input__group input::placeholder {
+    color: var(--color-text);
+}
+
+.input__group i.icon-left {
+    font-size: var(--input-icon-size);
+    color: var(--color-icons);
+    margin-right: 10px;
+}
+
+.input__group i.icon-right {
+    position: absolute;
+    right: 15px;
+    font-size: var(--input-icon-size);
+    color: var(--color-icons);
+    cursor: pointer;
+}
+
+/* ===== Link "Recuperar contraseña" ===== */
+.login__link--recuperar {
+    width: 100%;
+    max-width: var(--input-width);
+    margin: 10px 0 20px 0; 
+    margin-right: 20px;
+    font-size: 15px;
+    text-align: right;
+    font-family: var(--fuente-subtitulos);
+    color: var(--color-text);
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+.login__link--recuperar:hover {
+    text-decoration: underline;
+    color: var(--color-buttons-hover);
+}
+
+/* ===== Botón Iniciar Sesión ===== */
+.login__button {
+    width: 100%;
+    max-width: 280px;
+    height: 40px;
+    margin: 0 0 20px 0; /* separación del botón de otros elementos */
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--color-text);
+    background-color: var(--color-buttons-hover);
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    text-align: center;
+    transition: transform 0.3s ease, filter 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.login__button:hover {
+    transform: scale(var(--button-hover-scale));
+    filter: brightness(var(--button-hover-brightness));
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+}
+
+/* ===== Footer registro ===== */
+.registrate__link {
+    width: 100%;
+    text-align: center;
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+.registrate__link p {
+    font-size: 16px;
+}
+
+.registrate__link a {
+    color: var(--color-text);
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.registrate__link a:hover {
+    text-decoration: underline;
+}
+
+/* ===== Formulario centrado verticalmente ===== */
+.container__login_data__content form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
 }

@@ -1,7 +1,5 @@
 :root {  
-    /* =======================
-       Colores y gradientes
-       ======================= */
+    /* Colores y gradientes */
     --color-text: #000000;
     --color-box: #D9D6D2;
     --color-inputs: #b8b8b8;
@@ -11,7 +9,6 @@
     --gradient-panel: linear-gradient(135deg, #6D4F3E, #623B25, #653E2F);
     --gradient-button: linear-gradient(135deg, #b4b4b4, #9c9c9c);
 
-    
 
     /* Dimensiones paneles */
     --panel-left-width: 500px;  
@@ -42,8 +39,8 @@
     --input-padding: 0 15px;
     --input-icon-size: 18px;
 
-    --signup-button-padding: 12px 30px;
-    --signup-button-margin: 20px auto 0;
+    --signup-button-padding: 8px;
+    --signup-button-margin: 15px auto 0;
     --border-radius: 20px;
     --image-left-opacity: 0.9;
 }
@@ -232,22 +229,30 @@ h1 {
     cursor: pointer;
 }
 
+/* ===== Botón Iniciar Sesión ===== */
 .signup__button {
-    display: block;
-    margin: var(--signup-button-margin);
-    padding: var(--signup-button-padding);
-    background: var(--gradient-button);
+    width: 100%;
+    max-width: 280px;
+    height: 40px;
+    margin: 30px 0 20px 0; /* separación del botón de otros elementos */
+    font-size: 16px;
+    font-weight: 700;
     color: var(--color-text);
+    background-color: var(--color-buttons-hover);
     border: none;
     border-radius: var(--border-radius);
     cursor: pointer;
-    transition: background 0.3s ease;
-    font-weight: 700;
+    text-align: center;
+    transition: transform 0.3s ease, filter 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
 }
 
 .signup__button:hover {
-    background-color: var(--color-buttons-hover);
+    transform: scale(var(--button-hover-scale));
+    filter: brightness(var(--button-hover-brightness));
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
 }
+
 
 .signup__link {
     margin-top: 20px;
@@ -259,4 +264,12 @@ h1 {
     color: var(--color-text);
     text-decoration: none;
     font-weight: bold;
+}
+
+.signup__link p {
+    font-size: 16px;
+}
+
+.signup__link a:hover {
+    text-decoration: underline;
 }
