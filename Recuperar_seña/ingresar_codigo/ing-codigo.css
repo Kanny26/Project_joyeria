@@ -7,7 +7,7 @@
     --color-inputs: #dcdad8;
     --color-iconos: #4f2a09;
     --color-button: #b4b4b4;
-    --color-button-hover: #9c9c9c;
+    --color-buttons-hover: #aaa9a9;
 
   /* Gradientes */
     --gradient-principal: linear-gradient(135deg, #8C6C5A, #A99481, #C9C2BA);
@@ -197,27 +197,25 @@ body {
 
 /* Botón principal */
 .codigo__button {
-    display: inline-block;
-    padding: 10px 20px; 
-    font-size: 16px; 
-    font-weight: 600;
-    background-color: var(--color-button);
-    border: none;
-    border-radius: 20px;
+    width: 100%;
+    max-width: 300px;
+    height: 40px;
+    margin: 30px 0 20px 0; /* separación del botón de otros elementos */
+    font-size: 16px;
+    font-weight: 700;
     color: var(--color-text);
-    font-family: var(--fuente-subtitulos);
+    background-color: var(--color-buttons-hover);
+    border: none;
+    border-radius: var(--border-radius);
     cursor: pointer;
-    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
-    transition: all 0.25s ease;
+    text-align: center;
+    transition: transform 0.3s ease, filter 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
 }
 
 .codigo__button:hover {
-    background-color: var(--color-button-hover);
-    transform: translateY(-1.5px);
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.18);
+    transform: scale(var(--button-hover-scale));
+    filter: brightness(var(--button-hover-brightness));
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
 }
 
-.codigo__button:active {
-    transform: translateY(0);
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
-}
