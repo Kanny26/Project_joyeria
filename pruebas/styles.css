@@ -1,0 +1,186 @@
+/* ----- Estilos generales ----- */
+body {
+    font-family: 'Poppins', sans-serif;
+    background: #f9f9f9;
+    color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+}
+
+/* ----- Card principal ----- */
+.product-card {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background: #fff;
+    border-radius: 25px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    width: 900px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+/* ----- Imagen del producto ----- */
+.product-card__image {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, #f7d6d0, #f2c4ba);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 300px;
+    height: 500px;
+}
+
+.product-card__image img {
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    transition: transform 0.4s ease;
+}
+
+.product-card__image:hover img {
+    transform: scale(1.05);
+}
+
+.product-card__view {
+    position: absolute;
+    bottom: 20px;
+    background: rgba(255, 255, 255, 0.9);
+    color: #333;
+    padding: 8px 18px;
+    border-radius: 20px;
+    font-weight: 500;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.product-card__image:hover .product-card__view {
+    opacity: 1;
+}
+
+/* ----- Detalles del producto ----- */
+.product-card__details {
+    flex: 1;
+    padding: 30px 40px;
+}
+
+.product-card__name {
+    font-size: 1.8rem;
+    color: #222;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.product-card__category {
+    color: #c16b5b;
+    font-weight: 500;
+    margin-bottom: 12px;
+}
+
+.product-card__price {
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: #e57373;
+    margin: 10px 0;
+}
+
+.product-card__material {
+    font-size: 0.95rem;
+    color: #777;
+    margin-bottom: 10px;
+}
+
+.product-card__description {
+    font-size: 0.95rem;
+    color: #555;
+    line-height: 1.5;
+    margin-bottom: 15px;
+}
+
+.product-card__stock {
+    font-size: 0.9rem;
+    color: #4caf50;
+    margin-bottom: 15px;
+}
+
+/* ----- Reseñas ----- */
+.product-card__ratings {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 20px;
+    color: #f9a825;
+}
+
+.product-card__ratings span {
+    color: #444;
+    font-size: 0.9rem;
+}
+
+/* ----- Acciones (editar/eliminar) ----- */
+.product-card__actions {
+    display: flex;
+    gap: 15px;
+    font-size: 1.2rem;
+}
+
+.product-card__actions i {
+    cursor: pointer;
+    color: #999;
+    transition: color 0.3s ease;
+}
+
+.product-card__actions i:hover {
+    color: #d46a6a;
+}
+
+/* ----- Iconos superiores (Buscar/Filtrar) ----- */
+.admin__icons-right {
+    position: absolute;
+    top: 25px;
+    right: 25px;
+    display: flex;
+    gap: 15px;
+}
+
+.icon-container {
+    position: relative;
+    background: #fff;
+    border-radius: 50%;
+    padding: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.icon-container:hover {
+    transform: scale(1.1);
+}
+
+.tooltip {
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #333;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.icon-container:hover .tooltip {
+    opacity: 1;
+}

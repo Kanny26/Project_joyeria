@@ -1,8 +1,8 @@
 :root {
     /* Colores */
     --color-background: #f5f5f5;
-    --color-panel: rgba(217, 217, 217, 0.83); /* d3 ≈ 83% opacidad */
-    --color-data: #d9d9d9c5;
+    --color-panel: #ffd9d9; 
+    --color-data: #ffcaca;
     --color-inputs: #b8b8b8;
     --color-buttons: #b4b4b4;
     --color-buttons-hover: #9c9c9c;
@@ -11,15 +11,15 @@
 
     /*Dimensiones*/
     --fondo-img-min-height: 100vh; 
-    --barra-home-width: 1200px;
+    --barra-home-width: 1500px;
     --barra-home-height: 90px;
     --circulo-img-admin-width-height: 91px;
     --img-admin-width-heigh: 70px;
     --icon-home-font-size: 40px;
-    --title-home-font-size: 35px;
+    --title-home-font-size: 60px;
     --title-cards-font-size: 35px;
-    --cards-contenedor-width: 350px;
-    --cards-contenedor-height: 350px;
+    --cards-contenedor-width: 250px;
+    --cards-contenedor-height: 250px;
     --img-cards-width-height: 200px;
 
 }
@@ -34,7 +34,7 @@
 
 body {
     font-family: var(--fuente-titulos); 
-    background-image: url('../../Imagenes/fondos/fondo_aplicativo1.jpg');
+    background-image: url('../../Imagenes/fondos/fondo_admin1.jpg');
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
@@ -63,11 +63,30 @@ body {
     width: var(--circulo-img-admin-width-height);
     height: var(--circulo-img-admin-width-height);
     border-radius: 50%;
-    background-color: var(--color-buttons);
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-left: -40px;
+    margin-left: -15px;
+}
+
+/* Estilo base del texto "Inicio" */
+.admin__catalogo h2 {
+    position: absolute; /* relativo al body si no pones relative en home__admin */
+    bottom: 30px;
+    left: 160px;
+    transform: translateX(-50%) translateY(10px);
+    opacity: 0;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--color-text);
+    pointer-events: none; /* para que no interfiera con el hover */
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* Cuando se pasa el mouse por admin__catalogo */
+.admin__catalogo:hover h2 {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0); /* sube suavemente */
 }
 
 .admin__catalogo img {
@@ -91,41 +110,79 @@ body {
     cursor: pointer;
 }
 .cards {
-    display: flex;
-    flex-direction: column; 
-    align-items: center; 
-    margin-top: 150px; 
+    display: flex; 
+    flex-direction: column;
+    align-items: center;
+    margin-top: 150px;
 }
 
 .cards__title {
     font-size: 40px;
-    margin-bottom: 50px; 
+    margin-top: 50px; 
     text-align: center;
+    color: #ffd9d9e8;
+    text-shadow: #000000 4px 4px 4px;
+    transition: transform 0.3s, color 0.3s;
+}
+
+.cards__title:hover {
+    color: #977b6b;
 }
 
 .cards__contenedor {
     display: flex;
-    gap: 30px; 
-    justify-items: center; 
-    width: auto; 
+    gap: 100px; 
+    justify-content: center;
+    margin-top: 50px;
 }
 
 .cards__contenedor-content {
-    width: var(--cards-contenedor-width);
-    height: var(--cards-contenedor-height);
-    background-color: var(--color-panel);
-    padding: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* === Nuevo contenedor para ícono y texto === */
+.card-item {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    background-color: var(--color-data);
     border-radius: 50px;
-    text-align: center;
+    padding: 25px 35px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.cards__contenedor-content img {
-    width: var(--img-cards-width-height);
-    height: var(--img-cards-width-height);
-    margin-top: -10px;
+.card-item:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    background-color: #DDA17E;
 }
 
-.cards__contenedor-content h3 {
+/* Círculo del icono */
+.icon-circle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 200px;
+    height: 200px;
+    transition: transform 0.3s ease;
+}
+
+.icon-circle img {
+    width: 150px;
+    height: 150px;
+}
+
+.card-item h3 {
+    color: #000;
     font-size: 30px;
-    margin-top: 10px;
+    font-weight: 600;
+    text-align: left;
+    transition: color 0.3s ease;
+}
+
+.card-item:hover h3 {
+    color: #ffffff;
 }

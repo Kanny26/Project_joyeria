@@ -40,7 +40,7 @@
 body {
     font-family: var(--fuente-titulos); 
     /* background: var(--gradient-principal); */
-    background-image: url(https://i.pinimg.com/736x/bc/0b/ef/bc0bef694f30a8d61167242739bdc1a0.jpg);
+    background-image: url(../../Imagenes/fondos/fondo_admin1.jpg);
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
