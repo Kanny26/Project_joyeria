@@ -1,25 +1,28 @@
 :root {
     /* Colores */
     --color-background: #f5f5f5;
-    --color-panel: #D9D6D2;
-    --color-data: #d9d9d9c5;
+    --color-panel: #ffd9d9; 
+    --color-data: #ffcaca;
     --color-inputs: #b8b8b8;
-    --color-buttons: #d0bdb1;
+    /* --color-buttons: #b4b4b4; */
     --color-buttons-hover: #9c9c9c;
     --color-text: #000000;
     --color-iconos: #000000;
-    --gradient-principal: linear-gradient(135deg, #a68a78, #7d6854, #9a8874);
-    --gradient-panel: linear-gradient(135deg, #ccc1bb, #d7c9c1, #eed1c6);
+
+
+    --gradient-principal: radial-gradient(circle,rgba(150, 144, 144, 1) 0%, rgba(163, 146, 132, 1) 32%, rgba(105, 87, 74, 1) 89%);
+    --gradient-button: radial-gradient(circle, #b4b4b4, #9c9c9c);
+
 
     /*Dimensiones*/
     --fondo-img-min-height: 100vh; 
-    --barra-home-width: 1200px;
+    --barra-home-width: 1500px;
     --barra-home-height: 90px;
     --circulo-img-admin-width-height: 91px;
     --img-admin-width-heigh: 70px;
     --icon-home-font-size: 40px;
-    --title-home-font-size: 35px;
-    --title-cards-font-size: 35px;
+    --title-home-font-size: 60px;
+    /* --title-cards-font-size: 50px; */
     --cards-contenedor-width: 250px;
     --cards-contenedor-height: 250px;
     --img-cards-width-height: 150px;
@@ -36,14 +39,15 @@
 
 body {
     font-family: var(--fuente-titulos); 
-    background:var(--gradient-principal);
+    /* background: var(--gradient-principal); */
+    background-image: url(../../Imagenes/fondos/fondo_admin1.jpg);
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
     position: relative;
     min-height: var(--fondo-img-min-height);
     overflow: hidden; 
-}
+} 
 .home {
     width: var(--barra-home-width);
     height: var(--barra-home-height);
@@ -69,7 +73,27 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-left: -40px;
+    margin-left: -15px;
+}
+
+/* Estilo base del texto "Inicio" */
+.home__admin h2 {
+    position: absolute; /* relativo al body si no pones relative en home__admin */
+    bottom: 30px;
+    left: 160px;
+    transform: translateX(-50%) translateY(10px);
+    opacity: 0;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--color-text);
+    pointer-events: none; /* para que no interfiera con el hover */
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* Cuando se pasa el mouse por home__admin */
+.home__admin:hover h2 {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0); /* sube suavemente */
 }
 
 .home__admin img {
@@ -92,6 +116,7 @@ body {
     color: var(--color-iconos);
     cursor: pointer;
 }
+
 .cards {
     display: flex;
     flex-direction: column; 
@@ -100,50 +125,91 @@ body {
 }
 
 .cards__title {
-    font-size: 35px;
+    font-size: 40px;
     margin-bottom: 40px; 
     text-align: center;
-    color: #ffff;
+    color: #ffd9d9e8;
+    transition: transform 0.3s, color 0.3s;
+    text-shadow: #000000 4px 4px 4px;
+}
+.cards__title:hover {
+    color: #977b6b;
 }
 
 .cards__contenedor {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr); /* 3 columnas iguales */
-    gap: 30px; 
+    display: flex;
+    grid-template-columns: repeat(3, 1fr); 
+    gap: 50px; 
     justify-items: center; 
     width: auto; 
+    margin-top: 50px;
 }
 
-/* Card 4 debajo de 1 y 2 */
-.cards__contenedor-content:nth-child(4) {
-    grid-column: 1 / span 2; /* ocupa col 1 y 2 */
-    grid-row: 2;             /* segunda fila */
-    justify-self: center;    /* centrada */
-}
-
-/* Card 5 debajo de 2 y 3 */
-.cards__contenedor-content:nth-child(5) {
-    grid-column: 2 / span 2; /* ocupa col 2 y 3 */
-    grid-row: 2;             /* segunda fila */
-    justify-self: center;
-}
-
+/* Contenido de cada card */
 .cards__contenedor-content {
-    width: var(--cards-contenedor-width);
-    height: var(--cards-contenedor-height);
-    background:var(--gradient-panel);
-    padding: 30px;
+    display: flex;
+    flex-direction: column; 
+    align-items: center;
+    width: var(--cards-contenedor-width, 200px);
+    height: auto; 
+    padding: 20px;
     border-radius: 50px;
     text-align: center;
 }
 
-.cards__contenedor-content img {
-    width: var(--img-cards-width-height);
-    height: var(--img-cards-width-height);
-    margin-top: -10px;
+/* Círculo del icono con hover */
+.icon-circle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%; 
+    background-color: var(--color-data);
+    margin-bottom: 15px; 
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    transition: transform 0.3s;
 }
 
-.cards__contenedor-content h3 {
-    font-size: 22px;
-    margin-top: 10px;
+.icon-circle:hover {
+    transform: scale(1.1);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    background-color: #DDA17E;
 }
+
+.icon-circle img {
+    width: 120px;
+    height: 120px;
+    transition: transform 0.3s;
+}
+
+/* Contenedor de h3 con efecto deslizante */
+.h3-container {
+    position: relative;
+    width: 200px;
+    height: 45px;
+    border-radius: 20px;
+    overflow: hidden;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--color-data);
+    /* background: linear-gradient(90deg, #d1ab95 50%, #c2896b 50%); */
+    background-size: 200% 100%;
+    background-position: right bottom;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+}
+
+/* Texto centrado */
+.h3-container h3 {
+    position: relative; /* ya no absoluto */
+    color: #000000;
+    font-size: 25px;
+    font-weight: 600;
+    text-align: center;
+    z-index: 1; /* para que quede encima del gradiente */
+    transition: color 0.3s ease;
+}
+
+
