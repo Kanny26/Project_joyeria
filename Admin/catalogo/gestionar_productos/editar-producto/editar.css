@@ -1,32 +1,18 @@
 :root {
-    /* Colores */
-    --color-background: #cccccc67;
-    --color-panel: rgba(217, 217, 217, 0.83); /* d3 ≈ 83% opacidad */
-    --color-data: #d9d9d9c5;
-    --color-inputs: #b8b8b8;
-    --color-buttons: #b4b4b4;
-    --color-buttons-hover: #9c9c9c;
-    --color-text: #000000;
-    --color-iconos: #000000;
-    --fondo-tooltip: #333;
-    --texto-tooltip: #ffffff;
-    --color-card: rgba(217, 217, 217, 0.83); /* d3 ≈ 83% opacidad */
-    --color-estrellas: gold;
-    --hover-icons: #6e6968;
-
-    /*Dimensiones*/
-    --fondo-img-min-height: 100vh; 
-    --barra-home-width: 1200px;
+    --color-panel: #ffd9d9;
+    --color-data: #ad826f;
+    --color-acento: #eee3de;
+    --color-borde: #c49b63;
+    --color-texto: #222;
+    --color-estrellas: #fbc02d;
+    --sombra: 0 10px 25px rgba(0, 0, 0, 0.15);
+    --fondo-img-min-height: 100vh;
+    --barra-home-width: 1500px;
     --barra-home-height: 90px;
     --circulo-img-admin-width-height: 91px;
     --img-admin-width-heigh: 70px;
     --icon-home-font-size: 40px;
-    --title-home-font-size: 35px;
-    --title-cards-font-size: 35px;
-    --cards-contenedor-width: 950px;
-    --cards-contenedor-height: 350px;
-    --img-cards-width-height: 200px;
-
+    --title-home-font-size: 60px;
 }
 
 @import url('../../Tipografias/styles.css');
@@ -38,15 +24,14 @@
 }
 
 body {
-    font-family: var(--fuente-titulos); 
-    background-color: var(--color-background);
-    background-repeat: no-repeat;
+    font-family: var(--fuente-titulos);
+    background-image: url('../../../../Imagenes/fondos/fondo_admin.jpg');
     background-size: cover;
     background-position: center;
-    position: relative;
     min-height: var(--fondo-img-min-height);
-    overflow: hidden; 
+    color: var(--color-texto);
 }
+
 .admin {
     width: var(--barra-home-width);
     height: var(--barra-home-height);
@@ -68,11 +53,30 @@ body {
     width: var(--circulo-img-admin-width-height);
     height: var(--circulo-img-admin-width-height);
     border-radius: 50%;
-    background-color: var(--color-buttons);
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-left: -40px;
+    margin-left: -15px;
+}
+
+/* Estilo base del texto "Inicio" */
+.admin__catalogo h2 {
+    position: absolute; /* relativo al body si no pones relative en home__admin */
+    bottom: 30px;
+    left: 160px;
+    transform: translateX(-50%) translateY(10px);
+    opacity: 0;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--color-text);
+    pointer-events: none; /* para que no interfiera con el hover */
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* Cuando se pasa el mouse por admin__catalogo */
+.admin__catalogo:hover h2 {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0); /* sube suavemente */
 }
 
 .admin__catalogo img {
@@ -95,135 +99,211 @@ body {
     color: var(--color-iconos);
     cursor: pointer;
 }
-.admin__icons-right {  
-    position: fixed; 
-    right: 100px; 
-    top: 30%; /* Centrado vertical */
+
+/* --- Iconos laterales --- */
+.admin__icons-right {
+    position: fixed;
+    right: 60px;
+    top: 50%;
     transform: translateY(-50%);
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    z-index: 1000; 
+    gap: 15px;
+    z-index: 1000;
 }
 
 .icon-container {
-    position: relative;
-    width: 50px; 
+    background: #fff;
+    border-radius: 50%;
+    width: 50px;
     height: 50px;
     display: flex;
-    align-items: center;
     justify-content: center;
+    align-items: center;
+    box-shadow: var(--sombra);
     cursor: pointer;
+    position: relative;
 }
 
-.icon-container i {
-    font-size: 24px; 
+.icon-container:hover {
+    transform: scale(1.1);
 }
 
-.icon-container .tooltip {
+.tooltip {
     position: absolute;
-    left: 50px; 
-    top: 50%;
-    transform: translateY(-50%);
-    background: var(--fondo-tooltip); 
-    color: var(--texto-tooltip); 
-    padding: 5px 8px; 
-    border-radius: 4px; 
-    font-size: 14px; 
-    white-space: nowrap; 
-    opacity: 0; 
-    pointer-events: none; 
-    transition: opacity 0.3s, left 0.3s; 
-} 
-
-.icon-container:hover .tooltip { 
-    opacity: 1; 
-} 
-
-.admin__icons-left .icon-container .tooltip { 
-    left: auto; 
-    right: -50px;
+    right: 60px;
+    background: #333;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    opacity: 0;
+    transition: 0.3s;
 }
 
-/* Product card */
-.product-card {
+.icon-container:hover .tooltip {
+    opacity: 1;
+}
+
+/* --- Contenido principal --- */
+/* --- Contenedor principal --- */
+.product {
     display: flex;
+    flex-direction: column; 
+    justify-content: center;
+    align-items: center;
+    padding-top: 140px;
+    gap: 40px; 
+}
+
+.product-card__title {
+    font-size: 40px;
+    text-align: center;
+    color: #ffd9d9e8;
+    text-shadow: #000000 4px 4px 4px;
+    transition: transform 0.3s, color 0.3s;
+}
+
+.product-card__title:hover {
+    color: #977b6b;
+}
+
+/* Contenedor principal del formulario */
+.product-card__detalles {
+    background-color: var(--color-data);
+    border-radius: 16px;
+    box-shadow: var(--sombra);
+    padding: 40px 50px;
+    width: 950px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 25px;
+    margin-top: 5px;
+}
+
+/* Contenedor interior de dos columnas */
+.product__contenido {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
     gap: 40px;
-    background-color: var(--color-card);
-    border-radius: 20px;
-    padding: 30px;
-    margin: 150px auto 50px; 
-    width:var(--cards-contenedor-width);
-    height: var(--cards-contenedor-height);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    width: 100%;
+}
+
+.product-card__image {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .product-card__image img {
-    width: 250px;
-    height: 250px;
-    object-fit: cover;
-    border-radius: 15px;
+    width: 280px;
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-.product-card__view {
-    text-align: center;
+.edit-image-btn {
     margin-top: 10px;
-    font-weight: bold;
+    background-color: var(--color-acento);
+    color: #fff;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 8px;
     cursor: pointer;
-    color: var(--color-text);
+    font-size: 20px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: background-color 0.3s;
 }
 
-.product-card__details {
+.edit-image-btn:hover {
+    background-color: #5a362e;
+}
+
+
+/* Formulario derecha */
+.product-fields {
     flex: 1;
     display: flex;
     flex-direction: column;
+    gap: 12px;
 }
 
-.product-card__name {
-    font-size: 24px;
-    font-weight: bold;
+label {
+    font-weight: 600;
+    color: var(--color-acento);
 }
 
-.product-card__category,
-.product-card__material,
-.product-card__price,
-.product-card__stock {
+.input-text,
+.input-select,
+.input-area {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
     font-size: 16px;
-    margin: 5px 0;
+    background: #fff;
+    transition: 0.3s;
 }
 
-.product-card__description {
-    font-size: 14px;
-    margin: 10px 0;
+.input-area {
+    resize: none;
+    overflow: hidden;
 }
 
+
+.input-text:focus,
+.input-select:focus,
+.input-area:focus {
+    border-color: var(--color-borde);
+    box-shadow: 0 0 6px rgba(196, 155, 99, 0.4);
+}
+
+/* Reseñas y botones */
 .product-card__ratings {
     display: flex;
     align-items: center;
     gap: 5px;
-    margin-top: 10px;
-}
-
-.product-card__ratings i {
     color: var(--color-estrellas);
+    font-size: 18px;
 }
 
-.product-card__ratings span {
-    margin-left: 10px;
-    font-size: 14px;
-}
-
-.product-card__actions {
+.product-card__acciones {
     display: flex;
     gap: 15px;
-    margin-top: 15px;
+    justify-content: flex-end;
+    width: 100%;
 }
 
-.product-card__actions i {
-    font-size: 20px;
+
+.boton {
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
     cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    transition: 0.3s;
 }
 
-.product-card__actions i:hover {
-    color: var(--hover-icons);
+.guardar {
+    background-color: var(--color-acento);
+    color: #000000;
+}
+
+.guardar:hover {
+    background-color: #5a362e;
+}
+
+.cancelar {
+    background-color: #ccc;
+    color: #000000;
+}
+
+.cancelar:hover {
+    background-color: #707070;
 }
