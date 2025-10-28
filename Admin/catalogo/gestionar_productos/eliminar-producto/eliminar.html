@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eliminar producto</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="eliminar.css">
+</head>
+<body>
+
+    <nav class="admin">
+        <div class="admin__catalogo">
+        <img src="../../../../Imagenes/iconos/admin.png" alt="Admin">
+        <h2>Volver al inicio</h2>
+        </div>
+        <h1 class="admin__title">AAC27</h1>
+        <i class="fa-solid fa-house-chimney home__icon"></i>
+    </nav>
+
+    <div class="admin__icons-right">
+        <div class="icon-container">
+        <i class="fa-solid fa-magnifying-glass search__icon"></i>
+        <span class="tooltip">Buscar</span>
+        </div>
+        <div class="icon-container">
+        <i class="fa-solid fa-filter filter__icon"></i>
+        <span class="tooltip">Filtrar</span>
+        </div>
+    </div>
+
+    <main class="product">
+        <h1 class="product-card__title">Eliminar producto</h1>
+        <section class="product-card__eliminar">
+                <div class="product-card__vista">
+                    <div class="product-card__image">
+                        <img src="../../../../Imagenes/fondos/joya1.jpg" alt="Anillo alianza de sueños">
+                    </div>
+
+                    <div class="product-card__acciones">
+                        <button class="boton edit-image-btn">
+                            <i class="fa-solid fa-pen"></i>
+                            Editar producto
+                        </button>
+                        <button class="boton ver-image-btn">
+                            <i class="fa-solid fa-eye"></i>
+                            Ver producto
+                        </button>
+                    </div>
+                </div>
+
+                <div class="product_info">
+                    <div class="product_info__detalle">
+                        <h3>Detalles del producto</h3>
+                        <div class="item-detalle">
+                            <h2>Nombre: </h2>
+                            <span>Anillo Alianza de sueños</span>
+                        </div>
+                        <div class="item-detalle">
+                            <h2>Categoría: </h2>
+                            <span>Anillo de compromiso</span>
+                        </div>
+                        <div class="item-detalle">
+                            <h2>Precio: </h2>
+                            <span>$150.000</span>
+                        </div>
+                        <div class="item-detalle">
+                            <h2>Clasificación: </h2>
+                            <span>4.8 <i class="fa-solid fa-star"></i></span>
+                        </div>
+                    </div>
+
+                    <div class="product-advertencia">
+                        <i class="fa-solid fas fa-exclamation-triangle"></i>
+                        <div>
+                            <h1>¡Advertencia!</h1>
+                            <p>¿Estás seguro de que deseas eliminar este producto? Esta acción no se puede deshacer.</p>
+                        </div>
+                    </div>
+
+                    <div class="product-accion__eliminar">
+                        <button class="boton-confirmar eliminar">
+                            <i class="fa-solid fa-trash-can"></i> Eliminar producto
+                        </button>
+                        <button class="boton-cancelar cancelar">
+                            <i class="fa-solid fa-xmark"></i> Cancelar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

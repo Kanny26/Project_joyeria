@@ -1,0 +1,104 @@
+body {
+  background: linear-gradient(180deg, #7c5443, #744734);
+  font-family: "Poppins", sans-serif;
+  color: #000000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  margin: 0;
+  padding: 20px;
+}
+
+h1 {
+  color: #000000;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  font-weight: 600;
+  margin-bottom: 30px;
+}
+
+.contenedor {
+  display: flex;
+  gap: 40px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* Estructura general */
+.tarjeta {
+  width: 260px;
+  padding: 25px;
+  border-radius: 18px;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.25);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.tarjeta h2 {
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  font-size: 1rem;
+  letter-spacing: 1px;
+}
+
+/* Botones */
+.boton {
+  width: 160px;
+  text-align: center;
+  padding: 10px 0;
+  border-radius: 10px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  color: #000000;
+}
+
+/* === PALETA 1: LUJO NUDE === */
+.lujo-nude {
+  background: #d18e78;
+}
+.lujo-nude .editar { background: #e4b7a0; color: #3c2a23; }
+.lujo-nude .editar:hover { background: #f0cbb8; }
+.lujo-nude .eliminar { background: #b86b59; }
+.lujo-nude .eliminar:hover { background: #cc7f6b; }
+.lujo-nude .ver { background: #d6a083; }
+.lujo-nude .ver:hover { background: #e6bfa7; }
+.lujo-nude .guardar { background: #8c4c3b; }
+.lujo-nude .guardar:hover { background: #a25f4c; }
+.lujo-nude .cancelar { background: #b99384; }
+.lujo-nude .cancelar:hover { background: #caa395; }
+
+/* === PALETA 2: COBRE MODERNO === */
+.cobre-moderno {
+  background: #d18e78;
+}
+.cobre-moderno .editar { background: #975236; }
+.cobre-moderno .editar:hover { background: #69331e; }
+.cobre-moderno .eliminar { background: #7d351e; }
+.cobre-moderno .eliminar:hover { background: #6c3727; }
+.cobre-moderno .ver { background: #cc715d; }
+.cobre-moderno .ver:hover { background: #c37a4f; }
+.cobre-moderno .guardar { background: #905743; }
+.cobre-moderno .guardar:hover { background: #6b463b; }
+.cobre-moderno .cancelar { background: #7d5b4b; }
+.cobre-moderno .cancelar:hover { background: #ad694c; }
+
+/* === PALETA 3: ARENA ROSADA === */
+.arena-rosada {
+  background: #d18e78;
+}
+.arena-rosada .editar { background: #eec1a6; color: #3c2a23; }
+.arena-rosada .editar:hover { background: #f4d2bc; }
+.arena-rosada .eliminar { background: #c6866c; }
+.arena-rosada .eliminar:hover { background: #d79d83; }
+.arena-rosada .ver { background: #f0d1bf; color: #3c2a23; }
+.arena-rosada .ver:hover { background: #f6e0cf; }
+.arena-rosada .guardar { background: #9b5f4c; }
+.arena-rosada .guardar:hover { background: #b0715b; }
+.arena-rosada .cancelar { background: #d8a28b; }
+.arena-rosada .cancelar:hover { background: #e6b9a4; }

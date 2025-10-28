@@ -1,10 +1,7 @@
 :root {
     --color-panel: #ffd9d9;
-    --color-data: #ad826f;
-    --color-acento: #eee3de;
     --color-borde: #c49b63;
-    --color-texto: #222;
-    --color-estrellas: #fbc02d;
+
     --sombra: 0 10px 25px rgba(0, 0, 0, 0.15);
     --fondo-img-min-height: 100vh;
     --barra-home-width: 1500px;
@@ -13,6 +10,18 @@
     --img-admin-width-heigh: 70px;
     --icon-home-font-size: 40px;
     --title-home-font-size: 60px;
+
+    --color-fondo-card: #d18e78;
+    --color-acento: #000000db;
+    --color-texto: #000000e6;
+    --color-estrellas: #ffff00;
+    --color-boton-principal: #69331e;
+    --color-boton-secundario: #7d5b4b;
+    --sombra-card: 0 10px 25px rgba(0,0,0,0.15);
+    --border-radius-card: 25px;
+    --padding-card: 40px;
+    --gap-card: 30px;
+
 }
 
 @import url('../../Tipografias/styles.css');
@@ -25,7 +34,7 @@
 
 body {
     font-family: var(--fuente-titulos);
-    background-image: url('../../../../Imagenes/fondos/fondo_admin.jpg');
+    background-image: url('../../../../Imagenes/fondos/fondo_admin1.jpg');
     background-size: cover;
     background-position: center;
     min-height: var(--fondo-img-min-height);
@@ -145,85 +154,69 @@ body {
     opacity: 1;
 }
 
-/* --- Contenido principal --- */
-/* --- Contenedor principal --- */
+/* Contenedor principal */
 .product {
     display: flex;
-    flex-direction: column; 
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     padding-top: 140px;
-    gap: 40px; 
+    gap: 40px;
 }
 
 .product-card__title {
     font-size: 40px;
-    text-align: center;
     color: #ffd9d9e8;
     text-shadow: #000000 4px 4px 4px;
-    transition: transform 0.3s, color 0.3s;
 }
 
-.product-card__title:hover {
-    color: #977b6b;
-}
-
-/* Contenedor principal del formulario */
+/* Card / formulario */
 .product-card__detalles {
-    background-color: var(--color-data);
-    border-radius: 16px;
-    box-shadow: var(--sombra);
+    background-color: var(--color-fondo-card);
+    border-radius: var(--border-radius-card);
+    box-shadow: var(--sombra-card);
     padding: 40px 50px;
     width: 950px;
+    height: 580px;
     display: flex;
     flex-direction: column;
-    align-items: center;
     gap: 25px;
-    margin-top: 5px;
 }
 
-/* Contenedor interior de dos columnas */
 .product__contenido {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
     gap: 40px;
-    width: 100%;
 }
 
+/* Imagen */
 .product-card__image {
-    position: relative;
+    flex: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
 .product-card__image img {
-    width: 280px;
-    height: auto;
+    width: 300px;
     border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
 }
 
 .edit-image-btn {
     margin-top: 10px;
-    background-color: var(--color-acento);
-    color: #fff;
-    border: none;
-    padding: 8px 14px;
+    background-color: var(--color-boton-principal);
+    color: #000;
     border-radius: 8px;
+    padding: 8px 14px;
     cursor: pointer;
-    font-size: 20px;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    transition: background-color 0.3s;
 }
 
 .edit-image-btn:hover {
-    background-color: #5a362e;
+    background-color: #975236;
 }
-
 
 /* Formulario derecha */
 .product-fields {
@@ -234,7 +227,8 @@ body {
 }
 
 label {
-    font-weight: 600;
+    font-size: 20px;
+    /* font-weight: 600; */
     color: var(--color-acento);
 }
 
@@ -248,19 +242,14 @@ label {
     font-size: 16px;
     background: #fff;
     transition: 0.3s;
-}
-
-.input-area {
     resize: none;
-    overflow: hidden;
 }
-
 
 .input-text:focus,
 .input-select:focus,
 .input-area:focus {
-    border-color: var(--color-borde);
-    box-shadow: 0 0 6px rgba(196, 155, 99, 0.4);
+    border-color: #c49b63;
+    box-shadow: 0 0 6px rgba(196,155,99,0.4);
 }
 
 /* Reseñas y botones */
@@ -276,34 +265,32 @@ label {
     display: flex;
     gap: 15px;
     justify-content: flex-end;
-    width: 100%;
 }
-
 
 .boton {
     border: none;
     padding: 10px 20px;
-    border-radius: 8px;
-    cursor: pointer;
+    border-radius: 10px;
     font-size: 16px;
-    font-weight: 500;
+    font-weight: 600;
+    cursor: pointer;
     transition: 0.3s;
 }
 
 .guardar {
-    background-color: var(--color-acento);
-    color: #000000;
+    background-color: var(--color-boton-principal);
+    color: #000;
 }
 
 .guardar:hover {
-    background-color: #5a362e;
+    background-color: #975236;
 }
 
 .cancelar {
-    background-color: #ccc;
-    color: #000000;
+    background-color: var(--color-boton-secundario);
+    color: #000;
 }
 
 .cancelar:hover {
-    background-color: #707070;
+    background-color: #ad694c;
 }
