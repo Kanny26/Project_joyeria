@@ -1,6 +1,6 @@
-:root {
-    /*  Colores y gradientes */
-    --color-text: #000000;
+:root { 
+    /* Colores y gradientes */ 
+    --color-text: #000000; 
     --color-box: #D9D6D2;
     --color-inputs: #b8b8b8;
     --color-buttons-hover: #8c8c8c;
@@ -10,41 +10,42 @@
     --gradient-panel: linear-gradient(135deg, #6D4F3E, #623B25, #653E2F);
 
     /* Dimensiones generales */
-    --panel-left-width: 500px;
+    --panel-left-width: 450px;
     --panel-left-height: 600px;
     --panel-right-width: 700px;
     --panel-right-height: 600px;
 
-    --panel-box-width: 400px;
+    --panel-box-width: 350px;
     --panel-box-height: 530px;
 
-    /*  Logo */
-    --logo-width: 250px;
+    /* Logo */
+    --logo-width: 300px;
     --logo-height: auto;
     --logo-margin-top: -5px;
 
     /* Botones de rol */
-    --button-img-width: 90px;
-    --button-img-height: 90px;
+    --button-img-width: 80px;
+    --button-img-height: 80px;
     --button-hover-scale: 1.05;
     --button-hover-brightness: 1.1;
 
-    /* Formulario*/
+    /* Formulario */
     --form-container-width: 380px;
     --form-container-height: 500px;
-    --form-padding: 30px 0;
+    --form-padding: 30px 20px;
     --input-width: 280px;
     --input-height: 40px;
     --input-padding: 0 15px;
     --input-icon-size: 18px;
 
-    --login-button-padding: 8px;
+    --login-button-padding: 10px;
     --login-button-margin: 15px auto 0;
 
     --border-radius: 20px;
     --image-opacity: 0.9;
 }
 
+/* Importar tipografías */
 @import url('../Tipografias/styles.css');
 
 * {
@@ -59,45 +60,22 @@ body {
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    background-attachment: fixed;
-    overflow: hidden;
-}
-
-.container {
     display: flex;
-<<<<<<< HEAD:inicio-sesion/inicio-sesion.css
     justify-content: center;
-=======
-    flex-direction: row;
-}
-
-/* Imagen a la izquierda */
-.container__image__main {
-    width: var(--img-fondo-derecho-width);
-    /* height: var(--panel-izquierdo-height); */
-    background-image: url('../../assets/Imagenes/fondos/Signup_background.jpg');
-    opacity: 0.7;
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center;
-}
-
-/* Contenedor principal del formulario */
-.container__login_data {
-    width: var(--contenedor-mensaje-width);
-    height: var(--contenedor-mensaje-height);
-    background-color: var(--color-data); 
-    border-radius: var(--border-radius);
-    display: flex;
-    /* flex-direction: column; */
->>>>>>> Admin:components/css/inicio-sesion.css
     align-items: center;
     min-height: 100vh;
-    gap: 1px;
+}
+
+/* ===== Contenedor principal ===== */
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0;
     flex-wrap: wrap;
 }
 
-/* ===== Panel lateral ===== */
+/* ===== Panel lateral izquierdo ===== */
 .login-panel {
     width: var(--panel-left-width);
     height: var(--panel-left-height);
@@ -118,7 +96,7 @@ body {
     align-items: center;
     padding: var(--form-padding);
     text-align: center;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
 }
 
 .login-panel__logo-image {
@@ -162,7 +140,7 @@ body {
     font-family: var(--fuente-titulos);
 }
 
-/* ===== Contenedor del formulario ===== */
+/* ===== Contenedor derecho con imagen ===== */
 .container__image__main {
     width: var(--panel-right-width);
     height: var(--panel-right-height);
@@ -170,15 +148,17 @@ body {
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    background-image: url('../Imagenes/fondos/banner4.jpg');
+    background-image: url('../../assets/Imagenes/fondos/banner4.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    opacity: var(--image-opacity);
     border-radius: 0 var(--border-radius) var(--border-radius) 0;
     position: relative;
+    opacity: var(--image-opacity);
 }
 
+
+/* ===== Formulario ===== */
 .container__login_data {
     width: var(--form-container-width);
     height: var(--form-container-height);
@@ -188,7 +168,7 @@ body {
     justify-content: center;
     align-items: center;
     padding: var(--form-padding);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
     z-index: 1;
     position: relative;
 }
@@ -212,7 +192,7 @@ h1 {
     width: 100%;
     max-width: var(--input-width);
     height: var(--input-height);
-    margin: 10px 0; /* Espaciado uniforme entre inputs */
+    margin: 10px 0;
     display: flex;
     align-items: center;
     background-color: var(--color-inputs);
@@ -249,32 +229,32 @@ h1 {
     cursor: pointer;
 }
 
-/* ===== Link "Recuperar contraseña" ===== */
+/* ===== Links ===== */
+a {
+    text-decoration: none;
+    color: inherit;
+    font-weight: bold;
+}
+
 .login__link--recuperar {
     width: 100%;
     max-width: var(--input-width);
-    margin: 10px 0 20px 0; 
-    margin-right: 20px;
-    font-size: 15px;
-    text-align: right;
-    font-family: var(--fuente-subtitulos);
+    margin: 10px auto 20px auto;
+    font-size: 14px;
+    text-align: center;
     color: var(--color-text);
-    text-decoration: none;
-    font-weight: bold;
-    transition: color 0.3s ease;
 }
 
 .login__link--recuperar:hover {
-    text-decoration: underline;
     color: var(--color-buttons-hover);
 }
 
-/* ===== Botón Iniciar Sesión ===== */
+/* ===== Botón ===== */
 .login__button {
     width: 100%;
     max-width: 280px;
     height: 40px;
-    margin: 0 0 20px 0; /* separación del botón de otros elementos */
+    margin: var(--login-button-margin);
     font-size: 16px;
     font-weight: 700;
     color: var(--color-text);
@@ -293,7 +273,7 @@ h1 {
     box-shadow: 0 8px 20px rgba(0,0,0,0.3);
 }
 
-/* ===== Footer registro ===== */
+/* ===== Footer de registro ===== */
 .registrate__link {
     width: 100%;
     text-align: center;
@@ -301,21 +281,11 @@ h1 {
     font-size: 14px;
 }
 
-.registrate__link p {
-    font-size: 16px;
-}
-
-.registrate__link a {
-    color: var(--color-text);
-    text-decoration: none;
-    font-weight: bold;
-}
-
 .registrate__link a:hover {
     text-decoration: underline;
 }
 
-/* ===== Formulario centrado verticalmente ===== */
+/* ===== Form centrado verticalmente ===== */
 .container__login_data__content form {
     display: flex;
     flex-direction: column;

@@ -1,11 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign up</title>
-    <link rel="stylesheet" href="../../components/css/tipografias.css" >
+
+    <!-- Tipografías -->
+    <link rel="stylesheet" href="../components/css/Tipografias/styles.css">
+
+    <!-- CSS del login -->
     <link rel="stylesheet" href="../components/css/inicio-sesion.css">
+
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
@@ -19,7 +25,7 @@
                         <h2>ADMIN</h2>
                     </button>
                     <button class="login-panel__button">
-                        <img src="../assets/Imagenes/iconos/Seller.png" alt="Seller Icon">
+                        <img src="../assets/Imagenes/iconos/seller.png" alt="Seller Icon">
                         <h2>SELLER</h2>
                     </button>
                 </section>
@@ -30,45 +36,36 @@
             <section class="container__login_data"> 
                 <div class="container__login_data__content">
                     <header>
-                        <h1>Iniciar Sesion</h1>
+                        <h1>Iniciar Sesión</h1>
                     </header>
 
                     <form>
-                        <!-- Usuario -->
                         <div class="input__group">
                             <i class="fas fa-user icon-left"></i>
                             <input type="text" placeholder="Nombre de usuario" required>
                         </div>
 
-                        <!-- Contraseña -->
                         <div class="input__group">
                             <i class="fas fa-lock icon-left"></i>
-                            <input type="password" id="password" placeholder="Contraseña" required>
-                            <i class="fas fa-eye icon-right"></i>
-                        </div>
-<<<<<<< HEAD:inicio-sesion/inicio-sesion.html
-                        <a href="../Recuperar_seña/ingresar_correo/ing-correo.html" class="login__link--recuperar">¿olvidaste tu contraseña?</a>
-=======
-                        <a href="../public/Recuperar_pass/ing-correo.html" class="login__link">Recuperar contraseña</a>
->>>>>>> Admin:public/inicio-sesion.html
+                            <input type="password" id="password" placeholder="Contraseña" required> 
+                            <i class="fas fa-eye icon-right"></i> 
+                        </div> 
 
+                        <a href="../Recuperar_seña/ingresar_correo/ing-correo.html" class="login__link--recuperar">
+                            ¿Olvidaste tu contraseña?
+                        </a>
 
+                        <button type="submit" class="login__button">Iniciar Sesión</button> 
+                    </form> 
 
-                        <!-- Botón de registro -->
-                        <button type="submit" class="login__button">Iniciar Sesión</button>
-                    </form>
-                    
-<<<<<<< HEAD:inicio-sesion/inicio-sesion.html
-                    <footer class="registrate__link">
-                        <p>¿Aun no tienes una cuenta? <a href="../registro/registro.html">¡Registrate aqui!</a></p>
-=======
-                    <footer class="login__link">
-                        <p>¿Aun no tienes una cuenta? <a href="../public/registro.html">¡Registrate aqui!</a></p>
->>>>>>> Admin:public/inicio-sesion.html
-                    </footer>
-                </div>
-            </section>
-        </main>
-    </div>
+                    <footer class="registrate__link"> 
+                        <p>¿Aún no tienes una cuenta? 
+                            <a href="../registro/registro.html">¡Regístrate aquí!</a>
+                        </p> 
+                    </footer> 
+                </div> 
+            </section> 
+        </main> 
+    </div> 
 </body>
 </html>
