@@ -36,7 +36,7 @@ body {
 .container__image__main {
     width: 800px;
     height: var(--panel-height);
-    background-image: url('../Imagenes/fondos/Fondo_principal.jpg');
+    background-image: url('../../assets/Imagenes/fondos/Fondo_principal.jpg');
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;

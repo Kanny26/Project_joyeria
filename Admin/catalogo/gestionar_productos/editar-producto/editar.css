@@ -34,7 +34,7 @@
 
 body {
     font-family: var(--fuente-titulos);
-    background-image: url('../../../../../../assets/Imagenes/fondos/fondo_admin1.jpg');
+    background-image: url('../../../../Imagenes/fondos/fondo_admin1.jpg');
     background-size: cover;
     background-position: center;
     min-height: var(--fondo-img-min-height);

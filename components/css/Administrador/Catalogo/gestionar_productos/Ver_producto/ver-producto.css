@@ -48,7 +48,7 @@
 
 body {
     font-family: var(--fuente-titulos);
-    background-image: url(../../../../Imagenes/fondos/fondo_admin1.jpg);
+    background-image: url(../../../../../../assets/Imagenes/fondos/fondo_admin1.jpg);
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
