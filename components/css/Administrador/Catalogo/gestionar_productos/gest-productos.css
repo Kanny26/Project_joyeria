@@ -1,0 +1,274 @@
+:root {
+    /* Colores */
+    --color-background: #8a828267;
+    --color-panel: #ffd9d9; 
+    --color-data: #ffcaca;
+    --color-inputs: #b8b8b8;
+    --color-buttons: #b4b4b4;
+    --color-cards: #ffcaca;
+    --color-buttons-hover: #9c9c9c;
+    --color-text: #000000;
+    --color-iconos: #000000;
+
+    /*Dimensiones*/
+    --fondo-img-min-height: 100vh; 
+    --barra-home-width: 1500px;
+    --barra-home-height: 90px;
+    --circulo-img-admin-width-height: 91px;
+    --img-admin-width-heigh: 70px;
+    --icon-home-font-size: 40px;
+    --title-home-font-size: 60px;
+    --title-cards-font-size: 35px;
+    --cards-contenedor-width: 350px;
+    --cards-contenedor-height: 500px;
+    --img-cards-width: 250px;
+    --img-cards-height: 250px;
+
+}
+
+@import url('../../Tipografias/styles.css');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--fuente-titulos); 
+    background-image: url('../../../../../assets/Imagenes/fondos/fondo_admin1.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    min-height: var(--fondo-img-min-height);
+    /* overflow: hidden;  */
+}
+.admin {
+    width: var(--barra-home-width);
+    height: var(--barra-home-height);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: fixed;   
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%); 
+    background-color: var(--color-panel);
+    border-radius: 20px;
+    z-index: 10;
+    padding: 0 20px;
+}
+
+/* Círculo admin a la izquierda */
+.admin__catalogo {
+    width: var(--circulo-img-admin-width-height);
+    height: var(--circulo-img-admin-width-height);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: -15px;
+}
+
+/* Estilo base del texto "Inicio" */
+.admin__catalogo h2 {
+    position: absolute; /* relativo al body si no pones relative en home__admin */
+    bottom: 30px;
+    left: 160px;
+    transform: translateX(-50%) translateY(10px);
+    opacity: 0;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--color-text);
+    pointer-events: none; /* para que no interfiera con el hover */
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* Cuando se pasa el mouse por admin__catalogo */
+.admin__catalogo:hover h2 {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0); /* sube suavemente */
+}
+
+.admin__catalogo img {
+    width: var(--img-admin-width-heigh);
+    height: var(--img-admin-width-heigh);
+}
+
+/* Título centrado */
+.admin__title {
+    flex: 1; /* ocupa el espacio central */
+    text-align: center;
+    font-size: var(--title-home-font-size);
+    font-weight: 700;
+    color: var(--color-text);
+}
+
+/* Casita a la derecha */
+.home__icon {
+    font-size: var(--icon-home-font-size);
+    color: var(--color-iconos);
+    cursor: pointer;
+}
+
+.cards {
+    display: flex; 
+    flex-direction: column;
+    align-items: center;
+    margin-top: 150px;
+}
+
+.cards__title {
+    font-size: 40px;
+    margin-bottom: 40px; 
+    text-align: center;
+    color: #ffd9d9e8;
+    text-shadow: #000000 4px 4px 4px;
+    transition: transform 0.3s, color 0.3s;
+}
+
+.cards__title:hover {
+    color: #977b6b;
+}
+.cards__contenedor {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 60px;
+    justify-items: center;
+    padding: 40px;
+    width: 100%;
+    max-width: 1300px;
+}
+
+/* === CARD PRINCIPAL === */
+.cards__contenedor-content {
+    position: relative;
+    background: #ad826f;
+    width: 300px;
+    height: 470px;
+    border-radius: 25px;
+    padding: 25px 20px 80px; /* deja espacio para el bloque de color */
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    color: #fff;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow: hidden;
+}
+
+/* bloque inferior */
+.cards__contenedor-content::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 260px;
+    background-color: #ad826f;
+    background: linear-gradient(180deg, #7c5443, #744734);
+    border-bottom-left-radius: 25px;
+    border-bottom-right-radius: 25px;
+    z-index: 0;
+}
+
+/* para asegurar que el texto quede encima */
+.cards__contenedor-content h3,
+.cards__contenedor-content h4,
+.cards__contenedor-content .iconos {
+    position: relative;
+    z-index: 1;
+}
+
+
+/* === IMAGEN CIRCULAR === */
+.cards__contenedor-content img {
+    width: 160px;
+    height: 160px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 5px solid #fff;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+    transition: transform 0.3s ease;
+}
+
+.cards__contenedor-content:hover img {
+    transform: scale(0.9);
+}
+
+/* === TEXTOS DEL PRODUCTO === */
+.product__name {
+    font-size: 25px;
+    font-weight: 700;
+    margin-top: 30px;
+    color: #fff;
+    margin-bottom: 20px;
+}
+
+.product__category,
+.product__material,
+.product__price,
+.product__stock {
+    font-size: 18px;
+    color: rgba(255, 255, 255, 0.9);
+    margin-top: 10px;
+}
+
+/* === ICONOS === */
+.iconos {
+    display: flex;
+    justify-content: center;
+    margin-top: 25px;
+    gap: 18px;
+}
+
+.iconos i {
+    font-size: 22px;
+    color: #fff;
+    cursor: pointer;
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.iconos i:hover {
+    transform: scale(1.2);
+    color: #ffd28a;
+}
+
+/* === TÍTULO PRINCIPAL === */
+.cards__title {
+    font-size: 45px;
+    font-weight: 800;
+    color: #f4e9e1;
+    text-shadow: 0 3px 6px rgba(0, 0, 0, 0.4);
+    margin-bottom: 50px;
+    text-align: center;
+    letter-spacing: 1px;
+}
+
+/* Estilos para la barra de desplazamiento personalizada */
+::-webkit-scrollbar {
+    width: 10px;               
+    height: 5px;              
+}
+
+::-webkit-scrollbar-track {
+    background: #4b2c17;       
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #8C6C5A;       
+    border-radius: 10px;       
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #DDA17E;       
+}
+
+::-webkit-scrollbar-corner {
+    background: transparent;
+}
+
+

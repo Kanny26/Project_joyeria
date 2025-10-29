@@ -1,0 +1,196 @@
+:root {
+    --color-background: #f5f5f5;
+    --color-panel: #a6a6a6;
+    --color-box: #939393;
+    --color-data: #d9d9d9c5;
+    --color-inputs: #b8b8b8;
+    --color-buttons: #b4b4b4;
+    --color-buttons-hover: #9c9c9c;
+    --color-text: #000000;
+    --color-iconos: #333;
+
+    --panel-izquierdo-width: 600px;
+    --panel-izquierdo-height: 600px;
+    --img-fondo-derecho-width: 800px;
+
+    --contenedor-izq-logo-btn-width: 400px; 
+    --contenedor-der-logo-btn-width: 550px;
+    --logo-width: 300px;
+    --logo-height: auto;
+    --contenedor-botones-width: 100%;
+    --botones-img-width: 90px;
+    --botones-img-height: 90px;
+
+    --contenedor-mensaje-width:380px;
+    --contenedor-mensaje-height: 500px;
+    --contenedor-interno-width: 100%;
+    --inputs-width: 280px;
+    --inputs-height: 40px;
+
+    --border-radius: 20px;
+}
+@import url('../../Tipografias/styles.css');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--fuente-titulos);
+    background-color: var(--color-background);
+    overflow: hidden; 
+}
+
+.container {
+    display: flex;
+}
+
+/* Panel derecho con fondo */
+.container__image__main {
+    width: var(--img-fondo-derecho-width);
+    background-image: url('../../../assets/Imagenes/fondos/Signup_background.jpg');
+    opacity: 0.7;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+}
+
+/* Contenedor formulario */
+.container__codigo-recuperacion_data {
+    width: var(--contenedor-mensaje-width);
+    height: var(--contenedor-mensaje-height);
+    background-color: var(--color-data); 
+    border-radius: var(--border-radius);
+    display: flex;
+    align-items: center;
+    padding: 30px 0;
+    margin: 50px auto;
+}
+
+/* Contenido del formulario */
+.container__codigo-recuperacion_data__content {
+    width: var(--contenedor-interno-width);
+    font-size: 18px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.container__codigo-recuperacion_data__content p {
+    text-align: center;
+    max-width: 300px;
+    margin: 15px auto;
+    font-size: 15px;
+    line-height: 1.5;
+    font-family: var(--fuente-subtitulos);
+}
+
+
+h1{
+    color: var(--color-text);
+    font-family: var(--fuente-titulos);
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+/* Grupo input con ícono */
+.input__group {
+    width: var(--inputs-width);
+    height: var(--inputs-height);
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    background-color: var(--color-inputs);
+    border-radius: var(--border-radius);
+    padding: 0 15px;
+}
+
+.input__group input {
+    background-color: transparent;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    flex: 1;
+}
+
+.input__group i.icon-left {
+    font-size: 18px;
+    color: var(--color-iconos);
+    margin-right: 10px;
+}
+
+/* Botón */
+.codigo-recuperacion__button {
+    margin: 25px auto 0;   
+    padding: 12px 30px;
+    background-color: var(--color-buttons);
+    color: var(--color-text);
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-weight: 700;
+    font-family: var(--fuente-subtitulos);
+}
+
+.codigo-recuperacion__button:hover {
+    background-color: var(--color-buttons-hover);
+}
+
+/* Panel gris izquierdo */
+.codigo-recuperacion-panel {
+    width: var(--panel-izquierdo-width);
+    height: var(--panel-izquierdo-height);
+    background-color: var(--color-panel);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.codigo-recuperacion-panel__box {
+    width: var(--contenedor-izq-logo-btn-width);
+    height: var(--contenedor-der-logo-btn-width);
+    background-color: var(--color-box);
+    border-radius: var(--border-radius);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 0;
+}
+
+.codigo-recuperacion-panel__logo-image {
+    width: var(--logo-width);
+    height: var(--logo-height);
+    margin-top: -5px;
+}
+
+.codigo-recuperacion-panel__buttons {
+    display: flex;
+    justify-content: space-evenly;
+    width: var(--contenedor-botones-width);
+}
+
+.codigo-recuperacion-panel__button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: none;
+    border: none; 
+    cursor: pointer; 
+} 
+
+.codigo-recuperacion-panel__button img { 
+    width: var(--botones-img-width); 
+    height: var(--botones-img-height); 
+} 
+
+.codigo-recuperacion-panel__button h2 { 
+    margin-top: 10px; 
+    font-weight: 700; 
+    font-size: 20px; 
+    color: var(--color-text); 
+    font-family: var(--fuente-titulos); 
+}

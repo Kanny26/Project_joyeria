@@ -1,0 +1,53 @@
+<!DOCTYPE html> 
+<html lang="es"> 
+<head> 
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Revisar correo</title>
+    <link rel="stylesheet" href="../../components/css/tipografias.css">
+    <link rel="stylesheet" href="../../components/css/Recuperar_pass/ing-codigo.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+    <div class="container"> 
+        <!-- Panel izquierdo -->
+        <aside class="codigo-recuperacion-panel">
+            <div class="codigo-recuperacion-panel__box">
+                <img class="codigo-recuperacion-panel__logo-image" src="../../assets/Imagenes/Logo.png" alt="Logo">
+                <section class="codigo-recuperacion-panel__buttons">
+                    <button class="codigo-recuperacion-panel__button">
+                        <img src="../../assets/Imagenes/iconos/admin.png" alt="Admin Icon">
+                        <h2>ADMIN</h2>
+                    </button>
+                    <button class="codigo-recuperacion-panel__button">
+                        <img src="../../assets/Imagenes/iconos/Seller.png" alt="Seller Icon">
+                        <h2>SELLER</h2>
+                    </button>
+                </section>
+            </div>
+        </aside>
+
+        <!-- Panel derecho -->
+        <main class="container__image__main"> 
+            <section class="container__codigo-recuperacion_data"> 
+                <div class="container__codigo-recuperacion_data__content">
+                    <header>
+                        <h1>Revisa tu correo</h1>
+                    </header> 
+
+                    <p>Hemos enviado un código de verificación a tu correo electrónico. Ingresa el código a continuación para continuar.</p> 
+
+                    <!-- Campo con ícono -->
+                    <div class="input__group"> 
+                        <i class="fas fa-keyboard icon-left"></i>
+                        <input type="email" placeholder="correo@gmail.com" required> 
+                    </div> 
+                    
+                    <!-- Botón --> 
+                    <button type="submit" class="codigo-recuperacion__button">Enviar</button> 
+                </div> 
+            </section> 
+        </main> 
+    </div> 
+</body> 
+</html>
