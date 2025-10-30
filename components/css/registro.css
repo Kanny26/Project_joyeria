@@ -1,36 +1,26 @@
+@import url('../../Tipografias/styles.css');
+
 :root {  
-    /* Colores y gradientes */
     --color-text: #000000;
     --color-box: #D9D6D2;
     --color-inputs: #b8b8b8;
     --color-buttons-hover: #8c8c8c;
-
     --gradient-principal: linear-gradient(135deg, #8C6C5A, #A99481, #C9C2BA);
     --gradient-panel: linear-gradient(135deg, #6D4F3E, #623B25, #653E2F);
     --gradient-button: linear-gradient(135deg, #b4b4b4, #9c9c9c);
-
-
-    /* Dimensiones paneles */
-    --panel-left-width: 500px;  
+    --panel-left-width: 450px;  
     --panel-left-height: 600px;
     --panel-right-width: 700px;  
     --panel-right-height: 600px;
-
-    --panel-box-width: 400px;
+    --panel-box-width: 350px;
     --panel-box-height: 530px;
-
-    /* Logo */
     --logo-width: 250px;
     --logo-height: 250px;
     --logo-margin-top: -5px;
-
-    /* Botones */
     --button-img-width: 90px;
     --button-img-height: 90px;
     --button-hover-scale: 1.05;
     --button-hover-brightness: 1.1;
-
-    /* Formulario */
     --form-container-width: 380px;
     --form-container-height: 500px;
     --form-padding: 30px 0;
@@ -38,15 +28,13 @@
     --input-height: 40px;
     --input-padding: 0 15px;
     --input-icon-size: 18px;
-
     --signup-button-padding: 8px;
     --signup-button-margin: 15px auto 0;
     --border-radius: 20px;
     --image-left-opacity: 0.9;
 }
 
-@import url('../Tipografias/styles.css');
-
+/* estilos generales y layout */
 * {
     margin: 0;
     padding: 0;
@@ -55,26 +43,7 @@
 
 body {
     font-family: var(--fuente-titulos);
-<<<<<<< HEAD:registro/registro.css
     background: var(--gradient-principal);
-=======
-    background-color: var(--color-background);
-    overflow: hidden; 
-}
-
-.container {
-    display: flex;
-    flex-direction: row;
-}
-
-/* Imagen a la izquierda */
-.container__image__main {
-    width: var(--img-fondo-derecho-width);
-    /* height: var(--panel-izquierdo-height); */
-    background-image: url('../../assets/Imagenes/fondos/Signup_background.jpg');
-    opacity: 0.7;
-    background-repeat: no-repeat;
->>>>>>> Admin:components/css/registro.css
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -88,9 +57,9 @@ body {
     align-items: center;
     min-height: 100vh;
     gap: 1px;
-    flex-wrap: wrap;
 }
 
+/* Panel izquierdo */
 .panel-izquierdo {
     width: var(--panel-left-width);
     height: var(--panel-left-height);
@@ -101,6 +70,7 @@ body {
     border-radius: var(--border-radius) 0 0 var(--border-radius);
 }
 
+/* Caja interna */
 .signup-panel__box {
     width: var(--panel-box-width);
     height: var(--panel-box-height);
@@ -161,6 +131,7 @@ body {
     color: var(--color-text);
 }
 
+/* Panel derecho */
 .panel-derecho {
     width: var(--panel-right-width);
     height: var(--panel-right-height);
@@ -168,18 +139,16 @@ body {
     justify-content: center;
     align-items: center;
     flex-direction: column;
-
-    /* Imagen de fondo */
-    background-image: url(../Imagenes/fondos/banner4.jpg);
+    background-image: url('../../assets/Imagenes/fondos/banner4.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     opacity: var(--image-left-opacity);
+    border-radius: 0 20px 20px 0;
     position: relative;
-    padding: 10px;
-    border-radius: 0 20px 30px 0;
 }
 
+/* Formulario derecho */
 .container__signup_data {
     width: var(--form-container-width);
     height: var(--form-container-height);
@@ -202,12 +171,7 @@ body {
     font-family: var(--fuente-subtitulos);
 }
 
-h1 {
-    color: var(--color-text);
-    font-weight: 700;
-    margin-bottom: 20px;
-}
-
+/* Inputs */
 .input__group {
     width: var(--input-width);
     height: var(--input-height);
@@ -230,10 +194,6 @@ h1 {
     padding-right: 30px;
 }
 
-.input__group input::placeholder {
-    color: var(--color-text);
-}
-
 .input__group i.icon-left {
     font-size: var(--input-icon-size);
     color: #333;
@@ -248,12 +208,12 @@ h1 {
     cursor: pointer;
 }
 
-/* ===== Botón Iniciar Sesión ===== */
+/* Botón de registro */
 .signup__button {
     width: 100%;
     max-width: 280px;
     height: 40px;
-    margin: 30px 0 20px 0; /* separación del botón de otros elementos */
+    margin: 30px 0 20px 0;
     font-size: 16px;
     font-weight: 700;
     color: var(--color-text);
@@ -261,7 +221,6 @@ h1 {
     border: none;
     border-radius: var(--border-radius);
     cursor: pointer;
-    text-align: center;
     transition: transform 0.3s ease, filter 0.3s ease, box-shadow 0.3s ease;
     box-shadow: 0 5px 15px rgba(0,0,0,0.2);
 }
@@ -272,7 +231,7 @@ h1 {
     box-shadow: 0 8px 20px rgba(0,0,0,0.3);
 }
 
-
+/* Footer */
 .signup__link {
     margin-top: 20px;
     font-size: 13px;
