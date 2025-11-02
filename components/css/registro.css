@@ -1,6 +1,10 @@
 @import url('../../Tipografias/styles.css');
 
 :root {  
+<<<<<<< HEAD:components/css/registro.css
+=======
+    /* Colores y gradientes */
+>>>>>>> origin/mensajes-recuperarseña:registro/registro.css
     --color-text: #000000;
     --color-box: #D9D6D2;
     --color-inputs: #b8b8b8;
@@ -8,7 +12,14 @@
     --gradient-principal: linear-gradient(135deg, #8C6C5A, #A99481, #C9C2BA);
     --gradient-panel: linear-gradient(135deg, #6D4F3E, #623B25, #653E2F);
     --gradient-button: linear-gradient(135deg, #b4b4b4, #9c9c9c);
+<<<<<<< HEAD:components/css/registro.css
     --panel-left-width: 450px;  
+=======
+
+
+    /* Dimensiones paneles */
+    --panel-left-width: 500px;  
+>>>>>>> origin/mensajes-recuperarseña:registro/registro.css
     --panel-left-height: 600px;
     --panel-right-width: 700px;  
     --panel-right-height: 600px;
@@ -28,6 +39,10 @@
     --input-height: 40px;
     --input-padding: 0 15px;
     --input-icon-size: 18px;
+<<<<<<< HEAD:components/css/registro.css
+=======
+
+>>>>>>> origin/mensajes-recuperarseña:registro/registro.css
     --signup-button-padding: 8px;
     --signup-button-margin: 15px auto 0;
     --border-radius: 20px;
@@ -208,12 +223,20 @@ body {
     cursor: pointer;
 }
 
+<<<<<<< HEAD:components/css/registro.css
 /* Botón de registro */
+=======
+/* ===== Botón Iniciar Sesión ===== */
+>>>>>>> origin/mensajes-recuperarseña:registro/registro.css
 .signup__button {
     width: 100%;
     max-width: 280px;
     height: 40px;
+<<<<<<< HEAD:components/css/registro.css
     margin: 30px 0 20px 0;
+=======
+    margin: 30px 0 20px 0; /* separación del botón de otros elementos */
+>>>>>>> origin/mensajes-recuperarseña:registro/registro.css
     font-size: 16px;
     font-weight: 700;
     color: var(--color-text);
@@ -221,6 +244,10 @@ body {
     border: none;
     border-radius: var(--border-radius);
     cursor: pointer;
+<<<<<<< HEAD:components/css/registro.css
+=======
+    text-align: center;
+>>>>>>> origin/mensajes-recuperarseña:registro/registro.css
     transition: transform 0.3s ease, filter 0.3s ease, box-shadow 0.3s ease;
     box-shadow: 0 5px 15px rgba(0,0,0,0.2);
 }
@@ -231,7 +258,11 @@ body {
     box-shadow: 0 8px 20px rgba(0,0,0,0.3);
 }
 
+<<<<<<< HEAD:components/css/registro.css
 /* Footer */
+=======
+
+>>>>>>> origin/mensajes-recuperarseña:registro/registro.css
 .signup__link {
     margin-top: 20px;
     font-size: 13px;

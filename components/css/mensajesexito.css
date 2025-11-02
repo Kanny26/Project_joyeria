@@ -1,43 +1,47 @@
-:root {
-
-       /* Colores */
-    --color-background: #f5f5f5;
+:root { 
+  /* Colores  */
+    --color-text: #000; 
     --color-panel: #a6a6a6;
-    --color-box: #939393;
-    --color-data: #d9d9d9c5;
-    --color-inputs: #b8b8b8;
-    --color-buttons: #b4b4b4;
-    --color-buttons-hover: #9c9c9c;
-    --color-text: #000000;
-    --color-iconos: #333;
+    --color-box: #d9d6d2;
+    --color-message-box: #f0efed;
+    --color-button: #b4b4b4;
+    --color-button-hover: #9c9c9c;
 
+/* Gradientes  */
+    --gradient-principal: linear-gradient(135deg, #8C6C5A, #A99481, #C9C2BA);
+    --gradient-panel: linear-gradient(135deg, #6D4F3E, #623B25, #653E2F);
 
+  /* Dimensiones globales */
+    --panel-width: 550px;
+    --panel-height: 700px;
 
-    /* Dimensiones contenedores externos derechos e izquierdos */
-    --panel-izquierdo-width: 600px;
-    --panel-izquierdo-height: 600px;
-    --img-fondo-derecho-width: 800px;
+    --panel-derecho-width: 650px;
+    --panel-derecho-height: 700px;
 
-    /*Dimensiones contenedor logo y botones izquierda*/
-    --contenedor-izq-logo-btn-width: 400px; 
-    --contenedor-der-logo-btn-width: 550px;
+    --box-width: 400px;
+    --box-height: 500px;
+
+    --panel-box-width: 400px;
+    --panel-box-height: 500px;
+
     --logo-width: 300px;
     --logo-height: auto;
-    --contenedor-botones-width: 100%;
-    --botones-img-width: 90px;
-    --botones-img-height: 90px;
 
-    /* Dimensiones contenedor formulario */
-    --contenedor-mensaje-width:380px;
-    --contenedor-mensaje-height: 500px;
-    --contenedor-interno-width: 100%;
-    --inputs-width: 280px;
-    --inputs-height: 40px;
+    --button-img-width: 90px;
+    --button-img-height: 90px;
 
+    --icon-thumb-width: 60%;
+
+  /* Bordes y sombras */
     --border-radius: 20px;
+    --border-radius-panel: 30px;
+    --shadow-box: 0 0 20px rgba(0, 0, 0, 0.3);
 
-
-
+  /* Botones  */
+    --button-padding: 12px 30px;
+    --button-font-size: 18px;
+    --button-hover-scale: 1.05;
+    --button-hover-brightness: 1.1;
 }
 
 @import url('../Tipografias/styles.css');
@@ -50,6 +54,7 @@
 
 body {
     font-family: var(--fuente-titulos);
+<<<<<<< HEAD:components/css/mensajesexito.css
     background-color: var(--color-background);
     overflow: hidden; 
 }
@@ -67,82 +72,40 @@ body {
     background-image: url('../../assets/Imagenes/fondos/Signup_background.jpg');
     opacity: 0.7;
     background-repeat: no-repeat;
+=======
+    background: var(--gradient-principal);
+>>>>>>> origin/mensajes-recuperarseña:Mensajes_exito/mensajesexito.css
     background-size: cover;
     background-position: center;
-}
-
-/* Contenedor principal del mensaje */
-.container__success {
-    width: var(--contenedor-mensaje-width);
-    height: var(--contenedor-mensaje-height);
-    background-color: var(--color-data);
-    border-radius: var(--border-radius);
-    display: flex;
-    /* flex-direction: column; */
-    align-items: center;
-    padding: 30px 0;
-    margin: 50px auto;
-}
-
-/* Contenido interno del formulario */
-.container__success__content {
-    width: var(--contenedor-interno-width);
-    font-size: 13px;
-    font-family: var(--font-button); 
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-h1{
-    color: #000000;
-    font-family: var(--fuente-titulos);
-    font-weight: 800;
-    text-align: center;
-    text-justify: inter-word;
-}
-
-.icon__pulgar-arriba{
-    width: 65%;
-    padding: 20px;
-}
-
-/* Botón de registro */
-.success__button {
-    display: block;        
-    margin: 20px auto 0;   
-    padding: 12px 30px;
-    background-color: var(--color-buttons);
-    color: var(--color-text);
-    border: none;
-    border-radius: var(--border-radius);
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    font-weight: bold;
-    line-height: 1;
-    font-family: var(--fuente-subtitulos);
-}
-
-/* Efecto hover del botón */
-.success__button:hover {
-    background-color: var(--color-buttons-hover);
-}
-
-
-/* Panel gris a la derecha */
-.success-panel {
-    width: var(--panel-izquierdo-height);
-    height: var(--panel-izquierdo-width);
-    background-color: var(--color-panel);
+    height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-/* Caja interna con logo y botones */
+/* Estructura principal */
+.success-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1px;
+}
+
+/* Panel izquierdo */
+.success-panel {
+    width: var(--panel-width);
+    height: var(--panel-height);
+    background: var(--gradient-panel);
+    border-radius: var(--border-radius-panel) 0 0 var(--border-radius-panel);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: var(--shadow-box);
+}
+
 .success-panel__box {
-    width: var(--contenedor-izq-logo-btn-width);
-    height: var(--contenedor-der-logo-btn-width);
+    width: var(--panel-box-width);
+    height: var(--panel-box-height);
     background-color: var(--color-box);
     border-radius: var(--border-radius);
     display: flex;
@@ -151,21 +114,18 @@ h1{
     padding: 20px 0;
 }
 
-/* Imagen del logo */
 .success-panel__logo-image {
     width: var(--logo-width);
     height: var(--logo-height);
-    margin-top: -5px;
+    /* margin-bottom: 70px; */
 }
 
-/* Contenedor de botones */
 .success-panel__buttons {
     display: flex;
     justify-content: space-evenly;
-    width: var(--contenedor-botones-width);
+    width: 100%;
 }
 
-/* Botones */
 .success-panel__button {
     display: flex;
     flex-direction: column;
@@ -173,17 +133,91 @@ h1{
     background: none;
     border: none;
     cursor: pointer;
+    transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.success-panel__button:hover {
+    transform: scale(var(--button-hover-scale));
+    filter: brightness(var(--button-hover-brightness));
 }
 
 .success-panel__button img {
-    width: var(--botones-img-width);
-    height: var(--botones-img-height);
+    width: var(--button-img-width);
+    height: var(--button-img-height);
 }
 
 .success-panel__button h2 {
     margin-top: 10px;
-    font-weight: 700;
     font-size: 20px;
     color: var(--color-text);
     font-family: var(--fuente-titulos);
+}
+
+/* Panel derecho (mensaje) */
+.success-message {
+    width: var(--panel-derecho-width);
+    height: var(--panel-derecho-height);
+    background-image: url(../Imagenes/fondos/banner5.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    border-radius: 0 var(--border-radius-panel) var(--border-radius-panel) 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: var(--shadow-box);
+    opacity: 0.9;
+}
+
+.success-box {
+    width: var(--box-width);
+    height: var(--box-height);
+    background-color: var(--color-message-box);
+    border-radius: var(--border-radius);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 30px;
+    box-shadow: var(--shadow-box);
+}
+
+.success-box h1 {
+    font-family: var(--fuente-titulos);
+    font-size: 24px;
+    color: var(--color-text);
+    margin-bottom: 20px;
+}
+
+.icon__pulgar-arriba {
+    width: var(--icon-thumb-width);
+    margin-bottom: 20px;
+}
+
+/* Botón principal */
+.success__button {
+    display: inline-block;
+    padding: 10px 20px; 
+    font-size: 16px; 
+    font-weight: 600;
+    background-color: var(--color-button);
+    border: none;
+    border-radius: 20px;
+    color: var(--color-text);
+    font-family: var(--fuente-subtitulos);
+    cursor: pointer;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+    transition: all 0.25s ease;
+}
+
+.success__button:hover {
+    background-color: var(--color-button-hover);
+    transform: translateY(-1.5px);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.18);
+}
+
+.success__button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
 }
