@@ -1,27 +1,66 @@
 :root {
-    --color-panel: #ffd9d9;
-    --color-borde: #c49b63;
-
-    --sombra: 0 10px 25px rgba(0, 0, 0, 0.15);
-    --fondo-img-min-height: 100vh;
-    --barra-home-width: 1500px;
-    --barra-home-height: 90px;
-    --circulo-img-admin-width-height: 91px;
-    --img-admin-width-heigh: 70px;
-    --icon-home-font-size: 40px;
-    --title-home-font-size: 60px;
-
+    /* 🎨 Colores */
+    --color-fondo-panel: #ffd9d9;
+    --color-borde-principal: #c49b63;
     --color-fondo-card: #d18e78;
-    --color-acento: #000000db;
-    --color-texto: #000000e6;
+    --color-texto-principal: #000000e6;
+    --color-texto-acento: #000000db;
     --color-estrellas: #ffff00;
     --color-boton-principal: #69331e;
+    --color-boton-principal-hover: #975236;
     --color-boton-secundario: #7d5b4b;
-    --sombra-card: 0 10px 25px rgba(0,0,0,0.15);
-    --border-radius-card: 25px;
-    --padding-card: 40px;
-    --gap-card: 30px;
+    --color-boton-secundario-hover: #ad694c;
+    --color-fondo-tooltip: #333;
+    --color-texto-tooltip: #fff;
+    --color-fondo-icono: #fff;
+    --color-borde-input: #ccc;
+    --color-borde-input-focus: #c49b63;
+    --color-sombra-input-focus: rgba(196, 155, 99, 0.4);
+    --color-texto-titulo-card: #ffd9d9e8;
+    --color-sombra-texto: #000000;
 
+    /* 🌫 Sombras */
+    --sombra-general: 0 10px 25px rgba(0, 0, 0, 0.15);
+    --sombra-card: 0 10px 25px rgba(0, 0, 0, 0.15);
+    --sombra-imagen-card: 0 4px 12px rgba(0, 0, 0, 0.1);
+
+    /* 📏 Dimensiones */
+    --alto-minimo-fondo: 100vh;
+    --ancho-barra-home: 1500px;
+    --alto-barra-home: 90px;
+    --diametro-circulo-admin: 91px;
+    --tamano-imagen-admin: 70px;
+    --tamano-icono-home: 40px;
+    --tamano-titulo-home: 60px;
+    --ancho-card: 950px;
+    --alto-card: 580px;
+    --radio-borde-card: 25px;
+    --espaciado-card: 30px;
+    --padding-card-vertical: 40px;
+    --padding-card-horizontal: 50px;
+
+    /* 📏 Iconos laterales */
+    --tamano-icono-lateral: 50px;
+    --radio-borde-icono-lateral: 50%;
+    --distancia-icono-lateral: 60px;
+    --espaciado-iconos-laterales: 15px;
+
+    /* 🧭 Posiciones */
+    --espaciado-superior-cabecera: 20px;
+    --posicion-lateral-iconos: 60px;
+    --posicion-tooltip: 60px;
+
+    /* 🔠 Tipografía */
+    --tamano-texto-base: 16px;
+    --tamano-texto-etiqueta: 20px;
+    --tamano-titulo-card: 40px;
+    --tamano-texto-h2: 20px;
+    --peso-texto-semi: 600;
+    --peso-texto-titulo: 700;
+
+    /* ⚙️ Transiciones */
+    --duracion-transicion: 0.3s;
+    --tipo-transicion: ease;
 }
 
 @import url('../../Tipografias/styles.css');
@@ -37,30 +76,31 @@ body {
     background-image: url('../../../../../../assets/Imagenes/fondos/fondo_admin1.jpg');
     background-size: cover;
     background-position: center;
-    min-height: var(--fondo-img-min-height);
-    color: var(--color-texto);
+    min-height: var(--alto-minimo-fondo);
+    color: var(--color-texto-principal);
 }
 
+/* --- Barra superior --- */
 .admin {
-    width: var(--barra-home-width);
-    height: var(--barra-home-height);
+    width: var(--ancho-barra-home);
+    height: var(--alto-barra-home);
     display: flex;
     align-items: center;
     justify-content: space-between;
-    position: fixed;   
-    top: 20px;
+    position: fixed;
+    top: var(--espaciado-superior-cabecera);
     left: 50%;
-    transform: translateX(-50%); 
-    background-color: var(--color-panel);
+    transform: translateX(-50%);
+    background-color: var(--color-fondo-panel);
     border-radius: 20px;
     z-index: 10;
     padding: 0 20px;
 }
 
-/* Círculo admin a la izquierda */
+/* Círculo admin */
 .admin__catalogo {
-    width: var(--circulo-img-admin-width-height);
-    height: var(--circulo-img-admin-width-height);
+    width: var(--diametro-circulo-admin);
+    height: var(--diametro-circulo-admin);
     border-radius: 50%;
     display: flex;
     justify-content: center;
@@ -68,70 +108,70 @@ body {
     margin-left: -15px;
 }
 
-/* Estilo base del texto "Inicio" */
 .admin__catalogo h2 {
-    position: absolute; /* relativo al body si no pones relative en home__admin */
+    position: absolute;
     bottom: 30px;
     left: 160px;
     transform: translateX(-50%) translateY(10px);
     opacity: 0;
-    font-size: 20px;
-    font-weight: 600;
-    color: var(--color-text);
-    pointer-events: none; /* para que no interfiera con el hover */
-    transition: opacity 0.3s ease, transform 0.3s ease;
+    font-size: var(--tamano-texto-h2);
+    font-weight: var(--peso-texto-semi);
+    color: var(--color-texto-principal);
+    pointer-events: none;
+    transition: opacity var(--duracion-transicion) var(--tipo-transicion),
+                transform var(--duracion-transicion) var(--tipo-transicion);
 }
 
-/* Cuando se pasa el mouse por admin__catalogo */
 .admin__catalogo:hover h2 {
     opacity: 1;
-    transform: translateX(-50%) translateY(0); /* sube suavemente */
+    transform: translateX(-50%) translateY(0);
 }
 
 .admin__catalogo img {
-    width: var(--img-admin-width-heigh);
-    height: var(--img-admin-width-heigh);
+    width: var(--tamano-imagen-admin);
+    height: var(--tamano-imagen-admin);
 }
 
 /* Título centrado */
 .admin__title {
-    flex: 1; /* ocupa el espacio central */
+    flex: 1;
     text-align: center;
-    font-size: var(--title-home-font-size);
-    font-weight: 700;
-    color: var(--color-text);
+    font-size: var(--tamano-titulo-home);
+    font-weight: var(--peso-texto-titulo);
+    color: var(--color-texto-principal);
 }
 
-/* Casita a la derecha */
+/* Icono casita */
 .home__icon {
-    font-size: var(--icon-home-font-size);
-    color: var(--color-iconos);
+    font-size: var(--tamano-icono-home);
+    color: var(--color-iconos-principal);
     cursor: pointer;
 }
 
 /* --- Iconos laterales --- */
 .admin__icons-right {
     position: fixed;
-    right: 60px;
+    right: var(--posicion-lateral-iconos);
     top: 50%;
     transform: translateY(-50%);
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: var(--espaciado-iconos-laterales);
     z-index: 1000;
 }
 
 .icon-container {
-    background: #fff;
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
+    background: var(--color-fondo-icono);
+    border-radius: var(--radio-borde-icono-lateral);
+    width: var(--tamano-icono-lateral);
+    height: var(--tamano-icono-lateral);
     display: flex;
     justify-content: center;
     align-items: center;
-    box-shadow: var(--sombra);
+    box-shadow: var(--sombra-general);
     cursor: pointer;
     position: relative;
+    transition: transform var(--duracion-transicion);
 }
 
 .icon-container:hover {
@@ -140,21 +180,21 @@ body {
 
 .tooltip {
     position: absolute;
-    right: 60px;
-    background: #333;
-    color: #fff;
+    right: var(--posicion-tooltip);
+    background: var(--color-fondo-tooltip);
+    color: var(--color-texto-tooltip);
     padding: 5px 10px;
     border-radius: 6px;
     font-size: 0.85rem;
     opacity: 0;
-    transition: 0.3s;
+    transition: var(--duracion-transicion);
 }
 
 .icon-container:hover .tooltip {
     opacity: 1;
 }
 
-/* Contenedor principal */
+/* --- Contenedor principal --- */
 .product {
     display: flex;
     flex-direction: column;
@@ -165,19 +205,19 @@ body {
 }
 
 .product-card__title {
-    font-size: 40px;
-    color: #ffd9d9e8;
-    text-shadow: #000000 4px 4px 4px;
+    font-size: var(--tamano-titulo-card);
+    color: var(--color-texto-titulo-card);
+    text-shadow: var(--color-sombra-texto) 4px 4px 4px;
 }
 
-/* Card / formulario */
+/* --- Card --- */
 .product-card__detalles {
     background-color: var(--color-fondo-card);
-    border-radius: var(--border-radius-card);
+    border-radius: var(--radio-borde-card);
     box-shadow: var(--sombra-card);
-    padding: 40px 50px;
-    width: 950px;
-    height: 580px;
+    padding: var(--padding-card-vertical) var(--padding-card-horizontal);
+    width: var(--ancho-card);
+    height: var(--alto-card);
     display: flex;
     flex-direction: column;
     gap: 25px;
@@ -190,7 +230,7 @@ body {
     gap: 40px;
 }
 
-/* Imagen */
+/* --- Imagen --- */
 .product-card__image {
     flex: 1;
     display: flex;
@@ -201,24 +241,25 @@ body {
 .product-card__image img {
     width: 300px;
     border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    transition: transform 0.3s ease;
+    box-shadow: var(--sombra-imagen-card);
+    transition: transform var(--duracion-transicion) var(--tipo-transicion);
 }
 
 .edit-image-btn {
     margin-top: 10px;
     background-color: var(--color-boton-principal);
-    color: #000;
+    color: var(--color-texto-principal);
     border-radius: 8px;
     padding: 8px 14px;
     cursor: pointer;
+    transition: background-color var(--duracion-transicion) var(--tipo-transicion);
 }
 
 .edit-image-btn:hover {
-    background-color: #975236;
+    background-color: var(--color-boton-principal-hover);
 }
 
-/* Formulario derecha */
+/* --- Formulario --- */
 .product-fields {
     flex: 1;
     display: flex;
@@ -227,9 +268,8 @@ body {
 }
 
 label {
-    font-size: 20px;
-    /* font-weight: 600; */
-    color: var(--color-acento);
+    font-size: var(--tamano-texto-etiqueta);
+    color: var(--color-texto-acento);
 }
 
 .input-text,
@@ -238,21 +278,21 @@ label {
     width: 100%;
     padding: 10px 12px;
     border-radius: 8px;
-    border: 1px solid #ccc;
-    font-size: 16px;
-    background: #fff;
-    transition: 0.3s;
+    border: 1px solid var(--color-borde-input);
+    font-size: var(--tamano-texto-base);
+    background: var(--color-fondo-icono);
+    transition: var(--duracion-transicion);
     resize: none;
 }
 
 .input-text:focus,
 .input-select:focus,
 .input-area:focus {
-    border-color: #c49b63;
-    box-shadow: 0 0 6px rgba(196,155,99,0.4);
+    border-color: var(--color-borde-input-focus);
+    box-shadow: 0 0 6px var(--color-sombra-input-focus);
 }
 
-/* Reseñas y botones */
+/* --- Reseñas y botones --- */
 .product-card__ratings {
     display: flex;
     align-items: center;
@@ -271,26 +311,26 @@ label {
     border: none;
     padding: 10px 20px;
     border-radius: 10px;
-    font-size: 16px;
-    font-weight: 600;
+    font-size: var(--tamano-texto-base);
+    font-weight: var(--peso-texto-semi);
     cursor: pointer;
-    transition: 0.3s;
+    transition: background-color var(--duracion-transicion);
 }
 
 .guardar {
     background-color: var(--color-boton-principal);
-    color: #000;
+    color: var(--color-texto-principal);
 }
 
 .guardar:hover {
-    background-color: #975236;
+    background-color: var(--color-boton-principal-hover);
 }
 
 .cancelar {
     background-color: var(--color-boton-secundario);
-    color: #000;
+    color: var(--color-texto-principal);
 }
 
 .cancelar:hover {
-    background-color: #ad694c;
+    background-color: var(--color-boton-secundario-hover);
 }

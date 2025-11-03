@@ -1,51 +1,48 @@
-:root { 
-  /* Colores  */
-    --color-text: #000; 
+@import url('../Tipografias/styles.css');
+
+:root {
+    /* Colores */
+    --color-text: #000;
     --color-panel: #a6a6a6;
     --color-box: #d9d6d2;
     --color-message-box: #f0efed;
     --color-button: #b4b4b4;
     --color-button-hover: #9c9c9c;
 
-/* Gradientes  */
+    /* Gradientes */
     --gradient-principal: linear-gradient(135deg, #8C6C5A, #A99481, #C9C2BA);
     --gradient-panel: linear-gradient(135deg, #6D4F3E, #623B25, #653E2F);
 
-  /* Dimensiones globales */
+    /* Dimensiones */
     --panel-width: 550px;
     --panel-height: 700px;
-
     --panel-derecho-width: 650px;
     --panel-derecho-height: 700px;
-
-    --box-width: 400px;
-    --box-height: 500px;
-
-    --panel-box-width: 400px;
-    --panel-box-height: 500px;
-
-    --logo-width: 300px;
-    --logo-height: auto;
-
+    --box-width: 430px;
+    --box-height: 620px;
+    --panel-box-width: 430px;
+    --panel-box-height: 620px;
+    --logo-width: 350px;
+    --logo-height: 350px;
     --button-img-width: 90px;
     --button-img-height: 90px;
-
     --icon-thumb-width: 60%;
+    --button-success-iniciar-width: 300px;
+    --button-success-iniciar-height: 50px;
 
-  /* Bordes y sombras */
+    /* Bordes y sombras */
     --border-radius: 20px;
     --border-radius-panel: 30px;
-    --shadow-box: 0 0 20px rgba(0, 0, 0, 0.3);
+    --shadow-box: 0 0 20px rgba(0,0,0,0.3);
 
-  /* Botones  */
+    /* Botones */
     --button-padding: 12px 30px;
     --button-font-size: 18px;
     --button-hover-scale: 1.05;
     --button-hover-brightness: 1.1;
 }
 
-@import url('../Tipografias/styles.css');
-
+/* Reset */
 * {
     margin: 0;
     padding: 0;
@@ -54,27 +51,7 @@
 
 body {
     font-family: var(--fuente-titulos);
-<<<<<<< HEAD:components/css/mensajesexito.css
-    background-color: var(--color-background);
-    overflow: hidden; 
-}
-
-/*principal*/
-.success {
-    display: flex;
-    flex-direction: row;
-}
-
-/* Imagen a la izquierda */
-.container__image__main {
-    width: var(--img-fondo-derecho-width);
-    /* height: var(--panel-izquierdo-height); */
-    background-image: url('../../assets/Imagenes/fondos/Signup_background.jpg');
-    opacity: 0.7;
-    background-repeat: no-repeat;
-=======
     background: var(--gradient-principal);
->>>>>>> origin/mensajes-recuperarseña:Mensajes_exito/mensajesexito.css
     background-size: cover;
     background-position: center;
     height: 100vh;
@@ -83,13 +60,13 @@ body {
     align-items: center;
 }
 
-/* Estructura principal */
+/* Contenedor principal */
 .success-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 1px;
-}
+    gap: 0px;
+    }
 
 /* Panel izquierdo */
 .success-panel {
@@ -111,19 +88,20 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     padding: 20px 0;
 }
 
 .success-panel__logo-image {
     width: var(--logo-width);
     height: var(--logo-height);
-    /* margin-bottom: 70px; */
 }
 
 .success-panel__buttons {
     display: flex;
     justify-content: space-evenly;
     width: 100%;
+    margin-top: 20px;
 }
 
 .success-panel__button {
@@ -153,12 +131,11 @@ body {
     font-family: var(--fuente-titulos);
 }
 
-/* Panel derecho (mensaje) */
+/* Panel derecho */
 .success-message {
     width: var(--panel-derecho-width);
     height: var(--panel-derecho-height);
-    background-image: url(../Imagenes/fondos/banner5.jpg);
-    background-repeat: no-repeat;
+    background-image: url('../../assets/Imagenes/fondos/banner5.jpg');
     background-size: cover;
     background-position: center;
     border-radius: 0 var(--border-radius-panel) var(--border-radius-panel) 0;
@@ -185,7 +162,7 @@ body {
 
 .success-box h1 {
     font-family: var(--fuente-titulos);
-    font-size: 24px;
+    font-size: 30px;
     color: var(--color-text);
     margin-bottom: 20px;
 }
@@ -197,27 +174,27 @@ body {
 
 /* Botón principal */
 .success__button {
-    display: inline-block;
-    padding: 10px 20px; 
-    font-size: 16px; 
+    height: var(--button-success-iniciar-height);
+    width: var(--button-success-iniciar-width);
+    padding: 10px 20px;
+    font-size: 22px;
     font-weight: 600;
     background-color: var(--color-button);
     border: none;
     border-radius: 20px;
     color: var(--color-text);
-    font-family: var(--fuente-subtitulos);
     cursor: pointer;
-    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 3px 8px rgba(0,0,0,0.15);
     transition: all 0.25s ease;
 }
 
-.success__button:hover {
+    .success__button:hover {
     background-color: var(--color-button-hover);
     transform: translateY(-1.5px);
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.18);
+    box-shadow: 0 5px 10px rgba(0,0,0,0.18);
 }
 
-.success__button:active {
+    .success__button:active {
     transform: translateY(0);
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.12);
 }

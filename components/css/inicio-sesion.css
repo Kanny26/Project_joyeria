@@ -1,48 +1,116 @@
 :root { 
-    /* Colores y gradientes */ 
-    --color-text: #000000; 
-    --color-box: #D9D6D2;
-    --color-inputs: #b8b8b8;
-    --color-buttons-hover: #8c8c8c;
-    --color-icons: #333;
+    /* Colores - Texto e Iconos */
+    --color-texto-principal: #000000;
+    --color-iconos: #333;
+    
+    /* Colores - Fondos */
+    --color-fondo-caja: #D9D6D2;
+    --color-fondo-input: #b8b8b8;
+    --color-fondo-boton: #8c8c8c;
 
-    --gradient-principal: linear-gradient(135deg, #8C6C5A, #A99481, #C9C2BA);
-    --gradient-panel: linear-gradient(135deg, #6D4F3E, #623B25, #653E2F);
+    /* Gradientes */
+    --gradiente-fondo-principal: linear-gradient(135deg, #8C6C5A, #A99481, #C9C2BA);
+    --gradiente-panel-lateral: linear-gradient(135deg, #6D4F3E, #623B25, #653E2F);
 
-    /* Dimensiones generales */
-    --panel-left-width: 450px;
-    --panel-left-height: 600px;
-    --panel-right-width: 700px;
-    --panel-right-height: 600px;
+    /* Dimensiones - Panel Lateral Izquierdo */
+    --ancho-panel-izquierdo: 450px;
+    --alto-panel-izquierdo: 600px;
+    --ancho-caja-panel: 350px;
+    --alto-caja-panel: 530px;
 
-    --panel-box-width: 350px;
-    --panel-box-height: 530px;
+    /* Dimensiones - Panel Derecho con Imagen */
+    --ancho-panel-derecho: 700px;
+    --alto-panel-derecho: 600px;
 
-    /* Logo */
-    --logo-width: 300px;
-    --logo-height: auto;
-    --logo-margin-top: -5px;
+    /* Dimensiones - Formulario */
+    --ancho-contenedor-formulario: 380px;
+    --alto-contenedor-formulario: 500px;
+    --ancho-input: 280px;
+    --alto-input: 40px;
+    --ancho-boton-login: 280px;
+    --alto-boton-login: 40px;
 
-    /* Botones de rol */
-    --button-img-width: 80px;
-    --button-img-height: 80px;
-    --button-hover-scale: 1.05;
-    --button-hover-brightness: 1.1;
+    /* Dimensiones - Logo */
+    --ancho-logo: 300px;
 
-    /* Formulario */
-    --form-container-width: 380px;
-    --form-container-height: 500px;
-    --form-padding: 30px 20px;
-    --input-width: 280px;
-    --input-height: 40px;
-    --input-padding: 0 15px;
-    --input-icon-size: 18px;
+    /* Dimensiones - Botones de Rol */
+    --ancho-imagen-boton-rol: 80px;
+    --alto-imagen-boton-rol: 80px;
 
-    --login-button-padding: 10px;
-    --login-button-margin: 15px auto 0;
+    /* Dimensiones - Iconos */
+    --tamaño-icono-input: 18px;
 
-    --border-radius: 20px;
-    --image-opacity: 0.9;
+    /* Dimensiones - Contenedores */
+    --ancho-contenedor-botones: 100%;
+    --ancho-maximo-input: 280px;
+
+    /* Bordes - Radios */
+    --radio-borde-principal: 20px;
+    --radio-borde-panel-izquierdo: 20px 0 0 20px;
+    --radio-borde-panel-derecho: 0 20px 20px 0;
+
+    /* Sombras */
+    --sombra-caja-panel: 0 4px 15px rgba(0,0,0,0.2);
+    --sombra-formulario: 0 4px 15px rgba(0,0,0,0.2);
+    --sombra-boton-normal: 0 5px 15px rgba(0,0,0,0.2);
+    --sombra-boton-hover: 0 8px 20px rgba(0,0,0,0.3);
+
+    /* Opacidades */
+    --opacidad-sombra-caja: 0.2;
+    --opacidad-sombra-boton-hover: 0.3;
+    --opacidad-imagen-fondo: 0.9;
+
+    /* Espaciados - Padding */
+    --padding-formulario-vertical: 30px;
+    --padding-formulario-horizontal: 20px;
+    --padding-input-horizontal: 15px;
+    --padding-boton-login: 10px;
+    --padding-input-derecho: 30px;
+
+    /* Espaciados - Margin */
+    --margen-logo-superior: -5px;
+    --margen-botones-rol-superior: 25px;
+    --margen-titulo-boton-superior: 10px;
+    --margen-titulo-inferior: 20px;
+    --margen-input-vertical: 10px;
+    --margen-link-recuperar-superior: 10px;
+    --margen-link-recuperar-inferior: 20px;
+    --margen-boton-login-superior: 15px;
+    --margen-boton-login-horizontal: auto;
+    --margen-boton-login-inferior: 0;
+    --margen-link-registro-superior: 10px;
+    --margen-icono-derecho: 10px;
+    --margen-icono-izquierdo: 10px;
+
+    /* Espaciados - Gap */
+    --espacio-contenedor-principal: 0;
+
+    /* Posicionamiento */
+    --posicion-icono-derecho: 15px;
+    --indice-z-formulario: 1;
+
+    /* Tipografía - Tamaños */
+    --tamaño-fuente-titulo-boton-rol: 18px;
+    --tamaño-fuente-input: 16px;
+    --tamaño-fuente-link-recuperar: 14px;
+    --tamaño-fuente-boton-login: 16px;
+    --tamaño-fuente-link-registro: 14px;
+
+    /* Tipografía - Pesos */
+    --peso-fuente-titulo-principal: 700;
+    --peso-fuente-titulo-boton-rol: 700;
+    --peso-fuente-boton-login: 700;
+
+    /* Efectos - Hover */
+    --escala-hover-boton: 1.05;
+    --brillo-hover-boton: 1.1;
+
+    /* Transiciones - Duraciones */
+    --duracion-transicion-boton-rol: 0.2s;
+    --duracion-transicion-boton-login: 0.3s;
+
+    /* Altura mínima */
+    --altura-minima-body: 100vh;
 }
 
 /* Importar tipografías */
@@ -56,14 +124,14 @@
 
 body {
     font-family: var(--fuente-titulos);
-    background: var(--gradient-principal);
+    background: var(--gradiente-fondo-principal);
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
+    min-height: var(--altura-minima-body);
 }
 
 /* ===== Contenedor principal ===== */
@@ -71,45 +139,45 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 0;
+    gap: var(--espacio-contenedor-principal);
     flex-wrap: wrap;
 }
 
 /* ===== Panel lateral izquierdo ===== */
 .login-panel {
-    width: var(--panel-left-width);
-    height: var(--panel-left-height);
-    background: var(--gradient-panel);
+    width: var(--ancho-panel-izquierdo);
+    height: var(--alto-panel-izquierdo);
+    background: var(--gradiente-panel-lateral);
     display: flex;
     justify-content: center;
     align-items: center;
-    border-radius: var(--border-radius) 0 0 var(--border-radius);
+    border-radius: var(--radio-borde-panel-izquierdo);
 }
 
 .login-panel__box {
-    width: var(--panel-box-width);
-    height: var(--panel-box-height);
-    background-color: var(--color-box);
-    border-radius: var(--border-radius);
+    width: var(--ancho-caja-panel);
+    height: var(--alto-caja-panel);
+    background-color: var(--color-fondo-caja);
+    border-radius: var(--radio-borde-principal);
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: var(--form-padding);
+    padding: var(--padding-formulario-vertical) var(--padding-formulario-horizontal);
     text-align: center;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    box-shadow: var(--sombra-caja-panel);
 }
 
 .login-panel__logo-image {
-    width: var(--logo-width);
-    height: var(--logo-height);
-    margin-top: var(--logo-margin-top);
+    width: var(--ancho-logo);
+    height: auto;
+    margin-top: var(--margen-logo-superior);
 }
 
 .login-panel__buttons {
     display: flex;
     justify-content: space-evenly;
-    width: 100%;
-    margin-top: 25px;
+    width: var(--ancho-contenedor-botones);
+    margin-top: var(--margen-botones-rol-superior);
 }
 
 .login-panel__button {
@@ -119,31 +187,31 @@ body {
     background: none;
     border: none;
     cursor: pointer;
-    transition: transform 0.2s ease, filter 0.2s ease;
+    transition: transform var(--duracion-transicion-boton-rol) ease, filter var(--duracion-transicion-boton-rol) ease;
 }
 
 .login-panel__button:hover {
-    transform: scale(var(--button-hover-scale));
-    filter: brightness(var(--button-hover-brightness));
+    transform: scale(var(--escala-hover-boton));
+    filter: brightness(var(--brillo-hover-boton));
 }
 
 .login-panel__button img {
-    width: var(--button-img-width);
-    height: var(--button-img-height);
+    width: var(--ancho-imagen-boton-rol);
+    height: var(--alto-imagen-boton-rol);
 }
 
 .login-panel__button h2 {
-    margin-top: 10px;
-    font-weight: 700;
-    font-size: 18px;
-    color: var(--color-text);
+    margin-top: var(--margen-titulo-boton-superior);
+    font-weight: var(--peso-fuente-titulo-boton-rol);
+    font-size: var(--tamaño-fuente-titulo-boton-rol);
+    color: var(--color-texto-principal);
     font-family: var(--fuente-titulos);
 }
 
 /* ===== Contenedor derecho con imagen ===== */
 .container__image__main {
-    width: var(--panel-right-width);
-    height: var(--panel-right-height);
+    width: var(--ancho-panel-derecho);
+    height: var(--alto-panel-derecho);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -152,29 +220,28 @@ body {
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    border-radius: 0 var(--border-radius) var(--border-radius) 0;
+    border-radius: var(--radio-borde-panel-derecho);
     position: relative;
-    opacity: var(--image-opacity);
+    opacity: var(--opacidad-imagen-fondo);
 }
-
 
 /* ===== Formulario ===== */
 .container__login_data {
-    width: var(--form-container-width);
-    height: var(--form-container-height);
-    background-color: var(--color-box);
-    border-radius: var(--border-radius);
+    width: var(--ancho-contenedor-formulario);
+    height: var(--alto-contenedor-formulario);
+    background-color: var(--color-fondo-caja);
+    border-radius: var(--radio-borde-principal);
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: var(--form-padding);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-    z-index: 1;
+    padding: var(--padding-formulario-vertical) var(--padding-formulario-horizontal);
+    box-shadow: var(--sombra-formulario);
+    z-index: var(--indice-z-formulario);
     position: relative;
 }
 
 .container__login_data__content {
-    width: 100%;
+    width: var(--ancho-contenedor-botones);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -182,22 +249,22 @@ body {
 }
 
 h1 {
-    color: var(--color-text);
-    font-weight: 700;
-    margin-bottom: 20px;
+    color: var(--color-texto-principal);
+    font-weight: var(--peso-fuente-titulo-principal);
+    margin-bottom: var(--margen-titulo-inferior);
 }
 
 /* ===== Inputs ===== */
 .input__group {
-    width: 100%;
-    max-width: var(--input-width);
-    height: var(--input-height);
-    margin: 10px 0;
+    width: var(--ancho-contenedor-botones);
+    max-width: var(--ancho-input);
+    height: var(--alto-input);
+    margin: var(--margen-input-vertical) 0;
     display: flex;
     align-items: center;
-    background-color: var(--color-inputs);
-    border-radius: var(--border-radius);
-    padding: var(--input-padding);
+    background-color: var(--color-fondo-input);
+    border-radius: var(--radio-borde-principal);
+    padding: 0 var(--padding-input-horizontal);
     position: relative;
 }
 
@@ -206,26 +273,26 @@ h1 {
     border: none;
     outline: none;
     font-family: var(--fuente-subtitulos);
-    font-size: 16px;
+    font-size: var(--tamaño-fuente-input);
     flex: 1;
-    padding-right: 30px;
+    padding-right: var(--padding-input-derecho);
 }
 
 .input__group input::placeholder {
-    color: var(--color-text);
+    color: var(--color-texto-principal);
 }
 
 .input__group i.icon-left {
-    font-size: var(--input-icon-size);
-    color: var(--color-icons);
-    margin-right: 10px;
+    font-size: var(--tamaño-icono-input);
+    color: var(--color-iconos);
+    margin-right: var(--margen-icono-izquierdo);
 }
 
 .input__group i.icon-right {
     position: absolute;
-    right: 15px;
-    font-size: var(--input-icon-size);
-    color: var(--color-icons);
+    right: var(--posicion-icono-derecho);
+    font-size: var(--tamaño-icono-input);
+    color: var(--color-iconos);
     cursor: pointer;
 }
 
@@ -233,52 +300,52 @@ h1 {
 a {
     text-decoration: none;
     color: inherit;
-    font-weight: bold;
+    font-weight: var(--peso-fuente-titulo-principal);
 }
 
 .login__link--recuperar {
-    width: 100%;
-    max-width: var(--input-width);
-    margin: 10px auto 20px auto;
-    font-size: 14px;
+    width: var(--ancho-contenedor-botones);
+    max-width: var(--ancho-input);
+    margin: var(--margen-link-recuperar-superior) auto var(--margen-link-recuperar-inferior) auto;
+    font-size: var(--tamaño-fuente-link-recuperar);
     text-align: center;
-    color: var(--color-text);
+    color: var(--color-texto-principal);
 }
 
 .login__link--recuperar:hover {
-    color: var(--color-buttons-hover);
+    color: var(--color-fondo-boton);
 }
 
 /* ===== Botón ===== */
 .login__button {
-    width: 100%;
-    max-width: 280px;
-    height: 40px;
-    margin: var(--login-button-margin);
-    font-size: 16px;
-    font-weight: 700;
-    color: var(--color-text);
-    background-color: var(--color-buttons-hover);
+    width: var(--ancho-contenedor-botones);
+    max-width: var(--ancho-boton-login);
+    height: var(--alto-boton-login);
+    margin: var(--margen-boton-login-superior) var(--margen-boton-login-horizontal) var(--margen-boton-login-inferior);
+    font-size: var(--tamaño-fuente-boton-login);
+    font-weight: var(--peso-fuente-boton-login);
+    color: var(--color-texto-principal);
+    background-color: var(--color-fondo-boton);
     border: none;
-    border-radius: var(--border-radius);
+    border-radius: var(--radio-borde-principal);
     cursor: pointer;
     text-align: center;
-    transition: transform 0.3s ease, filter 0.3s ease, box-shadow 0.3s ease;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    transition: transform var(--duracion-transicion-boton-login) ease, filter var(--duracion-transicion-boton-login) ease, box-shadow var(--duracion-transicion-boton-login) ease;
+    box-shadow: var(--sombra-boton-normal);
 }
 
 .login__button:hover {
-    transform: scale(var(--button-hover-scale));
-    filter: brightness(var(--button-hover-brightness));
-    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    transform: scale(var(--escala-hover-boton));
+    filter: brightness(var(--brillo-hover-boton));
+    box-shadow: var(--sombra-boton-hover);
 }
 
 /* ===== Footer de registro ===== */
 .registrate__link {
-    width: 100%;
+    width: var(--ancho-contenedor-botones);
     text-align: center;
-    margin-top: 10px;
-    font-size: 14px;
+    margin-top: var(--margen-link-registro-superior);
+    font-size: var(--tamaño-fuente-link-registro);
 }
 
 .registrate__link a:hover {
@@ -290,5 +357,5 @@ a {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 100%;
+    width: var(--ancho-contenedor-botones);
 }

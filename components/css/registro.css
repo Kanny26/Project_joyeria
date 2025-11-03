@@ -1,52 +1,120 @@
 @import url('../../Tipografias/styles.css');
 
 :root {  
-<<<<<<< HEAD:components/css/registro.css
-=======
-    /* Colores y gradientes */
->>>>>>> origin/mensajes-recuperarseña:registro/registro.css
-    --color-text: #000000;
-    --color-box: #D9D6D2;
-    --color-inputs: #b8b8b8;
-    --color-buttons-hover: #8c8c8c;
-    --gradient-principal: linear-gradient(135deg, #8C6C5A, #A99481, #C9C2BA);
-    --gradient-panel: linear-gradient(135deg, #6D4F3E, #623B25, #653E2F);
-    --gradient-button: linear-gradient(135deg, #b4b4b4, #9c9c9c);
-<<<<<<< HEAD:components/css/registro.css
-    --panel-left-width: 450px;  
-=======
+    /* Colores - Texto e Iconos */
+    --color-texto-principal: #000000;
+    --color-iconos: #333;
+    
+    /* Colores - Fondos */
+    --color-fondo-caja: #D9D6D2;
+    --color-fondo-input: #b8b8b8;
+    --color-fondo-boton: #8c8c8c;
+    
+    /* Gradientes */
+    --gradiente-fondo-principal: linear-gradient(135deg, #8C6C5A, #A99481, #C9C2BA);
+    --gradiente-panel-izquierdo: linear-gradient(135deg, #6D4F3E, #623B25, #653E2F);
+    --gradiente-boton: linear-gradient(135deg, #b4b4b4, #9c9c9c);
 
+    /* Dimensiones - Panel Izquierdo */
+    --ancho-panel-izquierdo: 500px;
+    --alto-panel-izquierdo: 600px;
+    --ancho-caja-panel-izquierdo: 350px;
+    --alto-caja-panel-izquierdo: 530px;
 
-    /* Dimensiones paneles */
-    --panel-left-width: 500px;  
->>>>>>> origin/mensajes-recuperarseña:registro/registro.css
-    --panel-left-height: 600px;
-    --panel-right-width: 700px;  
-    --panel-right-height: 600px;
-    --panel-box-width: 350px;
-    --panel-box-height: 530px;
-    --logo-width: 250px;
-    --logo-height: 250px;
-    --logo-margin-top: -5px;
-    --button-img-width: 90px;
-    --button-img-height: 90px;
-    --button-hover-scale: 1.05;
-    --button-hover-brightness: 1.1;
-    --form-container-width: 380px;
-    --form-container-height: 500px;
-    --form-padding: 30px 0;
-    --input-width: 280px;
-    --input-height: 40px;
-    --input-padding: 0 15px;
-    --input-icon-size: 18px;
-<<<<<<< HEAD:components/css/registro.css
-=======
+    /* Dimensiones - Panel Derecho */
+    --ancho-panel-derecho: 700px;
+    --alto-panel-derecho: 600px;
 
->>>>>>> origin/mensajes-recuperarseña:registro/registro.css
-    --signup-button-padding: 8px;
-    --signup-button-margin: 15px auto 0;
-    --border-radius: 20px;
-    --image-left-opacity: 0.9;
+    /* Dimensiones - Logo */
+    --ancho-logo: 250px;
+    --alto-logo: 250px;
+
+    /* Dimensiones - Botones de Rol */
+    --ancho-imagen-boton-rol: 90px;
+    --alto-imagen-boton-rol: 90px;
+
+    /* Dimensiones - Formulario */
+    --ancho-contenedor-formulario: 380px;
+    --alto-contenedor-formulario: 500px;
+    --ancho-input: 280px;
+    --alto-input: 40px;
+    --ancho-boton-registro: 280px;
+    --alto-boton-registro: 40px;
+
+    /* Dimensiones - Iconos */
+    --tamaño-icono-input: 18px;
+
+    /* Dimensiones - Contenedores */
+    --ancho-contenedor-botones: 100%;
+    --ancho-maximo-boton-registro: 280px;
+
+    /* Bordes - Radios */
+    --radio-borde-principal: 20px;
+    --radio-borde-panel-izquierdo: 20px 0 0 20px;
+    --radio-borde-panel-derecho: 0 20px 20px 0;
+
+    /* Sombras */
+    --sombra-caja-panel: 0 4px 15px rgba(0,0,0,0.2);
+    --sombra-formulario: 0 4px 15px rgba(0,0,0,0.2);
+    --sombra-boton-normal: 0 5px 15px rgba(0,0,0,0.2);
+    --sombra-boton-hover: 0 8px 20px rgba(0,0,0,0.3);
+
+    /* Opacidades */
+    --opacidad-sombra-caja: 0.2;
+    --opacidad-sombra-boton-hover: 0.3;
+    --opacidad-imagen-fondo: 0.9;
+
+    /* Espaciados - Padding */
+    --padding-caja-panel-vertical: 30px;
+    --padding-caja-panel-horizontal: 0;
+    --padding-formulario-vertical: 30px;
+    --padding-formulario-horizontal: 0;
+    --padding-input-horizontal: 15px;
+    --padding-input-derecho: 30px;
+    --padding-boton-registro: 8px;
+
+    /* Espaciados - Margin */
+    --margen-logo-superior: -5px;
+    --margen-rol-inferior: 15px;
+    --margen-botones-rol-superior: 25px;
+    --margen-titulo-boton-superior: 10px;
+    --margen-input-superior: 15px;
+    --margen-icono-derecho: 10px;
+    --margen-boton-registro-superior: 30px;
+    --margen-boton-registro-horizontal: 0;
+    --margen-boton-registro-inferior: 20px;
+    --margen-link-registro-superior: 20px;
+
+    /* Espaciados - Gap */
+    --espacio-contenedor-principal: 0px;
+
+    /* Posicionamiento */
+    --posicion-icono-derecho: 15px;
+    --indice-z-formulario: 1;
+
+    /* Tipografía - Tamaños */
+    --tamaño-fuente-rol: 24px;
+    --tamaño-fuente-titulo-boton-rol: 16px;
+    --tamaño-fuente-input: 16px;
+    --tamaño-fuente-boton-registro: 16px;
+    --tamaño-fuente-link-footer: 13px;
+    --tamaño-fuente-parrafo-footer: 16px;
+
+    /* Tipografía - Pesos */
+    --peso-fuente-rol: 700;
+    --peso-fuente-titulo-boton-rol: 600;
+    --peso-fuente-boton-registro: 700;
+
+    /* Efectos - Hover */
+    --escala-hover-boton: 1.05;
+    --brillo-hover-boton: 1.1;
+
+    /* Transiciones - Duraciones */
+    --duracion-transicion-boton-rol: 0.2s;
+    --duracion-transicion-boton-registro: 0.3s;
+
+    /* Altura mínima */
+    --altura-minima-contenedor: 100vh;
 }
 
 /* estilos generales y layout */
@@ -58,7 +126,7 @@
 
 body {
     font-family: var(--fuente-titulos);
-    background: var(--gradient-principal);
+    background: var(--gradiente-fondo-principal);
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -70,53 +138,54 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
-    gap: 1px;
+    min-height: var(--altura-minima-contenedor);
+    gap: var(--espacio-contenedor-principal);
 }
 
 /* Panel izquierdo */
 .panel-izquierdo {
-    width: var(--panel-left-width);
-    height: var(--panel-left-height);
-    background: var(--gradient-panel);
+    width: var(--ancho-panel-izquierdo);
+    height: var(--alto-panel-izquierdo);
+    background: var(--gradiente-panel-izquierdo);
     display: flex;
     justify-content: center;
     align-items: center;
-    border-radius: var(--border-radius) 0 0 var(--border-radius);
+    border-radius: var(--radio-borde-panel-izquierdo);
 }
 
-/* Caja interna */
+/* Caja interna panel izquierdo */
 .signup-panel__box {
-    width: var(--panel-box-width);
-    height: var(--panel-box-height);
-    background-color: var(--color-box);
-    border-radius: var(--border-radius);
+    width: var(--ancho-caja-panel-izquierdo);
+    height: var(--alto-caja-panel-izquierdo);
+    background-color: var(--color-fondo-caja);
+    border-radius: var(--radio-borde-principal);
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: var(--form-padding);
+    justify-content: center;
+    padding: var(--padding-caja-panel-vertical) var(--padding-caja-panel-horizontal);
     text-align: center;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    box-shadow: var(--sombra-caja-panel);
 }
 
 .signup-panel__logo-image {
-    width: var(--logo-width);
-    height: var(--logo-height);
-    margin-top: var(--logo-margin-top);
+    width: var(--ancho-logo);
+    height: var(--alto-logo);
+    margin-top: var(--margen-logo-superior);
 }
 
 .signup-panel__rol {
-    margin-bottom: 15px;
-    font-weight: 700;
-    font-size: 24px;
-    color: var(--color-text);
+    margin-bottom: var(--margen-rol-inferior);
+    font-weight: var(--peso-fuente-rol);
+    font-size: var(--tamaño-fuente-rol);
+    color: var(--color-texto-principal);
 }
 
 .signup-panel__buttons {
     display: flex;
     justify-content: space-evenly;
-    width: 100%;
-    margin-top: 25px;
+    width: var(--ancho-contenedor-botones);
+    margin-top: var(--margen-botones-rol-superior);
 }
 
 .signup-panel__button {
@@ -126,30 +195,30 @@ body {
     background: none;
     border: none;
     cursor: pointer;
-    transition: transform 0.2s ease, filter 0.2s ease;
+    transition: transform var(--duracion-transicion-boton-rol) ease, filter var(--duracion-transicion-boton-rol) ease;
 }
 
 .signup-panel__button:hover {
-    transform: scale(var(--button-hover-scale));
-    filter: brightness(var(--button-hover-brightness));
+    transform: scale(var(--escala-hover-boton));
+    filter: brightness(var(--brillo-hover-boton));
 }
 
 .signup-panel__button img {
-    width: var(--button-img-width);
-    height: var(--button-img-height);
+    width: var(--ancho-imagen-boton-rol);
+    height: var(--alto-imagen-boton-rol);
 }
 
 .signup-panel__button span {
-    margin-top: 10px;
-    font-weight: 600;
-    font-size: 16px;
-    color: var(--color-text);
+    margin-top: var(--margen-titulo-boton-superior);
+    font-weight: var(--peso-fuente-titulo-boton-rol);
+    font-size: var(--tamaño-fuente-titulo-boton-rol);
+    color: var(--color-texto-principal);
 }
 
 /* Panel derecho */
 .panel-derecho {
-    width: var(--panel-right-width);
-    height: var(--panel-right-height);
+    width: var(--ancho-panel-derecho);
+    height: var(--alto-panel-derecho);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -158,28 +227,28 @@ body {
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    opacity: var(--image-left-opacity);
-    border-radius: 0 20px 20px 0;
+    opacity: var(--opacidad-imagen-fondo);
+    border-radius: var(--radio-borde-panel-derecho);
     position: relative;
 }
 
 /* Formulario derecho */
 .container__signup_data {
-    width: var(--form-container-width);
-    height: var(--form-container-height);
-    background-color: var(--color-box);
-    border-radius: var(--border-radius);
+    width: var(--ancho-contenedor-formulario);
+    height: var(--alto-contenedor-formulario);
+    background-color: var(--color-fondo-caja);
+    border-radius: var(--radio-borde-principal);
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: var(--form-padding);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-    z-index: 1;
+    padding: var(--padding-formulario-vertical) var(--padding-formulario-horizontal);
+    box-shadow: var(--sombra-formulario);
+    z-index: var(--indice-z-formulario);
     position: relative;
 }
 
 .container__signup_data__content {
-    width: 100%;
+    width: var(--ancho-contenedor-botones);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -188,14 +257,14 @@ body {
 
 /* Inputs */
 .input__group {
-    width: var(--input-width);
-    height: var(--input-height);
-    margin-top: 15px;
+    width: var(--ancho-input);
+    height: var(--alto-input);
+    margin-top: var(--margen-input-superior);
     display: flex;
     align-items: center;
-    background-color: var(--color-inputs);
-    border-radius: var(--border-radius);
-    padding: var(--input-padding);
+    background-color: var(--color-fondo-input);
+    border-radius: var(--radio-borde-principal);
+    padding: 0 var(--padding-input-horizontal);
     position: relative;
 }
 
@@ -204,79 +273,64 @@ body {
     border: none;
     outline: none;
     font-family: var(--fuente-subtitulos);
-    font-size: 16px;
+    font-size: var(--tamaño-fuente-input);
     flex: 1;
-    padding-right: 30px;
+    padding-right: var(--padding-input-derecho);
 }
 
 .input__group i.icon-left {
-    font-size: var(--input-icon-size);
-    color: #333;
-    margin-right: 10px;
+    font-size: var(--tamaño-icono-input);
+    color: var(--color-iconos);
+    margin-right: var(--margen-icono-derecho);
 }
 
 .input__group i.icon-right {
     position: absolute;
-    right: 15px;
-    font-size: var(--input-icon-size);
-    color: #333;
+    right: var(--posicion-icono-derecho);
+    font-size: var(--tamaño-icono-input);
+    color: var(--color-iconos);
     cursor: pointer;
 }
 
-<<<<<<< HEAD:components/css/registro.css
 /* Botón de registro */
-=======
-/* ===== Botón Iniciar Sesión ===== */
->>>>>>> origin/mensajes-recuperarseña:registro/registro.css
 .signup__button {
-    width: 100%;
-    max-width: 280px;
-    height: 40px;
-<<<<<<< HEAD:components/css/registro.css
-    margin: 30px 0 20px 0;
-=======
-    margin: 30px 0 20px 0; /* separación del botón de otros elementos */
->>>>>>> origin/mensajes-recuperarseña:registro/registro.css
-    font-size: 16px;
-    font-weight: 700;
-    color: var(--color-text);
-    background-color: var(--color-buttons-hover);
+    width: var(--ancho-contenedor-botones);
+    max-width: var(--ancho-maximo-boton-registro);
+    height: var(--alto-boton-registro);
+    margin: var(--margen-boton-registro-superior) var(--margen-boton-registro-horizontal) var(--margen-boton-registro-inferior);
+    font-size: var(--tamaño-fuente-boton-registro);
+    font-weight: var(--peso-fuente-boton-registro);
+    color: var(--color-texto-principal);
+    background-color: var(--color-fondo-boton);
     border: none;
-    border-radius: var(--border-radius);
+    border-radius: var(--radio-borde-principal);
     cursor: pointer;
-<<<<<<< HEAD:components/css/registro.css
-=======
     text-align: center;
->>>>>>> origin/mensajes-recuperarseña:registro/registro.css
-    transition: transform 0.3s ease, filter 0.3s ease, box-shadow 0.3s ease;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    transition: transform var(--duracion-transicion-boton-registro) ease, filter var(--duracion-transicion-boton-registro) ease, box-shadow var(--duracion-transicion-boton-registro) ease;
+    box-shadow: var(--sombra-boton-normal);
 }
 
 .signup__button:hover {
-    transform: scale(var(--button-hover-scale));
-    filter: brightness(var(--button-hover-brightness));
-    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    transform: scale(var(--escala-hover-boton));
+    filter: brightness(var(--brillo-hover-boton));
+    box-shadow: var(--sombra-boton-hover);
 }
 
-<<<<<<< HEAD:components/css/registro.css
 /* Footer */
-=======
-
->>>>>>> origin/mensajes-recuperarseña:registro/registro.css
 .signup__link {
-    margin-top: 20px;
-    font-size: 13px;
+    margin-top: var(--margen-link-registro-superior);
+    font-size: var(--tamaño-fuente-link-footer);
     text-align: center;
 }
 
 .signup__link a {
-    color: var(--color-text);
+    color: var(--color-texto-principal);
     text-decoration: none;
-    font-weight: bold;
+    font-weight: var(--peso-fuente-rol);
 }
 
 .signup__link p {
-    font-size: 16px;
+    font-size: var(--tamaño-fuente-parrafo-footer);
 }
 
 .signup__link a:hover {
