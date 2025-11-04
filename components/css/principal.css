@@ -1,81 +1,10 @@
+@import url(../../components/css/globales.css);
+
 :root {   
-    /* Colores - Texto */
-    --color-texto-principal: #000;
-    
-    /* Colores - Fondos */
-    --color-fondo-caja: #D9D6D2;
-    --color-fondo-panel: #E0DDD8;
-
-    /* Gradientes - Fondos */
-    --gradiente-fondo-principal: linear-gradient(135deg, #8C6C5A, #A99481, #C9C2BA);
-    --gradiente-panel-derecho: linear-gradient(135deg, #6D4F3E, #623B25, #653E2F);
-    --gradiente-marron: linear-gradient(135deg, #6D4F3E, #8A4F2E, #9C6651);
-    --gradiente-suave-radial: radial-gradient(circle, #C9C2BA, #A99481, #8C6C5A);
-    --gradiente-dorado: linear-gradient(to right, #D4AF37, #A99481);
-
-    /* Dimensiones - Panel Izquierdo */
-    --ancho-imagen-principal: 900px;
-    --alto-panel: 800px;
-
-    /* Dimensiones - Panel Derecho */
-    --ancho-panel-derecho: 675px;
-    --ancho-caja-interna: 500px;
-    --alto-caja-interna: 690px;
-
-    /* Dimensiones - Logo */
-    --ancho-logo: 410px;
-    --alto-logo: 410px;
-
-    /* Dimensiones - Botones */
-    --ancho-imagen-boton: 130px;
-    --alto-imagen-boton: 130px;
-    --ancho-contenedor-botones: 100%;
-
-    /* Bordes - Radios */
-    --radio-borde-panel-izquierdo: 30px 0 0 20px;
-    --radio-borde-panel-derecho: 0 20px 30px 0;
-    --radio-borde-caja: 20px;
-
-    /* Sombras */
-    --sombra-caja-interna: 0 0 20px rgba(0,0,0,0.5);
-    --sombra-imagen-principal: 0 4px 10px rgba(0,0,0,0.2);
-
-    /* Opacidades para sombras */
-    --opacidad-sombra-caja: 0.5;
-    --opacidad-sombra-imagen: 0.2;
-
-    /* Espaciados - Padding */
-    --padding-caja-vertical: 25px;
-    --padding-caja-horizontal: 0;
-
-    /* Espaciados - Margin */
-    --margen-logo-inferior: 8px;
-    --margen-bienvenida-superior: -81px;
-    --margen-bienvenida-inferior: 30px;
-    --margen-rol-inferior: 10px;
-    --margen-botones-superior: 12px;
-    --margen-titulo-boton-superior: 10px;
-
-    /* Espaciados - Gap */
-    --espacio-contenedor-principal: 0px;
-
-    /* Tipografía - Tamaños */
-    --tamaño-fuente-bienvenida: 42px;
-    --tamaño-fuente-rol: 35px;
-    --tamaño-fuente-titulo-boton: 25px;
-
-    /* Tipografía - Pesos */
-    --peso-fuente-titulo-boton: 600;
-
     /* Efectos - Hover */
     --escala-hover-boton: 1.05;
     --brillo-hover-boton: 1.1;
 
-    /* Transiciones - Duraciones */
-    --duracion-transicion-boton: 0.2s;
-
-    /* Altura de vista */
-    --altura-contenedor-principal: 100vh;
 }
 
 @import url('../Tipografias/styles.css');
@@ -101,31 +30,31 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: var(--altura-contenedor-principal);
-    gap: var(--espacio-contenedor-principal);
+    height: var(--alto-vista-completa);
+    gap: var(--separacion-paneles);
 }
 
 /* Panel izquierdo: imagen */
 .container__image__main {
-    width: var(--ancho-imagen-principal);
-    height: var(--alto-panel);
+    width: var(--ancho-panel-izquierdo);
+    height: var(--alto-paneles);
     background-image: url('../../assets/Imagenes/fondos/banner4.jpg');
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
-    border-radius: var(--radio-borde-panel-izquierdo);
+    border-radius: var(--radio-bordes-panel-izquierdo);
     box-shadow: var(--sombra-imagen-principal);
 }
 
 /* Panel derecho */
 .login-panel {
     width: var(--ancho-panel-derecho);
-    height: var(--alto-panel);
+    height: var(--alto-paneles);
     background: var(--gradiente-panel-derecho);
     display: flex;
     justify-content: center;
     align-items: center;
-    border-radius: var(--radio-borde-panel-derecho);
+    border-radius: var(--radio-bordes-panel-derecho);
 }
 
 /* Caja interna dentro del panel derecho */
@@ -133,7 +62,7 @@ body {
     width: var(--ancho-caja-interna);
     height: var(--alto-caja-interna);
     background-color: var(--color-fondo-caja);
-    border-radius: var(--radio-borde-caja);
+    border-radius: var(--radio-bordes-caja);
     box-shadow: var(--sombra-caja-interna);
     display: flex;
     flex-direction: column;

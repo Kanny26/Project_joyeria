@@ -1,73 +1,27 @@
+@import url('../../../../../../components/css/global.css');
+
 :root {
-    /* 🎨 Colores */
-    --color-fondo-panel: #ffd9d9;
-    --color-borde-principal: #c49b63;
-    --color-fondo-card: #d18e78;
-    --color-texto-principal: #000000e6;
-    --color-texto-acento: #000000db;
-    --color-estrellas: #ffff00;
-    --color-boton-principal: #69331e;
-    --color-boton-principal-hover: #975236;
-    --color-boton-secundario: #7d5b4b;
-    --color-boton-secundario-hover: #ad694c;
-    --color-fondo-tooltip: #333;
-    --color-texto-tooltip: #fff;
-    --color-fondo-icono: #fff;
-    --color-borde-input: #ccc;
-    --color-borde-input-focus: #c49b63;
-    --color-sombra-input-focus: rgba(196, 155, 99, 0.4);
-    --color-texto-titulo-card: #ffd9d9e8;
-    --color-sombra-texto: #000000;
-
-    /* 🌫 Sombras */
-    --sombra-general: 0 10px 25px rgba(0, 0, 0, 0.15);
-    --sombra-card: 0 10px 25px rgba(0, 0, 0, 0.15);
-    --sombra-imagen-card: 0 4px 12px rgba(0, 0, 0, 0.1);
-
-    /* 📏 Dimensiones */
-    --alto-minimo-fondo: 100vh;
-    --ancho-barra-home: 1500px;
-    --alto-barra-home: 90px;
-    --diametro-circulo-admin: 91px;
-    --tamano-imagen-admin: 70px;
-    --tamano-icono-home: 40px;
-    --tamano-titulo-home: 60px;
-    --ancho-card: 950px;
-    --alto-card: 580px;
-    --radio-borde-card: 25px;
-    --espaciado-card: 30px;
-    --padding-card-vertical: 40px;
-    --padding-card-horizontal: 50px;
-
-    /* 📏 Iconos laterales */
-    --tamano-icono-lateral: 50px;
-    --radio-borde-icono-lateral: 50%;
-    --distancia-icono-lateral: 60px;
-    --espaciado-iconos-laterales: 15px;
-
-    /* 🧭 Posiciones */
-    --espaciado-superior-cabecera: 20px;
-    --posicion-lateral-iconos: 60px;
-    --posicion-tooltip: 60px;
-
-    /* 🔠 Tipografía */
-    --tamano-texto-base: 16px;
-    --tamano-texto-etiqueta: 20px;
-    --tamano-titulo-card: 40px;
-    --tamano-texto-h2: 20px;
-    --peso-texto-semi: 600;
-    --peso-texto-titulo: 700;
-
-    /* ⚙️ Transiciones */
-    --duracion-transicion: 0.3s;
-    --tipo-transicion: ease;
+    /* Dimensiones - Círculo Admin */
+    --tamaño-imagen-admin: var(--alto-imagen-admin);
+    
+    /* Dimensiones - Iconos */
+    --tamaño-icono-home: var(--alto-boton-login-registro);
+    --tamaño-icono-lateral: var(--alto-boton-iniciar);
+    
+    /* Tipografía - Tamaños */
+    --tamaño-texto-base: var(--radio-bordes-tarjeta);
+    --tamaño-texto-etiqueta: var(--margen-boton-inferior);
+    --tamaño-titulo-card: var(--alto-boton-login-registro);
+    --tamaño-titulo-home: var(--posicion-lateral-iconos);
+    --tamaño-texto-h2: var(--margen-boton-inferior);
+    
 }
 
 @import url('../../Tipografias/styles.css');
 
 * {
-    margin: 0;
-    padding: 0;
+    margin: var(--desplazamiento-active-boton);
+    padding: var(--desplazamiento-active-boton);
     box-sizing: border-box;
 }
 
@@ -88,13 +42,13 @@ body {
     align-items: center;
     justify-content: space-between;
     position: fixed;
-    top: var(--espaciado-superior-cabecera);
+    top: var(--posicion-top-cabecera);
     left: 50%;
-    transform: translateX(-50%);
+    transform: var(--transformacion-centrar-x);
     background-color: var(--color-fondo-panel);
-    border-radius: 20px;
-    z-index: 10;
-    padding: 0 20px;
+    border-radius: var(--radio-bordes-panel);
+    z-index: var(--z-index-panel);
+    padding: var(--padding-panel);
 }
 
 /* Círculo admin */
@@ -105,45 +59,44 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-left: -15px;
+    margin-left: var(--margen-left-circulo-admin);
 }
 
 .admin__catalogo h2 {
     position: absolute;
-    bottom: 30px;
-    left: 160px;
-    transform: translateX(-50%) translateY(10px);
-    opacity: 0;
-    font-size: var(--tamano-texto-h2);
+    bottom: var(--posicion-bottom-texto-catalogo);
+    left: var(--posicion-left-texto-catalogo);
+    transform: var(--transformacion-texto-catalogo-inicial);
+    opacity: var(--opacidad-texto-catalogo-inicial);
+    font-size: var(--tamaño-texto-h2);
     font-weight: var(--peso-texto-semi);
     color: var(--color-texto-principal);
     pointer-events: none;
-    transition: opacity var(--duracion-transicion) var(--tipo-transicion),
-                transform var(--duracion-transicion) var(--tipo-transicion);
+    transition: var(--transicion-opacidad-transform);
 }
 
 .admin__catalogo:hover h2 {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
+    opacity: var(--opacidad-texto-catalogo-hover);
+    transform: var(--transformacion-texto-catalogo-hover);
 }
 
 .admin__catalogo img {
-    width: var(--tamano-imagen-admin);
-    height: var(--tamano-imagen-admin);
+    width: var(--tamaño-imagen-admin);
+    height: var(--tamaño-imagen-admin);
 }
 
 /* Título centrado */
 .admin__title {
-    flex: 1;
+    flex: var(--indice-z-formulario);
     text-align: center;
-    font-size: var(--tamano-titulo-home);
+    font-size: var(--tamaño-titulo-home);
     font-weight: var(--peso-texto-titulo);
     color: var(--color-texto-principal);
 }
 
 /* Icono casita */
 .home__icon {
-    font-size: var(--tamano-icono-home);
+    font-size: var(--tamaño-icono-home);
     color: var(--color-iconos-principal);
     cursor: pointer;
 }
@@ -153,29 +106,29 @@ body {
     position: fixed;
     right: var(--posicion-lateral-iconos);
     top: 50%;
-    transform: translateY(-50%);
+    transform: var(--transformacion-centrar-y);
     display: flex;
     flex-direction: column;
-    gap: var(--espaciado-iconos-laterales);
-    z-index: 1000;
+    gap: var(--separacion-iconos-laterales);
+    z-index: var(--z-index-iconos);
 }
 
 .icon-container {
     background: var(--color-fondo-icono);
-    border-radius: var(--radio-borde-icono-lateral);
-    width: var(--tamano-icono-lateral);
-    height: var(--tamano-icono-lateral);
+    border-radius: var(--radio-bordes-icono-lateral);
+    width: var(--tamaño-icono-lateral);
+    height: var(--tamaño-icono-lateral);
     display: flex;
     justify-content: center;
     align-items: center;
     box-shadow: var(--sombra-general);
     cursor: pointer;
     position: relative;
-    transition: transform var(--duracion-transicion);
+    transition: var(--transicion-icono);
 }
 
 .icon-container:hover {
-    transform: scale(1.1);
+    transform: scale(var(--escala-icono-hover));
 }
 
 .tooltip {
@@ -183,15 +136,15 @@ body {
     right: var(--posicion-tooltip);
     background: var(--color-fondo-tooltip);
     color: var(--color-texto-tooltip);
-    padding: 5px 10px;
-    border-radius: 6px;
-    font-size: 0.85rem;
-    opacity: 0;
+    padding: var(--padding-tooltip);
+    border-radius: var(--radio-bordes-tooltip);
+    font-size: var(--desplazamiento-active-boton).85rem;
+    opacity: var(--opacidad-tooltip-inicial);
     transition: var(--duracion-transicion);
 }
 
 .icon-container:hover .tooltip {
-    opacity: 1;
+    opacity: var(--opacidad-tooltip-hover);
 }
 
 /* --- Contenedor principal --- */
@@ -200,12 +153,12 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding-top: 140px;
-    gap: 40px;
+    padding-top: var(--margen-top-contenedor);
+    gap: var(--separacion-producto);
 }
 
 .product-card__title {
-    font-size: var(--tamano-titulo-card);
+    font-size: var(--tamaño-titulo-card);
     color: var(--color-texto-titulo-card);
     text-shadow: var(--color-sombra-texto) 4px 4px 4px;
 }
@@ -213,46 +166,46 @@ body {
 /* --- Card --- */
 .product-card__detalles {
     background-color: var(--color-fondo-card);
-    border-radius: var(--radio-borde-card);
+    border-radius: var(--radio-bordes-card);
     box-shadow: var(--sombra-card);
     padding: var(--padding-card-vertical) var(--padding-card-horizontal);
     width: var(--ancho-card);
     height: var(--alto-card);
     display: flex;
     flex-direction: column;
-    gap: 25px;
+    gap: var(--margen-botones-rol-superior);
 }
 
 .product__contenido {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    gap: 40px;
+    gap: var(--separacion-contenido);
 }
 
 /* --- Imagen --- */
 .product-card__image {
-    flex: 1;
+    flex: var(--indice-z-formulario);
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
 .product-card__image img {
-    width: 300px;
-    border-radius: 12px;
+    width: var(--ancho-boton-iniciar);
+    border-radius: var(--radio-bordes-imagen);
     box-shadow: var(--sombra-imagen-card);
     transition: transform var(--duracion-transicion) var(--tipo-transicion);
 }
 
 .edit-image-btn {
-    margin-top: 10px;
+    margin-top: var(--margen-top-imagen-boton);
     background-color: var(--color-boton-principal);
     color: var(--color-texto-principal);
-    border-radius: 8px;
-    padding: 8px 14px;
+    border-radius: var(--radio-bordes-boton);
+    padding: var(--padding-boton);
     cursor: pointer;
-    transition: background-color var(--duracion-transicion) var(--tipo-transicion);
+    transition: var(--transicion-boton);
 }
 
 .edit-image-btn:hover {
@@ -261,14 +214,14 @@ body {
 
 /* --- Formulario --- */
 .product-fields {
-    flex: 1;
+    flex: var(--indice-z-formulario);
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: var(--separacion-campos);
 }
 
 label {
-    font-size: var(--tamano-texto-etiqueta);
+    font-size: var(--tamaño-texto-etiqueta);
     color: var(--color-texto-acento);
 }
 
@@ -276,10 +229,10 @@ label {
 .input-select,
 .input-area {
     width: 100%;
-    padding: 10px 12px;
-    border-radius: 8px;
-    border: 1px solid var(--color-borde-input);
-    font-size: var(--tamano-texto-base);
+    padding: var(--padding-input);
+    border-radius: var(--radio-bordes-input);
+    border: var(--espaciado-letras-titulo) solid var(--color-fondo-borde-input);
+    font-size: var(--tamaño-texto-base);
     background: var(--color-fondo-icono);
     transition: var(--duracion-transicion);
     resize: none;
@@ -289,32 +242,32 @@ label {
 .input-select:focus,
 .input-area:focus {
     border-color: var(--color-borde-input-focus);
-    box-shadow: 0 0 6px var(--color-sombra-input-focus);
+    box-shadow: var(--desplazamiento-active-boton) var(--desplazamiento-active-boton) var(--radio-bordes-tooltip) var(--color-sombra-input-focus);
 }
 
 /* --- Reseñas y botones --- */
 .product-card__ratings {
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: var(--separacion-estrellas);
     color: var(--color-estrellas);
-    font-size: 18px;
+    font-size: var(--separacion-iconos);
 }
 
 .product-card__acciones {
     display: flex;
-    gap: 15px;
+    gap: var(--separacion-botones);
     justify-content: flex-end;
 }
 
 .boton {
     border: none;
-    padding: 10px 20px;
-    border-radius: 10px;
-    font-size: var(--tamano-texto-base);
+    padding: var(--padding-boton);
+    border-radius: var(--radio-bordes-boton);
+    font-size: var(--tamaño-texto-base);
     font-weight: var(--peso-texto-semi);
     cursor: pointer;
-    transition: background-color var(--duracion-transicion);
+    transition: var(--transicion-boton);
 }
 
 .guardar {

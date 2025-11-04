@@ -1,120 +1,20 @@
-    :root {
-    /* Colores - Texto e Iconos */
-    --color-texto-principal: #000;
-    --color-iconos: #4f2a09;
-    
-    /* Colores - Fondos */
-    --color-fondo-panel-lateral: #a6a6a6;
-    --color-fondo-caja-panel: #d9d6d2;
-    --color-fondo-caja-mensaje: #f0efed;
-    --color-fondo-input: #dcdad8;
-    --color-fondo-boton: #b4b4b4;
-    --color-fondo-boton-hover: #aaa9a9;
+@import url(../../components/css/globales.css);
 
-    /* Gradientes */
-    --gradiente-fondo-principal: linear-gradient(135deg, #8C6C5A, #A99481, #C9C2BA);
-    --gradiente-panel-izquierdo: linear-gradient(135deg, #6D4F3E, #623B25, #653E2F);
-
-    /* Dimensiones - Panel Izquierdo */
-    --ancho-panel-izquierdo: 550px;
-    --alto-panel-izquierdo: 700px;
-    --ancho-caja-panel-izquierdo: 450px;
-    --alto-caja-panel-izquierdo: 620px;
-
-    /* Dimensiones - Panel Derecho */
-    --ancho-panel-derecho: 650px;
-    --alto-panel-derecho: 700px;
-    --ancho-caja-mensaje: 450px;
-    --alto-caja-mensaje: 620px;
-
-    /* Dimensiones - Logo */
-    --ancho-logo: 350px;
-    --alto-logo: 350px;
-
-    /* Dimensiones - Input */
-    --ancho-input: 300px;
-    --alto-input: 50px;
-
-    /* Dimensiones - Botones de Navegación */
-    --ancho-imagen-boton-navegacion: 90px;
-    --alto-imagen-boton-navegacion: 90px;
-
-    /* Dimensiones - Botón Principal */
-    --ancho-maximo-boton-principal: 300px;
-    --alto-boton-principal: 50px;
-
-    /* Dimensiones - Contenedores */
-    --ancho-contenedor-botones: 100%;
-    --ancho-maximo-parrafo: 300px;
-
-    /* Bordes - Radios */
-    --radio-borde-caja: 20px;
-    --radio-borde-panel: 30px;
-    --radio-borde-panel-izquierdo: 30px 0 0 30px;
-    --radio-borde-panel-derecho: 0 30px 30px 0;
-
-    /* Sombras */
-    --sombra-panel: 0 0 20px rgba(0, 0, 0, 0.3);
-    --sombra-caja-mensaje: 0 0 20px rgba(0, 0, 0, 0.3);
-    --sombra-boton-normal: 0 5px 15px rgba(0,0,0,0.2);
-    --sombra-boton-hover: 0 8px 20px rgba(0,0,0,0.3);
-
-    /* Opacidades */
-    --opacidad-sombra-panel: 0.3;
-    --opacidad-sombra-boton-normal: 0.2;
-    --opacidad-sombra-boton-hover: 0.3;
-    --opacidad-imagen-fondo: 0.95;
-
-    /* Espaciados - Padding */
-    --padding-caja-panel-vertical: 20px;
-    --padding-caja-panel-horizontal: 0;
-    --padding-caja-mensaje: 30px;
-    --padding-input-horizontal: 15px;
-
-    /* Espaciados - Margin */
-    --margen-titulo-boton-superior: 10px;
-    --margen-titulo-mensaje-inferior: 20px;
-    --margen-parrafo-inferior: 20px;
-    --margen-input-inferior: 20px;
-    --margen-icono-derecho: 10px;
-    --margen-boton-superior: 30px;
-    --margen-boton-horizontal: 0;
-    --margen-boton-inferior: 20px;
-
-    /* Espaciados - Gap */
-    --espacio-contenedor-principal: 1px;
-
+:root {
     /* Tipografía - Tamaños */
-    --tamaño-fuente-titulo-boton-navegacion: 20px;
+    --tamaño-fuente-titulo-boton-navegacion: var(--margen-boton-inferior);
     --tamaño-fuente-titulo-mensaje: 35px;
-    --tamaño-fuente-parrafo: 20px;
+    --tamaño-fuente-parrafo: var(--margen-boton-inferior);
     --tamaño-fuente-icono-input: 22px;
-    --tamaño-fuente-input: 20px;
-    --tamaño-fuente-boton-principal: 20px;
-
-    /* Tipografía - Pesos */
-    --peso-fuente-boton-principal: 700;
-
-    /* Altura de línea */
-    --altura-linea-parrafo: 1.5;
-
-    /* Efectos - Hover */
-    --escala-hover-boton: 1.05;
-    --brillo-hover-boton: 1.1;
-
-    /* Transiciones - Duraciones */
-    --duracion-transicion-boton-navegacion: 0.3s;
-    --duracion-transicion-boton-principal: 0.3s;
-
-    /* Altura de vista */
-    --altura-body: 100vh;
+    --tamaño-fuente-input: var(--margen-boton-inferior);
+    --tamaño-fuente-boton-principal: var(--margen-boton-inferior);
 }
 
 @import url('../../tipografias/styles.css');
 
 * {
-    margin: 0;
-    padding: 0;
+    margin: var(--desplazamiento-active-boton);
+    padding: var(--desplazamiento-active-boton);
     box-sizing: border-box;
 }
 
@@ -124,7 +24,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: var(--altura-body);
+    height: var(--alto-vista-completa);
 }
 
 /* Contenedor general */
@@ -132,7 +32,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: var(--espacio-contenedor-principal);
+    gap: var(--separacion-paneles);
 }
 
 /* Panel izquierdo */
@@ -140,7 +40,7 @@ body {
     width: var(--ancho-panel-izquierdo);
     height: var(--alto-panel-izquierdo);
     background: var(--gradiente-panel-izquierdo);
-    border-radius: var(--radio-borde-panel-izquierdo);
+    border-radius: var(--radio-bordes-panel-izquierdo);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -151,7 +51,7 @@ body {
     width: var(--ancho-caja-panel-izquierdo);
     height: var(--alto-caja-panel-izquierdo);
     background-color: var(--color-fondo-caja-panel);
-    border-radius: var(--radio-borde-caja);
+    border-radius: var(--radio-bordes-caja);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -176,7 +76,7 @@ body {
     background: none;
     border: none;
     cursor: pointer;
-    transition: transform var(--duracion-transicion-boton-navegacion) ease, filter var(--duracion-transicion-boton-navegacion) ease;
+    transition: transform var(--duracion-transicion-boton-navegacion) var(--tipo-transicion), filter var(--duracion-transicion-boton-navegacion) var(--tipo-transicion);
 }
 
 .codigo-panel__button:hover {
@@ -202,7 +102,7 @@ body {
     background-image: url('../../../assets/Imagenes/fondos/banner3.jpg');
     background-size: cover;
     background-position: center;
-    border-radius: var(--radio-borde-panel-derecho);
+    border-radius: var(--radio-bordes-panel-derecho);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -215,7 +115,7 @@ body {
     width: var(--ancho-caja-mensaje);
     height: var(--alto-caja-mensaje);
     background-color: var(--color-fondo-caja-mensaje);
-    border-radius: var(--radio-borde-caja);
+    border-radius: var(--radio-bordes-caja);
     box-shadow: var(--sombra-caja-mensaje);
     text-align: center;
     display: flex;
@@ -246,8 +146,8 @@ body {
     display: flex;
     align-items: center;
     background-color: var(--color-fondo-input);
-    border-radius: var(--radio-borde-caja);
-    padding: 0 var(--padding-input-horizontal);
+    border-radius: var(--radio-bordes-caja);
+    padding: var(--desplazamiento-active-boton) var(--padding-input-horizontal);
     margin-bottom: var(--margen-input-inferior);
 }
 
@@ -258,7 +158,7 @@ body {
 }
 
 .input__group input {
-    flex: 1;
+    flex: var(--indice-z-formulario);
     border: none;
     background: transparent;
     font-size: var(--tamaño-fuente-input);
@@ -276,9 +176,9 @@ body {
     color: var(--color-texto-principal);
     background-color: var(--color-fondo-boton);
     border: none;
-    border-radius: var(--radio-borde-caja);
+    border-radius: var(--radio-bordes-caja);
     cursor: pointer;
-    transition: transform var(--duracion-transicion-boton-principal) ease, filter var(--duracion-transicion-boton-principal) ease, box-shadow var(--duracion-transicion-boton-principal) ease;
+    transition: transform var(--duracion-transicion-boton-principal) var(--tipo-transicion), filter var(--duracion-transicion-boton-principal) var(--tipo-transicion), box-shadow var(--duracion-transicion-boton-principal) var(--tipo-transicion);
     box-shadow: var(--sombra-boton-normal);
 }
 

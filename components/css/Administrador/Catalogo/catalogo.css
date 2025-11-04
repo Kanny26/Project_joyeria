@@ -1,61 +1,35 @@
-:root {
-    /* Colores principales */
-    --color-fondo-principal: #f5f5f5; 
-    --color-panel-principal: #ffd9d9; 
-    --color-datos-tarjeta: #ffcaca; 
-    --color-inputs: #b8b8b8;
-    --color-botones: #b4b4b4;
-    --color-botones-hover: #9c9c9c;
-    --color-texto-principal: #000000;
-    --color-iconos-principal: #000000;
-    --color-texto-titulo-cards: #ffd9d9e8;
-    --color-texto-hover-cards: #977b6b;
-    --color-fondo-tarjeta-hover: #dda17e;
-    --color-sombra-texto: #000000;
-    --color-sombra-tarjeta: rgba(0, 0, 0, 0.1);
-    --color-sombra-tarjeta-hover: rgba(0, 0, 0, 0.2);
+@import url(../../components/css/globales.css);
 
-    /* Dimensiones */
-    --alto-fondo-minimo: 100vh;
-    --ancho-barra-superior: 1500px;
-    --alto-barra-superior: 90px;
-    --tamaño-circulo-admin: 91px;
-    --tamaño-imagen-admin: 70px;
-    --tamaño-icono-home: 40px;
-    --tamaño-titulo-home: 60px;
+:root {
+    /* Dimensiones - Círculo Admin */
+    --tamaño-imagen-admin: var(--alto-imagen-admin);
+    
+    /* Dimensiones - Iconos */
+    --tamaño-icono-home: var(--alto-boton-login-registro);
+    
+    /* Dimensiones - Títulos */
+    --tamaño-titulo-home: var(--posicion-lateral-iconos);
     --tamaño-titulo-cards: 35px;
-    --ancho-contenedor-cards: 350px;
-    --alto-contenedor-cards: 350px;
-    --tamaño-imagen-cards: 200px;
-    --tamaño-fuente-texto-inicio: 20px;
-    --margen-superior-cards: 150px;
-    --margen-inferior-titulo-cards: 40px;
-    --radio-borde-general: 20px;
-    --radio-borde-tarjeta: 16px;
-    --sombra-difuminada: 0 4px 15px var(--color-sombra-tarjeta);
-    --sombra-difuminada-hover: 0 8px 20px var(--color-sombra-tarjeta-hover);
-    --padding-horizontal-barra: 20px;
-    --padding-tarjeta: 20px 25px;
-    --gap-tarjetas: 25px;
-    --gap-grid-cards: 30px;
-    --padding-grid-cards: 0 40px;
-    --posicion-top-barra: 20px;
-    --espaciado-izquierda-h2: 160px;
-    --posicion-bottom-h2: 30px;
-    --margen-izquierda-circulo: -15px;
-    --tamaño-icono-circulo: 155px;
-    --tamaño-imagen-circulo: 150px;
+
+    /* Dimensiones - Tarjetas */
+    
+    --tamaño-imagen-cards: var(--alto-circulo-icono);
+    
+    /* Dimensiones - Círculo Icono */
+    
+    --tamaño-imagen-circulo: var(--margen-superior-cards);
+
+    /* Tipografía - Tamaños */
+    --tamaño-fuente-texto-inicio: var(--margen-boton-inferior);
     --tamaño-fuente-titulo-card: 35px;
-    --peso-fuente-semititulos: 600;
-    --escala-hover-tarjeta: 1.1;
-    --duracion-transicion: 0.3s;
+
 }
 
 @import url('../../Tipografias/styles.css');
 
 * {
-    margin: 0;
-    padding: 0;
+    margin: var(--desplazamiento-active-boton);
+    padding: var(--desplazamiento-active-boton);
     box-sizing: border-box;
 }
 
@@ -66,7 +40,7 @@ body {
     background-size: cover;
     background-position: center;
     position: relative;
-    min-height: var(--alto-fondo-minimo);
+    min-height: var(--alto-minimo-fondo);
     overflow: hidden; 
 }
 
@@ -81,16 +55,16 @@ body {
     top: var(--posicion-top-barra);
     left: 50%;
     transform: translateX(-50%); 
-    background-color: var(--color-panel-principal);
-    border-radius: var(--radio-borde-general);
-    z-index: 10;
-    padding: 0 var(--padding-horizontal-barra);
+    background-color: var(--color-fondo-panel-superior);
+    border-radius: var(--radio-bordes-general);
+    z-index: var(--z-index-panel);
+    padding: var(--desplazamiento-active-boton) var(--padding-horizontal-barra);
 }
 
 /* Círculo admin */
 .admin__catalogo {
-    width: var(--tamaño-circulo-admin);
-    height: var(--tamaño-circulo-admin);
+    width: var(--diametro-circulo-admin);
+    height: var(--diametro-circulo-admin);
     border-radius: 50%;
     display: flex;
     justify-content: center;
@@ -102,19 +76,19 @@ body {
 .admin__catalogo h2 {
     position: absolute;
     bottom: var(--posicion-bottom-h2);
-    left: var(--espaciado-izquierda-h2);
-    transform: translateX(-50%) translateY(10px);
-    opacity: 0;
+    left: var(--posicion-left-h2);
+    transform: translateX(-50%) translateY(var(--ancho-scrollbar));
+    opacity: var(--desplazamiento-active-boton);
     font-size: var(--tamaño-fuente-texto-inicio);
     font-weight: var(--peso-fuente-semititulos);
     color: var(--color-texto-principal);
     pointer-events: none;
-    transition: opacity var(--duracion-transicion) ease, transform var(--duracion-transicion) ease;
+    transition: opacity var(--duracion-transicion) var(--tipo-transicion), transform var(--duracion-transicion) var(--tipo-transicion);
 }
 
 .admin__catalogo:hover h2 {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
+    opacity: var(--indice-z-formulario);
+    transform: translateX(-50%) translateY(var(--desplazamiento-active-boton));
 }
 
 .admin__catalogo img {
@@ -124,10 +98,10 @@ body {
 
 /* Título central */
 .admin__title {
-    flex: 1;
+    flex: var(--indice-z-formulario);
     text-align: center;
     font-size: var(--tamaño-titulo-home);
-    font-weight: 700;
+    font-weight: var(--peso-fuente-titulo-principal);
     color: var(--color-texto-principal);
 }
 
@@ -162,8 +136,8 @@ body {
 /* Contenedor de tarjetas */
 .cards__contenedor {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: var(--gap-grid-cards);
+    grid-template-columns: repeat(var(--margen-boton-login-horizontal)-fit, minmax(320px, var(--grid-columnas-maximo)));
+    gap: var(--separacion-grid-cards);
     justify-items: center;
     padding: var(--padding-grid-cards);
 }
@@ -178,14 +152,14 @@ body {
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    background: var(--color-datos-tarjeta);
-    border-radius: var(--radio-borde-tarjeta);
+    background: var(--color-fondo-datos-tarjeta);
+    border-radius: var(--radio-bordes-tarjeta);
     box-shadow: var(--sombra-difuminada);
     width: 545px;
-    height: 200px;
+    height: var(--alto-circulo-icono);
     padding: var(--padding-tarjeta);
-    gap: var(--gap-tarjetas);
-    transition: transform var(--duracion-transicion) ease, box-shadow var(--duracion-transicion) ease;
+    gap: var(--separacion-tarjetas);
+    transition: transform var(--duracion-transicion) var(--tipo-transicion), box-shadow var(--duracion-transicion) var(--tipo-transicion);
     cursor: pointer;
 }
 
@@ -197,13 +171,13 @@ body {
 
 /* Círculo del icono */
 .icon-circle {
-    width: var(--tamaño-icono-circulo);
-    height: var(--tamaño-icono-circulo);
+    width: var(--diametro-icono-circulo);
+    height: var(--diametro-icono-circulo);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    flex-shrink: 0;
+    flex-shrink: var(--desplazamiento-active-boton);
     transition: background var(--duracion-transicion), transform var(--duracion-transicion);
 }
 
@@ -215,7 +189,7 @@ body {
 }
 
 .icon-circle:hover img {
-    filter: brightness(1) invert(0);
+    filter: brightness(var(--indice-z-formulario)) invert(var(--desplazamiento-active-boton));
 }
 
 /* Texto dentro de la tarjeta */
@@ -225,6 +199,6 @@ body {
     font-size: var(--tamaño-fuente-titulo-card);
     font-weight: var(--peso-fuente-semititulos);
     text-align: center;
-    z-index: 1;
-    transition: color var(--duracion-transicion) ease;
+    z-index: var(--indice-z-formulario);
+    transition: color var(--duracion-transicion) var(--tipo-transicion);
 }

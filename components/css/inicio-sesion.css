@@ -1,124 +1,23 @@
+@import url(../../components/css/globales.css);
+
 :root { 
-    /* Colores - Texto e Iconos */
-    --color-texto-principal: #000000;
-    --color-iconos: #333;
-    
-    /* Colores - Fondos */
-    --color-fondo-caja: #D9D6D2;
-    --color-fondo-input: #b8b8b8;
-    --color-fondo-boton: #8c8c8c;
-
-    /* Gradientes */
-    --gradiente-fondo-principal: linear-gradient(135deg, #8C6C5A, #A99481, #C9C2BA);
-    --gradiente-panel-lateral: linear-gradient(135deg, #6D4F3E, #623B25, #653E2F);
-
-    /* Dimensiones - Panel Lateral Izquierdo */
-    --ancho-panel-izquierdo: 450px;
-    --alto-panel-izquierdo: 600px;
-    --ancho-caja-panel: 350px;
-    --alto-caja-panel: 530px;
-
-    /* Dimensiones - Panel Derecho con Imagen */
-    --ancho-panel-derecho: 700px;
-    --alto-panel-derecho: 600px;
-
-    /* Dimensiones - Formulario */
-    --ancho-contenedor-formulario: 380px;
-    --alto-contenedor-formulario: 500px;
-    --ancho-input: 280px;
-    --alto-input: 40px;
-    --ancho-boton-login: 280px;
-    --alto-boton-login: 40px;
-
-    /* Dimensiones - Logo */
-    --ancho-logo: 300px;
-
-    /* Dimensiones - Botones de Rol */
-    --ancho-imagen-boton-rol: 80px;
-    --alto-imagen-boton-rol: 80px;
-
     /* Dimensiones - Iconos */
-    --tamaño-icono-input: 18px;
-
-    /* Dimensiones - Contenedores */
-    --ancho-contenedor-botones: 100%;
-    --ancho-maximo-input: 280px;
-
-    /* Bordes - Radios */
-    --radio-borde-principal: 20px;
-    --radio-borde-panel-izquierdo: 20px 0 0 20px;
-    --radio-borde-panel-derecho: 0 20px 20px 0;
-
-    /* Sombras */
-    --sombra-caja-panel: 0 4px 15px rgba(0,0,0,0.2);
-    --sombra-formulario: 0 4px 15px rgba(0,0,0,0.2);
-    --sombra-boton-normal: 0 5px 15px rgba(0,0,0,0.2);
-    --sombra-boton-hover: 0 8px 20px rgba(0,0,0,0.3);
-
-    /* Opacidades */
-    --opacidad-sombra-caja: 0.2;
-    --opacidad-sombra-boton-hover: 0.3;
-    --opacidad-imagen-fondo: 0.9;
-
-    /* Espaciados - Padding */
-    --padding-formulario-vertical: 30px;
-    --padding-formulario-horizontal: 20px;
-    --padding-input-horizontal: 15px;
-    --padding-boton-login: 10px;
-    --padding-input-derecho: 30px;
-
-    /* Espaciados - Margin */
-    --margen-logo-superior: -5px;
-    --margen-botones-rol-superior: 25px;
-    --margen-titulo-boton-superior: 10px;
-    --margen-titulo-inferior: 20px;
-    --margen-input-vertical: 10px;
-    --margen-link-recuperar-superior: 10px;
-    --margen-link-recuperar-inferior: 20px;
-    --margen-boton-login-superior: 15px;
-    --margen-boton-login-horizontal: auto;
-    --margen-boton-login-inferior: 0;
-    --margen-link-registro-superior: 10px;
-    --margen-icono-derecho: 10px;
-    --margen-icono-izquierdo: 10px;
-
-    /* Espaciados - Gap */
-    --espacio-contenedor-principal: 0;
-
-    /* Posicionamiento */
-    --posicion-icono-derecho: 15px;
-    --indice-z-formulario: 1;
+    --tamaño-icono-input: var(--separacion-iconos);
 
     /* Tipografía - Tamaños */
-    --tamaño-fuente-titulo-boton-rol: 18px;
-    --tamaño-fuente-input: 16px;
+    --tamaño-fuente-titulo-boton-rol: var(--separacion-iconos);
+    --tamaño-fuente-input: var(--radio-bordes-tarjeta);
     --tamaño-fuente-link-recuperar: 14px;
-    --tamaño-fuente-boton-login: 16px;
+    --tamaño-fuente-boton-login: var(--radio-bordes-tarjeta);
     --tamaño-fuente-link-registro: 14px;
-
-    /* Tipografía - Pesos */
-    --peso-fuente-titulo-principal: 700;
-    --peso-fuente-titulo-boton-rol: 700;
-    --peso-fuente-boton-login: 700;
-
-    /* Efectos - Hover */
-    --escala-hover-boton: 1.05;
-    --brillo-hover-boton: 1.1;
-
-    /* Transiciones - Duraciones */
-    --duracion-transicion-boton-rol: 0.2s;
-    --duracion-transicion-boton-login: 0.3s;
-
-    /* Altura mínima */
-    --altura-minima-body: 100vh;
 }
 
 /* Importar tipografías */
 @import url('../Tipografias/styles.css');
 
 * {
-    margin: 0;
-    padding: 0;
+    margin: var(--desplazamiento-active-boton);
+    padding: var(--desplazamiento-active-boton);
     box-sizing: border-box;
 }
 
@@ -131,7 +30,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: var(--altura-minima-body);
+    min-height: var(--alto-minimo-body);
 }
 
 /* ===== Contenedor principal ===== */
@@ -139,7 +38,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: var(--espacio-contenedor-principal);
+    gap: var(--separacion-paneles);
     flex-wrap: wrap;
 }
 
@@ -151,14 +50,14 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    border-radius: var(--radio-borde-panel-izquierdo);
+    border-radius: var(--radio-bordes-panel-izquierdo);
 }
 
 .login-panel__box {
     width: var(--ancho-caja-panel);
     height: var(--alto-caja-panel);
     background-color: var(--color-fondo-caja);
-    border-radius: var(--radio-borde-principal);
+    border-radius: var(--radio-bordes-principal);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -169,7 +68,7 @@ body {
 
 .login-panel__logo-image {
     width: var(--ancho-logo);
-    height: auto;
+    height: var(--alto-logo);
     margin-top: var(--margen-logo-superior);
 }
 
@@ -187,7 +86,7 @@ body {
     background: none;
     border: none;
     cursor: pointer;
-    transition: transform var(--duracion-transicion-boton-rol) ease, filter var(--duracion-transicion-boton-rol) ease;
+    transition: transform var(--duracion-transicion-boton-rol) var(--tipo-transicion), filter var(--duracion-transicion-boton-rol) var(--tipo-transicion);
 }
 
 .login-panel__button:hover {
@@ -220,7 +119,7 @@ body {
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    border-radius: var(--radio-borde-panel-derecho);
+    border-radius: var(--radio-bordes-panel-derecho);
     position: relative;
     opacity: var(--opacidad-imagen-fondo);
 }
@@ -230,7 +129,7 @@ body {
     width: var(--ancho-contenedor-formulario);
     height: var(--alto-contenedor-formulario);
     background-color: var(--color-fondo-caja);
-    border-radius: var(--radio-borde-principal);
+    border-radius: var(--radio-bordes-principal);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -259,12 +158,12 @@ h1 {
     width: var(--ancho-contenedor-botones);
     max-width: var(--ancho-input);
     height: var(--alto-input);
-    margin: var(--margen-input-vertical) 0;
+    margin: var(--margen-input-vertical) var(--desplazamiento-active-boton);
     display: flex;
     align-items: center;
     background-color: var(--color-fondo-input);
-    border-radius: var(--radio-borde-principal);
-    padding: 0 var(--padding-input-horizontal);
+    border-radius: var(--radio-bordes-principal);
+    padding: var(--desplazamiento-active-boton) var(--padding-input-horizontal);
     position: relative;
 }
 
@@ -274,7 +173,7 @@ h1 {
     outline: none;
     font-family: var(--fuente-subtitulos);
     font-size: var(--tamaño-fuente-input);
-    flex: 1;
+    flex: var(--indice-z-formulario);
     padding-right: var(--padding-input-derecho);
 }
 
@@ -306,7 +205,7 @@ a {
 .login__link--recuperar {
     width: var(--ancho-contenedor-botones);
     max-width: var(--ancho-input);
-    margin: var(--margen-link-recuperar-superior) auto var(--margen-link-recuperar-inferior) auto;
+    margin: var(--margen-link-recuperar-superior) var(--margen-boton-login-horizontal) var(--margen-link-recuperar-inferior) var(--margen-boton-login-horizontal);
     font-size: var(--tamaño-fuente-link-recuperar);
     text-align: center;
     color: var(--color-texto-principal);
@@ -316,21 +215,22 @@ a {
     color: var(--color-fondo-boton);
 }
 
+
 /* ===== Botón ===== */
 .login__button {
     width: var(--ancho-contenedor-botones);
-    max-width: var(--ancho-boton-login);
-    height: var(--alto-boton-login);
+    max-width: var(--ancho-boton-login-registro);
+    height: var(--alto-boton-login-registro);
     margin: var(--margen-boton-login-superior) var(--margen-boton-login-horizontal) var(--margen-boton-login-inferior);
     font-size: var(--tamaño-fuente-boton-login);
     font-weight: var(--peso-fuente-boton-login);
     color: var(--color-texto-principal);
     background-color: var(--color-fondo-boton);
     border: none;
-    border-radius: var(--radio-borde-principal);
+    border-radius: var(--radio-bordes-principal);
     cursor: pointer;
     text-align: center;
-    transition: transform var(--duracion-transicion-boton-login) ease, filter var(--duracion-transicion-boton-login) ease, box-shadow var(--duracion-transicion-boton-login) ease;
+    transition: transform var(--duracion-transicion-boton-login) var(--tipo-transicion), filter var(--duracion-transicion-boton-login) var(--tipo-transicion), box-shadow var(--duracion-transicion-boton-login) var(--tipo-transicion);
     box-shadow: var(--sombra-boton-normal);
 }
 
