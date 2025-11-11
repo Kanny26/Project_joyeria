@@ -1,235 +1,256 @@
 @import url(../../components/css/globales.css);
 
-:root {  
+:root {
+  --tamaño-icono-input: var(--separacion-iconos);
 
-    --tamaño-icono-input: var(--separacion-iconos);
-
-    /* Tipografía - Tamaños */
-    --tamaño-fuente-rol: var(--margen-bottom-estrellas);
-    --tamaño-fuente-titulo-boton-rol: var(--radio-bordes-tarjeta);
-    --tamaño-fuente-input: var(--radio-bordes-tarjeta);
-    --tamaño-fuente-boton-registro: var(--radio-bordes-tarjeta);
-    --tamaño-fuente-link-footer: 13px;
-    --tamaño-fuente-parrafo-footer: var(--radio-bordes-tarjeta);
-
+  /* Tipografía - Tamaños */
+  --tamaño-fuente-rol: var(--margen-bottom-estrellas);
+  /* --tamaño-fuente-titulo-boton-rol: var(--radio-bordes-tarjeta); */
+  /* --tamaño-fuente-input: var(--radio-bordes-tarjeta); */
+  --tamaño-fuente-boton-registro: var(--radio-bordes-tarjeta);
+  --tamaño-fuente-link-footer: 13px;
+  /* --tamaño-fuente-parrafo-footer: var(--radio-bordes-tarjeta); */
 }
 
 /* estilos generales y layout */
 * {
-    margin: var(--desplazamiento-active-boton);
-    padding: var(--desplazamiento-active-boton);
-    box-sizing: border-box;
+  margin: var(--desplazamiento-active-boton);
+  padding: var(--desplazamiento-active-boton);
+  box-sizing: border-box;
 }
 
 body {
-    font-family: var(--fuente-titulos);
-    background: var(--gradiente-fondo-principal);
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    overflow: hidden;
+  font-family: var(--fuente-titulos);
+  background: var(--gradiente-fondo-principal);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  overflow: hidden;
 }
 
 .container_principal {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: var(--alto-minimo-contenedor);
-    gap: var(--separacion-paneles);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: var(--alto-minimo-contenedor);
+  gap: var(--separacion-paneles);
 }
 
 /* Panel izquierdo */
 .panel-izquierdo {
-    width: var(--ancho-panel-izquierdo);
-    height: var(--alto-panel-izquierdo);
-    background: var(--gradiente-panel-izquierdo);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: var(--radio-bordes-panel-izquierdo);
+  width: var(--ancho-panel-izquierdo);
+  height: var(--alto-panel-izquierdo);
+  background: var(--gradiente-panel-izquierdo);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: var(--radio-bordes-panel-izquierdo);
 }
 
 /* Caja interna panel izquierdo */
 .signup-panel__box {
-    width: var(--ancho-caja-panel-izquierdo);
-    height: var(--alto-caja-panel-izquierdo);
-    background-color: var(--color-fondo-caja);
-    border-radius: var(--radio-bordes-principal);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: var(--padding-caja-panel-vertical) var(--padding-caja-panel-horizontal);
-    text-align: center;
-    box-shadow: var(--sombra-caja-panel);
+  width: var(--ancho-panel-izquierdo-interno);
+  height: var(--alto-panel-izquierdo-interno);
+  background-color: var(--color-fondo-caja);
+  border-radius: var(--radio-bordes-principal);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--padding-caja-panel-vertical)
+    var(--padding-caja-panel-horizontal);
+  text-align: center;
+  box-shadow: var(--sombra-caja-panel);
 }
 
 .signup-panel__logo-image {
-    width: var(--ancho-logo);
-    height: var(--alto-logo);
-    margin-top: var(--margen-logo-superior);
+  width: var(--ancho-logo);
+  height: var(--alto-logo);
+  margin-top: var(--margen-logo-superior);
 }
 
 .signup-panel__rol {
-    margin-bottom: var(--margen-rol-inferior);
-    font-weight: var(--peso-fuente-rol);
-    font-size: var(--tamaño-fuente-rol);
-    color: var(--color-texto-principal);
+  margin-bottom: var(--margen-rol-inferior);
+  font-weight: var(--peso-fuente-rol);
+  font-size: var(--tamaño-fuente-rol);
+  color: var(--color-texto-principal);
 }
 
 .signup-panel__buttons {
-    display: flex;
-    justify-content: space-evenly;
-    width: var(--ancho-contenedor-botones);
-    margin-top: var(--margen-botones-rol-superior);
+  display: flex;
+  justify-content: space-evenly;
+  width: var(--ancho-contenedor-botones);
+  margin-top: var(--margen-botones-rol-superior);
 }
 
 .signup-panel__button {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background: none;
-    border: none;
-    cursor: pointer;
-    transition: transform var(--duracion-transicion-boton-rol) var(--tipo-transicion), filter var(--duracion-transicion-boton-rol) var(--tipo-transicion);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: transform var(--duracion-transicion-boton-rol)
+      var(--tipo-transicion),
+    filter var(--duracion-transicion-boton-rol) var(--tipo-transicion);
 }
 
 .signup-panel__button:hover {
-    transform: scale(var(--escala-hover-boton));
-    filter: brightness(var(--brillo-hover-boton));
+  transform: scale(var(--escala-hover-boton));
+  filter: brightness(var(--brillo-hover-boton));
 }
 
 .signup-panel__button img {
-    width: var(--ancho-imagen-boton-rol);
-    height: var(--alto-imagen-boton-rol);
+  width: var(--ancho-imagen-boton-rol);
+  height: var(--alto-imagen-boton-rol);
 }
 
 .signup-panel__button span {
-    margin-top: var(--margen-titulo-boton-superior);
-    font-weight: var(--peso-fuente-titulo-boton-rol);
-    font-size: var(--tamaño-fuente-titulo-boton-rol);
-    color: var(--color-texto-principal);
+  margin-top: var(--margen-titulo-boton-superior);
+  font-weight: var(--peso-fuente-titulo-boton-rol);
+  font-size: var(--tamano-titulo-h2);
+  color: var(--color-texto-principal);
+  font-family: var(--fuente-titulos);
 }
 
 /* Panel derecho */
 .panel-derecho {
-    width: var(--ancho-panel-derecho);
-    height: var(--alto-panel-derecho);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    background-image: url('../../assets/Imagenes/fondos/banner4.jpg');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    opacity: var(--opacidad-imagen-fondo);
-    border-radius: var(--radio-bordes-panel-derecho);
-    position: relative;
+  width: var(--ancho-panel-derecho);
+  height: var(--alto-panel-derecho);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  background-image: url("../../assets/Imagenes/fondos/banner4.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: var(--opacidad-imagen-fondo);
+  border-radius: var(--radio-bordes-panel-derecho);
+  position: relative;
 }
 
 /* Formulario derecho */
 .container__signup_data {
-    width: var(--ancho-contenedor-formulario);
-    height: var(--alto-contenedor-formulario);
-    background-color: var(--color-fondo-caja);
-    border-radius: var(--radio-bordes-principal);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: var(--padding-formulario-vertical) var(--padding-formulario-horizontal);
-    box-shadow: var(--sombra-formulario);
-    z-index: var(--indice-z-formulario);
-    position: relative;
+  width: var(--ancho-contenedor-formulario);
+  height: var(--alto-contenedor-formulario);
+  background-color: var(--color-fondo-caja);
+  border-radius: var(--radio-bordes-principal);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: var(--padding-formulario-vertical)
+    var(--padding-formulario-horizontal);
+  box-shadow: var(--sombra-formulario);
+  z-index: var(--indice-z-formulario);
+  position: relative;
 }
 
 .container__signup_data__content {
-    width: var(--ancho-contenedor-botones);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    font-family: var(--fuente-subtitulos);
+  width: var(--ancho-contenedor-botones);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: var(--fuente-subtitulos);
 }
 
+h1 {
+  color: var(--color-texto-principal);
+  font-weight: var(--peso-fuente-titulo-formularios);
+  font-family: var(--fuente-titulos);
+  font-size: 25px;
+  /* margin-bottom: var(--margen-titulo-inferior); */
+}
 /* Inputs */
 .input__group {
-    width: var(--ancho-input);
-    height: var(--alto-input);
-    margin-top: var(--margen-input-superior);
-    display: flex;
-    align-items: center;
-    background-color: var(--color-fondo-input);
-    border-radius: var(--radio-bordes-principal);
-    padding: var(--desplazamiento-active-boton) var(--padding-input-horizontal);
-    position: relative;
+  width: var(--ancho-input);
+  height: var(--alto-input);
+  margin-top: var(--margen-input-superior);
+  display: flex;
+  align-items: center;
+  background-color: var(--color-fondo-input);
+  border-radius: var(--radio-bordes-principal);
+  padding: var(--desplazamiento-active-boton) var(--padding-input-horizontal);
+  position: relative;
 }
 
 .input__group input {
-    background-color: transparent;
-    border: none;
-    outline: none;
-    font-family: var(--fuente-subtitulos);
-    font-size: var(--tamaño-fuente-input);
-    flex: var(--indice-z-formulario);
-    padding-right: var(--padding-input-derecho);
+  background-color: transparent;
+  border: none;
+  outline: none;
+  font-family: var(--fuente-placeholder);
+  font-size: var(--tamano-fuente-placeholder);
+  flex: var(--indice-z-formulario);
+  padding-right: var(--padding-input-derecho);
+  color: var(--color-texto-negro);
+}
+
+.input__group input::placeholder {
+  color: var(--color-texto-placeholders);
+  /* color: aqua; */
 }
 
 .input__group i.icon-left {
-    font-size: var(--tamaño-icono-input);
-    color: var(--color-iconos);
-    margin-right: var(--margen-icono-derecho);
+  font-size: var(--tamaño-icono-input);
+  color: var(--color-iconos);
+  margin-right: var(--margen-icono-derecho);
 }
 
 .input__group i.icon-right {
-    position: absolute;
-    right: var(--posicion-icono-derecho);
-    font-size: var(--tamaño-icono-input);
-    color: var(--color-iconos);
-    cursor: pointer;
+  position: absolute;
+  right: var(--posicion-icono-derecho);
+  font-size: var(--tamaño-icono-input);
+  color: var(--color-iconos);
+  cursor: pointer;
 }
 
 /* Botón de registro */
 .signup__button {
-    width: var(--ancho-contenedor-botones);
-    max-width: var(--ancho-maximo-boton-registro);
-    height: var(--alto-boton-login-registro);
-    margin: var(--margen-boton-registro-superior) var(--margen-boton-registro-horizontal) var(--margen-boton-registro-inferior);
-    font-size: var(--tamaño-fuente-boton-registro);
-    font-weight: var(--peso-fuente-boton-registro);
-    color: var(--color-texto-principal);
-    background-color: var(--color-fondo-boton);
-    border: none;
-    border-radius: var(--radio-bordes-principal);
-    cursor: pointer;
-    text-align: center;
-    transition: transform var(--duracion-transicion-boton-registro) var(--tipo-transicion), filter var(--duracion-transicion-boton-registro) var(--tipo-transicion), box-shadow var(--duracion-transicion-boton-registro) var(--tipo-transicion);
-    box-shadow: var(--sombra-boton-normal);
+  width: var(--ancho-contenedor-botones);
+  max-width: var(--ancho-maximo-boton-registro);
+  height: var(--alto-boton-login-registro);
+  margin: var(--margen-boton-registro-superior)
+    var(--margen-boton-registro-horizontal)
+    var(--margen-boton-registro-inferior);
+  font-size: var(--tamaño-fuente-boton-registro);
+  font-weight: var(--peso-fuente-boton-registro);
+  color: var(--color-texto-principal);
+  background-color: var(--color-fondo-boton);
+  border: none;
+  border-radius: var(--radio-bordes-principal);
+  cursor: pointer;
+  text-align: center;
+  transition: transform var(--duracion-transicion-boton-registro)
+      var(--tipo-transicion),
+    filter var(--duracion-transicion-boton-registro) var(--tipo-transicion),
+    box-shadow var(--duracion-transicion-boton-registro) var(--tipo-transicion);
+  box-shadow: var(--sombra-boton-normal);
 }
 
 .signup__button:hover {
-    transform: scale(var(--escala-hover-boton));
-    filter: brightness(var(--brillo-hover-boton));
-    box-shadow: var(--sombra-boton-hover);
+  transform: scale(var(--escala-hover-boton));
+  filter: brightness(var(--brillo-hover-boton));
+  box-shadow: var(--sombra-boton-hover);
 }
 
 /* Footer */
 .signup__link {
-    margin-top: var(--margen-link-registro-superior);
-    font-size: var(--tamaño-fuente-link-footer);
-    text-align: center;
+  margin-top: var(--margen-link-registro-superior);
+  font-size: var(--tamaño-fuente-link-footer);
+  text-align: center;
 }
 
 .signup__link a {
-    color: var(--color-texto-principal);
-    text-decoration: none;
-    font-weight: var(--peso-fuente-rol);
+  color: var(--color-texto-principal);
+  text-decoration: none;
+  font-weight: var(--peso-fuente-rol);
 }
 
 .signup__link p {
-    font-size: var(--tamaño-fuente-parrafo-footer);
+  font-size: var(--tamano-fuente-parrafos-alternativos);
 }
 
 .signup__link a:hover {
-    text-decoration: underline;
+  color: var(--color-link-hover);
 }
