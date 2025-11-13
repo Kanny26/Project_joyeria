@@ -62,10 +62,6 @@ body {
     overflow: hidden; 
 }
 
-<<<<<<< HEAD:principal/principal.css
-/* Contenedor general */
-.container_principal {
-=======
 .container_principal{
     display: flex;
 }
@@ -89,7 +85,6 @@ body {
     width: var(--panel-width);
     height: var(--panel-height);
     background-color: var(--color-panel);
->>>>>>> Admin:components/css/principal.css
     display: flex;
     justify-content: center;
     align-items: center;

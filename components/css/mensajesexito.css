@@ -54,27 +54,7 @@
 
 body {
     font-family: var(--fuente-titulos);
-<<<<<<< HEAD:components/css/mensajesexito.css
-    background-color: var(--color-background);
-    overflow: hidden; 
-}
-
-/*principal*/
-.success {
-    display: flex;
-    flex-direction: row;
-}
-
-/* Imagen a la izquierda */
-.container__image__main {
-    width: var(--img-fondo-derecho-width);
-    /* height: var(--panel-izquierdo-height); */
-    background-image: url('../../assets/Imagenes/fondos/Signup_background.jpg');
-    opacity: 0.7;
-    background-repeat: no-repeat;
-=======
     background: var(--gradient-principal);
->>>>>>> origin/mensajes-recuperarseña:Mensajes_exito/mensajesexito.css
     background-size: cover;
     background-position: center;
     height: 100vh;
