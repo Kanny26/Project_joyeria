@@ -15,6 +15,8 @@
 @import url("https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:ital,wght@0,200..800;1,200..800&family=Funnel+Display:wght@300..800&family=Lexend+Mega:wght@100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Oswald:wght@200..700&family=Poiret+One&display=swap");
 
 :root {
+  /*reseteo*/
+  --margin_padding_reset: 0;
   /* ===================================================== */
   /*  TIPOGRAFÍA - FUENTES Y PESOS FUENTES*/
   /* ===================================================== */
@@ -313,7 +315,6 @@
   --radio-borde-general: 20px;
   --radio-bordes-boton: 10px;
   --radio-bordes-boton-grande: 12px;
-  --radio-bordes-caja: 20px;
   --radio-bordes-card: 25px;
   --radio-bordes-general: 20px;
   --radio-bordes-icono: 50%;
@@ -322,9 +323,10 @@
   --radio-bordes-imagen-circular: 50%;
   --radio-bordes-input: 8px;
   --radio-bordes-panel: 30px;
-  --radio-bordes-panel-derecho: 0 30px 30px 0;
-  --radio-bordes-panel-izquierdo: 30px 0 0 30px;
-  --radio-bordes-principal: 20px;
+  --bordes-panel-derecho: 0 30px 30px 0;
+  --bordes-panel-izquierdo: 30px 0 0 30px;
+  --bordes-caja-panel-izquierda-derecha: 20px;
+  --bordes-inputs-botones: 20px;
   --radio-bordes-scrollbar: 10px;
   --radio-bordes-tarjeta: 16px;
   --radio-bordes-tooltip: 6px;
