@@ -1,34 +1,27 @@
+@import url('../../../../../../components/css/global.css');
+
 :root {
-    --color-panel: #ffd9d9;
-    --color-borde: #c49b63;
-
-    --sombra: 0 10px 25px rgba(0, 0, 0, 0.15);
-    --fondo-img-min-height: 100vh;
-    --barra-home-width: 1500px;
-    --barra-home-height: 90px;
-    --circulo-img-admin-width-height: 91px;
-    --img-admin-width-heigh: 70px;
-    --icon-home-font-size: 40px;
-    --title-home-font-size: 60px;
-
-    --color-fondo-card: #d18e78;
-    --color-acento: #000000db;
-    --color-texto: #000000e6;
-    --color-estrellas: #ffff00;
-    --color-boton-principal: #69331e;
-    --color-boton-secundario: #7d5b4b;
-    --sombra-card: 0 10px 25px rgba(0,0,0,0.15);
-    --border-radius-card: 25px;
-    --padding-card: 40px;
-    --gap-card: 30px;
-
+    /* Dimensiones - Círculo Admin */
+    --tamaño-imagen-admin: var(--alto-imagen-admin);
+    
+    /* Dimensiones - Iconos */
+    --tamaño-icono-home: var(--alto-boton-login-registro);
+    --tamaño-icono-lateral: var(--alto-boton-iniciar);
+    
+    /* Tipografía - Tamaños */
+    --tamaño-texto-base: var(--radio-bordes-tarjeta);
+    --tamaño-texto-etiqueta: var(--margen-boton-inferior);
+    --tamaño-titulo-card: var(--alto-boton-login-registro);
+    --tamaño-titulo-home: var(--posicion-lateral-iconos);
+    --tamaño-texto-h2: var(--margen-boton-inferior);
+    
 }
 
 @import url('../../Tipografias/styles.css');
 
 * {
-    margin: 0;
-    padding: 0;
+    margin: var(--desplazamiento-active-boton);
+    padding: var(--desplazamiento-active-boton);
     box-sizing: border-box;
 }
 
@@ -37,260 +30,260 @@ body {
     background-image: url('../../../../../../assets/Imagenes/fondos/fondo_admin1.jpg');
     background-size: cover;
     background-position: center;
-    min-height: var(--fondo-img-min-height);
-    color: var(--color-texto);
+    min-height: var(--alto-minimo-fondo);
+    color: var(--color-texto-principal);
 }
 
+/* --- Barra superior --- */
 .admin {
-    width: var(--barra-home-width);
-    height: var(--barra-home-height);
+    width: var(--ancho-barra-home);
+    height: var(--alto-barra-home);
     display: flex;
     align-items: center;
     justify-content: space-between;
-    position: fixed;   
-    top: 20px;
+    position: fixed;
+    top: var(--posicion-top-cabecera);
     left: 50%;
-    transform: translateX(-50%); 
-    background-color: var(--color-panel);
-    border-radius: 20px;
-    z-index: 10;
-    padding: 0 20px;
+    transform: var(--transformacion-centrar-x);
+    background-color: var(--color-fondo-panel);
+    border-radius: var(--radio-bordes-panel);
+    z-index: var(--z-index-panel);
+    padding: var(--padding-panel);
 }
 
-/* Círculo admin a la izquierda */
+/* Círculo admin */
 .admin__catalogo {
-    width: var(--circulo-img-admin-width-height);
-    height: var(--circulo-img-admin-width-height);
+    width: var(--diametro-circulo-admin);
+    height: var(--diametro-circulo-admin);
     border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-left: -15px;
+    margin-left: var(--margen-left-circulo-admin);
 }
 
-/* Estilo base del texto "Inicio" */
 .admin__catalogo h2 {
-    position: absolute; /* relativo al body si no pones relative en home__admin */
-    bottom: 30px;
-    left: 160px;
-    transform: translateX(-50%) translateY(10px);
-    opacity: 0;
-    font-size: 20px;
-    font-weight: 600;
-    color: var(--color-text);
-    pointer-events: none; /* para que no interfiera con el hover */
-    transition: opacity 0.3s ease, transform 0.3s ease;
+    position: absolute;
+    bottom: var(--posicion-bottom-texto-catalogo);
+    left: var(--posicion-left-texto-catalogo);
+    transform: var(--transformacion-texto-catalogo-inicial);
+    opacity: var(--opacidad-texto-catalogo-inicial);
+    font-size: var(--tamaño-texto-h2);
+    font-weight: var(--peso-texto-semi);
+    color: var(--color-texto-principal);
+    pointer-events: none;
+    transition: var(--transicion-opacidad-transform);
 }
 
-/* Cuando se pasa el mouse por admin__catalogo */
 .admin__catalogo:hover h2 {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0); /* sube suavemente */
+    opacity: var(--opacidad-texto-catalogo-hover);
+    transform: var(--transformacion-texto-catalogo-hover);
 }
 
 .admin__catalogo img {
-    width: var(--img-admin-width-heigh);
-    height: var(--img-admin-width-heigh);
+    width: var(--tamaño-imagen-admin);
+    height: var(--tamaño-imagen-admin);
 }
 
 /* Título centrado */
 .admin__title {
-    flex: 1; /* ocupa el espacio central */
+    flex: var(--indice-z-formulario);
     text-align: center;
-    font-size: var(--title-home-font-size);
-    font-weight: 700;
-    color: var(--color-text);
+    font-size: var(--tamaño-titulo-home);
+    font-weight: var(--peso-texto-titulo);
+    color: var(--color-texto-principal);
 }
 
-/* Casita a la derecha */
+/* Icono casita */
 .home__icon {
-    font-size: var(--icon-home-font-size);
-    color: var(--color-iconos);
+    font-size: var(--tamaño-icono-home);
+    color: var(--color-iconos-principal);
     cursor: pointer;
 }
 
 /* --- Iconos laterales --- */
 .admin__icons-right {
     position: fixed;
-    right: 60px;
+    right: var(--posicion-lateral-iconos);
     top: 50%;
-    transform: translateY(-50%);
+    transform: var(--transformacion-centrar-y);
     display: flex;
     flex-direction: column;
-    gap: 15px;
-    z-index: 1000;
+    gap: var(--separacion-iconos-laterales);
+    z-index: var(--z-index-iconos);
 }
 
 .icon-container {
-    background: #fff;
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
+    background: var(--color-fondo-icono);
+    border-radius: var(--radio-bordes-icono-lateral);
+    width: var(--tamaño-icono-lateral);
+    height: var(--tamaño-icono-lateral);
     display: flex;
     justify-content: center;
     align-items: center;
-    box-shadow: var(--sombra);
+    box-shadow: var(--sombra-general);
     cursor: pointer;
     position: relative;
+    transition: var(--transicion-icono);
 }
 
 .icon-container:hover {
-    transform: scale(1.1);
+    transform: scale(var(--escala-icono-hover));
 }
 
 .tooltip {
     position: absolute;
-    right: 60px;
-    background: #333;
-    color: #fff;
-    padding: 5px 10px;
-    border-radius: 6px;
-    font-size: 0.85rem;
-    opacity: 0;
-    transition: 0.3s;
+    right: var(--posicion-tooltip);
+    background: var(--color-fondo-tooltip);
+    color: var(--color-texto-tooltip);
+    padding: var(--padding-tooltip);
+    border-radius: var(--radio-bordes-tooltip);
+    font-size: var(--desplazamiento-active-boton).85rem;
+    opacity: var(--opacidad-tooltip-inicial);
+    transition: var(--duracion-transicion);
 }
 
 .icon-container:hover .tooltip {
-    opacity: 1;
+    opacity: var(--opacidad-tooltip-hover);
 }
 
-/* Contenedor principal */
+/* --- Contenedor principal --- */
 .product {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding-top: 140px;
-    gap: 40px;
+    padding-top: var(--margen-top-contenedor);
+    gap: var(--separacion-producto);
 }
 
 .product-card__title {
-    font-size: 40px;
-    color: #ffd9d9e8;
-    text-shadow: #000000 4px 4px 4px;
+    font-size: var(--tamaño-titulo-card);
+    color: var(--color-texto-titulo-card);
+    text-shadow: var(--color-sombra-texto) 4px 4px 4px;
 }
 
-/* Card / formulario */
+/* --- Card --- */
 .product-card__detalles {
     background-color: var(--color-fondo-card);
-    border-radius: var(--border-radius-card);
+    border-radius: var(--radio-bordes-card);
     box-shadow: var(--sombra-card);
-    padding: 40px 50px;
-    width: 950px;
-    height: 580px;
+    padding: var(--padding-card-vertical) var(--padding-card-horizontal);
+    width: var(--ancho-card);
+    height: var(--alto-card);
     display: flex;
     flex-direction: column;
-    gap: 25px;
+    gap: var(--margen-botones-rol-superior);
 }
 
 .product__contenido {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    gap: 40px;
+    gap: var(--separacion-contenido);
 }
 
-/* Imagen */
+/* --- Imagen --- */
 .product-card__image {
-    flex: 1;
+    flex: var(--indice-z-formulario);
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
 .product-card__image img {
-    width: 300px;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    transition: transform 0.3s ease;
+    width: var(--ancho-boton-iniciar);
+    border-radius: var(--radio-bordes-imagen);
+    box-shadow: var(--sombra-imagen-card);
+    transition: transform var(--duracion-transicion) var(--tipo-transicion);
 }
 
 .edit-image-btn {
-    margin-top: 10px;
+    margin-top: var(--margen-top-imagen-boton);
     background-color: var(--color-boton-principal);
-    color: #000;
-    border-radius: 8px;
-    padding: 8px 14px;
+    color: var(--color-texto-principal);
+    border-radius: var(--radio-bordes-boton);
+    padding: var(--padding-boton);
     cursor: pointer;
+    transition: var(--transicion-boton);
 }
 
 .edit-image-btn:hover {
-    background-color: #975236;
+    background-color: var(--color-boton-principal-hover);
 }
 
-/* Formulario derecha */
+/* --- Formulario --- */
 .product-fields {
-    flex: 1;
+    flex: var(--indice-z-formulario);
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: var(--separacion-campos);
 }
 
 label {
-    font-size: 20px;
-    /* font-weight: 600; */
-    color: var(--color-acento);
+    font-size: var(--tamaño-texto-etiqueta);
+    color: var(--color-texto-acento);
 }
 
 .input-text,
 .input-select,
 .input-area {
     width: 100%;
-    padding: 10px 12px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-    font-size: 16px;
-    background: #fff;
-    transition: 0.3s;
+    padding: var(--padding-input);
+    border-radius: var(--radio-bordes-input);
+    border: var(--espaciado-letras-titulo) solid var(--color-fondo-borde-input);
+    font-size: var(--tamaño-texto-base);
+    background: var(--color-fondo-icono);
+    transition: var(--duracion-transicion);
     resize: none;
 }
 
 .input-text:focus,
 .input-select:focus,
 .input-area:focus {
-    border-color: #c49b63;
-    box-shadow: 0 0 6px rgba(196,155,99,0.4);
+    border-color: var(--color-borde-input-focus);
+    box-shadow: var(--desplazamiento-active-boton) var(--desplazamiento-active-boton) var(--radio-bordes-tooltip) var(--color-sombra-input-focus);
 }
 
-/* Reseñas y botones */
+/* --- Reseñas y botones --- */
 .product-card__ratings {
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: var(--separacion-estrellas);
     color: var(--color-estrellas);
-    font-size: 18px;
+    font-size: var(--separacion-iconos);
 }
 
 .product-card__acciones {
     display: flex;
-    gap: 15px;
+    gap: var(--separacion-botones);
     justify-content: flex-end;
 }
 
 .boton {
     border: none;
-    padding: 10px 20px;
-    border-radius: 10px;
-    font-size: 16px;
-    font-weight: 600;
+    padding: var(--padding-boton);
+    border-radius: var(--radio-bordes-boton);
+    font-size: var(--tamaño-texto-base);
+    font-weight: var(--peso-texto-semi);
     cursor: pointer;
-    transition: 0.3s;
+    transition: var(--transicion-boton);
 }
 
 .guardar {
     background-color: var(--color-boton-principal);
-    color: #000;
+    color: var(--color-texto-principal);
 }
 
 .guardar:hover {
-    background-color: #975236;
+    background-color: var(--color-boton-principal-hover);
 }
 
 .cancelar {
     background-color: var(--color-boton-secundario);
-    color: #000;
+    color: var(--color-texto-principal);
 }
 
 .cancelar:hover {
-    background-color: #ad694c;
+    background-color: var(--color-boton-secundario-hover);
 }

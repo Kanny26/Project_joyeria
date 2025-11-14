@@ -1,101 +1,70 @@
-
+@import url(../../components/css/globales.css);
 
 :root {
-    /* ===== Colores ===== */
-    --color-text: #000;
-    --color-panel: #a6a6a6;
-    --color-box: #d9d6d2;
-    --color-message-box: #f0efed;
-    --color-inputs: #dcdad8;
-    --color-iconos: #4f2a09;
-    --color-button: #b4b4b4;
-    --color-buttons-hover: #9c9c9c;
 
-    
-  /* Gradientes */
-    --gradient-principal: linear-gradient(135deg, #8C6C5A, #A99481, #C9C2BA);
-    --gradient-panel: linear-gradient(135deg, #6D4F3E, #623B25, #653E2F);
+    /* Dimensiones - Iconos */
+    --tamaño-icono-input: var(--separacion-iconos);
 
-    /*  Dimensiones */
-    --panel-width: 550px;
-    --panel-height: 700px;
-    --panel-right-width: 650px;
-    --panel-right-height: 700px;
-    --box-width: 400px;
-    --box-height: 500px;
-    --logo-width: 300px;
-    --logo-height: auto;
-    --input-width: 280px;
-    --input-height: 40px;
-    --input-icon-size: 18px;
-    --button-img-width: 90px;
-    --button-img-height: 90px;
+    /* Tipografía - Tamaños */
+    --tamaño-fuente-titulo-mensaje: 35px;
+    --tamaño-fuente-parrafo: var(--margen-boton-inferior);
+    --tamaño-fuente-texto-navegacion: var(--margen-boton-inferior);
+    --tamaño-fuente-enlace: var(--separacion-iconos);
+    --tamaño-fuente-link: var(--separacion-iconos);
 
-  /*  Bordes y sombras */
-    --border-radius: 20px;
-    --border-radius-panel: 30px;
-    --shadow-box: 0 0 20px rgba(0, 0, 0, 0.3);
-
-  /* Botones */
-    --button-padding: 10px;
-    --button-font-size: 14px;
-    --button-hover-scale: 1.05;
-    --button-hover-brightness: 1.1;
 }
 
-@import url('../../Tipografias/styles.css');
+@import url('../../tipografias.css');
 
-/* ===== Reset ===== */ 
 * {
-    margin: 0;
-    padding: 0;
+    margin: var(--desplazamiento-active-boton);
+    padding: var(--desplazamiento-active-boton);
     box-sizing: border-box;
 }
 
 body {
     font-family: var(--fuente-titulos);
-    background: var(--gradient-principal);
+    background: var(--gradiente-fondo-principal);
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    height: var(--alto-vista-completa);
 }
 
-/* ===== Layout general ===== */
+/* Contenedor principal */
 .nueva-pass-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 1px;
+    gap: var(--separacion-paneles);
 }
 
-/* ===== Panel lateral ===== */
+/* Panel izquierdo */
 .nueva-pass-panel {
-    width: var(--panel-width);
-    height: var(--panel-height);
-    background: var(--gradient-panel);
-    border-radius: var(--border-radius-panel) 0 0 var(--border-radius-panel);
+    width: var(--ancho-panel-izquierdo);
+    height: var(--alto-panel-izquierdo);
+    background: var(--gradiente-panel-izquierdo);
+    border-radius: var(--radio-bordes-panel-izquierdo);
     display: flex;
     justify-content: center;
     align-items: center;
-    box-shadow: var(--shadow-box);
+    box-shadow: var(--sombra-caja);
 }
 
 .nueva-pass-panel__box {
-    width: var(--box-width);
-    height: var(--box-height);
-    background-color: var(--color-box);
-    border-radius: var(--border-radius);
+    width: var(--ancho-caja-panel-izquierdo);
+    height: var(--alto-caja-panel-izquierdo);
+    background-color: var(--color-fondo-caja);
+    border-radius: var(--radio-bordes-caja);
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 20px 0;
+    padding: var(--padding-caja-panel-vertical) var(--padding-caja-panel-horizontal);
 }
 
 .nueva-pass-panel__logo {
-    width: var(--logo-width);
-    height: var(--logo-height);
-    /* margin-bottom: 40px; */
+    width: var(--ancho-logo);
+    height: var(--alto-logo);
 }
 
 .nueva-pass-panel__buttons {
@@ -111,154 +80,133 @@ body {
     background: none;
     border: none;
     cursor: pointer;
-    transition: transform 0.3s ease, filter 0.3s ease;
+    transition: transform var(--duracion-transicion-boton) var(--tipo-transicion), filter var(--duracion-transicion-boton) var(--tipo-transicion);
 }
 
-
-.nueva-pass__button:hover {
-    transform: scale(var(--button-hover-scale));
-    filter: brightness(var(--button-hover-brightness));
+.nueva-pass-panel__button:hover {
+    transform: scale(var(--escala-hover-boton));
+    filter: brightness(var(--brillo-hover-boton));
 }
 
 .nueva-pass-panel__button img {
-    width: var(--button-img-width);
-    height: var(--button-img-height);
+    width: var(--ancho-imagen-boton-navegacion);
+    height: var(--alto-imagen-boton-navegacion);
 }
 
 .nueva-pass-panel__button h2 {
-    margin-top: 10px;
-    font-size: 20px;
-    color: var(--color-text);
+    margin-top: var(--margen-elemento-inferior);
+    font-size: var(--tamaño-fuente-texto-navegacion);
+    color: var(--color-texto-principal);
 }
 
-/* ===== Sección derecha ===== */
+/* Panel derecho */
 .nueva-pass-main {
-    width: var(--panel-right-width);
-    height: var(--panel-right-height);
-    background-image: url(../../Imagenes/fondos/banner6.jpg);
+    width: var(--ancho-panel-derecho);
+    height: var(--alto-panel-derecho);
+    background-image: url('../../../assets/Imagenes/fondos/banner3.jpg');
     background-size: cover;
     background-position: center;
-    border-radius: 0 var(--border-radius-panel) var(--border-radius-panel) 0;
+    border-radius: var(--radio-bordes-panel-derecho);
     display: flex;
     justify-content: center;
     align-items: center;
-    box-shadow: var(--shadow-box);
-    opacity: 0.95;
+    box-shadow: var(--sombra-caja);
+    opacity: var(--opacidad-panel-derecho);
 }
 
-/* ===== Formulario ===== */
+/* Formulario */
 .nueva-pass-form {
-    width: var(--box-width);
-    height: var(--box-height);
-    background-color: var(--color-message-box);
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow-box);
+    width: var(--ancho-caja-formulario);
+    height: var(--alto-caja-formulario);
+    background-color: var(--color-fondo-caja-mensaje);
+    border-radius: var(--radio-bordes-caja);
+    box-shadow: var(--sombra-caja);
     text-align: center;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 30px;
+    padding: var(--padding-caja-formulario);
 }
 
 .nueva-pass-form h1 {
-    font-size: 24px;
-    color: var(--color-text);
-    margin-bottom: 20px;
+    font-size: var(--tamaño-fuente-titulo-mensaje);
+    color: var(--color-texto-principal);
+    margin-bottom: var(--margen-elemento-inferior);
 }
 
 .nueva-pass-form p {
-    max-width: 300px;
-    font-size: 15px;
+    max-width: var(--ancho-input);
+    font-size: var(--tamaño-fuente-link);
     font-family: var(--fuente-subtitulos);
-    margin-bottom: 20px;
-    line-height: 1.5;
+    margin-bottom: var(--margen-elemento-inferior);
+    line-height: var(--altura-linea-parrafo);
 }
 
-/* ===== Inputs ===== */
+/* Inputs */
 .input-group {
-    width: var(--input-width);
-    height: var(--input-height);
+    width: var(--ancho-input);
+    height: var(--alto-input);
     display: flex;
     align-items: center;
-    background-color: var(--color-inputs);
-    border-radius: var(--border-radius);
-    padding: 10px 15px;
-    margin-bottom: 10px;
-    margin-top: 20px;
+    background-color: var(--color-fondo-input);
+    border-radius: var(--radio-bordes-caja);
+    padding: var(--padding-input-vertical) var(--padding-input-horizontal);
+    margin-top: var(--margen-input-superior);
+    margin-bottom: var(--margen-input-inferior);
 }
 
-.input__group i {
-    font-size: 18px;
+.input-group i {
+    font-size: var(--tamaño-icono-input);
     color: var(--color-iconos);
-    margin-right: 10px;
+    margin-right: var(--ancho-scrollbar);
 }
 
 .input-group input {
-    flex: 1;
+    flex: var(--indice-z-formulario);
     border: none;
     background: transparent;
-    font-size: 16px;
+    font-size: var(--tamaño-fuente-texto-navegacion);
     outline: none;
-    margin-left: 10px;
 }
 
-.input__group i.icon-left {
-    font-size: var(--input-icon-size);
-    color: #333;
-    margin-right: 18px;
-}
-
-.input__group i.icon-right {
-    position: absolute;
-    right: 15px;
-    font-size: var(--input-icon-size);
-    color: #333;
-    cursor: pointer;
-}
-
-/* ===== Botón ===== */
-/* Botón principal */
+/* Botón */
 .nueva-pass__button {
     width: 100%;
-    max-width: 300px;
-    height: 40px;
-    margin: 30px 0 20px 0; /* separación del botón de otros elementos */
-    font-size: 16px;
-    font-weight: 700;
-    color: var(--color-text);
-    background-color: var(--color-buttons-hover);
+    max-width: var(--ancho-boton-principal);
+    height: var(--alto-boton-principal);
+    margin: var(--margen-boton-vertical) var(--desplazamiento-active-boton) var(--margen-boton-inferior) var(--desplazamiento-active-boton);
+    font-size: var(--tamaño-fuente-texto-navegacion);
+    font-weight: var(--peso-fuente-titulo-principal);
+    color: var(--color-texto-principal);
+    background-color: var(--color-fondo-boton-hover);
     border: none;
-    border-radius: var(--border-radius);
+    border-radius: var(--radio-bordes-caja);
     cursor: pointer;
     text-align: center;
-    transition: transform 0.3s ease, filter 0.3s ease, box-shadow 0.3s ease;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    transition: transform var(--duracion-transicion-boton) var(--tipo-transicion), filter var(--duracion-transicion-boton) var(--tipo-transicion), box-shadow var(--duracion-transicion-boton) var(--tipo-transicion);
+    box-shadow: var(--sombra-boton-normal);
 }
 
 .nueva-pass__button:hover {
-    transform: scale(var(--button-hover-scale));
-    filter: brightness(var(--button-hover-brightness));
-    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    transform: scale(var(--escala-hover-boton));
+    filter: brightness(var(--brillo-hover-boton));
+    box-shadow: var(--sombra-boton-hover);
 }
 
-
+/* Enlace final */
 .nueva-pass__link {
-    margin-top: 20px;
-    font-size: 13px;
+    margin-top: var(--margen-link-superior);
+    font-size: var(--tamaño-fuente-enlace);
     text-align: center;
 }
 
 .nueva-pass__link a {
-    color: var(--color-text);
+    color: var(--color-texto-principal);
     text-decoration: none;
-    font-weight: bold;
-}
-
-.nueva-pass__link p {
-    font-size: 16px;
+    font-weight: var(--peso-fuente-link-var(--peso-fuente-link-bold));
 }
 
 .nueva-pass__link a:hover {
-    text-decoration: underline;
+    text-decoration: underline;   
 }

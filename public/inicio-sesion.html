@@ -1,71 +1,85 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sign up</title>
 
     <!-- Tipografías -->
-    <link rel="stylesheet" href="../components/css/Tipografias/styles.css">
+    <!-- <link rel="stylesheet" href="../components/css/Tipografias/styles.css"> -->
 
     <!-- CSS del login -->
-    <link rel="stylesheet" href="../components/css/inicio-sesion.css">
+    <link rel="stylesheet" href="../components/css/global.css" />
+    <link rel="stylesheet" href="../components/css/inicio-sesion.css" />
 
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-</head>
-<body>
-    <div class="container"> 
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    </head>
+    <body>
+        <div class="container">
         <aside class="login-panel">
             <div class="login-panel__box">
-                <img class="login-panel__logo-image" src="../assets/Imagenes/Logo.png" alt="Logo">
-                <section class="login-panel__buttons">
-                    <button class="login-panel__button">
-                        <img src="../assets/Imagenes/iconos/admin.png" alt="Admin Icon">
-                        <h2>ADMIN</h2>
-                    </button>
-                    <button class="login-panel__button">
-                        <img src="../assets/Imagenes/iconos/seller.png" alt="Seller Icon">
-                        <h2>SELLER</h2>
-                    </button>
-                </section>
+            <img
+                class="login-panel__logo-image"
+                src="../assets/Imagenes/Logo.png"
+                alt="Logo"
+            />
             </div>
         </aside>
 
-        <main class="container__image__main"> 
-            <section class="container__login_data"> 
-                <div class="container__login_data__content">
-                    <header>
-                        <h1>Iniciar Sesión</h1>
-                    </header>
+        <main class="container__image__main">
+            <section class="container__login_data">
+            <div class="container__login_data__content">
+                <header>
+                <h1>Iniciar Sesión</h1>
+                </header>
 
-                    <form>
-                        <div class="input__group">
-                            <i class="fas fa-user icon-left"></i>
-                            <input type="text" placeholder="Nombre de usuario" required>
-                        </div>
+                <form action="../public/inicio-sesion.html" method="get">
+                <div class="input__group">
+                    <i class="fas fa-user icon-left"></i>
+                    <input
+                    type="text"
+                    placeholder="Nombre de usuario"
+                    id="usuario"
+                    required
+                    />
+                </div>
 
-                        <div class="input__group">
-                            <i class="fas fa-lock icon-left"></i>
-                            <input type="password" id="password" placeholder="Contraseña" required> 
-                            <i class="fas fa-eye icon-right"></i> 
-                        </div> 
+                <div class="input__group">
+                    <i class="fas fa-lock icon-left"></i>
+                    <input
+                    type="password"
+                    id="password"
+                    placeholder="Contraseña"
+                    required
+                    />
+                    <i class="fas fa-eye icon-right"></i>
+                </div>
 
-                        <a href="../Recuperar_seña/ingresar_correo/ing-correo.html" class="login__link--recuperar">
-                            ¿Olvidaste tu contraseña?
-                        </a>
+                <a
+                    href="../Recuperar_seña/ingresar_correo/ing-correo.html"
+                    class="login__link--recuperar"
+                >
+                    ¿Olvidaste tu contraseña?
+                </a>
 
-                        <button type="submit" class="login__button">Iniciar Sesión</button> 
-                    </form> 
+                <button type="submit" class="login__button">
+                    Iniciar Sesión
+                </button>
+                </form>
 
-                    <footer class="registrate__link"> 
-                        <p>¿Aún no tienes una cuenta? 
-                            <a href="../registro/registro.html">¡Regístrate aquí!</a>
-                        </p> 
-                    </footer> 
-                </div> 
-            </section> 
-        </main> 
-    </div> 
-</body>
+                <footer class="registrate__link">
+                <p>
+                    ¿No tienes una cuenta?
+                    <a href="../public/registro.html">¡Regístrate!</a>
+                </p>
+                </footer>
+            </div>
+            </section>
+        </main>
+        </div>
+    </body>   
 </html>

@@ -1,196 +1,133 @@
-:root {  
-    /* Colores */
-    --color-text: #000; 
-    --color-box: #D9D6D2;
+@import url(../../components/css/globales.css);
 
-    /* Gradientes */
-    --gradient-principal: linear-gradient(135deg, #8C6C5A, #A99481, #C9C2BA);
-    --gradient-panel: linear-gradient(135deg, #6D4F3E, #623B25, #653E2F);
-    --gradient-marron: linear-gradient(135deg, #6D4F3E, #8A4F2E, #9C6651);
-    --gradient-suave: radial-gradient(circle, #C9C2BA, #A99481, #8C6C5A);
-    --gradient-dorado: linear-gradient(to right, #D4AF37, #A99481);
-
-    /* Dimensiones Generales */
-    --panel-width: 800px;
-    --panel-height: 800px;
-    --panel-padding: 25px;
-    --box-width: 500px;
-    --box-height: 650px;
-    --logo-width: 350px;
-    --logo-height: 350px;
-
-    /* Bordes / Radios */
-    --border-radius-panel-left: 30px 0 0 20px;
-    --border-radius-panel-right: 0 20px 30px 0;
-    --border-radius-box: 20px;
-
-    /* Sombras */
-    --shadow-box: 0 0 20px rgb(0, 0, 0);
-    --shadow-image: 0 4px 10px rgba(0,0,0,0.2);
-
-    /* Espaciados */
-    --gap-container: 1px;
-    --margin-logo-bottom: 8px;
-    --margin-welcome-top: -81px;
-    --margin-welcome-bottom: 30px;
-    --margin-rol-bottom: 10px;
-    --margin-buttons-top: 12px;
-
-    /* Botones */
-    --button-img-width: 130px;
-    --button-img-height: 130px;
-    --button-font-size: 25px;
-    --button-hover-scale: 1.05;
-    --button-hover-brightness: 1.1;
+:root {
+  /* Efectos - Hover */
+  --escala-hover-boton: 1.05;
+  --brillo-hover-boton: 1.1;
 }
 
-@import url('../Tipografias/styles.css');
+/* @import url("../Tipografias/styles.css"); */
 
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 body {
-    font-family: var(--fuente-titulos);
-    background: var(--gradient-principal);
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    overflow: hidden; 
+  font-family: var(--fuente-titulos);
+  background: var(--gradiente-fondo-principal);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  overflow: hidden;
 }
 
-.container_principal{
-    display: flex;
+/* Contenedor general */
+.container_principal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: var(--alto-vista-completa);
+  gap: var(--separacion-paneles);
 }
 
-.container {
-    display: flex;
-}
-
-/* Imagen a la izquierda */
+/* Panel izquierdo: imagen */
 .container__image__main {
-    width: 800px;
-    height: var(--panel-height);
-    background-image: url('../../assets/Imagenes/fondos/Fondo_principal.jpg');
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center;
-}
-
-/* Panel gris a la derecha */
-.login-panel {
-    width: var(--panel-width);
-    height: var(--panel-height);
-    background-color: var(--color-panel);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    gap: var(--gap-container);
-}
-
-/* Paneles */
-.panel-izquierdo, .panel-derecho {
-    position: relative;
-}
-
-/* Imagen izquierda */
-.container__image__main {
-    width: 900px;
-    height: var(--panel-height);
-    background-image: url('../Imagenes/fondos/banner1.jpg');
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center;
-    border-radius: var(--border-radius-panel-left);
-    box-shadow: var(--shadow-image);
-    z-index: -1;
-    padding: 10px;
+  width: var(--ancho-panel-izquierdo);
+  height: var(--alto-paneles);
+  background-image: url("../../assets/Imagenes/fondos/banner4.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  border-radius: var(--radio-bordes-panel-izquierdo);
+  box-shadow: var(--sombra-imagen-principal);
 }
 
 /* Panel derecho */
 .login-panel {
-    width: var(--panel-width);
-    height: var(--panel-height);
-    background: var(--gradient-panel);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: var(--border-radius-panel-right);
+  width: var(--ancho-panel-derecho);
+  height: var(--alto-paneles);
+  background: var(--gradiente-panel-derecho);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: var(--radio-bordes-panel-derecho);
 }
 
-/* Caja interna */
+/* Caja interna dentro del panel derecho */
 .login-panel__box {
-    width: var(--box-width);
-    height: var(--box-height);
-    background-color: var(--color-box);
-    border-radius: var(--border-radius-box);
-    box-shadow: var(--shadow-box);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: var(--panel-padding) 0;
-    text-align: center;
+  width: var(--ancho-panel-derecho-interno);
+  height: var(--alto-panel-derecho-interno);
+  background-color: var(--color-fondo-caja);
+  border-radius: var(--radio-bordes-caja);
+  box-shadow: var(--sombra-caja-interna);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--padding-caja-vertical) var(--padding-caja-horizontal);
+  text-align: center;
 }
 
 /* Logo */
 .login-panel__logo-image {
-    width: var(--logo-width);
-    height: var(--logo-height);
-    margin-bottom: var(--margin-logo-bottom);
+  width: var(--ancho-logo);
+  height: var(--alto-logo);
+  margin-bottom: var(--margen-logo-inferior);
 }
 
 /* Mensajes */
 .login-panel__welcome {
-    font-size: 42px;
-    margin-top: var(--margin-welcome-top);
-    margin-bottom: var(--margin-welcome-bottom);
-    color: var(--color-text);
-    font-family: var(--fuente-titulos);
+  font-size: var(--tamaño-fuente-bienvenida);
+  margin-top: var(--margen-bienvenida-superior);
+  margin-bottom: var(--margen-bienvenida-inferior);
+  color: var(--color-texto-principal);
+  font-family: var(--fuente-titulos);
 }
 
 .login-panel__rol {
-    font-size: 35px;
-    margin-bottom: var(--margin-rol-bottom);
-    color: var(--color-text);
-    font-family: var(--fuente-titulos);
+  font-size: var(--tamaño-fuente-rol);
+  margin-bottom: var(--margen-rol-inferior);
+  color: var(--color-texto-principal);
+  font-family: var(--fuente-titulos);
 }
 
 /* Botones */
 .login-panel__buttons {
-    display: flex;
-    justify-content: space-evenly;
-    width: 100%;
-    margin-top: var(--margin-buttons-top);
+  display: flex;
+  justify-content: space-evenly;
+  width: var(--ancho-contenedor-botones);
+  margin-top: var(--margen-botones-superior);
 }
 
 .login-panel__button {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background: none;
-    border: none;
-    cursor: pointer;
-    transition: transform 0.2s ease, filter 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: transform var(--duracion-transicion-boton) ease,
+    filter var(--duracion-transicion-boton) ease;
 }
 
 .login-panel__button:hover {
-    transform: scale(var(--button-hover-scale));
-    filter: brightness(var(--button-hover-brightness));
+  transform: scale(var(--escala-hover-boton));
+  filter: brightness(var(--brillo-hover-boton));
 }
 
 .login-panel__button img {
-    width: var(--button-img-width);
-    height: var(--button-img-height);
+  width: var(--ancho-imagen-boton-rol);
+  height: var(--alto-imagen-boton-rol);
 }
 
 .login-panel__button h2 {
-    margin-top: 10px;
-    font-weight: 600;
-    font-size: var(--button-font-size);
-    color: var(--color-text);
-    font-family: var(--fuente-descripciones);
+  margin-top: var(--margen-titulo-boton-superior);
+  font-weight: var(--peso-fuente-titulo-boton-rol);
+  font-size: var(--tamano-titulo-h2);
+  color: var(--color-texto-principal);
+  font-family: var(--fuente-titulos);
+  /* font-family: Montserrat; */
 }

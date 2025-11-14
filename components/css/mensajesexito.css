@@ -1,109 +1,72 @@
-:root { 
-  /* Colores  */
-    --color-text: #000; 
-    --color-panel: #a6a6a6;
-    --color-box: #d9d6d2;
-    --color-message-box: #f0efed;
-    --color-button: #b4b4b4;
-    --color-button-hover: #9c9c9c;
+@import url(../../components/css/globales.css);
 
-/* Gradientes  */
-    --gradient-principal: linear-gradient(135deg, #8C6C5A, #A99481, #C9C2BA);
-    --gradient-panel: linear-gradient(135deg, #6D4F3E, #623B25, #653E2F);
-
-  /* Dimensiones globales */
-    --panel-width: 550px;
-    --panel-height: 700px;
-
-    --panel-derecho-width: 650px;
-    --panel-derecho-height: 700px;
-
-    --box-width: 400px;
-    --box-height: 500px;
-
-    --panel-box-width: 400px;
-    --panel-box-height: 500px;
-
-    --logo-width: 300px;
-    --logo-height: auto;
-
-    --button-img-width: 90px;
-    --button-img-height: 90px;
-
-    --icon-thumb-width: 60%;
-
-  /* Bordes y sombras */
-    --border-radius: 20px;
-    --border-radius-panel: 30px;
-    --shadow-box: 0 0 20px rgba(0, 0, 0, 0.3);
-
-  /* Botones  */
-    --button-padding: 12px 30px;
-    --button-font-size: 18px;
-    --button-hover-scale: 1.05;
-    --button-hover-brightness: 1.1;
+:root {
+    /* Tipografía - Tamaños */
+    --tamaño-fuente-titulo-boton-rol: var(--margen-boton-inferior);
+    --tamaño-fuente-titulo-mensaje: var(--margen-bienvenida-inferior);
+    --tamaño-fuente-boton-iniciar: 22px;
 }
 
-@import url('../Tipografias/styles.css');
-
+/* Reset */
 * {
-    margin: 0;
-    padding: 0;
+    margin: var(--desplazamiento-active-boton);
+    padding: var(--desplazamiento-active-boton);
     box-sizing: border-box;
 }
 
 body {
     font-family: var(--fuente-titulos);
-    background: var(--gradient-principal);
+    background: var(--gradiente-fondo-principal);
     background-size: cover;
     background-position: center;
-    height: 100vh;
+    height: var(--alto-vista-completa);
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-/* Estructura principal */
+/* Contenedor principal */
 .success-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 1px;
+    gap: var(--separacion-paneles);
 }
 
 /* Panel izquierdo */
 .success-panel {
-    width: var(--panel-width);
-    height: var(--panel-height);
-    background: var(--gradient-panel);
-    border-radius: var(--border-radius-panel) 0 0 var(--border-radius-panel);
+    width: var(--ancho-panel-izquierdo);
+    height: var(--alto-panel-izquierdo);
+    background: var(--gradiente-panel-izquierdo);
+    border-radius: var(--radio-bordes-panel-izquierdo);
     display: flex;
     justify-content: center;
     align-items: center;
-    box-shadow: var(--shadow-box);
+    box-shadow: var(--sombra-caja);
 }
 
 .success-panel__box {
-    width: var(--panel-box-width);
-    height: var(--panel-box-height);
-    background-color: var(--color-box);
-    border-radius: var(--border-radius);
+    width: var(--ancho-caja-panel-izquierdo);
+    height: var(--alto-caja-panel-izquierdo);
+    background-color: var(--color-fondo-caja);
+    border-radius: var(--radio-bordes-principal);
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 20px 0;
+    justify-content: center;
+    padding: var(--padding-caja-panel-vertical) var(--padding-caja-panel-horizontal);
 }
 
 .success-panel__logo-image {
-    width: var(--logo-width);
-    height: var(--logo-height);
-    /* margin-bottom: 70px; */
+    width: var(--ancho-logo);
+    height: var(--alto-logo);
 }
 
 .success-panel__buttons {
     display: flex;
     justify-content: space-evenly;
     width: 100%;
+    margin-top: var(--margen-botones-rol-superior);
 }
 
 .success-panel__button {
@@ -113,91 +76,90 @@ body {
     background: none;
     border: none;
     cursor: pointer;
-    transition: transform 0.3s ease, filter 0.3s ease;
+    transition: transform var(--duracion-transicion-boton-rol) var(--tipo-transicion), filter var(--duracion-transicion-boton-rol) var(--tipo-transicion);
 }
 
 .success-panel__button:hover {
-    transform: scale(var(--button-hover-scale));
-    filter: brightness(var(--button-hover-brightness));
+    transform: scale(var(--escala-hover-boton));
+    filter: brightness(var(--brillo-hover-boton));
 }
 
 .success-panel__button img {
-    width: var(--button-img-width);
-    height: var(--button-img-height);
+    width: var(--ancho-imagen-boton-rol);
+    height: var(--alto-imagen-boton-rol);
 }
 
 .success-panel__button h2 {
-    margin-top: 10px;
-    font-size: 20px;
-    color: var(--color-text);
+    margin-top: var(--margen-titulo-boton-superior);
+    font-size: var(--tamaño-fuente-titulo-boton-rol);
+    color: var(--color-texto-principal);
     font-family: var(--fuente-titulos);
 }
 
-/* Panel derecho (mensaje) */
+/* Panel derecho */
 .success-message {
-    width: var(--panel-derecho-width);
-    height: var(--panel-derecho-height);
-    background-image: url(../Imagenes/fondos/banner5.jpg);
-    background-repeat: no-repeat;
+    width: var(--ancho-panel-derecho);
+    height: var(--alto-panel-derecho);
+    background-image: url('../../assets/Imagenes/fondos/banner5.jpg');
     background-size: cover;
     background-position: center;
-    border-radius: 0 var(--border-radius-panel) var(--border-radius-panel) 0;
+    border-radius: var(--radio-bordes-panel-derecho);
     display: flex;
     justify-content: center;
     align-items: center;
-    box-shadow: var(--shadow-box);
-    opacity: 0.9;
+    box-shadow: var(--sombra-caja);
+    opacity: var(--opacidad-imagen-fondo);
 }
 
 .success-box {
-    width: var(--box-width);
-    height: var(--box-height);
-    background-color: var(--color-message-box);
-    border-radius: var(--border-radius);
+    width: var(--ancho-caja-mensaje);
+    height: var(--alto-caja-mensaje);
+    background-color: var(--color-fondo-caja-mensaje);
+    border-radius: var(--radio-bordes-principal);
     text-align: center;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 30px;
-    box-shadow: var(--shadow-box);
+    padding: var(--padding-caja-mensaje);
+    box-shadow: var(--sombra-caja);
 }
 
 .success-box h1 {
     font-family: var(--fuente-titulos);
-    font-size: 24px;
-    color: var(--color-text);
-    margin-bottom: 20px;
+    font-size: var(--tamaño-fuente-titulo-mensaje);
+    color: var(--color-texto-principal);
+    margin-bottom: var(--margen-titulo-mensaje-inferior);
 }
 
 .icon__pulgar-arriba {
-    width: var(--icon-thumb-width);
-    margin-bottom: 20px;
+    width: var(--ancho-icono-pulgar);
+    margin-bottom: var(--margen-icono-pulgar-inferior);
 }
 
 /* Botón principal */
 .success__button {
-    display: inline-block;
-    padding: 10px 20px; 
-    font-size: 16px; 
-    font-weight: 600;
-    background-color: var(--color-button);
+    height: var(--alto-boton-iniciar);
+    width: var(--ancho-boton-iniciar);
+    padding: var(--padding-boton-iniciar-vertical) var(--padding-boton-iniciar-horizontal);
+    font-size: var(--tamaño-fuente-boton-iniciar);
+    font-weight: var(--peso-fuente-boton-iniciar);
+    background-color: var(--color-fondo-boton);
     border: none;
-    border-radius: 20px;
-    color: var(--color-text);
-    font-family: var(--fuente-subtitulos);
+    border-radius: var(--radio-bordes-principal);
+    color: var(--color-texto-principal);
     cursor: pointer;
-    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
-    transition: all 0.25s ease;
+    box-shadow: var(--sombra-boton-normal);
+    transition: all var(--duracion-transicion-boton-iniciar) var(--tipo-transicion);
 }
 
 .success__button:hover {
-    background-color: var(--color-button-hover);
-    transform: translateY(-1.5px);
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.18);
+    background-color: var(--color-fondo-boton-hover);
+    transform: translateY(var(--desplazamiento-hover-boton));
+    box-shadow: var(--sombra-boton-hover);
 }
 
 .success__button:active {
-    transform: translateY(0);
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+    transform: translateY(var(--desplazamiento-active-boton));
+    box-shadow: var(--sombra-boton-active);
 }

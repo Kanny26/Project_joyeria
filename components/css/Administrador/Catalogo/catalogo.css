@@ -1,34 +1,35 @@
-:root {
-    /* Colores */
-    --color-background: #f5f5f5;
-    --color-panel: #ffd9d9; 
-    --color-data: #ffcaca;
-    --color-inputs: #b8b8b8;
-    --color-buttons: #b4b4b4;
-    --color-buttons-hover: #9c9c9c;
-    --color-text: #000000;
-    --color-iconos: #000000;
+@import url(../../components/css/globales.css);
 
-    /*Dimensiones*/
-    --fondo-img-min-height: 100vh; 
-    --barra-home-width: 1500px;
-    --barra-home-height: 90px;
-    --circulo-img-admin-width-height: 91px;
-    --img-admin-width-heigh: 70px;
-    --icon-home-font-size: 40px;
-    --title-home-font-size: 60px;
-    --title-cards-font-size: 35px;
-    --cards-contenedor-width: 350px;
-    --cards-contenedor-height: 350px;
-    --img-cards-width-height: 200px;
+:root {
+    /* Dimensiones - Círculo Admin */
+    --tamaño-imagen-admin: var(--alto-imagen-admin);
+    
+    /* Dimensiones - Iconos */
+    --tamaño-icono-home: var(--alto-boton-login-registro);
+    
+    /* Dimensiones - Títulos */
+    --tamaño-titulo-home: var(--posicion-lateral-iconos);
+    --tamaño-titulo-cards: 35px;
+
+    /* Dimensiones - Tarjetas */
+    
+    --tamaño-imagen-cards: var(--alto-circulo-icono);
+    
+    /* Dimensiones - Círculo Icono */
+    
+    --tamaño-imagen-circulo: var(--margen-superior-cards);
+
+    /* Tipografía - Tamaños */
+    --tamaño-fuente-texto-inicio: var(--margen-boton-inferior);
+    --tamaño-fuente-titulo-card: 35px;
 
 }
 
 @import url('../../Tipografias/styles.css');
 
 * {
-    margin: 0;
-    padding: 0;
+    margin: var(--desplazamiento-active-boton);
+    padding: var(--desplazamiento-active-boton);
     box-sizing: border-box;
 }
 
@@ -39,163 +40,165 @@ body {
     background-size: cover;
     background-position: center;
     position: relative;
-    min-height: var(--fondo-img-min-height);
+    min-height: var(--alto-minimo-fondo);
     overflow: hidden; 
 }
+
+/* Barra superior (admin) */
 .admin {
-    width: var(--barra-home-width);
-    height: var(--barra-home-height);
+    width: var(--ancho-barra-superior);
+    height: var(--alto-barra-superior);
     display: flex;
     align-items: center;
     justify-content: space-between;
     position: fixed;   
-    top: 20px;
+    top: var(--posicion-top-barra);
     left: 50%;
     transform: translateX(-50%); 
-    background-color: var(--color-panel);
-    border-radius: 20px;
-    z-index: 10;
-    padding: 0 20px;
+    background-color: var(--color-fondo-panel-superior);
+    border-radius: var(--radio-bordes-general);
+    z-index: var(--z-index-panel);
+    padding: var(--desplazamiento-active-boton) var(--padding-horizontal-barra);
 }
 
-/* Círculo admin a la izquierda */
+/* Círculo admin */
 .admin__catalogo {
-    width: var(--circulo-img-admin-width-height);
-    height: var(--circulo-img-admin-width-height);
+    width: var(--diametro-circulo-admin);
+    height: var(--diametro-circulo-admin);
     border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-left: -15px;
+    margin-left: var(--margen-izquierda-circulo);
 }
 
-/* Estilo base del texto "Inicio" */
+/* Texto "Inicio" */
 .admin__catalogo h2 {
-    position: absolute; /* relativo al body si no pones relative en home__admin */
-    bottom: 30px;
-    left: 160px;
-    transform: translateX(-50%) translateY(10px);
-    opacity: 0;
-    font-size: 20px;
-    font-weight: 600;
-    color: var(--color-text);
-    pointer-events: none; /* para que no interfiera con el hover */
-    transition: opacity 0.3s ease, transform 0.3s ease;
+    position: absolute;
+    bottom: var(--posicion-bottom-h2);
+    left: var(--posicion-left-h2);
+    transform: translateX(-50%) translateY(var(--ancho-scrollbar));
+    opacity: var(--desplazamiento-active-boton);
+    font-size: var(--tamaño-fuente-texto-inicio);
+    font-weight: var(--peso-fuente-semititulos);
+    color: var(--color-texto-principal);
+    pointer-events: none;
+    transition: opacity var(--duracion-transicion) var(--tipo-transicion), transform var(--duracion-transicion) var(--tipo-transicion);
 }
 
-/* Cuando se pasa el mouse por home__admin */
 .admin__catalogo:hover h2 {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0); /* sube suavemente */
+    opacity: var(--indice-z-formulario);
+    transform: translateX(-50%) translateY(var(--desplazamiento-active-boton));
 }
 
 .admin__catalogo img {
-    width: var(--img-admin-width-heigh);
-    height: var(--img-admin-width-heigh);
+    width: var(--tamaño-imagen-admin);
+    height: var(--tamaño-imagen-admin);
 }
 
-/* Título centrado */
+/* Título central */
 .admin__title {
-    flex: 1; /* ocupa el espacio central */
+    flex: var(--indice-z-formulario);
     text-align: center;
-    font-size: var(--title-home-font-size);
-    font-weight: 700;
-    color: var(--color-text);
+    font-size: var(--tamaño-titulo-home);
+    font-weight: var(--peso-fuente-titulo-principal);
+    color: var(--color-texto-principal);
 }
 
-/* Casita a la derecha */
+/* Icono de casa */
 .home__icon {
-    font-size: var(--icon-home-font-size);
-    color: var(--color-iconos);
+    font-size: var(--tamaño-icono-home);
+    color: var(--color-iconos-principal);
     cursor: pointer;
 }
 
+/* Sección de tarjetas */
 .cards {
     display: flex;
-    flex-direction: column; 
-    align-items: center; 
-    margin-top: 150px; 
+    flex-direction: column;
+    align-items: center;
+    margin-top: var(--margen-superior-cards);
 }
 
 .cards__title {
-    font-size: 40px;
-    margin-bottom: 40px; 
+    font-size: var(--tamaño-titulo-home);
+    margin-bottom: var(--margen-inferior-titulo-cards);
     text-align: center;
-    color: #ffd9d9e8;
-    transition: transform 0.3s, color 0.3s;
-    text-shadow: #000000 4px 4px 4px;
-}
-.cards__title:hover {
-    color: #977b6b;
+    color: var(--color-texto-titulo-cards);
+    transition: transform var(--duracion-transicion), color var(--duracion-transicion);
+    text-shadow: var(--color-sombra-texto) 4px 4px 4px;
 }
 
+.cards__title:hover {
+    color: var(--color-texto-hover-cards);
+}
+
+/* Contenedor de tarjetas */
 .cards__contenedor {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 30px;
+    grid-template-columns: repeat(var(--margen-boton-login-horizontal)-fit, minmax(320px, var(--grid-columnas-maximo)));
+    gap: var(--separacion-grid-cards);
     justify-items: center;
-    padding: 0 40px;
+    padding: var(--padding-grid-cards);
 }
 
-/* ======= CARD ITEM RECTANGULAR ======= */
 .cards__contenedor-content {
     display: flex;
     justify-content: center;
 }
 
+/* Tarjeta */
 .card-item {
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    background: var(--color-data);
-    border-radius: 16px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    background: var(--color-fondo-datos-tarjeta);
+    border-radius: var(--radio-bordes-tarjeta);
+    box-shadow: var(--sombra-difuminada);
     width: 545px;
-    height: 200px;
-    padding: 20px 25px;
-    gap: 25px;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    height: var(--alto-circulo-icono);
+    padding: var(--padding-tarjeta);
+    gap: var(--separacion-tarjetas);
+    transition: transform var(--duracion-transicion) var(--tipo-transicion), box-shadow var(--duracion-transicion) var(--tipo-transicion);
     cursor: pointer;
 }
 
 .card-item:hover {
-    transform: scale(1.1);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-    background-color: #DDA17E;
+    transform: scale(var(--escala-hover-tarjeta));
+    box-shadow: var(--sombra-difuminada-hover);
+    background-color: var(--color-fondo-tarjeta-hover);
 }
 
-/* ======= ICON CIRCLE ======= */
+/* Círculo del icono */
 .icon-circle {
-    width: 155px;
-    height: 155px;
-    /* background: #f3c766; */
+    width: var(--diametro-icono-circulo);
+    height: var(--diametro-icono-circulo);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    flex-shrink: 0;
-    transition: background 0.3s, transform 0.3s;
+    flex-shrink: var(--desplazamiento-active-boton);
+    transition: background var(--duracion-transicion), transform var(--duracion-transicion);
 }
 
-
 .icon-circle img {
-    width: 150px;
-    height: 150px;
+    width: var(--tamaño-imagen-circulo);
+    height: var(--tamaño-imagen-circulo);
     object-fit: contain;
-    transition: filter 0.3s;
+    transition: filter var(--duracion-transicion);
 }
 
 .icon-circle:hover img {
-    filter: brightness(1) invert(0);
+    filter: brightness(var(--indice-z-formulario)) invert(var(--desplazamiento-active-boton));
 }
 
-/* ======= CARD TEXT ======= */
+/* Texto dentro de la tarjeta */
 .card-item h3 {
-    position: relative; /* ya no absoluto */
-    color: #000000;
-    font-size: 35px;
-    font-weight: 600;
+    position: relative;
+    color: var(--color-texto-principal);
+    font-size: var(--tamaño-fuente-titulo-card);
+    font-weight: var(--peso-fuente-semititulos);
     text-align: center;
-    z-index: 1; /* para que quede encima del gradiente */
-    transition: color 0.3s ease;
+    z-index: var(--indice-z-formulario);
+    transition: color var(--duracion-transicion) var(--tipo-transicion);
 }

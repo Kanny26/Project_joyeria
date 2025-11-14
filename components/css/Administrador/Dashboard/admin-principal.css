@@ -1,32 +1,59 @@
 :root {
-    /* Colores */
-    --color-background: #f5f5f5;
-    --color-panel: #ffd9d9; 
-    --color-data: #ffcaca;
-    --color-inputs: #b8b8b8;
-    /* --color-buttons: #b4b4b4; */
-    --color-buttons-hover: #9c9c9c;
-    --color-text: #000000;
-    --color-iconos: #000000;
+    /* 🎨 Colores */
+    --color-fondo-principal: #f5f5f5;
+    --color-fondo-panel: #ffd9d9;
+    --color-fondo-datos: #ffcaca;
+    --color-fondo-inputs: #b8b8b8;
+    --color-fondo-boton-hover: #9c9c9c;
+    --color-texto-principal: #000000;
+    --color-iconos-principal: #000000;
+    --color-titulo-hover: #977b6b;
+    --color-titulo-cards: #ffd9d9e8;
+    --color-fondo-circulo-hover: #dda17e;
+    --color-sombra-oscura: rgba(0, 0, 0, 0.5);
+    --color-sombra-suave: rgba(0, 0, 0, 0.2);
 
+    /* 🌈 Gradientes */
+    --degradado-principal: radial-gradient(circle, rgba(150, 144, 144, 1) 0%, rgba(163, 146, 132, 1) 32%, rgba(105, 87, 74, 1) 89%);
+    --degradado-boton: radial-gradient(circle, #b4b4b4, #9c9c9c);
 
-    --gradient-principal: radial-gradient(circle,rgba(150, 144, 144, 1) 0%, rgba(163, 146, 132, 1) 32%, rgba(105, 87, 74, 1) 89%);
-    --gradient-button: radial-gradient(circle, #b4b4b4, #9c9c9c);
+    /* 📏 Dimensiones */
+    --alto-minimo-fondo: 100vh;
+    --ancho-barra-home: 1500px;
+    --alto-barra-home: 90px;
+    --diametro-circulo-admin: 91px;
+    --tamano-imagen-admin: 70px;
+    --tamano-icono-home: 40px;
+    --tamano-titulo-home: 60px;
+    --ancho-card: 250px;
+    --alto-card: 250px;
+    --tamano-imagen-card: 150px;
+    --tamano-titulo-card: 40px;
+    --margen-titulo-card-abajo: 40px;
+    --margen-superior-cards: 150px;
+    --espaciado-cards: 50px;
+    --ancho-circulo-icono: 200px;
+    --alto-circulo-icono: 200px;
+    --radio-circulo-icono: 50%;
+    --tamano-imagen-icono: 120px;
+    --ancho-h3-container: 200px;
+    --alto-h3-container: 45px;
+    --radio-h3-container: 20px;
 
+    /* 🔤 Tipografía y pesos */
+    --tamano-texto-home-admin: 20px;
+    --tamano-texto-h3: 25px;
+    --peso-texto-semi: 600;
+    --peso-texto-titulo: 700;
 
-    /*Dimensiones*/
-    --fondo-img-min-height: 100vh; 
-    --barra-home-width: 1500px;
-    --barra-home-height: 90px;
-    --circulo-img-admin-width-height: 91px;
-    --img-admin-width-heigh: 70px;
-    --icon-home-font-size: 40px;
-    --title-home-font-size: 60px;
-    /* --title-cards-font-size: 50px; */
-    --cards-contenedor-width: 250px;
-    --cards-contenedor-height: 250px;
-    --img-cards-width-height: 150px;
+    /* ⏱️ Transiciones */
+    --transicion-general: 0.3s ease;
 
+    /* 🔳 Bordes y sombras */
+    --radio-borde-general: 20px;
+    --radio-borde-card: 50px;
+    --sombra-general: 0 4px 10px var(--color-sombra-oscura);
+    --sombra-hover: 0 8px 20px var(--color-sombra-suave);
 }
 
 @import url('../../Tipografias/styles.css');
@@ -38,178 +65,173 @@
 }
 
 body {
-    font-family: var(--fuente-titulos); 
-    /* background: var(--gradient-principal); */
+    font-family: var(--fuente-titulos);
     background-image: url(../../../../assets/Imagenes/fondos/fondo_admin1.jpg);
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
     position: relative;
-    min-height: var(--fondo-img-min-height);
-    overflow: hidden; 
-} 
+    min-height: var(--alto-minimo-fondo);
+    overflow: hidden;
+}
+
 .home {
-    width: var(--barra-home-width);
-    height: var(--barra-home-height);
+    width: var(--ancho-barra-home);
+    height: var(--alto-barra-home);
     display: flex;
     align-items: center;
     justify-content: space-between;
-    position: fixed;   
+    position: fixed;
     top: 20px;
     left: 50%;
-    transform: translateX(-50%); 
-    background-color: var(--color-panel);
-    border-radius: 20px;
+    transform: translateX(-50%);
+    background-color: var(--color-fondo-panel);
+    border-radius: var(--radio-borde-general);
     z-index: 10;
     padding: 0 20px;
 }
 
 /* Círculo admin a la izquierda */
 .home__admin {
-    width: var(--circulo-img-admin-width-height);
-    height: var(--circulo-img-admin-width-height);
+    width: var(--diametro-circulo-admin);
+    height: var(--diametro-circulo-admin);
     border-radius: 50%;
-    background-color: var(--color-buttons);
+    background-color: var(--color-fondo-inputs);
     display: flex;
     justify-content: center;
     align-items: center;
     margin-left: -15px;
 }
 
-/* Estilo base del texto "Inicio" */
 .home__admin h2 {
-    position: absolute; /* relativo al body si no pones relative en home__admin */
+    position: absolute;
     bottom: 30px;
     left: 160px;
     transform: translateX(-50%) translateY(10px);
     opacity: 0;
-    font-size: 20px;
-    font-weight: 600;
-    color: var(--color-text);
-    pointer-events: none; /* para que no interfiera con el hover */
-    transition: opacity 0.3s ease, transform 0.3s ease;
+    font-size: var(--tamano-texto-home-admin);
+    font-weight: var(--peso-texto-semi);
+    color: var(--color-texto-principal);
+    pointer-events: none;
+    transition: opacity var(--transicion-general), transform var(--transicion-general);
 }
 
-/* Cuando se pasa el mouse por home__admin */
 .home__admin:hover h2 {
     opacity: 1;
-    transform: translateX(-50%) translateY(0); /* sube suavemente */
+    transform: translateX(-50%) translateY(0);
 }
 
 .home__admin img {
-    width: var(--img-admin-width-heigh);
-    height: var(--img-admin-width-heigh);
+    width: var(--tamano-imagen-admin);
+    height: var(--tamano-imagen-admin);
 }
 
 /* Título centrado */
 .home__title {
-    flex: 1; /* ocupa el espacio central */
+    flex: 1;
     text-align: center;
-    font-size: var(--title-home-font-size);
-    font-weight: 700;
-    color: var(--color-text);
+    font-size: var(--tamano-titulo-home);
+    font-weight: var(--peso-texto-titulo);
+    color: var(--color-texto-principal);
 }
 
-/* Casita a la derecha */
+/* Icono de casa */
 .home__icon {
-    font-size: var(--icon-home-font-size);
-    color: var(--color-iconos);
+    font-size: var(--tamano-icono-home);
+    color: var(--color-iconos-principal);
     cursor: pointer;
 }
 
 .cards {
     display: flex;
-    flex-direction: column; 
-    align-items: center; 
-    margin-top: 150px; 
+    flex-direction: column;
+    align-items: center;
+    margin-top: var(--margen-superior-cards);
 }
 
 .cards__title {
-    font-size: 40px;
-    margin-bottom: 40px; 
+    font-size: var(--tamano-titulo-card);
+    margin-bottom: var(--margen-titulo-card-abajo);
     text-align: center;
-    color: #ffd9d9e8;
-    transition: transform 0.3s, color 0.3s;
-    text-shadow: #000000 4px 4px 4px;
+    color: var(--color-titulo-cards);
+    transition: transform var(--transicion-general), color var(--transicion-general);
+    text-shadow: var(--color-texto-principal) 4px 4px 4px;
 }
+
 .cards__title:hover {
-    color: #977b6b;
+    color: var(--color-titulo-hover);
 }
 
 .cards__contenedor {
     display: flex;
-    grid-template-columns: repeat(3, 1fr); 
-    gap: 50px; 
-    justify-items: center; 
-    width: auto; 
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--espaciado-cards);
+    justify-items: center;
+    width: auto;
     margin-top: 50px;
 }
 
-/* Contenido de cada card */
 .cards__contenedor-content {
     display: flex;
-    flex-direction: column; 
+    flex-direction: column;
     align-items: center;
-    width: var(--cards-contenedor-width, 200px);
-    height: auto; 
+    width: var(--ancho-card);
+    height: auto;
     padding: 20px;
-    border-radius: 50px;
+    border-radius: var(--radio-borde-card);
     text-align: center;
 }
 
-/* Círculo del icono con hover */
+/* Círculo del icono */
 .icon-circle {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 200px;
-    height: 200px;
-    border-radius: 50%; 
-    background-color: var(--color-data);
-    margin-bottom: 15px; 
-    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-    transition: transform 0.3s;
+    width: var(--ancho-circulo-icono);
+    height: var(--alto-circulo-icono);
+    border-radius: var(--radio-circulo-icono);
+    background-color: var(--color-fondo-datos);
+    margin-bottom: 15px;
+    box-shadow: var(--sombra-general);
+    transition: transform var(--transicion-general);
 }
 
 .icon-circle:hover {
     transform: scale(1.1);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-    background-color: #DDA17E;
+    box-shadow: var(--sombra-hover);
+    background-color: var(--color-fondo-circulo-hover);
 }
 
 .icon-circle img {
-    width: 120px;
-    height: 120px;
-    transition: transform 0.3s;
+    width: var(--tamano-imagen-icono);
+    height: var(--tamano-imagen-icono);
+    transition: transform var(--transicion-general);
 }
 
-/* Contenedor de h3 con efecto deslizante */
+/* Contenedor de h3 */
 .h3-container {
     position: relative;
-    width: 200px;
-    height: 45px;
-    border-radius: 20px;
+    width: var(--ancho-h3-container);
+    height: var(--alto-h3-container);
+    border-radius: var(--radio-h3-container);
     overflow: hidden;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: var(--color-data);
-    /* background: linear-gradient(90deg, #d1ab95 50%, #c2896b 50%); */
+    background-color: var(--color-fondo-datos);
     background-size: 200% 100%;
     background-position: right bottom;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+    box-shadow: 0 2px 6px var(--color-sombra-oscura);
 }
 
 /* Texto centrado */
 .h3-container h3 {
-    position: relative; /* ya no absoluto */
-    color: #000000;
-    font-size: 25px;
-    font-weight: 600;
+    position: relative;
+    color: var(--color-texto-principal);
+    font-size: var(--tamano-texto-h3);
+    font-weight: var(--peso-texto-semi);
     text-align: center;
-    z-index: 1; /* para que quede encima del gradiente */
-    transition: color 0.3s ease;
+    z-index: 1;
+    transition: color var(--transicion-general);
 }
-
-
