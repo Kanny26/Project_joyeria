@@ -1,123 +1,67 @@
-:root {
-    /* 🎨 Colores */
-    --color-fondo-principal: #f5f5f5;
-    --color-fondo-panel: #ffd9d9;
-    --color-fondo-datos: #ffcaca;
-    --color-fondo-inputs: #b8b8b8;
-    --color-fondo-boton-hover: #9c9c9c;
-    --color-texto-principal: #000000;
-    --color-iconos-principal: #000000;
-    --color-titulo-hover: #977b6b;
-    --color-titulo-cards: #ffd9d9e8;
-    --color-fondo-circulo-hover: #dda17e;
-    --color-sombra-oscura: rgba(0, 0, 0, 0.5);
-    --color-sombra-suave: rgba(0, 0, 0, 0.2);
+@import url(../../global.css);
 
-    /* 🌈 Gradientes */
-    --degradado-principal: radial-gradient(circle, rgba(150, 144, 144, 1) 0%, rgba(163, 146, 132, 1) 32%, rgba(105, 87, 74, 1) 89%);
-    --degradado-boton: radial-gradient(circle, #b4b4b4, #9c9c9c);
-
-    /* 📏 Dimensiones */
-    --alto-minimo-fondo: 100vh;
-    --ancho-barra-home: 1500px;
-    --alto-barra-home: 90px;
-    --diametro-circulo-admin: 91px;
-    --tamano-imagen-admin: 70px;
-    --tamano-icono-home: 40px;
-    --tamano-titulo-home: 60px;
-    --ancho-card: 250px;
-    --alto-card: 250px;
-    --tamano-imagen-card: 150px;
-    --tamano-titulo-card: 40px;
-    --margen-titulo-card-abajo: 40px;
-    --margen-superior-cards: 150px;
-    --espaciado-cards: 50px;
-    --ancho-circulo-icono: 200px;
-    --alto-circulo-icono: 200px;
-    --radio-circulo-icono: 50%;
-    --tamano-imagen-icono: 120px;
-    --ancho-h3-container: 200px;
-    --alto-h3-container: 45px;
-    --radio-h3-container: 20px;
-
-    /* 🔤 Tipografía y pesos */
-    --tamano-texto-home-admin: 20px;
-    --tamano-texto-h3: 25px;
-    --peso-texto-semi: 600;
-    --peso-texto-titulo: 700;
-
-    /* ⏱️ Transiciones */
-    --transicion-general: 0.3s ease;
-
-    /* 🔳 Bordes y sombras */
-    --radio-borde-general: 20px;
-    --radio-borde-card: 50px;
-    --sombra-general: 0 4px 10px var(--color-sombra-oscura);
-    --sombra-hover: 0 8px 20px var(--color-sombra-suave);
-}
 
 @import url('../../Tipografias/styles.css');
 
 * {
-    margin: 0;
-    padding: 0;
+    margin: var(--margin_padding_reset);
+    padding: var(--margin_padding_reset);
     box-sizing: border-box;
 }
 
 body {
     font-family: var(--fuente-titulos);
-    background-image: url(../../../../assets/Imagenes/fondos/fondo_admin1.jpg);
-    background-repeat: no-repeat;
+    background-color: var(--color-fondo-admin);
     background-size: cover;
     background-position: center;
-    position: relative;
-    min-height: var(--alto-minimo-fondo);
-    overflow: hidden;
+    background-repeat: no-repeat;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: var(--alto-minimo-body);
 }
 
 .home {
-    width: var(--ancho-barra-home);
-    height: var(--alto-barra-home);
+    width: var(--ancho-nav-admin);
+    height: var(--alto-nav-admin);
     display: flex;
     align-items: center;
     justify-content: space-between;
-    position: fixed;
+    position: fixed;   
     top: 20px;
     left: 50%;
-    transform: translateX(-50%);
-    background-color: var(--color-fondo-panel);
-    border-radius: var(--radio-borde-general);
-    z-index: 10;
-    padding: 0 20px;
+    transform: translateX(-50%); 
+    background-color: var(--color-nav-admin);
+    border-radius: var(--borde-general);
+    z-index: var(--z-index-panel);
+    padding:0 20px;
 }
 
 /* Círculo admin a la izquierda */
 .home__admin {
-    width: var(--diametro-circulo-admin);
-    height: var(--diametro-circulo-admin);
+    width: var(--circulo-admin);
+    height: var(--circulo-admin);
     border-radius: 50%;
-    background-color: var(--color-fondo-inputs);
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-left: -15px;
+    margin-left: 10px;
 }
 
 .home__admin h2 {
     position: absolute;
-    bottom: 30px;
-    left: 160px;
-    transform: translateX(-50%) translateY(10px);
+    bottom: 20px;
+    right: 980px;
+    transform: translateX(-50%) translateY(var(--ancho-scrollbar));
     opacity: 0;
     font-size: var(--tamano-texto-home-admin);
-    font-weight: var(--peso-texto-semi);
+    font-weight: var(--peso-fuente-semititulos);
     color: var(--color-texto-principal);
-    pointer-events: none;
-    transition: opacity var(--transicion-general), transform var(--transicion-general);
+    transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
 .home__admin:hover h2 {
-    opacity: 1;
+    opacity: var(--indice-z-formulario);
     transform: translateX(-50%) translateY(0);
 }
 
@@ -131,7 +75,7 @@ body {
     flex: 1;
     text-align: center;
     font-size: var(--tamano-titulo-home);
-    font-weight: var(--peso-texto-titulo);
+    font-weight: var(--peso-fuente-titulo-principal);
     color: var(--color-texto-principal);
 }
 
@@ -146,29 +90,26 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: var(--margen-superior-cards);
 }
 
 .cards__title {
     font-size: var(--tamano-titulo-card);
-    margin-bottom: var(--margen-titulo-card-abajo);
+    margin-bottom: 40px;
     text-align: center;
     color: var(--color-titulo-cards);
-    transition: transform var(--transicion-general), color var(--transicion-general);
-    text-shadow: var(--color-texto-principal) 4px 4px 4px;
+    transition: transform var(--duracion-transicion), color var(--duracion-transicion);
+    text-shadow: var(--color-sombra-texto) 4px 4px 4px;
 }
 
 .cards__title:hover {
-    color: var(--color-titulo-hover);
+    color: var(--color-texto-hover-cards);
 }
 
 .cards__contenedor {
-    display: flex;
-    grid-template-columns: repeat(3, 1fr);
-    gap: var(--espaciado-cards);
+    display: flex; 
+    gap: var(--gap-cards-catalogo);
     justify-items: center;
-    width: auto;
-    margin-top: 50px;
+    padding: 0 40px;
 }
 
 .cards__contenedor-content {
@@ -187,13 +128,11 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: var(--ancho-circulo-icono);
-    height: var(--alto-circulo-icono);
-    border-radius: var(--radio-circulo-icono);
-    background-color: var(--color-fondo-datos);
+    width: var(--ancho-iconos-admin);
+    height: var(--alto-iconos-admin);
+    border-radius: 50%;
+    background-image: url('../../../../assets/Imagenes/fondos/fondo_cards.jpg');
     margin-bottom: 15px;
-    box-shadow: var(--sombra-general);
-    transition: transform var(--transicion-general);
 }
 
 .icon-circle:hover {
@@ -211,15 +150,15 @@ body {
 /* Contenedor de h3 */
 .h3-container {
     position: relative;
-    width: var(--ancho-h3-container);
-    height: var(--alto-h3-container);
-    border-radius: var(--radio-h3-container);
+    width: var(--ancho-dashboard-act);
+    height: var(--alto-dashboard-act);
+    border-radius: 20px;
     overflow: hidden;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: var(--color-fondo-datos);
+    background-color: var(--color-fondo-boton);
     background-size: 200% 100%;
     background-position: right bottom;
     box-shadow: 0 2px 6px var(--color-sombra-oscura);

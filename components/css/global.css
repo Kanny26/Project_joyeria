@@ -25,126 +25,82 @@
   --fuente-placeholder: "Montserrat", sans-serif;
   --fuente-subtitulos: "Lexend Mega", sans-serif;
   --fuente-titulos: "Montserrat", sans-serif;
-  --peso-fuente-bold: 700;
   --peso-fuente-boton: 600;
-  --peso-fuente-boton-iniciar: 600;
-  --peso-fuente-boton-login: 700;
-  --peso-fuente-boton-principal: 700;
   --peso-fuente-boton-registro: 700;
-  --peso-fuente-detalle: 400;
-  --peso-fuente-extra-bold: 800;
-  --peso-fuente-link-bold: bold;
   --peso-fuente-rol: 700;
   --peso-fuente-semibold: 600;
   --peso-fuente-semititulos: 600;
   --peso-fuente-texto-catalogo: 600;
-  --peso-fuente-titulo-boton: 500;
-  --peso-fuente-titulo-boton-rol: 600;
-  --peso-fuente-titulo-detalle: 600;
-  --peso-fuente-titulo-panel: 700;
+  --peso-fuente-boton: 600;
   --peso-fuente-titulo-principal: 600;
   --peso-fuente-titulo-formularios: 600;
   --peso-texto-semi: 600;
-  --peso-texto-titulo: 700;
+  --peso-texto-titulo: 700
   --tamano-texto-h3: 25px;
-  --tamano-titulo-h2: 20px;
-  --tamano-fuente-placeholder: 13px;
+  --tamano-parrafos: 15px;
+  --tamano-fuente-placeholder: 15px;
   --tamaño-fuente-links: 10px;
   --tamano-fuente-parrafos-alternativos: 12px;
-  --tamano-texto-home-admin: 20px;
-  --tamano-titulo-card: 40px;
+  --tamano-texto-home-admin: 35px;
+  --tamano-titulo-card: 50px;
   --tamano-titulo-home: 60px;
+  --tamano-botones: 30px;
+  --tamano-titulo-cards: 45px;
+  --tamano-nombre-producto-cards: 25px;
+  --tamano-contenido-producto: 18px;
+  --tamano-label: 20px;
+
+
 
   /* ===================================================== */
   /*  COLORES */
   /* ===================================================== */
-  --color-borde: #c49b63;
-  --color-borde-card: rgba(0, 0, 0, 0.08);
   --color-borde-imagen: #fff;
-  --color-borde-input-focus: #c49b63;
   --color-boton-principal: #69331e;
   --color-boton-principal-hover: #975236;
   --color-boton-secundario: #7d5b4b;
   --color-boton-secundario-hover: #6c3727;
   --color-estrellas: #ffff00;
   --color-fondo-advertencia: #eee3de;
-  --color-fondo-bloque-inferior-fin: #744734;
-  --color-fondo-bloque-inferior-inicio: #7c5443;
-  --color-fondo-body: #cccccc67;
-  --color-fondo-borde-input: #ccc;
-  --color-fondo-borde-principal: #c49b63;
+  
   --color-link-hover: #69331e;
+  --color-fondo-admin: #B4C0C0;
   --color-fondo-boton: #b4b4b4;
   --color-fondo-boton-hover: #9c9c9c;
-  --color-fondo-botones: #b4b4b4;
-  --color-fondo-botones-hover: #9c9c9c;
+
   --color-fondo-caja: #d9d6d2;
-  --color-fondo-caja-mensaje: #f0efed;
-  --color-fondo-caja-panel: #d9d6d2;
-  --color-fondo-card: #d18e78;
-  --color-fondo-card-principal: #ad826f;
-  --color-fondo-card-transparente: rgba(255, 255, 255, 0.85);
-  --color-fondo-cards: #ffcaca;
+  --color-fondo-card-productos: #aa7057;
   --color-fondo-circulo-hover: #dda17e;
-  --color-fondo-datos: #ffcaca;
-  --color-fondo-datos-tarjeta: #ffcaca;
   --color-fondo-general: #8a828267;
   --color-fondo-icono: #fff;
   --color-fondo-input: #b5b3b2;
   --color-fondo-inputs: #b8b8b8;
   --color-fondo-panel: #a6a6a6;
-  --color-fondo-panel-datos: #ad826f;
-  --color-fondo-panel-lateral: #a6a6a6;
-  --color-fondo-panel-superior: #ffd9d9;
-  --color-fondo-principal: #f5f5f5;
+
+  --color-nav-admin: #99AD96;
   --color-fondo-tarjeta-hover: #dda17e;
   --color-fondo-tooltip: #333;
-  --color-icono-advertencia: #80473f;
-  --color-iconos: #4f2a09;
-  --color-iconos-hover: #ffd28a;
+  --color-iconos: #2c1501;
+  --color-iconos-hover: #e7b77f;
   --color-iconos-principal: #000000;
   --color-scrollbar-thumb: #8c6c5a;
   --color-scrollbar-thumb-hover: #dda17e;
   --color-scrollbar-track: #4b2c17;
-  --color-sombra-input-focus: rgba(196, 155, 99, 0.4);
+
   --color-sombra-oscura: rgba(0, 0, 0, 0.5);
-  --color-sombra-suave: rgba(0, 0, 0, 0.2);
-  --color-sombra-tarjeta: rgba(0, 0, 0, 0.1);
-  --color-sombra-tarjeta-hover: rgba(0, 0, 0, 0.2);
-  --color-sombra-texto: #000000;
-  --color-texto-acento: #000000db;
+  --color-texto-general: #000000;
   --color-texto-advertencia-titulo: #c75757;
-  --color-texto-cards: #fff;
-  --color-texto-cards-secundario: rgba(255, 255, 255, 0.9);
-  --color-texto-descripcion: #000000;
-  --color-texto-hover-cards: #977b6b;
+  --color-texto-cards-productos: #ffffff;
+  --color-texto-hover-cards: #914021;
   --color-texto-placeholder: #696969;
   --color-texto-principal: #000000;
-  --color-texto-titulo-card: #ffd9d9e8;
-  --color-texto-titulo-cards: #ffd9d9e8;
-  --color-texto-titulo-hover: #977b6b;
-  --color-texto-titulo-principal: #f4e9e1;
-  --color-texto-titulo-producto: #ffd9d9e8;
   --color-texto-tooltip: #ffffff;
-  --color-titulo-cards: #ffd9d9e8;
-  --color-titulo-hover: #977b6b;
-  --degradado-boton: radial-gradient(circle, #b4b4b4, #9c9c9c);
-  --degradado-principal: radial-gradient(
-    circle,
-    rgba(150, 144, 144, 1) 0%,
-    rgba(163, 146, 132, 1) 32%,
-    rgba(105, 87, 74, 1) 89%
-  );
-  --gradiente-boton: linear-gradient(135deg, #b4b4b4, #9c9c9c);
-  --gradiente-dorado: linear-gradient(to right, #d4af37, #a99481);
-  --gradiente-fondo-principal: linear-gradient(
-    135deg,
+  --color-titulo-cards: #000000;
+  --gradiente-fondo-principal: linear-gradient(135deg,
     #8c6c5a,
     #a99481,
     #c9c2ba
   );
-  --gradiente-marron: linear-gradient(135deg, #6d4f3e, #8a4f2e, #9c6651);
-  --gradiente-panel-derecho: linear-gradient(135deg, #6d4f3e, #623b25, #653e2f);
   --gradiente-panel-izquierdo: linear-gradient(
     135deg,
     #6d4f3e,
@@ -152,175 +108,112 @@
     #653e2f
   );
   --gradiente-panel-lateral: linear-gradient(135deg, #6d4f3e, #623b25, #653e2f);
-  --gradiente-suave-radial: radial-gradient(circle, #c9c2ba, #a99481, #8c6c5a);
   --sombra-boton-active: 0 2px 6px rgba(0, 0, 0, 0.12);
   --sombra-boton-hover: 0 8px 20px rgba(0, 0, 0, 0.3);
   --sombra-boton-normal: 0 5px 15px rgba(0, 0, 0, 0.2);
   --sombra-caja: 0 0 20px rgba(0, 0, 0, 0.3);
-  --sombra-caja-interna: 0 0 20px rgba(0, 0, 0, 0.5);
-  --sombra-caja-mensaje: 0 0 20px rgba(0, 0, 0, 0.3);
   --sombra-caja-panel: 0 4px 15px rgba(0, 0, 0, 0.2);
-  --sombra-card: 0 10px 25px rgba(0, 0, 0, 0.15);
-  --sombra-card-hover: 0 20px 40px rgba(0, 0, 0, 0.2);
-  --sombra-card-principal: 0 20px 60px rgba(0, 0, 0, 0.3);
+  --sombra-card-productos: 0 10px 25px rgba(112, 93, 93, 0.15);
+
+
   --sombra-formulario: 0 4px 15px rgba(0, 0, 0, 0.2);
   --sombra-icono: 0 6px 18px rgba(0, 0, 0, 0.15);
   --sombra-icono-hover: 0 8px 25px rgba(0, 0, 0, 0.2);
-  --sombra-imagen: 0 4px 12px rgba(0, 0, 0, 0.1);
+
   --sombra-imagen-card: 0 4px 12px rgba(0, 0, 0, 0.1);
   --sombra-imagen-circular: 0 6px 15px rgba(0, 0, 0, 0.4);
-  --sombra-imagen-principal: 0 4px 10px rgba(0, 0, 0, 0.2);
-  --sombra-imagen-producto: 0 10px 25px rgba(0, 0, 0, 0.2);
-  --sombra-panel: 0 0 20px rgba(0, 0, 0, 0.3);
-  --sombra-texto-titulo: 2px 2px 4px #000000;
-  --sombra-texto-titulo-cards: #000000 4px 4px 4px;
-  --sombra-texto-titulo-principal: 0 3px 6px rgba(0, 0, 0, 0.4);
-  --transicion-transform-color: transform var(--duracion-transicion),
-    color var(--duracion-transicion);
+  
   --tipo-transicion: ease;
 
   /* ===================================================== */
   /*  TAMAÑOS Y ESPACIADOS */
   /* ===================================================== */
   --margen-bienvenida-inferior: 30px;
-  --margen-bienvenida-superior: -81px;
-  --margen-boton-horizontal: 0;
   --margen-boton-inferior: 20px;
   --margen-boton-login-horizontal: auto;
   --margen-boton-login-inferior: 0;
   --margen-boton-login-superior: 15px;
+
   --margen-boton-registro-horizontal: 0;
   --margen-boton-registro-inferior: 20px;
   --margen-boton-registro-superior: 30px;
-  --margen-boton-superior: 30px;
-  --margen-boton-vertical: 30px;
+  
   --margen-botones-rol-superior: 25px;
-  --margen-botones-superior: 12px;
-  --margen-bottom-estrellas: 24px;
-  --margen-bottom-fila-detalle: 12px;
+
   --margen-bottom-item-detalle: 5px;
-  --margen-bottom-nombre-producto: 20px;
-  --margen-bottom-titulo-cards: 40px;
-  --margen-bottom-titulo-detalle: 15px;
-  --margen-bottom-titulo-principal: 50px;
-  --margen-elemento-inferior: 20px;
   --margen-icono-derecho: 10px;
   --margen-icono-izquierdo: 10px;
-  --margen-icono-pulgar-inferior: 20px;
-  --margen-inferior-titulo-cards: 40px;
-  --margen-input-inferior: 10px;
+  --margen-icono-pulgar-superior: 20px;
+  
   --margen-input-superior: 20px;
-  --margen-input-vertical: 10px;
-  --margen-izquierda-circulo: -15px;
-  --margen-left-circulo: -15px;
-  --margen-left-circulo-admin: -15px;
-  --margen-left-span-estrellas: 10px;
+
   --margen-link-recuperar-inferior: 20px;
   --margen-link-recuperar-superior: 10px;
+
   --margen-link-registro-superior: 20px;
-  --margen-link-superior: 20px;
   --margen-logo-inferior: 8px;
-  --margen-logo-superior: -5px;
   --margen-parrafo-inferior: 20px;
-  --margen-right-span-detalle: 80px;
-  --margen-rol-inferior: 15px;
-  --margen-superior-cards: 150px;
-  --margen-titulo-boton-superior: 10px;
-  --margen-titulo-card-abajo: 40px;
-  --margen-titulo-inferior: 20px;
-  --margen-titulo-mensaje-inferior: 20px;
-  --margen-titulo-superior: 10px;
+  --margen-parrafo-superior: 20px;
+  
   --margen-top-botones-accion: 20px;
   --margen-top-cards: 150px;
-  --margen-top-contenedor: 140px;
-  --margen-top-detalles-producto: 10px;
-  --margen-top-iconos: 25px;
-  --margen-top-imagen-boton: 10px;
-  --margen-top-nombre-producto: 30px;
-  --margen-top-producto: 160px;
+
   --padding-advertencia: 18px 20px;
   --padding-boton: 10px 20px;
   --padding-boton-grande: 15px 18px;
-  --padding-boton-iniciar-horizontal: 20px;
-  --padding-boton-iniciar-vertical: 10px;
-  --padding-boton-login: 10px;
-  --padding-boton-registro: 8px;
-  --padding-caja-formulario: 30px;
+  
   --padding-caja-horizontal: 0;
   --padding-caja-mensaje: 30px;
-  --padding-caja-panel-horizontal: 0;
-  --padding-caja-panel-vertical: 20px;
+
   --padding-caja-vertical: 25px;
-  --padding-card: 50px;
-  --padding-card-horizontal: 50px;
-  --padding-card-vertical: 40px;
-  --padding-contenedor-cards: 40px;
+  --padding-card-producto: 28px;
   --padding-detalles: 10px;
   --padding-formulario-horizontal: 0;
   --padding-formulario-vertical: 56px;
-  --padding-grid-cards: 0 40px;
-  --padding-horizontal-barra: 20px;
-  --padding-input: 10px 12px;
   --padding-input-derecho: 30px;
   --padding-input-horizontal: 15px;
-  --padding-input-vertical: 10px;
-  --padding-panel: 0 20px;
   --padding-tarjeta: 20px 25px;
   --padding-tooltip: 6px 10px;
 
   /* ===================================================== */
-  /*  LAYOUT Y ALTURAS */
+  /*  ALTURAS */
   /* ===================================================== */
-  --alto-barra-home: 90px;
-  --alto-barra-panel: 90px;
-  --alto-barra-superior: 90px;
-  --alto-bloque-inferior-card: 260px;
-  --alto-boton-iniciar: 50px;
+  --alto-nav-admin: 90px;
   --alto-boton-login-registro: 40px;
-  --alto-boton-principal: 50px;
-  --alto-caja-formulario: 620px;
-  --alto-caja-interna: 690px;
-  --alto-caja-mensaje: 620px;
   --alto-panel-izquierdo-interno: 700px;
   --alto-panel-derecho-interno: 700px;
   --alto-card: 250px;
-  --alto-card-contenedor: 470px;
-  --alto-circulo-admin: 91px;
-  --alto-circulo-icono: 200px;
-  --alto-contenedor-cards: 350px;
+  --alto-card-producto: 490px;
+  --alto-img-card-producto: 160px;
+
+  --alto-iconos-admin: 200px;
   --alto-contenedor-formulario: 500px;
-  --alto-contenedor-producto: 550px;
-  --alto-h3-container: 45px;
+  --alto-contenedor-mensajes: 550px;
+  --alto-dashboard-act: 50px;
   --alto-icono-lateral: 55px;
+  --alto-iconos-catalogo: 180px;
   --alto-imagen-admin: 70px;
-  --alto-imagen-boton: 130px;
-  --alto-imagen-boton-navegacion: 90px;
-  --alto-imagen-boton-rol: 123px;
   --alto-imagen-producto: 400px;
   --alto-input: 45px;
   --alto-logo: 350px;
   --alto-minimo-body: 100vh;
   --alto-minimo-contenedor: 100vh;
-  --alto-minimo-fondo: 100vh;
   --alto-panel-derecho: 800px;
   --alto-panel-izquierdo: 800px;
-  --alto-paneles: 800px;
   --alto-scrollbar: 5px;
-  --alto-vista-completa: 100vh;
 
   /* ===================================================== */
   /* BORDES Y RADIOS */
   /* ===================================================== */
   --radio-borde-card: 50px;
-  --radio-borde-general: 20px;
+  --borde-general: 20px;
   --radio-bordes-boton: 10px;
   --radio-bordes-boton-grande: 12px;
-  --radio-bordes-card: 25px;
-  --radio-bordes-general: 20px;
+  --radio-card-productos: 25px;
   --radio-bordes-icono: 50%;
   --radio-bordes-icono-lateral: 50%;
   --radio-bordes-imagen: 10px;
-  --radio-bordes-imagen-circular: 50%;
+  --bordes-img-card-producto: 50%;
   --radio-bordes-input: 8px;
   --radio-bordes-panel: 30px;
   --bordes-panel-derecho: 0 30px 30px 0;
@@ -328,21 +221,11 @@
   --bordes-caja-panel-izquierda-derecha: 20px;
   --bordes-inputs-botones: 20px;
   --radio-bordes-scrollbar: 10px;
-  --radio-bordes-tarjeta: 16px;
   --radio-bordes-tooltip: 6px;
-  --radio-circulo-icono: 50%;
-  --radio-h3-container: 20px;
 
   /* ===================================================== */
   /*  SOMBRAS */
   /* ===================================================== */
-  --opacidad-sombra-boton-hover: 0.3;
-  --opacidad-sombra-boton-normal: 0.2;
-  --opacidad-sombra-caja: 0.2;
-  --opacidad-sombra-imagen: 0.2;
-  --opacidad-sombra-panel: 0.3;
-  --sombra-difuminada: 0 4px 15px var(--color-sombra-tarjeta);
-  --sombra-difuminada-hover: 0 8px 20px var(--color-sombra-tarjeta-hover);
   --sombra-general: 0 4px 10px var(--color-sombra-oscura);
   --sombra-hover: 0 8px 20px var(--color-sombra-suave);
 
@@ -350,122 +233,79 @@
   /*  OTROS */
   /* ===================================================== */
   --altura-linea-parrafo: 1.5;
-  --ancho-barra-home: 1500px;
-  --ancho-barra-panel: 1500px;
-  --ancho-barra-superior: 1500px;
-  --ancho-boton-iniciar: 300px;
+  --ancho-nav-admin: 1500px;
   --ancho-boton-login-registro: 280px;
-  --ancho-boton-principal: 300px;
-  --ancho-caja-formulario: 450px;
   --ancho-panel-izquierdo-interno: 420px;
   --ancho-panel-derecho-interno: 420px;
-  --ancho-caja-mensaje: 450px;
-  --ancho-caja-panel-izquierdo: 450px;
-  --ancho-card: 250px;
-  --ancho-card-contenedor: 300px;
-  --ancho-circulo-admin: 91px;
-  --ancho-circulo-icono: 200px;
-  --ancho-completo: 100%;
+  --ancho-img-card-producto:160px;
+  --ancho-card-producto: 350px;
+  --ancho-iconos-admin: 200px;
   --ancho-contenedor-botones: 100%;
   --ancho-contenedor-cards: 350px;
   --ancho-contenedor-formulario: 380px;
-  --ancho-contenedor-producto: 1000px;
-  --ancho-h3-container: 200px;
+  --ancho-contenedor-mensajes: 400px;
+
+  --ancho-dashboard-act: 200px;
   --ancho-icono-lateral: 55px;
   --ancho-icono-pulgar: 60%;
   --ancho-imagen-admin: 70px;
-  /* --ancho-imagen-boton: 130px; */
+  --ancho-iconos-catalogo: 180px;
   --ancho-imagen-boton-navegacion: 90px;
   --ancho-imagen-boton-rol: 123px;
   --ancho-imagen-producto: 300px;
   --ancho-input: 280px;
   --ancho-logo: 350px;
-  --ancho-maximo-boton-principal: 300px;
   --ancho-maximo-boton-registro: 280px;
-  --ancho-maximo-card: 1100px;
-  --ancho-maximo-contenedor: 1300px;
-  --ancho-maximo-input: 280px;
-  --ancho-maximo-parrafo: 300px;
-  --ancho-minimo-titulo-detalle: 120px;
+  --ancho-max-contenedor-productos: 1300px;
   --ancho-panel-derecho: 550px;
   --ancho-panel-izquierdo: 550px;
   --ancho-scrollbar: 10px;
-  --angulo-gradiente-bloque: 180deg;
   --brillo-hover-boton: 1.1;
   --desplazamiento-active-boton: 0;
   --desplazamiento-hover-boton: -1.5px;
-  --diametro-circulo-admin: 91px;
-  --diametro-icono-circulo: 155px;
+  --circulo-admin: 91px;
   --duracion-transicion: 0.3s;
   --duracion-transicion-boton: 0.3s;
-  --duracion-transicion-boton-iniciar: 0.25s;
   --duracion-transicion-boton-login: 0.3s;
-  --duracion-transicion-boton-navegacion: 0.3s;
-  --duracion-transicion-boton-principal: 0.3s;
   --duracion-transicion-boton-registro: 0.3s;
-  --duracion-transicion-boton-rol: 0.2s;
-  --duracion-transicion-rapida: 0.2s;
   --escala-hover-boton: 1.05;
-  --escala-hover-tarjeta: 1.1;
   --escala-icono-hover: 1.1;
-  --escala-imagen-hover: 0.9;
-  --espaciado-cards: 50px;
-  --espaciado-letras-titulo: 1px;
   --grid-columnas-eliminar: 1fr 1fr;
-  --grid-columnas-maximo: 1fr;
-  --grid-columnas-minimo: 200px;
-  --grosor-borde-imagen-circular: 5px;
-  --indice-z-formulario: 1;
+  --grosor-borde-img-producto: 5px;
   --opacidad-imagen-fondo: 0.9;
-  --opacidad-panel-derecho: 0.95;
   --opacidad-texto-catalogo-hover: 1;
   --opacidad-texto-catalogo-inicial: 0;
   --opacidad-tooltip-hover: 1;
   --opacidad-tooltip-inicial: 0;
 
-  --posicion-bottom-bloque: 0;
-  --posicion-bottom-h2: 30px;
   --posicion-bottom-texto-catalogo: 30px;
   --posicion-icono-derecho: 15px;
   --posicion-lateral-iconos: 60px;
-  --posicion-left-bloque: 0;
-  --posicion-left-h2: 160px;
-  --posicion-left-panel: 50%;
   --posicion-left-texto-catalogo: 160px;
   --posicion-right-iconos: 60px;
   --posicion-right-tooltip: 65px;
   --posicion-tooltip: 60px;
-  --posicion-top-barra: 20px;
-  --posicion-top-cabecera: 20px;
   --posicion-top-iconos: 50%;
-  --posicion-top-panel: 20px;
   --separacion-acciones: 15px;
   --separacion-advertencia: 15px;
   --separacion-boton-icono: 6px;
-  --separacion-botones: 15px;
-  --separacion-campos: 12px;
   --separacion-card: 40px;
-  --separacion-contenedor-cards: 60px;
-  --separacion-contenido: 40px;
-  --separacion-detalle-fila: 30px;
-  --separacion-estrellas: 6px;
-  --separacion-grid-cards: 30px;
-  --separacion-iconos: 18px;
+  --gap-cards-productos: 150px;
+  --separacion-contenido: 120px;
+  --gap-estrellas: 6px;
+  --gap-cards-catalogo: 50px;
+  --gap-iconos: 18px;
   --separacion-iconos-laterales: 15px;
-  --separacion-info: 25px;
   --separacion-paneles: 0px;
-  --separacion-producto: 40px;
-  --separacion-producto-contenedor: 40px;
-  --separacion-tarjetas: 25px;
+  --gap-interno-tarjetas: 25px;
+  --gap-info-cards: 50px;
   --separacion-vista: 20px;
-  --tamano-icono-home: 40px;
-  --tamano-imagen-admin: 70px;
-  --tamano-imagen-card: 150px;
+  --tamano-icono-home: 60px;
+  --tamano-imagen-admin: 90px;
   --tamano-imagen-icono: 120px;
+  --tamano-iconos-productos: 22px;
 
   --transformacion-boton-hover: translateY(-2px);
-  --transformacion-card-hover: translateY(-5px);
-  --transformacion-centrar-x: translateX(-50%);
   --transformacion-centrar-y: translateY(-50%);
   --transformacion-icono-hover: scale(1.1);
   --transformacion-texto-catalogo-hover: translateX(-50%) translateY(0);
@@ -474,14 +314,10 @@
   --transicion-card: all 0.4s ease;
   --transicion-general: 0.3s ease;
   --transicion-icono: transform 0.3s ease, box-shadow 0.3s ease;
-  --transicion-imagen: transform 0.4s ease;
-  --transicion-opacidad: opacity 0.3s ease;
   --transicion-opacidad-transform: opacity var(--duracion-transicion)
       var(--tipo-transicion),
     transform var(--duracion-transicion) var(--tipo-transicion);
   --transicion-texto-catalogo: opacity 0.3s ease, transform 0.3s ease;
-  --z-index-capa-base: 0;
-  --z-index-capa-superior: 1;
   --z-index-iconos: 1000;
   --z-index-panel: 10;
 }

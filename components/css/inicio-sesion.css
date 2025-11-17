@@ -180,8 +180,8 @@ a {
   height: var(--alto-boton-login-registro);
   margin: var(--margen-boton-login-superior)
     var(--margen-boton-login-horizontal) var(--margen-boton-login-inferior);
-  font-size: var(--tamaño-fuente-boton-login);
-  font-weight: var(--peso-fuente-boton-login);
+  font-size: var(--tamano-botones);
+  font-weight: var(--peso-fuente-boton);
   color: var(--color-texto-principal);
   background-color: var(--color-fondo-boton);
   border: none;

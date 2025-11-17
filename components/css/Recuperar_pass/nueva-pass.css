@@ -1,34 +1,24 @@
 @import url(../../components/css/globales.css);
 
-:root {
-
-    /* Dimensiones - Iconos */
-    --tamaño-icono-input: var(--separacion-iconos);
-
-    /* Tipografía - Tamaños */
-    --tamaño-fuente-titulo-mensaje: 35px;
-    --tamaño-fuente-parrafo: var(--margen-boton-inferior);
-    --tamaño-fuente-texto-navegacion: var(--margen-boton-inferior);
-    --tamaño-fuente-enlace: var(--separacion-iconos);
-    --tamaño-fuente-link: var(--separacion-iconos);
-
-}
 
 @import url('../../tipografias.css');
 
 * {
-    margin: var(--desplazamiento-active-boton);
-    padding: var(--desplazamiento-active-boton);
+    margin: var(--margin_padding_reset);
+    padding: var(--margin_padding_reset);
     box-sizing: border-box;
 }
 
 body {
     font-family: var(--fuente-titulos);
     background: var(--gradiente-fondo-principal);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: var(--alto-vista-completa);
+    min-height: var(--alto-minimo-body);
 }
 
 /* Contenedor principal */
@@ -36,6 +26,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    min-height: var(--alto-minimo-contenedor);
     gap: var(--separacion-paneles);
 }
 
@@ -43,103 +34,78 @@ body {
 .nueva-pass-panel {
     width: var(--ancho-panel-izquierdo);
     height: var(--alto-panel-izquierdo);
-    background: var(--gradiente-panel-izquierdo);
-    border-radius: var(--radio-bordes-panel-izquierdo);
+    background: var(--gradiente-panel-lateral);
     display: flex;
     justify-content: center;
     align-items: center;
-    box-shadow: var(--sombra-caja);
+    border-radius: var(--bordes-panel-izquierdo);
 }
 
 .nueva-pass-panel__box {
-    width: var(--ancho-caja-panel-izquierdo);
-    height: var(--alto-caja-panel-izquierdo);
+    width: var(--ancho-panel-derecho-interno);
+    height: var(--alto-panel-derecho-interno);
     background-color: var(--color-fondo-caja);
-    border-radius: var(--radio-bordes-caja);
+    border-radius: var(--bordes-caja-panel-izquierda-derecha);
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: var(--padding-caja-panel-vertical) var(--padding-caja-panel-horizontal);
+    justify-content: center;
+    padding: var(--padding-caja-vertical) var(--padding-caja-horizontal);
+    box-shadow: var(--sombra-caja-panel);
+    text-align: center;
 }
 
 .nueva-pass-panel__logo {
     width: var(--ancho-logo);
     height: var(--alto-logo);
+    margin-top: var(--margen-logo-inferior);
 }
 
-.nueva-pass-panel__buttons {
-    display: flex;
-    justify-content: space-evenly;
-    width: 100%;
-}
-
-.nueva-pass-panel__button {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background: none;
-    border: none;
-    cursor: pointer;
-    transition: transform var(--duracion-transicion-boton) var(--tipo-transicion), filter var(--duracion-transicion-boton) var(--tipo-transicion);
-}
-
-.nueva-pass-panel__button:hover {
-    transform: scale(var(--escala-hover-boton));
-    filter: brightness(var(--brillo-hover-boton));
-}
-
-.nueva-pass-panel__button img {
-    width: var(--ancho-imagen-boton-navegacion);
-    height: var(--alto-imagen-boton-navegacion);
-}
-
-.nueva-pass-panel__button h2 {
-    margin-top: var(--margen-elemento-inferior);
-    font-size: var(--tamaño-fuente-texto-navegacion);
-    color: var(--color-texto-principal);
-}
 
 /* Panel derecho */
 .nueva-pass-main {
     width: var(--ancho-panel-derecho);
     height: var(--alto-panel-derecho);
-    background-image: url('../../../assets/Imagenes/fondos/banner3.jpg');
-    background-size: cover;
-    background-position: center;
-    border-radius: var(--radio-bordes-panel-derecho);
     display: flex;
     justify-content: center;
     align-items: center;
-    box-shadow: var(--sombra-caja);
-    opacity: var(--opacidad-panel-derecho);
+    flex-direction: column;
+    background-image: url("../../../assets/Imagenes/fondos/banner3.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    border-radius: var(--bordes-panel-derecho);
+    position: relative;
+    opacity: var(--opacidad-imagen-fondo);
 }
 
 /* Formulario */
 .nueva-pass-form {
-    width: var(--ancho-caja-formulario);
-    height: var(--alto-caja-formulario);
-    background-color: var(--color-fondo-caja-mensaje);
-    border-radius: var(--radio-bordes-caja);
-    box-shadow: var(--sombra-caja);
+    width: var(--ancho-contenedor-mensajes);
+    height: var(--alto-contenedor-mensajes);
+    background-color: var(--color-fondo-caja);
+    border-radius: var(--bordes-caja-panel-izquierda-derecha);
     text-align: center;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: var(--padding-caja-formulario);
+    padding: var(--padding-caja-mensaje);
+    box-shadow: var(--sombra-caja);
 }
 
 .nueva-pass-form h1 {
-    font-size: var(--tamaño-fuente-titulo-mensaje);
     color: var(--color-texto-principal);
-    margin-bottom: var(--margen-elemento-inferior);
+    font-weight: var(--peso-fuente-titulo-formularios);
+    font-family: var(--fuente-titulos);
+    font-size: 25px;
 }
 
 .nueva-pass-form p {
-    max-width: var(--ancho-input);
-    font-size: var(--tamaño-fuente-link);
+    font-size: var(--tamano-parrafos);
     font-family: var(--fuente-subtitulos);
-    margin-bottom: var(--margen-elemento-inferior);
+    margin-bottom: var(--margen-parrafo-inferior);
+    margin-top: var(--margen-parrafo-superior);
     line-height: var(--altura-linea-parrafo);
 }
 
@@ -147,45 +113,57 @@ body {
 .input-group {
     width: var(--ancho-input);
     height: var(--alto-input);
+    margin-top: var(--margen-input-superior);
     display: flex;
     align-items: center;
     background-color: var(--color-fondo-input);
-    border-radius: var(--radio-bordes-caja);
-    padding: var(--padding-input-vertical) var(--padding-input-horizontal);
-    margin-top: var(--margen-input-superior);
-    margin-bottom: var(--margen-input-inferior);
+    border-radius: var(--bordes-inputs-botones);
+    padding: var(--desplazamiento-active-boton) var(--padding-input-horizontal);
+    position: relative;
 }
 
 .input-group i {
-    font-size: var(--tamaño-icono-input);
+    font-size: var(--tamaño-fuente-icono-input);
     color: var(--color-iconos);
-    margin-right: var(--ancho-scrollbar);
+    margin-right: var(--margen-icono-derecho);
 }
 
 .input-group input {
-    flex: var(--indice-z-formulario);
+    background-color: transparent;
     border: none;
-    background: transparent;
-    font-size: var(--tamaño-fuente-texto-navegacion);
     outline: none;
+    font-family: var(--fuente-placeholder);
+    font-size: var(--tamano-fuente-placeholder);
+    flex: var(--indice-z-formulario);
+    padding-right: var(--padding-input-derecho);
 }
+
+.input__group input::placeholder {
+    color: var(--color-texto-placeholders);
+}
+
 
 /* Botón */
 .nueva-pass__button {
-    width: 100%;
-    max-width: var(--ancho-boton-principal);
-    height: var(--alto-boton-principal);
-    margin: var(--margen-boton-vertical) var(--desplazamiento-active-boton) var(--margen-boton-inferior) var(--desplazamiento-active-boton);
-    font-size: var(--tamaño-fuente-texto-navegacion);
-    font-weight: var(--peso-fuente-titulo-principal);
+    width: var(--ancho-contenedor-botones);
+    max-width: var(--ancho-boton-login-registro);
+    height: var(--alto-boton-login-registro);
+    margin: var(--margen-boton-login-superior)
+        var(--margen-boton-login-horizontal) var(--margen-boton-login-inferior);
+    font-size: var(--tamano-botones);
+    font-weight: var(--peso-fuente-boton);
     color: var(--color-texto-principal);
-    background-color: var(--color-fondo-boton-hover);
+    background-color: var(--color-fondo-boton);
     border: none;
-    border-radius: var(--radio-bordes-caja);
+    border-radius: var(--bordes-inputs-botones);
     cursor: pointer;
     text-align: center;
-    transition: transform var(--duracion-transicion-boton) var(--tipo-transicion), filter var(--duracion-transicion-boton) var(--tipo-transicion), box-shadow var(--duracion-transicion-boton) var(--tipo-transicion);
+    transition: transform var(--duracion-transicion-boton-login)
+        var(--tipo-transicion),
+        filter var(--duracion-transicion-boton-login) var(--tipo-transicion),
+        box-shadow var(--duracion-transicion-boton-login) var(--tipo-transicion);
     box-shadow: var(--sombra-boton-normal);
+
 }
 
 .nueva-pass__button:hover {
@@ -196,17 +174,22 @@ body {
 
 /* Enlace final */
 .nueva-pass__link {
-    margin-top: var(--margen-link-superior);
-    font-size: var(--tamaño-fuente-enlace);
+    width: var(--ancho-contenedor-botones);
     text-align: center;
+    margin-top: var(--margen-link-registro-superior);
+    font-size: var(--tamaño-fuente-link-registro);
 }
 
 .nueva-pass__link a {
     color: var(--color-texto-principal);
     text-decoration: none;
-    font-weight: var(--peso-fuente-link-var(--peso-fuente-link-bold));
+    font-weight: var(--peso-fuente-rol);
 }
 
 .nueva-pass__link a:hover {
-    text-decoration: underline;   
+    color: var(--color-link-hover);
+}
+
+.nueva-pass__link p {
+    font-size: var(--tamano-fuente-parrafos-alternativos);
 }

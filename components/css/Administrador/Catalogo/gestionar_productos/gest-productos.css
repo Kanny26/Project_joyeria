@@ -23,46 +23,48 @@
 @import url('../../Tipografias/styles.css');
 
 * {
-    margin: var(--desplazamiento-active-boton);
-    padding: var(--desplazamiento-active-boton);
+    margin: var(--margin_padding_reset);
+    padding: var(--margin_padding_reset);
     box-sizing: border-box;
 }
 
 body {
-    font-family: var(--fuente-titulos); 
-    background-image: url('../../../../../assets/Imagenes/fondos/fondo_admin1.jpg');
-    background-repeat: no-repeat;
+    font-family: var(--fuente-titulos);
+    background-color: var(--color-fondo-admin);
     background-size: cover;
     background-position: center;
-    position: relative;
-    min-height: var(--alto-minimo-fondo);
+    background-repeat: no-repeat;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: var(--alto-minimo-body);
 }
 
 .admin {
-    width: var(--ancho-barra-panel);
-    height: var(--alto-barra-panel);
+    width: var(--ancho-nav-admin);
+    height: var(--alto-nav-admin);
     display: flex;
     align-items: center;
     justify-content: space-between;
     position: fixed;   
-    top: var(--posicion-top-panel);
-    left: var(--posicion-left-panel);
-    transform: var(--transformacion-centrar-x); 
-    background-color: var(--color-fondo-panel-superior);
-    border-radius: var(--radio-bordes-panel);
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%); 
+    background-color: var(--color-nav-admin);
+    border-radius: var(--borde-general);
     z-index: var(--z-index-panel);
-    padding: var(--padding-panel);
+    padding:0 20px;
 }
 
 /* Círculo admin a la izquierda */
 .admin__catalogo {
-    width: var(--diametro-circulo-admin);
-    height: var(--diametro-circulo-admin);
-    border-radius: var(--radio-bordes-imagen-circular);
+    width: var(--circulo-admin);
+    height: var(--circulo-admin);
+    border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-left: var(--margen-left-circulo-admin);
+    margin-left: 10px;
 }
 
 /* Estilo base del texto "Inicio" */
@@ -92,10 +94,10 @@ body {
 
 /* Título centrado */
 .admin__title {
-    flex: var(--indice-z-formulario);
+    flex: 1;
     text-align: center;
-    font-size: var(--tamaño-fuente-titulo-panel);
-    font-weight: var(--peso-fuente-var(--peso-fuente-link-bold));
+    font-size: var(--tamano-titulo-home);
+    font-weight: var(--peso-fuente-titulo-principal);
     color: var(--color-texto-principal);
 }
 
@@ -114,59 +116,41 @@ body {
 }
 
 .cards__title {
-    font-size: var(--tamaño-fuente-titulo-cards);
-    margin-bottom: var(--margen-bottom-titulo-cards); 
+    font-size: var(--tamano-titulo-card);
     text-align: center;
-    color: var(--color-texto-titulo-cards);
-    text-shadow: var(--sombra-texto-titulo-cards);
-    transition: var(--transicion-transform-color);
+    color: var(--color-titulo-cards);
+    transition: transform var(--duracion-transicion), color var(--duracion-transicion);
+    text-shadow: var(--color-sombra-texto) 4px 4px 4px;
 }
 
 .cards__title:hover {
-    color: var(--color-texto-titulo-hover);
+    color: var(--color-texto-hover-cards);
 }
 
 .cards__contenedor {
     display: grid;
-    grid-template-columns: repeat(var(--margen-boton-login-horizontal)-fit, minmax(var(--grid-columnas-minimo), var(--grid-columnas-maximo)));
-    gap: var(--separacion-contenedor-cards);
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--gap-cards-productos);
     justify-items: center;
-    padding: var(--padding-contenedor-cards);
-    width: var(--ancho-completo);
+    width: var(--ancho-max-contenedor-productos);
     max-width: var(--ancho-maximo-contenedor);
 }
 
 /* === CARD PRINCIPAL === */
 .cards__contenedor-content {
     position: relative;
-    background: var(--color-fondo-card-principal);
-    width: var(--ancho-card-contenedor);
-    height: var(--alto-card-contenedor);
-    border-radius: var(--radio-bordes-card);
-    padding: var(--padding-card);
-    box-shadow: var(--sombra-card);
+    background: var(--color-fondo-card-productos);
+    width: var(--ancho-card-producto);
+    height: var(--alto-card-producto);
+    border-radius: var(--radio-card-productos);
+    padding: var(--padding-card-producto);
+    box-shadow: var(--sombra-card-productos);
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-between;
-    color: var(--color-texto-cards);
+    color: var(--color-texto-cards-productos);
     transition: var(--transicion-card);
     overflow: hidden;
-}
-
-/* bloque inferior */
-.cards__contenedor-content::after {
-    content: "";
-    position: absolute;
-    bottom: var(--posicion-bottom-bloque);
-    left: var(--posicion-left-bloque);
-    width: var(--ancho-completo);
-    height: var(--alto-bloque-inferior-card);
-    background-color: var(--color-fondo-card-principal);
-    background: linear-gradient(var(--angulo-gradiente-bloque), var(--color-fondo-bloque-inferior-inicio), var(--color-fondo-bloque-inferior-fin));
-    border-bottom-left-radius: var(--radio-bordes-card);
-    border-bottom-right-radius: var(--radio-bordes-card);
-    z-index: var(--z-index-capa-base);
 }
 
 /* para asegurar que el texto quede encima */
@@ -174,71 +158,62 @@ body {
 .cards__contenedor-content h4,
 .cards__contenedor-content .iconos {
     position: relative;
-    z-index: var(--z-index-capa-superior);
+    z-index: 1;
 }
 
 /* === IMAGEN CIRCULAR === */
 .cards__contenedor-content img {
-    width: var(--tamaño-imagen-circular);
-    height: var(--tamaño-imagen-circular);
+    width: var(--ancho-img-card-producto);
+    height: var(--alto-img-card-producto);
     object-fit: cover;
-    border-radius: var(--radio-bordes-imagen-circular);
-    border: var(--grosor-borde-imagen-circular) solid var(--color-borde-imagen);
+    border-radius: var(--bordes-img-card-producto);
+    border: var(--grosor-borde-img-producto) solid var(--color-borde-imagen);
     box-shadow: var(--sombra-imagen-circular);
-    transition: var(--transicion-imagen);
 }
 
-.cards__contenedor-content:hover img {
-    transform: scale(var(--escala-imagen-hover));
-}
-
-/* === TEXTOS DEL PRODUCTO === */
 .product__name {
-    font-size: var(--tamaño-fuente-nombre-producto);
-    font-weight: var(--peso-fuente-var(--peso-fuente-link-bold));
-    margin-top: var(--margen-top-nombre-producto);
-    color: var(--color-texto-cards);
-    margin-bottom: var(--margen-bottom-nombre-producto);
+    font-size: var(--tamano-nombre-producto-cards);
+    margin-top: 30px;
+    color: var(--color-texto-cards-productos);
+    margin-bottom: 20px;
 }
 
 .product__category,
 .product__material,
 .product__price,
 .product__stock {
-    font-size: var(--tamaño-fuente-texto-secundario);
-    color: var(--color-texto-cards-secundario);
-    margin-top: var(--margen-top-detalles-producto);
+    font-size: var(--tamano-contenido-producto);
+    color: var(--color-texto-cards-productos);
+    margin-top: 10px;
 }
 
 /* === ICONOS === */
 .iconos {
     display: flex;
     justify-content: center;
-    margin-top: var(--margen-top-iconos);
-    gap: var(--separacion-iconos);
+    margin-top: 25px;
+    gap: var(--gap-iconos);
 }
 
 .iconos i {
-    font-size: var(--tamaño-fuente-iconos);
-    color: var(--color-texto-cards);
+    font-size: var(--tamano-iconos-productos);
+    color: var(--color-iconos);
     cursor: pointer;
-    transition: var(--transicion-icono);
+    margin-top: 20px;
 }
 
 .iconos i:hover {
-    transform: scale(var(--escala-icono-hover));
     color: var(--color-iconos-hover);
 }
 
 /* === TÍTULO PRINCIPAL === */
 .cards__title {
-    font-size: var(--tamaño-fuente-titulo-principal);
-    font-weight: var(--peso-fuente-extra-var(--peso-fuente-link-bold));
-    color: var(--color-texto-titulo-principal);
-    text-shadow: var(--sombra-texto-titulo-principal);
-    margin-bottom: var(--margen-bottom-titulo-principal);
+    font-size: var(--tamano-titulo-card);
+    margin-bottom: 40px;
     text-align: center;
-    letter-spacing: var(--espaciado-letras-titulo);
+    color: var(--color-titulo-cards);
+    transition: transform var(--duracion-transicion), color var(--duracion-transicion);
+    text-shadow: var(--color-sombra-texto) 4px 4px 4px;
 }
 
 /* Estilos para la barra de desplazamiento personalizada */

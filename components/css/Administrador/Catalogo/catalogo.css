@@ -1,113 +1,89 @@
 @import url(../../components/css/globales.css);
 
-:root {
-    /* Dimensiones - Círculo Admin */
-    --tamaño-imagen-admin: var(--alto-imagen-admin);
-    
-    /* Dimensiones - Iconos */
-    --tamaño-icono-home: var(--alto-boton-login-registro);
-    
-    /* Dimensiones - Títulos */
-    --tamaño-titulo-home: var(--posicion-lateral-iconos);
-    --tamaño-titulo-cards: 35px;
-
-    /* Dimensiones - Tarjetas */
-    
-    --tamaño-imagen-cards: var(--alto-circulo-icono);
-    
-    /* Dimensiones - Círculo Icono */
-    
-    --tamaño-imagen-circulo: var(--margen-superior-cards);
-
-    /* Tipografía - Tamaños */
-    --tamaño-fuente-texto-inicio: var(--margen-boton-inferior);
-    --tamaño-fuente-titulo-card: 35px;
-
-}
 
 @import url('../../Tipografias/styles.css');
 
 * {
-    margin: var(--desplazamiento-active-boton);
-    padding: var(--desplazamiento-active-boton);
+    margin: var(--margin_padding_reset);
+    padding: var(--margin_padding_reset);
     box-sizing: border-box;
 }
 
 body {
-    font-family: var(--fuente-titulos); 
-    background-image: url('../../../../assets/Imagenes/fondos/fondo_admin1.jpg');
-    background-repeat: no-repeat;
+    font-family: var(--fuente-titulos);
+    background-color: var(--color-fondo-admin);
     background-size: cover;
     background-position: center;
-    position: relative;
-    min-height: var(--alto-minimo-fondo);
-    overflow: hidden; 
+    background-repeat: no-repeat;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: var(--alto-minimo-body);
 }
 
 /* Barra superior (admin) */
 .admin {
-    width: var(--ancho-barra-superior);
-    height: var(--alto-barra-superior);
+    width: var(--ancho-nav-admin);
+    height: var(--alto-nav-admin);
     display: flex;
     align-items: center;
     justify-content: space-between;
     position: fixed;   
-    top: var(--posicion-top-barra);
+    top: 20px;
     left: 50%;
     transform: translateX(-50%); 
-    background-color: var(--color-fondo-panel-superior);
-    border-radius: var(--radio-bordes-general);
+    background-color: var(--color-nav-admin);
+    border-radius: var(--borde-general);
     z-index: var(--z-index-panel);
-    padding: var(--desplazamiento-active-boton) var(--padding-horizontal-barra);
+    padding:0 20px;
 }
 
 /* Círculo admin */
 .admin__catalogo {
-    width: var(--diametro-circulo-admin);
-    height: var(--diametro-circulo-admin);
+    width: var(--circulo-admin);
+    height: var(--circulo-admin);
     border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-left: var(--margen-izquierda-circulo);
+    margin-left: 10px;
 }
 
 /* Texto "Inicio" */
 .admin__catalogo h2 {
     position: absolute;
-    bottom: var(--posicion-bottom-h2);
-    left: var(--posicion-left-h2);
+    bottom: 20px;
+    right: 980px;
     transform: translateX(-50%) translateY(var(--ancho-scrollbar));
-    opacity: var(--desplazamiento-active-boton);
-    font-size: var(--tamaño-fuente-texto-inicio);
+    opacity: 0;
+    font-size: var(--tamano-texto-home-admin);
     font-weight: var(--peso-fuente-semititulos);
     color: var(--color-texto-principal);
-    pointer-events: none;
-    transition: opacity var(--duracion-transicion) var(--tipo-transicion), transform var(--duracion-transicion) var(--tipo-transicion);
+    transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
 .admin__catalogo:hover h2 {
     opacity: var(--indice-z-formulario);
-    transform: translateX(-50%) translateY(var(--desplazamiento-active-boton));
+    transform: translateX(-50%) translateY(0);
 }
 
 .admin__catalogo img {
-    width: var(--tamaño-imagen-admin);
-    height: var(--tamaño-imagen-admin);
+    width: var(--tamano-imagen-admin);
+    height: var(--tamano-imagen-admin);
 }
 
 /* Título central */
 .admin__title {
-    flex: var(--indice-z-formulario);
+    flex: 1;
     text-align: center;
-    font-size: var(--tamaño-titulo-home);
+    font-size: var(--tamano-titulo-home);
     font-weight: var(--peso-fuente-titulo-principal);
     color: var(--color-texto-principal);
 }
 
 /* Icono de casa */
 .home__icon {
-    font-size: var(--tamaño-icono-home);
+    font-size: var(--tamano-icono-home);
     color: var(--color-iconos-principal);
     cursor: pointer;
 }
@@ -117,14 +93,13 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: var(--margen-superior-cards);
 }
 
 .cards__title {
-    font-size: var(--tamaño-titulo-home);
-    margin-bottom: var(--margen-inferior-titulo-cards);
+    font-size: var(--tamano-titulo-card);
+    margin-bottom: 40px;
     text-align: center;
-    color: var(--color-texto-titulo-cards);
+    color: var(--color-titulo-cards);
     transition: transform var(--duracion-transicion), color var(--duracion-transicion);
     text-shadow: var(--color-sombra-texto) 4px 4px 4px;
 }
@@ -135,16 +110,10 @@ body {
 
 /* Contenedor de tarjetas */
 .cards__contenedor {
-    display: grid;
-    grid-template-columns: repeat(var(--margen-boton-login-horizontal)-fit, minmax(320px, var(--grid-columnas-maximo)));
-    gap: var(--separacion-grid-cards);
+    display: flex; 
+    gap: var(--gap-cards-catalogo);
     justify-items: center;
-    padding: var(--padding-grid-cards);
-}
-
-.cards__contenedor-content {
-    display: flex;
-    justify-content: center;
+    padding: 0 40px;
 }
 
 /* Tarjeta */
@@ -152,53 +121,37 @@ body {
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    background: var(--color-fondo-datos-tarjeta);
-    border-radius: var(--radio-bordes-tarjeta);
+    background-image: url('../../../../assets/Imagenes/fondos/fondo_cards.jpg');
+    border-radius: 16px;
     box-shadow: var(--sombra-difuminada);
-    width: 545px;
-    height: var(--alto-circulo-icono);
+    width: 610px;
+    height: 220px;
     padding: var(--padding-tarjeta);
-    gap: var(--separacion-tarjetas);
+    gap: var(--gap-interno-tarjetas);
     transition: transform var(--duracion-transicion) var(--tipo-transicion), box-shadow var(--duracion-transicion) var(--tipo-transicion);
     cursor: pointer;
 }
 
 .card-item:hover {
-    transform: scale(var(--escala-hover-tarjeta));
+    transform: scale(1.1);
     box-shadow: var(--sombra-difuminada-hover);
     background-color: var(--color-fondo-tarjeta-hover);
 }
 
-/* Círculo del icono */
-.icon-circle {
-    width: var(--diametro-icono-circulo);
-    height: var(--diametro-icono-circulo);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: var(--desplazamiento-active-boton);
-    transition: background var(--duracion-transicion), transform var(--duracion-transicion);
-}
-
 .icon-circle img {
-    width: var(--tamaño-imagen-circulo);
-    height: var(--tamaño-imagen-circulo);
-    object-fit: contain;
-    transition: filter var(--duracion-transicion);
+    width: var(--alto-iconos-catalogo);
+    height: var(--ancho-iconos-catalogo);
 }
 
 .icon-circle:hover img {
-    filter: brightness(var(--indice-z-formulario)) invert(var(--desplazamiento-active-boton));
+    filter: brightness(1) invert(0);
 }
 
 /* Texto dentro de la tarjeta */
 .card-item h3 {
     position: relative;
     color: var(--color-texto-principal);
-    font-size: var(--tamaño-fuente-titulo-card);
+    font-size: var(--tamano-titulo-cards);
     font-weight: var(--peso-fuente-semititulos);
     text-align: center;
-    z-index: var(--indice-z-formulario);
-    transition: color var(--duracion-transicion) var(--tipo-transicion);
 }

@@ -1,115 +1,93 @@
 @import url('../../../../../../components/css/global.css');
 
 
-:root {
-    /* Dimensiones - Círculos e Imágenes */
-    
-    --tamaño-imagen-admin: var(--alto-imagen-admin);
-    
-    /* Tipografía - Tamaños */
-    --tamaño-fuente-icono-home: var(--alto-boton-login-registro);
-    --tamaño-fuente-titulo-panel: var(--posicion-lateral-iconos);
-    --tamaño-fuente-titulo-card: var(--alto-boton-login-registro);
-    --tamaño-fuente-titulo-detalle: var(--margen-bienvenida-inferior);
-    --tamaño-fuente-titulo-item: var(--margen-botones-rol-superior);
-    --tamaño-fuente-span-detalle: var(--margen-boton-inferior);
-    --tamaño-fuente-boton-grande: var(--margen-boton-inferior);
-    --tamaño-fuente-boton: var(--separacion-iconos);
-    --tamaño-fuente-boton-pequeno: var(--radio-bordes-tarjeta);
-    --tamaño-fuente-texto-h2: var(--margen-boton-inferior);
-    --tamaño-fuente-advertencia-titulo: var(--margen-bienvenida-inferior);
-    --tamaño-fuente-advertencia-texto: var(--margen-botones-rol-superior);
-    --tamaño-fuente-icono-advertencia: var(--margen-right-span-detalle);
-    --tamaño-fuente-tooltip: var(--desplazamiento-active-boton).85rem;
-    
-}
-
 @import url('../../Tipografias/styles.css');
 
+
 * {
-    margin: var(--desplazamiento-active-boton);
-    padding: var(--desplazamiento-active-boton);
+    margin: var(--margin_padding_reset);
+    padding: var(--margin_padding_reset);
     box-sizing: border-box;
 }
 
 body {
     font-family: var(--fuente-titulos);
-    background-image: url(../../../../../../assets/Imagenes/fondos/fondo_admin1.jpg);
-    background-repeat: no-repeat;
+    background-color: var(--color-fondo-admin);
     background-size: cover;
     background-position: center;
-    min-height: var(--alto-minimo-fondo);
-    color: var(--color-text);
-    overflow: hidden;
+    background-repeat: no-repeat;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: var(--alto-minimo-body);
 }
 
+/* --- Barra superior --- */
 .admin {
-    width: var(--ancho-barra-panel);
-    height: var(--alto-barra-panel);
+    width: var(--ancho-nav-admin);
+    height: var(--alto-nav-admin);
     display: flex;
     align-items: center;
     justify-content: space-between;
     position: fixed;   
-    top: var(--posicion-top-panel);
-    left: var(--posicion-left-panel);
-    transform: var(--transformacion-centrar-x); 
-    background-color: var(--color-fondo-panel);
-    border-radius: var(--radio-bordes-panel);
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%); 
+    background-color: var(--color-nav-admin);
+    border-radius: var(--borde-general);
     z-index: var(--z-index-panel);
-    padding: var(--padding-panel);
+    padding:0 20px;
 }
 
-/* Círculo admin a la izquierda */
+/* Círculo admin */
 .admin__catalogo {
-    width: var(--diametro-circulo-admin);
-    height: var(--diametro-circulo-admin);
-    border-radius: var(--radio-bordes-icono);
+    width: var(--circulo-admin);
+    height: var(--circulo-admin);
+    border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-left: var(--margen-left-circulo-admin);
+    margin-left: 10px;
 }
 
-/* Estilo base del texto "Inicio" */
 .admin__catalogo h2 {
     position: absolute;
-    bottom: var(--posicion-bottom-texto-catalogo);
-    left: var(--posicion-left-texto-catalogo);
-    transform: var(--transformacion-texto-catalogo-inicial);
-    opacity: var(--opacidad-texto-catalogo-inicial);
-    font-size: var(--tamaño-fuente-texto-h2);
-    font-weight: var(--peso-fuente-semibold);
-    color: var(--color-text);
-    pointer-events: none;
-    transition: var(--transicion-opacidad-transform);
+    bottom: 20px;
+    right: 980px;
+    transform: translateX(-50%) translateY(var(--ancho-scrollbar));
+    opacity: 0;
+    font-size: var(--tamano-texto-home-admin);
+    font-weight: var(--peso-fuente-semititulos);
+    color: var(--color-texto-principal);
+    transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
-/* Cuando se pasa el mouse por admin__catalogo */
 .admin__catalogo:hover h2 {
-    opacity: var(--opacidad-texto-catalogo-hover);
-    transform: var(--transformacion-texto-catalogo-hover);
+    opacity: var(--indice-z-formulario);
+    transform: translateX(-50%) translateY(0);
 }
 
 .admin__catalogo img {
-    width: var(--tamaño-imagen-admin);
-    height: var(--tamaño-imagen-admin);
+    width: var(--tamano-imagen-admin);
+    height: var(--tamano-imagen-admin);
 }
 
 /* Título centrado */
 .admin__title {
-    flex: var(--indice-z-formulario);
+    flex: 1;
     text-align: center;
-    font-size: var(--tamaño-fuente-titulo-panel);
-    font-weight: var(--peso-fuente-var(--peso-fuente-link-bold));
-    color: var(--color-text);
+    font-size: var(--tamano-titulo-home);
+    font-weight: var(--peso-fuente-titulo-principal);
+    color: var(--color-texto-principal);
 }
 
-/* Casita a la derecha */
+/* Icono casita */
 .home__icon {
-    font-size: var(--tamaño-fuente-icono-home);
-    color: var(--color-iconos);
+    font-size: var(--tamano-icono-home);
+    color: var(--color-iconos-principal);
     cursor: pointer;
 }
+
 
 /* --- Iconos laterales --- */
 .admin__icons-right {
@@ -160,16 +138,20 @@ body {
 .product {
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
-    padding-top: var(--margen-top-contenedor);
-    gap: var(--separacion-producto);
 }
 
 .product-card__title {
-    font-size: var(--tamaño-fuente-titulo-card);
-    color: var(--color-texto-titulo-card);
-    text-shadow: var(--sombra-texto-titulo);
+    font-size: var(--tamano-titulo-card);
+    margin-bottom: 40px;
+    text-align: center;
+    color: var(--color-titulo-cards);
+    transition: transform var(--duracion-transicion), color var(--duracion-transicion);
+    text-shadow: var(--color-sombra-texto) 4px 4px 4px;
+}
+
+.product-card__title:hover {
+    color: var(--color-texto-hover-cards);
 }
 
 /* Card principal */
@@ -177,12 +159,10 @@ body {
     display: grid;
     grid-template-columns: var(--grid-columnas-eliminar);
     gap: var(--separacion-card);
-    background: var(--color-fondo-card);
-    border-radius: var(--radio-bordes-card);
-    padding: var(--padding-card);
-    width: var(--ancho-completo);
-    max-width: var(--ancho-maximo-card);
-    box-shadow: var(--sombra-card-principal);
+    background: var(--color-fondo-card-productos);
+    border-radius: var(--radio-borde-card);
+    width: 1250px;
+    height: 520px;
 }
 
 /* Imagen y botones */
@@ -194,10 +174,10 @@ body {
 }
 
 .product-card__image img {
+    margin-top: 24px;
     width: var(--ancho-imagen-producto);
     height: var(--alto-imagen-producto);
     border-radius: var(--radio-bordes-imagen);
-    box-shadow: var(--sombra-imagen);
 }
 
 .product-card__acciones {
@@ -209,7 +189,6 @@ body {
     padding: var(--padding-boton-grande);
     border-radius: var(--radio-bordes-boton);
     font-size: var(--tamaño-fuente-boton-grande);
-    font-weight: var(--peso-fuente-semibold);
     display: flex;
     align-items: center;
     gap: var(--separacion-boton-icono);
@@ -240,13 +219,17 @@ body {
 .product_info {
     display: flex;
     flex-direction: column;
-    gap: var(--separacion-info);
+    justify-content: center;
+}
+
+.product_info__detalle {
+    margin-right: 127px;
 }
 
 .product_info__detalle h3 {
-    font-size: var(--tamaño-fuente-titulo-detalle);
-    color: var(--color-texto-principal);
-    margin-bottom: var(--margen-bottom-titulo-detalle);
+    font-size: var(--tamano-nombre-producto-cards);
+    color: var(--color-texto-general);
+    min-width: 120px;
 }
 
 .item-detalle {
@@ -256,14 +239,13 @@ body {
 }
 
 .item-detalle h2 {
-    font-size: var(--tamaño-fuente-titulo-item);
-    color: var(--color-texto-acento);
+    font-size: var(--tamano-contenido-producto);
+    color: var(--color-texto-principal);
 }
 
 .item-detalle span {
-    font-size: var(--tamaño-fuente-span-detalle);
-    color: var(--color-texto-negro);
-    margin-right: var(--margen-right-span-detalle);
+    font-size: var(--tamano-contenido-producto);
+    color: var(--color-texto-principal);
 }
 
 .item-detalle i {
@@ -278,12 +260,16 @@ body {
     display: flex;
     align-items: flex-start;
     gap: var(--separacion-advertencia);
-    box-shadow: var(--sombra-card);
     text-align: center;
+    margin-right: 130px;
+    margin-top: 35px;
+    width: 500px;
+    height: 130px;
+    font-size: var(--tamano-contenido-producto) ;
 }
 
 .product-advertencia i {
-    font-size: var(--tamaño-fuente-icono-advertencia);
+    font-size: 80px;
     color: var(--color-icono-advertencia);
 }
 
@@ -303,30 +289,34 @@ body {
     justify-content: center;
     gap: var(--separacion-acciones);
     margin-top: var(--margen-top-botones-accion);
+    margin-right: 128px;
 }
 
 .boton-confirmar {
-    background-color: var(--color-boton-principal);
-    color: var(--color-texto-negro);
-    padding: var(--padding-boton);
     border: none;
-    border-radius: var(--radio-bordes-boton-grande);
-    font-size: var(--tamaño-fuente-boton-pequeno);
+    padding: var(--padding-boton);
+    border-radius: var(--radio-bordes-boton);
+    font-size: var(--tamano-iconos-productos);
+    cursor: pointer;
+    transition: var(--transicion-boton);
+    background: var(--color-boton-principal);
 }
 
 .boton-confirmar:hover {
-    background-color: var(--color-boton-principal-hover);
+    background: var(--color-boton-principal-hover);
+    transform: var(--transformacion-boton-hover);
 }
 
 .boton-cancelar {
-    background-color: var(--color-boton-secundario);
-    color: var(--color-texto-negro);
-    padding: var(--padding-boton);
     border: none;
-    border-radius: var(--radio-bordes-boton-grande);
-    font-size: var(--tamaño-fuente-boton);
+    padding: var(--padding-boton);
+    border-radius: var(--radio-bordes-boton);
+    font-size: var(--tamano-iconos-productos);
+    cursor: pointer;
+    transition: var(--transicion-boton);
+    background: var(--color-boton-secundario);
 }
 
 .boton-cancelar:hover {
-    background-color: var(--color-boton-secundario-hover);
+    background: var(--color-boton-secundario-hover);
 }
