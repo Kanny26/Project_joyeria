@@ -1,0 +1,107 @@
+/*botones de confirmacion o ingreso*/
+
+.btn {
+    width: var(--ancho-contenedor-botones);
+    max-width: var(--ancho-boton-login-registro);
+    height: var(--alto-boton-login-registro);
+    margin: var(--margen-boton-login-superior)
+            var(--margen-boton-login-horizontal)
+            var(--margen-boton-login-inferior);
+    font-size: var(--tamano-letra-botones);
+    font-weight: var(--peso-fuente-boton);
+    color: var(--color-texto-principal);
+    background-color: var(--color-fondo-boton);
+    border: none;
+    border-radius: var(--bordes-inputs-botones);
+    cursor: pointer;
+    text-align: center;
+    transition: transform var(--duracion-transicion-boton-login) var(--tipo-transicion),
+                filter var(--duracion-transicion-boton-login) var(--tipo-transicion),
+                box-shadow var(--duracion-transicion-boton-login) var(--tipo-transicion);
+    box-shadow: var(--sombra-boton-normal);
+}
+
+.btn:hover {
+    transform: scale(var(--escala-hover-boton));
+    filter: brightness(var(--brillo-hover-boton));
+    box-shadow: var(--sombra-boton-hover);
+}
+
+
+/*botones para acciones, editar, ver, eliminar, guardar, cancelar*/
+.boton,
+.boton_view_edit,
+.boton-confirmar {
+    display: flex;
+    align-items: center;
+    gap: var(--separacion-boton-icono);
+    padding: var(--padding-boton-grande);
+    border-radius: var(--radio-bordes-boton);
+    font-size: var(--tamaño-fuente-boton-grande);
+    border: none;
+    cursor: pointer;
+    transition: var(--transicion-boton);
+}
+
+/* Íconos dentro de botones */
+.boton i,
+.boton_view_edit i,
+.boton-confirmar i {
+    font-size: 1em; /* relativo al texto */
+}
+
+/* ===== Variantes ===== */
+
+/* Guardar */
+.boton.guardar {
+    background-color: var(--color-boton-principal);
+    color: var(--color-texto-principal);
+}
+.boton.guardar:hover {
+    background-color: var(--color-boton-principal-hover);
+}
+
+/* Cancelar */
+.boton.cancelar {
+    background-color: var(--color-boton-secundario);
+    color: var(--color-texto-principal);
+}
+.boton.cancelar:hover {
+    background-color: var(--color-boton-secundario-hover);
+}
+
+/* Editar producto */
+.edit-image-btn {
+    background-color: var(--color-boton-principal);
+    color: var(--color-texto-negro);
+}
+.edit-image-btn:hover {
+    background-color: var(--color-boton-principal-hover);
+}
+
+/* Ver producto */
+.ver-image-btn {
+    background-color: var(--color-boton-secundario);
+    color: var(--color-texto-negro);
+}
+.ver-image-btn:hover {
+    background-color: var(--color-boton-secundario-hover);
+}
+
+/* Eliminar producto */
+.boton-confirmar.eliminar {
+    background-color: var(--color-boton-principal);
+    color: var(--color-texto-principal);
+}
+.boton-confirmar.eliminar:hover {
+    background-color: var(--color-boton-principal-hover);
+    transform: var(--transformacion-boton-hover);
+}
+
+/* Contenedor de botones */
+.product-card__acciones {
+    display: flex;
+    gap: var(--separacion-acciones);
+    align-items: center; /* Alinea todos los botones verticalmente */
+    margin-top: 10px;
+}

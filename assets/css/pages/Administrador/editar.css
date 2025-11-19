@@ -1,0 +1,131 @@
+@import url('../../base/global.css');
+
+
+* {
+    margin: var(--margin_padding_reset);
+    padding: var(--margin_padding_reset);
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--fuente-titulos);
+    background-color: var(--color-fondo-admin);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: var(--alto-minimo-body);
+}
+
+/* --- Contenedor principal --- */
+.product {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.product-card__title {
+    font-size: var(--tamano-titulo-card);
+    margin-bottom: 40px;
+    text-align: center;
+    color: var(--color-titulo-cards);
+    transition: transform var(--duracion-transicion), color var(--duracion-transicion);
+    text-shadow: var(--color-sombra-texto) 4px 4px 4px;
+}
+
+.product-card__title:hover {
+    color: var(--color-texto-hover-cards);
+}
+
+/* --- Card --- */
+.product-card__detalles {
+    background-color: var(--color-fondo-card-productos);
+    border-radius: var(--radio-borde-card);
+    width: 1200px;
+    height: 550px;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.product__contenido {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--separacion-contenido);
+}
+
+.product-card__image {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+}
+.product-card__image img {
+    margin-left: 120px;
+    margin-top: 20px;
+    width: var(--ancho-imagen-producto);
+    border-radius: var(--radio-bordes-imagen);
+    box-shadow: var(--sombra-imagen-card);
+}
+
+.edit-image-btn {
+    margin-left: 120px;
+    margin-top: 10px;
+    background-color: var(--color-boton-principal);
+    color: var(--color-texto-principal);
+    border-radius: var(--radio-bordes-boton);
+    padding: var(--padding-boton);
+    cursor: pointer;
+    transition: var(--transicion-boton);
+}
+
+.edit-image-btn:hover {
+    background-color: var(--color-boton-principal-hover);
+}
+
+/* --- Formulario --- */
+.product-fields {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 25px;
+}
+
+label {
+    font-size: var(--tamano-label);
+    color: var(--color-texto-acento);
+}
+
+.input-text,
+.input-select,
+.input-area {
+    width: 500px;
+    height: 50px;
+    padding: 10px 12px;
+    border-radius: var(--radio-bordes-input);
+    border:2px solid #ccc;
+    font-size: var(--tamano-fuente-placeholder);
+    background: var(--color-fondo-icono);
+    transition: var(--duracion-transicion);
+    resize: none;
+    border-style: none;
+}
+
+
+/* --- Reseñas y botones --- */
+.product-card__ratings {
+    display: flex;
+    align-items: center;
+    gap: var(--gap-estrellas);
+    color: var(--color-estrellas);
+    font-size: var(--tamano-iconos-productos);
+}
+
+.product-card__acciones {
+    display: flex;
+    gap: 12px;
+}

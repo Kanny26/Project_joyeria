@@ -1,0 +1,65 @@
+.navbar-admin {
+    width: var(--ancho-nav-admin);
+    height: var(--alto-nav-admin);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: fixed;   
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%); 
+    background-color: var(--color-nav-admin);
+    border-radius: var(--borde-general);
+    z-index: var(--z-index-panel);
+    padding:0 20px;
+}
+
+/* Círculo admin */
+.navbar-admin__catalogo {
+    width: var(--circulo-admin);
+    height: var(--circulo-admin);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 10px;
+}
+
+.navbar-admin__catalogo img {
+    width: var(--tamano-imagen-admin);
+    height: var(--tamano-imagen-admin);
+}
+
+/* Texto "Inicio" */
+.navbar-admin__catalogo h2 {
+    position: absolute;
+    bottom: 20px;
+    right: 980px;
+    transform: translateX(-50%) translateY(var(--ancho-scrollbar));
+    opacity: 0;
+    font-size: var(--tamano-texto-home-admin);
+    font-weight: var(--peso-fuente-semititulos);
+    color: var(--color-texto-principal);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.navbar-admin__catalogo:hover h2 {
+    opacity: var(--indice-z-formulario);
+    transform: translateX(-50%) translateY(0);
+}
+
+/* Título central */
+.navbar-admin__title {
+    flex: 1;
+    text-align: center;
+    font-size: var(--tamano-titulo-home);
+    font-weight: var(--peso-fuente-titulo-principal);
+    color: var(--color-texto-principal);
+}
+
+/* Icono de casa */
+.navbar-admin__home-icon {
+    font-size: var(--tamano-icono-home);
+    color: var(--color-iconos-principal);
+    cursor: pointer;
+}
