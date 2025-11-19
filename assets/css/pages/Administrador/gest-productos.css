@@ -1,0 +1,155 @@
+@import url('../../base/global.css');
+
+
+:root {
+    /* Dimensiones - Círculos e Imágenes */
+    --tamaño-imagen-admin: var(--alto-imagen-admin);
+    --tamaño-imagen-circular: var(--margen-top-producto);
+    --tamaño-imagen-card-ancho: var(--alto-card);
+    --tamaño-imagen-card-alto: var(--alto-card);
+    
+    /* Tipografía - Tamaños */
+    --tamaño-fuente-icono-home: var(--alto-boton-login-registro);
+    --tamaño-fuente-titulo-panel: var(--posicion-lateral-iconos);
+    --tamaño-fuente-titulo-cards: var(--alto-boton-login-registro);
+    --tamaño-fuente-titulo-principal: var(--alto-h3-container);
+    --tamaño-fuente-texto-h2: var(--margen-boton-inferior);
+    --tamaño-fuente-nombre-producto: var(--margen-botones-rol-superior);
+    --tamaño-fuente-texto-secundario: var(--separacion-iconos);
+    --tamaño-fuente-iconos: 22px;
+    
+}
+
+@import url('../../Tipografias/styles.css');
+
+* {
+    margin: var(--margin_padding_reset);
+    padding: var(--margin_padding_reset);
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--fuente-titulos);
+    background-color: var(--color-fondo-admin);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: var(--alto-minimo-body);
+}
+
+
+.cards {
+    display: flex; 
+    flex-direction: column;
+    align-items: center;
+    margin-top: var(--margen-top-cards);
+}
+
+.cards__title {
+    font-size: var(--tamano-titulo-card);
+    text-align: center;
+    color: var(--color-titulo-cards);
+    transition: transform var(--duracion-transicion), color var(--duracion-transicion);
+    text-shadow: var(--color-sombra-texto) 4px 4px 4px;
+}
+
+.cards__title:hover {
+    color: var(--color-texto-hover-cards);
+}
+
+.cards__contenedor {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--gap-cards-productos);
+    justify-items: center;
+    width: var(--ancho-max-contenedor-productos);
+    max-width: var(--ancho-maximo-contenedor);
+}
+
+/* === CARD PRINCIPAL === */
+.cards__contenedor-content {
+    position: relative;
+    background: var(--color-fondo-card-productos);
+    width: var(--ancho-card-producto);
+    height: var(--alto-card-producto);
+    border-radius: var(--radio-card-productos);
+    padding: var(--padding-card-producto);
+    box-shadow: var(--sombra-card-productos);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: var(--color-texto-cards-productos);
+    transition: var(--transicion-card);
+    overflow: hidden;
+}
+
+/* para asegurar que el texto quede encima */
+.cards__contenedor-content h3,
+.cards__contenedor-content h4,
+.cards__contenedor-content .iconos {
+    position: relative;
+    z-index: 1;
+}
+
+/* === IMAGEN CIRCULAR === */
+.cards__contenedor-content img {
+    width: var(--ancho-img-card-producto);
+    height: var(--alto-img-card-producto);
+    object-fit: cover;
+    border-radius: var(--bordes-img-card-producto);
+    border: var(--grosor-borde-img-producto) solid var(--color-borde-imagen);
+    box-shadow: var(--sombra-imagen-circular);
+}
+
+.product__name {
+    font-size: var(--tamano-nombre-producto-cards);
+    margin-top: 30px;
+    color: var(--color-texto-cards-productos);
+    margin-bottom: 20px;
+}
+
+.product__category,
+.product__material,
+.product__price,
+.product__stock {
+    font-size: var(--tamano-contenido-producto);
+    color: var(--color-texto-cards-productos);
+    margin-top: 10px;
+}
+
+/* === TÍTULO PRINCIPAL === */
+.cards__title {
+    font-size: var(--tamano-titulo-card);
+    margin-bottom: 40px;
+    text-align: center;
+    color: var(--color-titulo-cards);
+    transition: transform var(--duracion-transicion), color var(--duracion-transicion);
+    text-shadow: var(--color-sombra-texto) 4px 4px 4px;
+}
+
+/* Estilos para la barra de desplazamiento personalizada */
+::-webkit-scrollbar {
+    width: var(--ancho-scrollbar);               
+    height: var(--alto-scrollbar);              
+}
+
+::-webkit-scrollbar-track {
+    background: var(--color-scrollbar-track);       
+    border-radius: var(--radio-bordes-scrollbar);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--color-scrollbar-thumb);       
+    border-radius: var(--radio-bordes-scrollbar);       
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--color-scrollbar-thumb-hover);       
+}
+
+::-webkit-scrollbar-corner {
+    background: transparent;
+}
