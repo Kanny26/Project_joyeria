@@ -1,0 +1,88 @@
+@import url('../../base/global.css');
+
+
+* {
+    margin: var(--margin_padding_reset);
+    padding: var(--margin_padding_reset);
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--fuente-titulos);
+    background-color: var(--color-fondo-admin);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: var(--alto-minimo-body);
+}
+
+.cards {
+    display: flex; 
+    flex-direction: column;
+    align-items: center;
+    margin-top: var(--margen-top-cards);
+}
+
+.cards__title {
+    font-size: var(--tamano-titulo-card);
+    text-align: center;
+    color: var(--color-titulo-cards);
+    transition: transform var(--duracion-transicion), color var(--duracion-transicion);
+    text-shadow: var(--color-sombra-texto) 4px 4px 4px;
+}
+
+.cards__title:hover {
+    color: var(--color-texto-hover-cards);
+}
+
+/* Contenedor de tarjetas */
+.cards__contenedor {
+    display: flex; 
+    flex-direction: row;
+    gap: var(--gap-cards-catalogo);
+    justify-items: center;
+    padding: 0 40px;
+}
+
+/* Tarjeta */
+.card-item {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    background-image: url('../../../../assets/Imagenes/fondos/fondo_cards.jpg');
+    border-radius: 16px;
+    box-shadow: var(--sombra-difuminada);
+    width: 610px;
+    height: 220px;
+    padding: var(--padding-tarjeta);
+    gap: var(--gap-interno-tarjetas);
+    transition: transform var(--duracion-transicion) var(--tipo-transicion), box-shadow var(--duracion-transicion) var(--tipo-transicion);
+    cursor: pointer;
+}
+
+.card-item:hover {
+    transform: scale(1.1);
+    box-shadow: var(--sombra-difuminada-hover);
+    background-color: var(--color-fondo-tarjeta-hover);
+}
+
+.icon-circle img {
+    width: var(--alto-iconos-catalogo);
+    height: var(--ancho-iconos-catalogo);
+}
+
+.icon-circle:hover img {
+    filter: brightness(1) invert(0);
+}
+
+/* Texto dentro de la tarjeta */
+.card-item h3 {
+    position: relative;
+    color: var(--color-texto-principal);
+    font-size: var(--tamano-titulo-cards);
+    font-weight: var(--peso-fuente-semititulos);
+    text-align: center;
+}

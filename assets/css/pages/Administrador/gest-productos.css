@@ -1,25 +1,6 @@
 @import url('../../base/global.css');
 
 
-:root {
-    /* Dimensiones - Círculos e Imágenes */
-    --tamaño-imagen-admin: var(--alto-imagen-admin);
-    --tamaño-imagen-circular: var(--margen-top-producto);
-    --tamaño-imagen-card-ancho: var(--alto-card);
-    --tamaño-imagen-card-alto: var(--alto-card);
-    
-    /* Tipografía - Tamaños */
-    --tamaño-fuente-icono-home: var(--alto-boton-login-registro);
-    --tamaño-fuente-titulo-panel: var(--posicion-lateral-iconos);
-    --tamaño-fuente-titulo-cards: var(--alto-boton-login-registro);
-    --tamaño-fuente-titulo-principal: var(--alto-h3-container);
-    --tamaño-fuente-texto-h2: var(--margen-boton-inferior);
-    --tamaño-fuente-nombre-producto: var(--margen-botones-rol-superior);
-    --tamaño-fuente-texto-secundario: var(--separacion-iconos);
-    --tamaño-fuente-iconos: 22px;
-    
-}
-
 @import url('../../Tipografias/styles.css');
 
 * {
