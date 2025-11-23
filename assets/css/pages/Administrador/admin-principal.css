@@ -1,6 +1,4 @@
-@import url(../../global.css);
-
-
+@import url('../../base/global.css');
 @import url('../../Tipografias/styles.css');
 
 * {
@@ -21,7 +19,7 @@ body {
     min-height: var(--alto-minimo-body);
 }
 
-.home {
+.panel-admin {
     width: var(--ancho-nav-admin);
     height: var(--alto-nav-admin);
     display: flex;
@@ -38,7 +36,7 @@ body {
 }
 
 /* Círculo admin a la izquierda */
-.home__admin {
+.panel-admin__circulo {
     width: var(--circulo-admin);
     height: var(--circulo-admin);
     border-radius: 50%;
@@ -48,7 +46,7 @@ body {
     margin-left: 10px;
 }
 
-.home__admin h2 {
+.panel-admin__circulo h2 {
     position: absolute;
     bottom: 20px;
     right: 980px;
@@ -60,18 +58,18 @@ body {
     transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
-.home__admin:hover h2 {
+.panel-admin__circulo:hover h2 {
     opacity: var(--indice-z-formulario);
     transform: translateX(-50%) translateY(0);
 }
 
-.home__admin img {
+.panel-admin__circulo img {
     width: var(--tamano-imagen-admin);
     height: var(--tamano-imagen-admin);
 }
 
 /* Título centrado */
-.home__title {
+.panel-admin__titulo {
     flex: 1;
     text-align: center;
     font-size: var(--tamano-titulo-home);
@@ -80,19 +78,19 @@ body {
 }
 
 /* Icono de casa */
-.home__icon {
+.panel-admin__icono {
     font-size: var(--tamano-icono-home);
     color: var(--color-iconos-principal);
     cursor: pointer;
 }
 
-.cards {
+.panel-admin__tarjetas {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-.cards__title {
+.panel-admin__tarjetas-titulo {
     font-size: var(--tamano-titulo-card);
     margin-bottom: 40px;
     text-align: center;
@@ -101,18 +99,18 @@ body {
     text-shadow: var(--color-sombra-texto) 4px 4px 4px;
 }
 
-.cards__title:hover {
+.panel-admin__tarjetas-titulo:hover {
     color: var(--color-texto-hover-cards);
 }
 
-.cards__contenedor {
+.panel-admin__tarjetas-contenedor {
     display: flex; 
     gap: var(--gap-cards-catalogo);
     justify-items: center;
     padding: 0 40px;
 }
 
-.cards__contenedor-content {
+.panel-admin__tarjeta {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -124,7 +122,7 @@ body {
 }
 
 /* Círculo del icono */
-.icon-circle {
+.panel-admin__tarjeta-circulo {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -135,20 +133,21 @@ body {
     margin-bottom: 15px;
 }
 
-.icon-circle:hover {
+.panel-admin__tarjeta-circulo:hover {
     transform: scale(1.1);
     box-shadow: var(--sombra-hover);
     background-color: var(--color-fondo-circulo-hover);
 }
 
-.icon-circle img {
+.panel-admin__tarjeta-circulo img {
     width: var(--tamano-imagen-icono);
     height: var(--tamano-imagen-icono);
     transition: transform var(--transicion-general);
 }
 
+
 /* Contenedor de h3 */
-.h3-container {
+.panel-admin__tarjeta-h3 {
     position: relative;
     width: var(--ancho-dashboard-act);
     height: var(--alto-dashboard-act);
@@ -165,7 +164,7 @@ body {
 }
 
 /* Texto centrado */
-.h3-container h3 {
+.panel-admin__tarjeta-h3 h3 {
     position: relative;
     color: var(--color-texto-principal);
     font-size: var(--tamano-texto-h3);
@@ -173,4 +172,37 @@ body {
     text-align: center;
     z-index: 1;
     transition: color var(--transicion-general);
+}
+
+/* Elementos decorativos izquierda y derecha */
+.panel-admin__tarjeta-h3-izquierda,
+.panel-admin__tarjeta-h3-derecha {
+    position: absolute;
+    top: 0;
+    width: 50%;
+    height: 100%;
+    transition: transform var(--transicion-general);
+}
+
+.panel-admin__tarjeta-h3-izquierda {
+    left: 0;
+    background: var(--color-fondo-h3-izquierda);
+}
+
+.panel-admin__tarjeta-h3-derecha {
+    right: 0;
+    background: var(--color-fondo-h3-derecha);
+}
+
+/* Hover efecto */
+.panel-admin__tarjeta-h3:hover h3 {
+    color: var(--color-texto-hover-cards);
+}
+
+.panel-admin__tarjeta-h3:hover .panel-admin__tarjeta-h3-izquierda {
+    transform: translateX(-100%);
+}
+
+.panel-admin__tarjeta-h3:hover .panel-admin__tarjeta-h3-derecha {
+    transform: translateX(100%);
 }
