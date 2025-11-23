@@ -206,3 +206,36 @@ body {
 .panel-admin__tarjeta-h3:hover .panel-admin__tarjeta-h3-derecha {
     transform: translateX(100%);
 }
+
+/* Elementos decorativos izquierda y derecha */
+.panel-admin__tarjeta-h3-izquierda,
+.panel-admin__tarjeta-h3-derecha {
+    position: absolute;
+    top: 0;
+    width: 50%;
+    height: 100%;
+    transition: transform var(--transicion-general);
+}
+
+.panel-admin__tarjeta-h3-izquierda {
+    left: 0;
+    background: var(--color-fondo-h3-izquierda);
+}
+
+.panel-admin__tarjeta-h3-derecha {
+    right: 0;
+    background: var(--color-fondo-h3-derecha);
+}
+
+/* Hover efecto */
+.panel-admin__tarjeta-h3:hover h3 {
+    color: var(--color-texto-hover-cards);
+}
+
+.panel-admin__tarjeta-h3:hover .panel-admin__tarjeta-h3-izquierda {
+    transform: translateX(-100%);
+}
+
+.panel-admin__tarjeta-h3:hover .panel-admin__tarjeta-h3-derecha {
+    transform: translateX(100%);
+}

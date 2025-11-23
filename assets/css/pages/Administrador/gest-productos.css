@@ -1,6 +1,7 @@
 @import url('../../base/global.css');
 
 
+<<<<<<< HEAD
 * {
     margin: var(--margin_padding_reset);
     padding: var(--margin_padding_reset);
@@ -133,6 +134,8 @@ body {
 }
 
 
+=======
+>>>>>>> admin
 @import url('../../Tipografias/styles.css');
 
 * {

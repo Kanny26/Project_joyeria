@@ -1,0 +1,211 @@
+@import url('../../base/global.css');
+@import url('../../Tipografias/styles.css');
+
+/* RESET */
+* {
+    margin: var(--margin_padding_reset);
+    padding: var(--margin_padding_reset);
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--fuente-titulos);
+    background-color: var(--color-fondo-admin);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: var(--alto-minimo-body);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 140px;
+}
+
+/* =========================== */
+/* NAVBAR ADMIN (igual al home) */
+/* =========================== */
+
+.navbar-admin {
+    width: var(--ancho-nav-admin);
+    height: var(--alto-nav-admin);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--color-nav-admin);
+    border-radius: var(--borde-general);
+    padding: 0 20px;
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: var(--z-index-panel);
+}
+
+/* Círculo izquierda */
+
+.navbar-admin__catalogo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+}
+
+.navbar-admin__catalogo img {
+    width: var(--tamano-imagen-admin);
+    height: var(--tamano-imagen-admin);
+    border-radius: 50%;
+}
+
+.navbar-admin__catalogo h2 {
+    opacity: 0;
+    font-size: var(--tamano-texto-home-admin);
+    font-weight: var(--peso-fuente-semititulos);
+    color: var(--color-texto-principal);
+    transition: opacity .3s ease, transform .3s ease;
+    transform: translateY(10px);
+}
+
+.navbar-admin__catalogo:hover h2 {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.navbar-admin__title {
+    font-size: var(--tamano-titulo-home);
+    font-weight: var(--peso-fuente-titulo-principal);
+    color: var(--color-texto-principal);
+}
+
+.navbar-admin__home-icon {
+    font-size: var(--tamano-icono-home);
+    color: var(--color-iconos-principal);
+    cursor: pointer;
+}
+
+/* =========================== */
+/* CATÁLOGO ADMIN */
+/* =========================== */
+
+.catalogo-admin {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.catalogo-admin__titulo {
+    font-size: var(--tamano-titulo-card);
+    color: var(--color-titulo-cards);
+    margin-bottom: 40px;
+    text-shadow: var(--color-sombra-texto) 4px 4px 4px;
+    transition: transform .3s ease, color .3s ease;
+}
+
+.catalogo-admin__titulo:hover {
+    color: var(--color-texto-hover-cards);
+}
+
+/* CONTENEDOR DE TARJETAS */
+.catalogo-admin__contenedor {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: var(--gap-cards-catalogo);
+    max-width: 1200px;
+    justify-content: center;
+}
+
+/* TARJETA */
+.catalogo-admin__contenedor-item {
+    list-style: none;
+}
+
+.catalogo-admin__tarjeta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: var(--ancho-card);
+    padding: 20px;
+    border-radius: var(--radio-borde-card);
+    text-align: center;
+    transition: transform .3s ease;
+    text-decoration: none;
+}
+
+.catalogo-admin__tarjeta:hover {
+    transform: scale(1.03);
+}
+
+/* CÍRCULO ICONO (igual que home) */
+.catalogo-admin__icono {
+    width: var(--ancho-iconos-admin);
+    height: var(--alto-iconos-admin);
+    border-radius: 50%;
+    background-image: url('../../../../assets/Imagenes/fondos/fondo_cards.jpg');
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 15px;
+    transition: transform .3s ease, box-shadow .3s ease;
+}
+
+.catalogo-admin__icono:hover {
+    transform: scale(1.1);
+    box-shadow: var(--sombra-hover);
+}
+
+.catalogo-admin__icono img {
+    width: var(--tamano-imagen-icono);
+    height: var(--tamano-imagen-icono);
+    transition: transform .3s ease;
+}
+
+/* BOTÓN H3 EFECTO (MISMO DEL HOME) */
+.catalogo-admin__titulo-tarjeta {
+    background-color: var(--color-fondo-boton);
+    width: var(--ancho-h3-categorias);
+    height: var(--alto-h3-categorias);
+    border-radius: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: var(--tamano-texto-h3);
+    color: var(--color-texto-principal);
+    font-weight: var(--peso-texto-semi);
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    box-shadow: 0 2px 6px var(--color-sombra-oscura);
+}
+
+/* Fondos animados divididos */
+.catalogo-admin__titulo-tarjeta::before,
+.catalogo-admin__titulo-tarjeta::after {
+    content: "";
+    position: absolute;
+    width: 50%;
+    height: 100%;
+    top: 0;
+    transition: transform .3s ease;
+    z-index: 0;
+}
+
+.catalogo-admin__titulo-tarjeta::before {
+    left: 0;
+    background: var(--color-fondo-h3-izquierda);
+}
+
+.catalogo-admin__titulo-tarjeta::after {
+    right: 0;
+    background: var(--color-fondo-h3-derecha);
+}
+
+.catalogo-admin__titulo-tarjeta:hover::before {
+    transform: translateX(-100%);
+}
+
+.catalogo-admin__titulo-tarjeta:hover::after {
+    transform: translateX(100%);
+}
+
+.catalogo-admin__titulo-tarjeta:hover {
+    color: var(--color-texto-hover-cards);
+}

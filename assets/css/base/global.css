@@ -35,7 +35,8 @@
   --peso-fuente-titulo-principal: 600;
   --peso-fuente-titulo-formularios: 600;
   --peso-texto-semi: 600;
-  --peso-texto-titulo: 700
+  --peso-texto-titulo: 700;
+  --tamano-texto-info: 35px;
   --tamano-texto-h3: 25px;
   --tamano-parrafos: 15px;
   --tamano-fuente-placeholder: 15px;
@@ -191,6 +192,7 @@
   --alto-contenedor-formulario: 500px;
   --alto-contenedor-mensajes: 550px;
   --alto-dashboard-act: 50px;
+  --alto-h3-categorias: 50px;
   --alto-icono-lateral: 55px;
   --alto-iconos-catalogo: 180px;
   --alto-imagen-admin: 70px;
@@ -248,6 +250,7 @@
   --ancho-contenedor-mensajes: 400px;
 
   --ancho-dashboard-act: 200px;
+  --ancho-h3-categorias: 250px;
   --ancho-icono-lateral: 55px;
   --ancho-icono-pulgar: 60%;
   --ancho-imagen-admin: 70px;
