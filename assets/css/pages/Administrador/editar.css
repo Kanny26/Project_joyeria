@@ -1,6 +1,5 @@
 @import url('../../base/global.css');
 
-
 * {
     margin: var(--margin_padding_reset);
     padding: var(--margin_padding_reset);
@@ -20,13 +19,13 @@ body {
 }
 
 /* --- Contenedor principal --- */
-.product {
+.editar-producto {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-.product-card__title {
+.editar-producto__titulo {
     font-size: var(--tamano-titulo-card);
     margin-bottom: 40px;
     text-align: center;
@@ -35,12 +34,12 @@ body {
     text-shadow: var(--color-sombra-texto) 4px 4px 4px;
 }
 
-.product-card__title:hover {
+.editar-producto__titulo:hover {
     color: var(--color-texto-hover-cards);
 }
 
 /* --- Card --- */
-.product-card__detalles {
+.editar-producto__detalles {
     background-color: var(--color-fondo-card-productos);
     border-radius: var(--radio-borde-card);
     width: 1200px;
@@ -50,20 +49,20 @@ body {
     gap: 25px;
 }
 
-.product__contenido {
+.editar-producto__contenido {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
     gap: var(--separacion-contenido);
 }
 
-.product-card__image {
+.editar-producto__imagen {
     display: flex;
     flex-direction: column;
     align-items: center;
-
 }
-.product-card__image img {
+
+.editar-producto__imagen img {
     margin-left: 120px;
     margin-top: 20px;
     width: var(--ancho-imagen-producto);
@@ -71,7 +70,7 @@ body {
     box-shadow: var(--sombra-imagen-card);
 }
 
-.edit-image-btn {
+.editar-producto__boton-imagen {
     margin-left: 120px;
     margin-top: 10px;
     background-color: var(--color-boton-principal);
@@ -82,12 +81,12 @@ body {
     transition: var(--transicion-boton);
 }
 
-.edit-image-btn:hover {
+.editar-producto__boton-imagen:hover {
     background-color: var(--color-boton-principal-hover);
 }
 
 /* --- Formulario --- */
-.product-fields {
+.editar-producto__campos {
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -100,9 +99,9 @@ label {
     color: var(--color-texto-acento);
 }
 
-.input-text,
-.input-select,
-.input-area {
+.editar-producto__input-texto,
+.editar-producto__input-select,
+.editar-producto__input-area {
     width: 500px;
     height: 50px;
     padding: 10px 12px;
@@ -115,9 +114,8 @@ label {
     border-style: none;
 }
 
-
 /* --- Reseñas y botones --- */
-.product-card__ratings {
+.editar-producto__reseñas {
     display: flex;
     align-items: center;
     gap: var(--gap-estrellas);
@@ -125,7 +123,7 @@ label {
     font-size: var(--tamano-iconos-productos);
 }
 
-.product-card__acciones {
+.editar-producto__acciones {
     display: flex;
     gap: 12px;
 }

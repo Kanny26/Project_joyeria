@@ -1,4 +1,3 @@
-
 @import url('../base/global.css'); /*variables globales*/
 
 /* estilos generales y layout */
@@ -20,7 +19,8 @@ body {
   min-height: var(--alto-minimo-body);
 }
 
-.container_principal {
+/* Contenedor principal */
+.registro-usuario {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -29,7 +29,7 @@ body {
 }
 
 /* Panel izquierdo */
-.panel-izquierdo {
+.registro-usuario__panel-izquierdo {
   width: var(--ancho-panel-izquierdo);
   height: var(--alto-panel-izquierdo);
   background: var(--gradiente-panel-izquierdo);
@@ -40,7 +40,7 @@ body {
 }
 
 /* Caja interna panel izquierdo */
-.signup-panel__box {
+.registro-usuario__panel-caja {
   width: var(--ancho-panel-izquierdo-interno);
   height: var(--alto-panel-izquierdo-interno);
   background-color: var(--color-fondo-caja);
@@ -54,14 +54,14 @@ body {
   box-shadow: var(--sombra-caja-panel);
 }
 
-.signup-panel__logo-image {
+.registro-usuario__panel-logo {
   width: var(--ancho-logo);
   height: var(--alto-logo);
   margin-top: var(--margen-logo-inferior);
 }
 
 /* Panel derecho */
-.panel-derecho {
+.registro-usuario__panel-derecho {
   width: var(--ancho-panel-derecho);
   height: var(--alto-panel-derecho);
   display: flex;
@@ -78,7 +78,7 @@ body {
 }
 
 /* Formulario derecho */
-.container__signup_data {
+.registro-usuario__formulario {
   width: var(--ancho-contenedor-formulario);
   height: var(--alto-contenedor-formulario);
   background-color: var(--color-fondo-caja);
@@ -93,7 +93,7 @@ body {
   position: relative;
 }
 
-.container__signup_data__content {
+.registro-usuario__formulario-contenido {
   width: var(--ancho-contenedor-botones);
   display: flex;
   flex-direction: column;
@@ -109,7 +109,7 @@ h1 {
 }
 
 /* Inputs */
-.input__group {
+.registro-usuario__input-grupo {
   width: var(--ancho-input);
   height: var(--alto-input);
   margin-top: var(--margen-input-superior);
@@ -121,7 +121,7 @@ h1 {
   position: relative;
 }
 
-.input__group input {
+.registro-usuario__input-grupo input {
   background-color: transparent;
   border: none;
   outline: none;
@@ -132,18 +132,17 @@ h1 {
   color: var(--color-texto-negro);
 }
 
-.input__group input::placeholder {
+.registro-usuario__input-grupo input::placeholder {
   color: var(--color-texto-placeholders);
-  /* color: aqua; */
 }
 
-.input__group i.icon-left {
+.registro-usuario__input-grupo i.icon-left {
   font-size: var(--tamaño-icono-input);
   color: var(--color-iconos);
   margin-right: var(--margen-icono-derecho);
 }
 
-.input__group i.icon-right {
+.registro-usuario__input-grupo i.icon-right {
   position: absolute;
   right: var(--posicion-icono-derecho);
   font-size: var(--tamaño-icono-input);
@@ -152,22 +151,22 @@ h1 {
 }
 
 /* Footer */
-.signup__link {
+.registro-usuario__link-footer {
   margin-top: var(--margen-link-registro-superior);
   font-size: var(--tamaño-fuente-link-footer);
   text-align: center;
 }
 
-.signup__link a {
+.registro-usuario__link-footer a {
   color: var(--color-texto-principal);
   text-decoration: none;
   font-weight: var(--peso-fuente-rol);
 }
 
-.signup__link p {
+.registro-usuario__link-footer p {
   font-size: var(--tamano-fuente-parrafos-alternativos);
 }
 
-.signup__link a:hover {
+.registro-usuario__link-footer a:hover {
   color: var(--color-link-hover);
 }

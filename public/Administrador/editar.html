@@ -31,17 +31,17 @@
     </div>
 
 
-<main class="product">
-    <h1 class="product-card__title">Editar producto</h1>
-    <form class="product-card__detalles">
+<main class="editar-producto">
+    <h1 class="editar-producto__titulo">Editar producto</h1>
+    <form class="editar-producto__detalles">
 
-        <div class="product__contenido">
+        <div class="editar-producto__contenido">
         <!-- Imagen izquierda -->
-            <div class="product-card__image">
+            <div class="editar-producto__imagen">
                 <img src="../../../../../assets/Imagenes/fondos/joya1.jpg" alt="Anillo alianza de sueños">
 
                 <!-- Label actúa como botón -->
-                <label for="nuevaImagen" class="edit-image-btn">
+                <label for="nuevaImagen" class="editar-producto__boton-imagen">
                     <i class="fa-solid fa-pen"></i> Cambiar imagen
                 </label>
 
@@ -49,14 +49,13 @@
                 <input type="file" id="nuevaImagen" name="imagen" accept="image/*" hidden>
             </div>
 
-
         <!-- Formulario derecha -->
-        <div class="product-fields">
+        <div class="editar-producto__campos">
             <label>Nombre del producto</label>
-            <input type="text" name="nombre" value="Anillo Alianza de sueños" class="input-text">
+            <input type="text" name="nombre" value="Anillo Alianza de sueños" class="editar-producto__input-texto">
 
             <label>Categoría</label>
-            <select name="categoria" class="input-select">
+            <select name="categoria" class="editar-producto__input-select">
             <option>Anillo de compromiso</option>
             <option>Anillo de bodas</option>
             <option>Anillo de 15 años</option>
@@ -64,12 +63,12 @@
             </select>
 
             <label>Precio</label>
-            <input placeholder="$" ="text" name="precio" value="35.000" class="input-text">
+            <input placeholder="$" type="text" name="precio" value="35.000" class="editar-producto__input-texto">
 
             <label>Descripción</label>
-            <textarea name="descripcion" class="input-area" rows="4">Un símbolo eterno de compromiso y esperanza...</textarea>
+            <textarea name="descripcion" class="editar-producto__input-area" rows="4">Un símbolo eterno de compromiso y esperanza...</textarea>
 
-            <div class="product-card__ratings">
+            <div class="editar-producto__reseñas">
             <i class="fas fa-star"></i>
             <i class="fas fa-star"></i>
             <i class="fas fa-star"></i>
@@ -78,7 +77,7 @@
             <span>4.8 Reseñas</span>
             </div>
 
-            <div class="product-card__acciones">
+            <div class="editar-producto__acciones">
                 <button class="boton guardar">
                     <i class="fa-solid fa-floppy-disk"></i> Guardar
                 </button>
@@ -87,13 +86,9 @@
                 </button>
             </div>
 
-
         </div>
         </div>
-
     </form>
 </main>
-
-
 </body>
 </html>

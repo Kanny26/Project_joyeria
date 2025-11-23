@@ -1,77 +1,75 @@
-<!DOCTYPE html>
-<html lang="es">
-    <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Registro</title>
+<!DOCTYPE html> 
+<html lang="es"> 
+<head> 
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Registro</title>
 
-    <link rel="stylesheet" href="../assets/css/main.css" />
-    <link rel="stylesheet" href="../assets/css/pages/registro.css" />
-    <!-- Font Awesome -->
-    <link
-        rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-    />
-    </head>
-    <body>
-        <main class="container_principal">
-        <!-- Panel izquierdo -->
-        <aside class="panel-izquierdo signup-panel">
-            <div class="signup-panel__box">
+<link rel="stylesheet" href="../assets/css/main.css" />
+<link rel="stylesheet" href="../assets/css/pages/registro.css" />
+
+<link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+/>
+</head>
+<body>
+<main class="registro-usuario">
+    <aside class="registro-usuario__panel-izquierdo">
+        <div class="registro-usuario__panel-caja">
             <img
-                class="signup-panel__logo-image"
+                class="registro-usuario__panel-logo"
                 src="../assets/Imagenes/Logo.png"
                 alt="Logo"
             />
-            </div>
-        </aside>
+        </div>
+    </aside>
 
-        <!-- Panel derecho -->
-        <section class="panel-derecho">
-            <div class="container__signup_data">
-            <div class="container__signup_data__content">
+    <section class="registro-usuario__panel-derecho">
+        <div class="registro-usuario__formulario">
+            <div class="registro-usuario__formulario-contenido">
                 <header>
-                <h1>Regístrate</h1>
+                    <h1>Regístrate</h1>
                 </header>
                 <form>
-                <div class="input__group">
-                    <i class="fas fa-user icon-left"></i>
-                    <input type="text" placeholder="Nombre de usuario" required />
-                </div>
-                <div class="input__group">
-                    <i class="fas fa-envelope icon-left"></i>
-                    <input type="email" placeholder="Correo electrónico" required />
-                </div>
-                <div class="input__group">
-                    <i class="fas fa-lock icon-left"></i>
-                    <input
-                    type="password"
-                    id="password"
-                    placeholder="Contraseña"
-                    required
-                    />
-                    <i class="fas fa-eye icon-right"></i>
-                </div>
-                <div class="input__group">
-                    <i class="fas fa-lock icon-left"></i>
-                    <input
-                    type="password"
-                    placeholder="Confirmar contraseña"
-                    required
-                    />
-                </div>
-                <button type="submit" class="btn"><a>Registrarse</a></button>
+                    <div class="registro-usuario__input-grupo">
+                        <i class="fas fa-user icon-left"></i>
+                        <input type="text" placeholder="Nombre de usuario" required />
+                    </div>
+                    <div class="registro-usuario__input-grupo">
+                        <i class="fas fa-envelope icon-left"></i>
+                        <input type="email" placeholder="Correo electrónico" required />
+                    </div>
+                    <div class="registro-usuario__input-grupo">
+                        <i class="fas fa-lock icon-left"></i>
+                        <input
+                            type="password"
+                            id="password"
+                            placeholder="Contraseña"
+                            required
+                        />
+                        <i class="fas fa-eye icon-right"></i>
+                    </div>
+                    <div class="registro-usuario__input-grupo">
+                        <i class="fas fa-lock icon-left"></i>
+                        <input
+                            type="password"
+                            placeholder="Confirmar contraseña"
+                            required
+                        />
+                    </div>
+                    <button type="submit" class="btn"><a>Registrarse</a></button>
                 </form>
 
-                <footer class="signup__link">
-                <p>
-                    ¿Ya tienes una cuenta?
-                    <a href="../public/inicio-sesion.html">Iniciar sesión</a>
-                </p>
+                <footer class="registro-usuario__link-footer">
+                    <p>
+                        ¿Ya tienes una cuenta?
+                        <a href="../public/inicio-sesion.html">Iniciar sesión</a>
+                    </p>
                 </footer>
             </div>
-            </div>
-        </section>
-        </main>
-    </body>
+        </div>
+    </section>
+</main>
+</body>
 </html>

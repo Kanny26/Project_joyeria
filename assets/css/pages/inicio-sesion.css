@@ -1,6 +1,4 @@
-
 @import url('../base/global.css'); /*variables globales*/
-
 
 * {
   margin: var(--margin_padding_reset);
@@ -21,7 +19,7 @@ body {
 }
 
 /* Contenedor principal */
-.container {
+.inicio-sesion {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -29,8 +27,8 @@ body {
   gap: var(--separacion-paneles);
 }
 
-/*  Panel lateral izquierdo */
-.login-panel {
+/* Panel lateral izquierdo */
+.inicio-sesion__panel {
   width: var(--ancho-panel-izquierdo);
   height: var(--alto-panel-izquierdo);
   background: var(--gradiente-panel-lateral);
@@ -40,7 +38,7 @@ body {
   border-radius: var(--bordes-panel-izquierdo);
 }
 
-.login-panel__box {
+.inicio-sesion__panel-caja {
   width: var(--ancho-panel-derecho-interno);
   height: var(--alto-panel-derecho-interno);
   background-color: var(--color-fondo-caja);
@@ -54,14 +52,14 @@ body {
   box-shadow: var(--sombra-caja-panel);
 }
 
-.login-panel__logo-image {
+.inicio-sesion__panel-logo {
   width: var(--ancho-logo);
   height: var(--alto-logo);
   margin-top: var(--margen-logo-inferior);
 }
 
-/* ===== Contenedor derecho con imagen ===== */
-.container__image__main {
+/* Contenedor derecho con imagen */
+.inicio-sesion__contenido {
   width: var(--ancho-panel-derecho);
   height: var(--alto-panel-derecho);
   display: flex;
@@ -77,8 +75,8 @@ body {
   opacity: var(--opacidad-imagen-fondo);
 }
 
-/* ===== Formulario ===== */
-.container__login_data {
+/* Formulario */
+.inicio-sesion__formulario {
   width: var(--ancho-contenedor-formulario);
   height: var(--alto-contenedor-formulario);
   background-color: var(--color-fondo-caja);
@@ -93,7 +91,7 @@ body {
   position: relative;
 }
 
-.container__login_data__content {
+.inicio-sesion__formulario-contenido {
   width: var(--ancho-contenedor-botones);
   display: flex;
   flex-direction: column;
@@ -108,8 +106,8 @@ h1 {
   font-size: 25px;
 }
 
-/* ===== Inputs ===== */
-.input__group {
+/* Inputs */
+.inicio-sesion__input-grupo {
   width: var(--ancho-input);
   height: var(--alto-input);
   margin-top: var(--margen-input-superior);
@@ -121,7 +119,7 @@ h1 {
   position: relative;
 }
 
-.input__group input {
+.inicio-sesion__input-grupo input {
   background-color: transparent;
   border: none;
   outline: none;
@@ -132,17 +130,17 @@ h1 {
   color: var(--color-texto-negro);
 }
 
-.input__group input::placeholder {
+.inicio-sesion__input-grupo input::placeholder {
   color: var(--color-texto-placeholders);
 }
 
-.input__group i.icon-left {
+.inicio-sesion__input-grupo i.icon-left {
   font-size: var(--tamaño-icono-input);
   color: var(--color-iconos);
   margin-right: var(--margen-icono-izquierdo);
 }
 
-.input__group i.icon-right {
+.inicio-sesion__input-grupo i.icon-right {
   position: absolute;
   right: var(--posicion-icono-derecho);
   font-size: var(--tamaño-icono-input);
@@ -150,14 +148,14 @@ h1 {
   cursor: pointer;
 }
 
-/* ----- Links ----- */
+/* Links */
 a {
   text-decoration: none;
   color: inherit;
   font-weight: var(--peso-fuente-titulo-principal);
 }
 
-.login__link--recuperar {
+.inicio-sesion__link-recuperar {
   width: var(--ancho-contenedor-botones);
   max-width: var(--ancho-input);
   margin: var(--margen-link-recuperar-superior)
@@ -168,33 +166,34 @@ a {
   color: var(--color-texto-principal);
 }
 
-.login__link--recuperar:hover {
+.inicio-sesion__link-recuperar:hover {
   color: var(--color-link-hover);
 }
 
-/* ===== Footer de registro ===== */
-.registrate__link {
+/* Footer registro */
+.inicio-sesion__link-registro {
   width: var(--ancho-contenedor-botones);
   text-align: center;
   margin-top: var(--margen-link-registro-superior);
   font-size: var(--tamaño-fuente-link-registro);
 }
 
-.registrate__link a {
+.inicio-sesion__link-registro a {
   color: var(--color-texto-principal);
   text-decoration: none;
   font-weight: var(--peso-fuente-rol);
 }
 
-.registrate__link a:hover {
+.inicio-sesion__link-registro a:hover {
   color: var(--color-link-hover);
 }
 
-.registrate__link p {
+.inicio-sesion__link-registro p {
   font-size: var(--tamano-fuente-parrafos-alternativos);
 }
-/* ===== Form centrado verticalmente ===== */
-.container__login_data__content form {
+
+/* Form centrado verticalmente */
+.inicio-sesion__formulario-contenido form {
   display: flex;
   flex-direction: column;
   align-items: center;

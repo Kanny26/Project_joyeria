@@ -1,5 +1,4 @@
-@import url('../../base/global.css');
-
+@import url('../../base/global.css'); 
 
 * {
     margin: var(--margin_padding_reset);
@@ -19,14 +18,14 @@ body {
     min-height: var(--alto-minimo-body);
 }
 
-/* Sección de tarjetas */
-.cards {
+/* Contenedor principal de catálogo */
+.catalogo-admin {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-.cards__title {
+.catalogo-admin__titulo {
     font-size: var(--tamano-titulo-card);
     margin-bottom: 40px;
     text-align: center;
@@ -35,20 +34,27 @@ body {
     text-shadow: var(--color-sombra-texto) 4px 4px 4px;
 }
 
-.cards__title:hover {
+.catalogo-admin__titulo:hover {
     color: var(--color-texto-hover-cards);
 }
 
 /* Contenedor de tarjetas */
-.cards__contenedor {
+.catalogo-admin__contenedor {
     display: flex; 
     gap: var(--gap-cards-catalogo);
     justify-items: center;
     padding: 0 40px;
 }
 
+/* Contenedor individual de tarjeta */
+.catalogo-admin__contenedor-item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 /* Tarjeta */
-.card-item {
+.catalogo-admin__tarjeta {
     display: flex;
     align-items: center;
     justify-content: flex-start;
@@ -63,23 +69,24 @@ body {
     cursor: pointer;
 }
 
-.card-item:hover {
+.catalogo-admin__tarjeta:hover {
     transform: scale(1.1);
     box-shadow: var(--sombra-difuminada-hover);
     background-color: var(--color-fondo-tarjeta-hover);
 }
 
-.icon-circle img {
+/* Icono dentro de la tarjeta */
+.catalogo-admin__icono img {
     width: var(--alto-iconos-catalogo);
     height: var(--ancho-iconos-catalogo);
 }
 
-.icon-circle:hover img {
+.catalogo-admin__icono:hover img {
     filter: brightness(1) invert(0);
 }
 
-/* Texto dentro de la tarjeta */
-.card-item h3 {
+/* Título de la tarjeta */
+.catalogo-admin__titulo-tarjeta {
     position: relative;
     color: var(--color-texto-principal);
     font-size: var(--tamano-titulo-cards);

@@ -1,85 +1,80 @@
-<!DOCTYPE html>
-<html lang="es">
-    <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sign up</title>
+<!DOCTYPE html> 
+<html lang="es"> 
+<head> 
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Sign up</title>
 
-    <!-- Tipografías -->
-    <!-- <link rel="stylesheet" href="../components/css/Tipografias/styles.css"> -->
+<link rel="stylesheet" href="../assets/css/main.css" />
+<link rel="stylesheet" href="../assets/css/pages/inicio-sesion.css" />
 
-    <!-- CSS del login -->
-    <link rel="stylesheet" href="../assets/css/main.css" />
-    <link rel="stylesheet" href="../assets/css/pages/inicio-sesion.css" />
+<link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+/>
+</head>
+<body>
+<div class="inicio-sesion">
+    <aside class="inicio-sesion__panel">
+        <div class="inicio-sesion__panel-caja"> 
+            <img 
+                class="inicio-sesion__panel-logo" 
+                src="../assets/Imagenes/Logo.png" 
+                alt="Logo" 
+            /> 
+        </div> 
+    </aside> 
 
-    <!-- Font Awesome -->
-    <link
-        rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-    />
-    </head>
-    <body>
-        <div class="container">
-        <aside class="login-panel">
-            <div class="login-panel__box">
-            <img
-                class="login-panel__logo-image"
-                src="../assets/Imagenes/Logo.png"
-                alt="Logo"
-            />
-            </div>
-        </aside>
+    <main class="inicio-sesion__contenido"> 
+        <section class="inicio-sesion__formulario"> 
+            <div class="inicio-sesion__formulario-contenido"> 
+                <header> 
+                    <h1>Iniciar Sesión</h1> 
+                </header> 
 
-        <main class="container__image__main">
-            <section class="container__login_data">
-            <div class="container__login_data__content">
-                <header>
-                <h1>Iniciar Sesión</h1>
-                </header>
+                <form action="../public/inicio-sesion.html" method="get"> 
+                    <div class="inicio-sesion__input-grupo"> 
+                        <i class="fas fa-user icon-left"></i> 
+                        <input 
+                            type="text" 
+                            placeholder="Nombre de usuario" 
+                            id="usuario" 
+                            required 
+                        /> 
+                    </div> 
 
-                <form action="../public/inicio-sesion.html" method="get">
-                <div class="input__group">
-                    <i class="fas fa-user icon-left"></i>
-                    <input
-                    type="text"
-                    placeholder="Nombre de usuario"
-                    id="usuario"
-                    required
-                    />
-                </div>
+                    <div class="inicio-sesion__input-grupo"> 
+                        <i class="fas fa-lock icon-left"></i> 
+                        <input 
+                            type="password" 
+                            id="password" 
+                            placeholder="Contraseña" 
+                            required 
+                        /> 
+                        <i class="fas fa-eye icon-right"></i> 
+                    </div> 
 
-                <div class="input__group">
-                    <i class="fas fa-lock icon-left"></i>
-                    <input
-                    type="password"
-                    id="password"
-                    placeholder="Contraseña"
-                    required
-                    />
-                    <i class="fas fa-eye icon-right"></i>
-                </div>
+                    <a 
+                        href="../Recuperar_seña/ingresar_correo/ing-correo.html" 
+                        class="inicio-sesion__link-recuperar" 
+                    > 
+                        ¿Olvidaste tu contraseña? 
+                    </a> 
 
-                <a
-                    href="../Recuperar_seña/ingresar_correo/ing-correo.html"
-                    class="login__link--recuperar"
-                >
-                    ¿Olvidaste tu contraseña?
-                </a>
+                    <button type="submit" class="btn"> 
+                        Iniciar Sesión 
+                    </button> 
+                </form> 
 
-                <button type="submit" class="btn">
-                    Iniciar Sesión
-                </button>
-                </form>
-
-                <footer class="registrate__link">
-                <p>
-                    ¿No tienes una cuenta?
-                    <a href="../public/registro.html">¡Regístrate!</a>
-                </p>
+                <footer class="inicio-sesion__link-registro"> 
+                    <p>
+                        ¿No tienes una cuenta?
+                        <a href="../public/registro.html">¡Regístrate!</a>
+                    </p>
                 </footer>
             </div>
-            </section>
-        </main>
-        </div>
-    </body>   
+        </section>
+    </main>
+</div>
+</body>   
 </html>
