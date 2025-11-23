@@ -1,84 +1,140 @@
-<!DOCTYPE html>   
-<html lang="es">   
-<head>   
-    <meta charset="UTF-8"> 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
-    <title>Gestionar Categorías</title> 
-    <link rel="stylesheet" href="../../assets/css/main.css" />
-    <link rel="stylesheet" href="../../assets/css/pages/Administrador/org-categorias.css" />
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestionar Categorías</title>
+    <link rel="stylesheet" href="../../assets/css/main.css">
+    <link rel="stylesheet" href="../../assets/css/pages/Administrador/org-categorias.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-</head> 
+</head>
 <body>
 
-<nav class="navbar-admin"> 
-    <div class="navbar-admin__catalogo"> 
-        <img src="../../../assets/Imagenes/iconos/admin.png" alt="Admin"> 
-        <h2>Volver al inicio</h2> 
-    </div> 
-    <h1 class="navbar-admin__title">AAC27</h1> 
-    <i class="fa-solid fa-house-chimney navbar-admin__home-icon"></i> 
-</nav>
-
-<main class="categorias"> 
-    <h2 class="categorias__title">Gestionar Categorías</h2> 
-    <section class="categorias__container"> 
-
-        <div class="categorias__card"> 
-            <div class="categorias__icon-circle"> 
-                <a href="../../../public/Administrador/Catalogo/gestionar_productos/gest-productos.html">
-                    <img src="../../../assets/Imagenes/iconos/gestionar_productos.png" alt="Gestionar productos">
-                </a> 
-            </div>
-            <h3 class="categorias__name">Anillos</h3>
+    <nav class="navbar-admin"> 
+        <div class="navbar-admin__catalogo"> 
+            <img src="../../../assets/Imagenes/iconos/admin.png" alt="Admin"> 
+            <h2>Volver al inicio</h2> 
         </div> 
+        <h1 class="navbar-admin__title">AAC27</h1> 
+        <i class="fa-solid fa-house-chimney navbar-admin__home-icon"></i> 
+    </nav>
 
-        <div class="categorias__card"> 
-            <div class="categorias__icon-circle"> 
-                <a href="../../../public/Administrador/Catalogo/organizar_categorias/org-categorias.html">
-                    <img src="../../../assets/Imagenes/iconos/organizar_categorias.png" alt="Organizar categorías">
-                </a> 
-            </div>
-            <h3 class="categorias__name">Topitos</h3>
-        </div> 
+    <!-- Contenido principal -->
+    <main class="categorias">
+        <h2 class="categorias__title">Gestionar Categorías</h2>
+        <section class="categorias__grid">
 
-        <div class="categorias__card"> 
-            <div class="categorias__icon-circle"> 
-                <a href="../../../public/Administrador/Catalogo/gestionar_productos/gest-productos.html">
-                    <img src="../../../assets/Imagenes/iconos/gestionar_productos.png" alt="Gestionar productos">
-                </a> 
-            </div>
-            <h3 class="categorias__name">Aretes Largos</h3>
-        </div> 
+            <!-- Tarjetas de categorías -->
+            <article class="categorias__card">
+                <a href="../../../public/Administrador/Catalogo/gestionar_productos/gest-productos.html" class="categorias__card-link">
+                    <div class="categorias__card-icon">
+                        <img src="../../assets/Imagenes/iconos/anillos.png" alt="Anillos">
+                    </div>
+                    <h3 class="categorias__card-name">Anillos</h3>
+                </a>
+            </article>
 
-        <div class="categorias__card"> 
-            <div class="categorias__icon-circle"> 
-                <a href="../../../public/Administrador/Catalogo/organizar_categorias/org-categorias.html">
-                    <img src="../../../assets/Imagenes/iconos/organizar_categorias.png" alt="Organizar categorías">
-                </a> 
-            </div>
-            <h3 class="categorias__name">Topitos</h3>
-        </div> 
+            <article class="categorias__card">
+                <a href="../../../public/Administrador/Catalogo/organizar_categorias/org-categorias.html" class="categorias__card-link">
+                    <div class="categorias__card-icon">
+                        <img src="../../assets/Imagenes/iconos/topitos.png" alt="Topitos">
+                    </div>
+                    <h3 class="categorias__card-name">Topitos</h3>
+                </a>
+            </article>
 
-        <div class="categorias__card"> 
-            <div class="categorias__icon-circle"> 
-                <a href="../../../public/Administrador/Catalogo/gestionar_productos/gest-productos.html">
-                    <img src="../../../assets/Imagenes/iconos/gestionar_productos.png" alt="Gestionar productos">
-                </a> 
-            </div> 
-            <h3 class="categorias__name">Anillos</h3> 
-        </div>  
+            <article class="categorias__card">
+                <a href="../../../public/Administrador/Catalogo/gestionar_productos/gest-productos.html" class="categorias__card-link">
+                    <div class="categorias__card-icon">
+                        <img src="../../assets/Imagenes/iconos/aretes largos.png" alt="Aretes Largos">
+                    </div>
+                    <h3 class="categorias__card-name">Aretes Largos</h3>
+                </a>
+            </article>
 
-        <div class="categorias__card">  
-            <div class="categorias__icon-circle">  
-                <a href="../../../public/Administrador/Catalogo/organizar_categorias/org-categorias.html"> 
-                    <img src="../../../assets/Imagenes/iconos/organizar_categorias.png" alt="Organizar categorías"> 
-                </a>  
-            </div> 
-            <h3 class="categorias__name">Topitos</h3> 
-        </div>      
+            <article class="categorias__card">
+                <a href="../../../public/Administrador/Catalogo/organizar_categorias/org-categorias.html" class="categorias__card-link">
+                    <div class="categorias__card-icon">
+                        <img src="../../assets/Imagenes/iconos/juegos.png" alt="Juegos collar-aretes">
+                    </div>
+                    <h3 class="categorias__card-name">Juegos collar-aretes</h3>
+                </a>
+            </article>
 
-    </section>  
-</main> 
+            <article class="categorias__card">
+                <a href="../../../public/Administrador/Catalogo/gestionar_productos/gest-productos.html" class="categorias__card-link">
+                    <div class="categorias__card-icon">
+                        <img src="../../assets/Imagenes/iconos/earcuff.png" alt="Earcuff">
+                    </div>
+                    <h3 class="categorias__card-name">Earcuff</h3>
+                </a>
+            </article>
 
-</body> 
+            <article class="categorias__card">
+                <a href="../../../public/Administrador/Catalogo/organizar_categorias/org-categorias.html" class="categorias__card-link">
+                    <div class="categorias__card-icon">
+                        <img src="../../assets/Imagenes/iconos/rosario.png" alt="Rosarios">
+                    </div>
+                    <h3 class="categorias__card-name">Rosarios</h3>
+                </a>
+            </article>
+
+            <article class="categorias__card">
+                <a href="../../../public/Administrador/Catalogo/organizar_categorias/org-categorias.html" class="categorias__card-link">
+                    <div class="categorias__card-icon">
+                        <img src="../../assets/Imagenes/iconos/collar.png" alt="Collares">
+                    </div>
+                    <h3 class="categorias__card-name">Collares</h3>
+                </a>
+            </article>
+
+            <article class="categorias__card">
+                <a href="../../../public/Administrador/Catalogo/gestionar_productos/gest-productos.html" class="categorias__card-link">
+                    <div class="categorias__card-icon">
+                        <img src="../../assets/Imagenes/iconos/tobillera.png" alt="Tobilleras">
+                    </div>
+                    <h3 class="categorias__card-name">Tobilleras</h3>
+                </a>
+            </article>
+
+            <article class="categorias__card">
+                <a href="../../../public/Administrador/Catalogo/organizar_categorias/org-categorias.html" class="categorias__card-link">
+                    <div class="categorias__card-icon">
+                        <img src="../../assets/Imagenes/iconos/dijes.png" alt="Dijes">
+                    </div>
+                    <h3 class="categorias__card-name">Dijes</h3>
+                </a>
+            </article>
+
+            <article class="categorias__card">
+                <a href="../../../public/Administrador/Catalogo/gestionar_productos/gest-productos.html" class="categorias__card-link">
+                    <div class="categorias__card-icon">
+                        <img src="../../assets/Imagenes/iconos/denarios.png" alt="Denarios">
+                    </div>
+                    <h3 class="categorias__card-name">Denarios</h3>
+                </a>
+            </article>
+
+            <article class="categorias__card">
+                <a href="../../../public/Administrador/Catalogo/organizar_categorias/org-categorias.html" class="categorias__card-link">
+                    <div class="categorias__card-icon">
+                        <img src="../../assets/Imagenes/iconos/pulsera.png" alt="Pulseras">
+                    </div>
+                    <h3 class="categorias__card-name">Pulseras</h3>
+                </a>
+            </article>
+
+            <article class="categorias__card">
+                <a href="../../../public/Administrador/Catalogo/organizar_categorias/org-categorias.html" class="categorias__card-link">
+                    <div class="categorias__card-icon">
+                        <img src="../../assets/Imagenes/iconos/manillas.png" alt="Manillas">
+                    </div>
+                    <h3 class="categorias__card-name">Manillas</h3>
+                </a>
+            </article>
+
+        </section>
+    </main>
+
+</body>
 </html>
