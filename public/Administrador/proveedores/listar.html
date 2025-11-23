@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listar proveedores</title>
+
+    <!-- Estilos -->
+    <link rel="stylesheet" href="../../../assets/css/main.css">
+    <link rel="stylesheet" href="../../../assets/css/pages/Administrador/proveedores/listar.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar-admin"> 
+        <div class="navbar-admin__catalogo"> 
+            <img src="../../../assets/Imagenes/iconos/admin.png" alt="Admin"> 
+            <h2>Volver al inicio</h2> 
+        </div> 
+        <h1 class="navbar-admin__title">AAC27</h1> 
+        <i class="fa-solid fa-house-chimney navbar-admin__home-icon"></i> 
+    </nav>
+
+    <main class="Proveedores-listar">
+        <h2 class="Proveedores-listar__titulo">Listar proveedores</h2>
+        <section class="Proveedores-listar__tabla-contenedor">
+            <table class="Proveedores-listar__tabla">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Telefono</th>
+                        <th>Correo</th>
+                        <th>Estado</th>
+                        <th>Material</th>
+                        <th>Productos</th>
+                        <th>Fecha inicio</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Nombre del proveedor</td>
+                        <td>Telefono del proveedor</td>
+                        <td>Correo del proveedor</td>
+                        <td><span class="estado estado--activo">Activo</span></td>
+                        <td>Acero inoxidable<br>Plata</td>
+                        <td>Aretes largos<br>collares<br>anillos</td>
+                        <td>Fecha contrato</td>
+                        <td class="Proveedores-listar__acciones">
+                            <div class="iconos">
+                                <a href="../../../public/Administrador/proveedores/editar.html"><i class="fa-solid fa-pen-to-square"></i></a>
+                                <a href="../../../public/Administrador/proveedores/eliminar.html"><i class="fa-solid fa-trash"></i></a>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Nombre del proveedor</td>
+                        <td>Telefono del proveedor</td>
+                        <td>Correo del proveedor</td>
+                        <td><span class="estado estado--inactivo">Inactivo</span></td>
+                        <td>Acero inoxidable<br>Plata</td>
+                        <td>Aretes largos<br>collares<br>anillos</td>
+                        <td>Fecha contrato</td>
+                        <td class="Proveedores-listar__acciones">
+                            <div class="iconos">
+                                <a href="../../../public/Administrador/proveedores/editar.html"><i class="fa-solid fa-pen-to-square"></i></a>
+                                <a href="../../../public/Administrador/proveedores/eliminar.html"><i class="fa-solid fa-trash"></i></a>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Nombre del proveedor</td>
+                        <td>Telefono del proveedor</td>
+                        <td>Correo del proveedor</td>
+                        <td><span class="estado estado--inactivo">Inactivo</span></td>
+                        <td>Acero inoxidable<br>Plata</td>
+                        <td>Aretes largos<br>collares<br>anillos</td>
+                        <td>Fecha contrato</td>
+                        <td class="Proveedores-listar__acciones">
+                            <div class="iconos">
+                                <a href="../../../public/Administrador/proveedores/editar.html"><i class="fa-solid fa-pen-to-square"></i></a>
+                                <a href="../../../public/Administrador/proveedores/eliminar.html"><i class="fa-solid fa-trash"></i></a>
+                            </div>
+                        </td>
+                    </tr>
+                    
+                </tbody>
+            </table>
+
+        </section>
+    </main>
+</body>
+</html>

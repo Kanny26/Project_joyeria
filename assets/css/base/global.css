@@ -57,6 +57,7 @@
   /* ===================================================== */
   /*  COLORES */
   /* ===================================================== */
+
   --color-borde-imagen: #fff;
   --color-boton-principal: #69331e;
   --color-boton-principal-hover: #975236;
@@ -180,6 +181,7 @@
   /* ===================================================== */
   /*  ALTURAS */
   /* ===================================================== */
+  
   --alto-nav-admin: 90px;
   --alto-boton-login-registro: 40px;
   --alto-panel-izquierdo-interno: 700px;
@@ -235,6 +237,9 @@
   /* ===================================================== */
   /*  OTROS */
   /* ===================================================== */
+  --ancho-tabla-proveedores: 1352px;
+  --ancho-interno-tabla-proveedores: 1330px;
+  --alto-interno-tabla-proveedores: 250px;
   --alto-ancho-container-tooltips: 50px;
   --altura-linea-parrafo: 1.5;
   --ancho-nav-admin: 1500px;
@@ -258,6 +263,7 @@
   --ancho-imagen-boton-navegacion: 90px;
   --ancho-imagen-boton-rol: 123px;
   --ancho-imagen-producto: 300px;
+  --ancho-imagen-proveedor: 350px;
   --ancho-input: 280px;
   --ancho-logo: 350px;
   --ancho-maximo-boton-registro: 280px;
