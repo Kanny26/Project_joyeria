@@ -42,6 +42,7 @@
     cursor: pointer;
     transition: var(--transicion-boton);
     margin-top: 10px;
+    height: 38px;
 }
 
 /* Íconos dentro de botones */

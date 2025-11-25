@@ -19,13 +19,13 @@ body {
 }
 
 /* Contenedor general */
-.eliminar-producto {
+.registro-proveedor {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-.eliminar-producto__titulo {
+.registro-proveedor__titulo {
     font-size: var(--tamano-titulo-card);
     margin-bottom: 40px;
     text-align: center;
@@ -34,7 +34,7 @@ body {
     text-shadow: var(--color-sombra-texto) 4px 4px 4px;
 }
 
-.eliminar-producto__titulo:hover {
+.registro-proveedor__titulo:hover {
     color: var(--color-texto-hover-cards);
 }
 

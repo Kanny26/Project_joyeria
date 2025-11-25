@@ -181,17 +181,19 @@
   /* ===================================================== */
   /*  ALTURAS */
   /* ===================================================== */
-  
+  --alto-panel-proveedores: 700px;
   --alto-nav-admin: 90px;
   --alto-boton-login-registro: 40px;
   --alto-panel-izquierdo-interno: 700px;
   --alto-panel-derecho-interno: 700px;
+  --alto-panel-izquierdo-interno: 700px;
   --alto-card: 250px;
   --alto-card-producto: 490px;
   --alto-img-card-producto: 160px;
 
   --alto-iconos-admin: 200px;
   --alto-contenedor-formulario: 500px;
+  --alto-contenedor-formulario-proveedor: 600px;
   --alto-contenedor-mensajes: 550px;
   --alto-dashboard-act: 50px;
   --alto-h3-categorias: 50px;
@@ -237,6 +239,8 @@
   /* ===================================================== */
   /*  OTROS */
   /* ===================================================== */
+  --ancho-contenedor-formulario-proveedores: 450px;
+  --ancho-panel-proveedores: 800px;
   --ancho-tabla-proveedores: 1352px;
   --ancho-interno-tabla-proveedores: 1330px;
   --alto-interno-tabla-proveedores: 250px;

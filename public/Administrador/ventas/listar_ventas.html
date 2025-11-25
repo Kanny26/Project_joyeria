@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listar Ventas</title>
+
+    <!-- Estilos -->
+    <link rel="stylesheet" href="../../../assets/css/main.css">
+    <link rel="stylesheet" href="../../../assets/css/pages/Administrador/ventas/listar_ventas.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar-admin"> 
+        <div class="navbar-admin__catalogo"> 
+            <img src="../../../assets/Imagenes/iconos/admin.png" alt="Admin"> 
+            <h2>Volver al inicio</h2> 
+        </div> 
+        <h1 class="navbar-admin__title">AAC27</h1> 
+        <i class="fa-solid fa-house-chimney navbar-admin__home-icon"></i> 
+    </nav>
+
+    <main class="Ventas-listar">
+        <h2 class="Ventas-listar__titulo">Listar Ventas</h2>
+        <section class="Ventas-listar__tabla-contenedor">
+            <table class="Ventas-listar__tabla">
+                <thead>
+                    <tr>
+                        <th>Factura</th>
+                        <th>Fecha</th>
+                        <th>Vendedor</th>
+                        <th>Cliente</th>
+                        <th>Total venta</th>
+                        <th>Metodo de pago</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Numero de factura</td>
+                        <td>fecha venta</td>
+                        <td>¿quien atendio la venta?</td>
+                        <td>Nombre del cliente</td>
+                        <td>Total venta</td>
+                        <td>Metodo de pago</td>
+                        <td><span class="estado estado--inactivo">Pendiente</span></td>
+                        <td class="Ventas-listar__acciones">
+                            <div class="iconos">
+                                <a href="../../../public/Administrador/Ventas/editar.html"><i class="fa-solid fa-pen-to-square"></i></a>
+                                <a href="../../../public/Administrador/Ventas/eliminar.html"><i class="fa-solid fa-trash"></i></a>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Numero de factura</td>
+                        <td>fecha venta</td>
+                        <td>¿quien atendio la venta?</td>
+                        <td>Nombre del cliente</td>
+                        <td>Total venta</td>
+                        <td>Metodo de pago</td>
+                        <td><span class="estado estado--inactivo">Pendiente</span></td>
+                        <td class="Ventas-listar__acciones">
+                            <div class="iconos">
+                                <a href="../../../public/Administrador/Ventas/editar.html"><i class="fa-solid fa-pen-to-square"></i></a>
+                                <a href="../../../public/Administrador/Ventas/eliminar.html"><i class="fa-solid fa-trash"></i></a>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Numero de factura</td>
+                        <td>fecha venta</td>
+                        <td>¿quien atendio la venta?</td>
+                        <td>Nombre del cliente</td>
+                        <td>Total venta</td>
+                        <td>Metodo de pago</td>
+                        <td><span class="estado estado--activo">Pagado</span></td>
+                        <td class="Ventas-listar__acciones">
+                            <div class="iconos">
+                                <a href="../../../public/Administrador/Ventas/editar.html"><i class="fa-solid fa-pen-to-square"></i></a>
+                                <a href="../../../public/Administrador/Ventas/eliminar.html"><i class="fa-solid fa-trash"></i></a>
+                            </div>
+                        </td>
+                    </tr>
+                    
+                </tbody>
+            </table>
+
+            
+        </section>
+        <div class="contadores">
+            <div class="contador-card">
+                <h2>Total Ventas</h2>
+                <h3 class="contador-card__numero">3</h3>
+            </div>
+
+            <div class="contador-card">
+                <h2>Pagos pendientes</h2>
+                <h3  class="contador-card__numero">2</h3>
+            </div>
+
+            <div class="contador-card">
+                <h2>Pagos en efectivo</h2>
+                <h3  class="contador-card__numero">3</h3>
+            </div>
+
+            <div class="contador-card">
+                <h2>Pagos por transferencia</h2>
+                <h3  class="contador-card__numero">3</h3>
+            </div>
+        </div>
+    </main>
+</body>
+</html>
