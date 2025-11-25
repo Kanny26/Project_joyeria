@@ -116,54 +116,15 @@ body {
     transition: transform .2s ease;
 }
 
-.contadores {
-    display: flex;
-    justify-content: center;
-    align-items: stretch;
-    gap: 25px;
-    padding: 20px;
-    flex-wrap: wrap;
-    max-width: 1200px;
-    margin: 0 auto;
-}
-
-.contador-card {
-    flex: 1;
-    min-width: 220px;
-    max-width: 260px;
-    background: #ac826a;
-    border-radius: 20px;
-    padding: 25px 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    transition: all 0.3s ease;
-    border-left: 5px solid #aa6948;
-}
-
-.contador-card:hover {
-    transform: translateY(-5px);
-}
-
-.contador-card h2 {
-    font-size: 18px;
-    font-weight: 600;
-    color: #000000;
-    margin-bottom: 15px;
-    letter-spacing: 0.5px;
-}
-
-.contador-card__numero {
-    font-size: 32px;
-    font-weight: 700;
-    color: #ffffff;
-    padding: 15px 25px;
-    border-radius: 50px; 
-    background: linear-gradient(145deg, #44240b, #aa6948);
-    transition: all 0.3s ease;
-}
-
-.contador-card__numero:hover {
-    transform: scale(1.1);
+.editar-producto__input-area {
+    width: 800px;
+    height: 50px;
+    padding: 12px;
+    border-radius: var(--radio-bordes-input);
+    border:2px solid #ccc;
+    font-size: 20px;
+    background: none;
+    transition: var(--duracion-transicion);
+    resize: none;
+    border-style: none;
 }
