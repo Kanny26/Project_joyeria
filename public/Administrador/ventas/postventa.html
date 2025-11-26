@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Postventa</title>
+
+    <!-- Estilos -->
+    <link rel="stylesheet" href="../../../assets/css/main.css">
+    <link rel="stylesheet" href="../../../assets/css/pages/Administrador/ventas/postventa.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar-admin"> 
+        <div class="navbar-admin__catalogo"> 
+            <img src="../../../assets/Imagenes/iconos/admin.png" alt="Admin"> 
+            <h2>Volver al inicio</h2> 
+        </div> 
+        <h1 class="navbar-admin__title">AAC27</h1> 
+        <i class="fa-solid fa-house-chimney navbar-admin__home-icon"></i> 
+    </nav>
+
+    <main class="postventa-listar">
+        <h2 class="postventa-listar__titulo">Devolucion, cambios y reclamos</h2>
+        <section class="postventa-listar__tabla-contenedor">
+            <table class="postventa-listar__tabla">
+                <thead>
+                    <tr>
+                        <th>Caso</th>
+                        <th>Fecha</th>
+                        <th>Vendedor</th>
+                        <th>Cliente</th>
+                        <th>Tipo</th>
+                        <th>Motivo</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Numero de caso</td>
+                        <td>fecha venta</td>
+                        <td>¿quien atendio la venta?</td>
+                        <td>Nombre del cliente</td>
+                        <td>Cambio</td>
+                        <td>Producto dañado</td>
+                        <td><span class="estado estado--pendiente">Pendiente</span></td>
+                        <td class="postventa-listar__acciones">
+                            <div class="iconos">
+                                <a href="../../../public/Administrador/ventas/casos_postventa.html"><i class="fas fa-eye icon-right"></i></a>
+                                <i class="fa-solid fa-check completado">
+                                    <span class="completado__texto">Completado</span>
+                                </i>
+
+                                    
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Numero de caso</td>
+                        <td>fecha venta</td>
+                        <td>¿quien atendio la venta?</td>
+                        <td>Nombre del cliente</td>
+                        <td>Devolucion</td>
+                        <td>Cambio talla </td>
+                        <td><span class="estado estado--proceso">En proceso</span></td>
+                        <td class="postventa-listar__acciones">
+                            <div class="iconos">
+                                <a href="../../../public/Administrador/ventas/casos_postventa.html"><i class="fas fa-eye icon-right"></i></a>
+                                <i class="fa-solid fa-check completado">
+                                    <span class="completado__texto">Completado</span>
+                                </i>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Numero de caso</td>
+                        <td>fecha venta</td>
+                        <td>¿quien atendio la venta?</td>
+                        <td>Nombre del cliente</td>
+                        <td>Reclamo</td>
+                        <td>Pedido completo</td>
+                        <td><span class="estado estado--resuelto">Resuelto</span></td>
+                        <td class="postventa-listar__acciones">
+                            <div class="iconos">
+                                <a href="../../../public/Administrador/ventas/casos_postventa.html"><i class="fas fa-eye icon-right"></i></a>
+                                <i class="fa-solid fa-check completado">
+                                    <span class="completado__texto">Completado</span>
+                                </i>
+                            </div>
+                        </td>
+                    </tr>
+                    
+                </tbody>
+            </table>
+
+            
+        </section>
+        <div class="contadores">
+            <div class="contador-card">
+                <h2>Total postventa</h2>
+                <h3 class="contador-card__numero">3</h3>
+            </div>
+
+            <div class="contador-card">
+                <h2>Pagos pendientes</h2>
+                <h3  class="contador-card__numero">2</h3>
+            </div>
+
+            <div class="contador-card">
+                <h2>Pagos en efectivo</h2>
+                <h3  class="contador-card__numero">3</h3>
+            </div>
+
+            <div class="contador-card">
+                <h2>Pagos por transferencia</h2>
+                <h3  class="contador-card__numero">3</h3>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

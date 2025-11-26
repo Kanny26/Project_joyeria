@@ -57,7 +57,7 @@
     font-size: var(--tamano-iconos-productos);
     color: var(--color-iconos);
     cursor: pointer;
-    margin-top: 20px;
+    /* margin-top: 10px; */
 }
 
 .iconos i:hover {

@@ -1,0 +1,93 @@
+@import url('../../../base/global.css');
+
+* {
+    margin: var(--margin_padding_reset);
+    padding: var(--margin_padding_reset);
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--fuente-titulos);
+    background-color: var(--color-fondo-admin);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: var(--alto-minimo-body);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 140px;
+}
+.postventa-listar__encabezado {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.postventa-listar__titulo {
+    font-size: var(--tamano-titulo-card);
+    color: var(--color-titulo-cards);
+    margin-bottom: 40px;
+    text-shadow: var(--color-sombra-texto) 4px 4px 4px;
+    transition: transform .3s ease, color .3s ease;
+}
+
+.postventa-listar__titulo:hover {
+    color: var(--color-texto-hover-cards);
+}
+
+.postventa-listar__contenedor {
+    width: 1000px;
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+.reclamo__encabezado {
+    display: flex;
+    justify-content: space-between;
+    font-size: 20px;
+    margin-bottom: 25px;
+    color: #000000;
+    gap:50px;
+}
+
+.reclamo__tabla {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 25px;
+}
+
+.reclamo__tabla th,
+.reclamo__tabla td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: left;
+    font-size: 18px;
+}
+
+.reclamo__tabla th {
+    background-color: #f5f5f5;
+    font-weight: 600;
+    color: #333;
+}
+
+.reclamo__observaciones h4 {
+    font-size: 18px;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+    .reclamo__observaciones ul {
+    list-style: disc;
+    padding-left: 20px;
+    color: #555;
+}
+
+.reclamo__observaciones li {
+    margin-bottom: 8px;
+    font-size: 0.95rem;
+}
+
