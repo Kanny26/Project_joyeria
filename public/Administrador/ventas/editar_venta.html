@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Ventas</title>
+
+    <!-- Estilos -->
+    <link rel="stylesheet" href="../../../assets/css/main.css">
+    <link rel="stylesheet" href="../../../assets/css/pages/Administrador/ventas/editar_venta.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar-admin"> 
+        <div class="navbar-admin__catalogo"> 
+            <img src="../../../assets/Imagenes/iconos/admin.png" alt="Admin"> 
+            <h2>Volver al inicio</h2> 
+        </div> 
+        <h1 class="navbar-admin__title">AAC27</h1> 
+        <i class="fa-solid fa-house-chimney navbar-admin__home-icon"></i> 
+    </nav>
+
+    <main class="Ventas-editar">
+        <h2 class="Ventas-editar__titulo">Editar Ventas</h2>
+        <section class="Ventas-editar__tabla-contenedor">
+            <table class="Ventas-editar__tabla">
+                <thead>
+                    <tr>
+                        <th>Factura</th>
+                        <th>Fecha</th>
+                        <th>Vendedor</th>
+                        <th>Cliente</th>
+                        <th>Total venta</th>
+                        <th>Metodo de pago</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Numero de factura</td>
+                        <td>fecha venta</td>
+                        <td>¿quien atendio la venta?</td>
+                        <td>Nombre del cliente</td>
+                        <td>Total venta</td>
+                        <td>Metodo de pago</td>
+
+                        <td>
+                          <select id="Select" name="estado" class="estado">
+                              <option value="verde" class="estado estado--pendiente">Pendiente</option>
+                              <option value="rojo" class="estado estado--pagado">Pagado</option>
+                              <option value="amarillo"class="estado estado--en_proceso">En proceso</option>
+                          </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Numero de factura</td>
+                        <td>fecha venta</td>
+                        <td>¿quien atendio la venta?</td>
+                        <td>Nombre del cliente</td>
+                        <td>Total venta</td>
+                        <td>Metodo de pago</td>
+                        <td>
+                            <select name="estado" class="estado">
+                              <option class="estado estado--en_proceso">En proceso</option>
+                              <option class="estado estado--pagado">Pagado</option>
+                            </select>
+                        </td>
+                        
+                    </tr>
+                    <tr>
+                        <td>Numero de factura</td>
+                        <td>fecha venta</td>
+                        <td>¿quien atendio la venta?</td>
+                        <td>Nombre del cliente</td>
+                        <td>Total venta</td>
+                        <td>Metodo de pago</td>
+                        <td><span class="estado estado--pagado">Pagado</span></td>
+                    </tr>
+                    
+                </tbody>
+            </table>
+
+            
+        </section>
+        <div class="contadores">
+            <div class="contador-card">
+                <h2>Total Ventas</h2>
+                <h3 class="contador-card__numero">3</h3>
+            </div>
+
+            <div class="contador-card">
+                <h2>Pagos pendientes</h2>
+                <h3  class="contador-card__numero">2</h3>
+            </div>
+
+            <div class="contador-card">
+                <h2>Pagos en efectivo</h2>
+                <h3  class="contador-card__numero">3</h3>
+            </div>
+
+            <div class="contador-card">
+                <h2>Pagos por transferencia</h2>
+                <h3  class="contador-card__numero">3</h3>
+            </div>
+        </div>
+    </main>
+</body>
+</html>
