@@ -77,8 +77,6 @@ body {
   border: 1px solid saddlebrown;
 }
 
-.seleccionar_estado {}
-
 .estado {
   padding: 5px 12px;
   border-radius: 10px;
@@ -91,13 +89,9 @@ body {
 }
 
 #select {
-  color: white;
+  color: rgb(0, 0, 0);
   padding: 8px;
-  border-radius: 5px;
-}
-
-#select:has(option[value="rojo"]:checked) {
-  background-color: rgb(236, 93, 93);
+  border-radius: 5px; 
 }
 
 .estado--pagado {
@@ -111,6 +105,19 @@ body {
 .estado--pendiente {
   background-color: rgb(236, 93, 93);
 }
+
+#select:has(option[value="rojo"]:checked) {
+  background-color: rgb(236, 93, 93);
+}
+#select:has(option[value="amarillo"]:checked) {
+  background-color: rgb(249, 255, 126);
+}
+
+#select:has(option[value="verde"]:checked) {
+  background-color: rgb(120, 172, 120);
+}
+
+
 
 /* Columna de acciones */
 .Ventas-editar__acciones {
