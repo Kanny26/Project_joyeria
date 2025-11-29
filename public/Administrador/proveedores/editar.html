@@ -3,90 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editar proveedores</title>
+    <title>Editar proveedor</title>
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="../../../assets/css/main.css" />
     <link rel="stylesheet" href="../../../assets/css/pages/Administrador/proveedores/editar.css" />
 </head>
+
 <body>
 
-    <nav class="navbar-admin"> 
-        <div class="navbar-admin__catalogo"> 
-            <img src="../../../assets/Imagenes/iconos/admin.png" alt="Admin"> 
-            <h2>Volver al inicio</h2> 
-        </div> 
-        <h1 class="navbar-admin__title">AAC27</h1> 
-        <i class="fa-solid fa-house-chimney navbar-admin__home-icon"></i> 
+    <!-- Navbar -->
+    <nav class="navbar-admin">
+        <div class="navbar-admin__catalogo">
+            <img src="../../../assets/Imagenes/iconos/admin.png" alt="Admin">
+            <h2>Volver al inicio</h2>
+        </div>
+        <h1 class="navbar-admin__title">AAC27</h1>
+        <i class="fa-solid fa-house-chimney navbar-admin__home-icon"></i>
     </nav>
 
-<main class="editar-proveedores">
-    <h1 class="editar-proveedores__titulo">Editar proveedor</h1>
+    <main class="editar-proveedores">
+        <h1 class="editar-proveedores__titulo">Editar proveedor</h1>
 
-    <form class="editar-proveedores__detalles">
+        <form class="editar-proveedores__detalles">
 
-        <div class="editar-proveedores__contenido">
+            <div class="editar-proveedores__contenido">
 
-            <div class="editar-proveedores__imagen">
-                <img src="../../../assets/Imagenes/iconos/proveedores.png" alt="Proveedor">
+                <!-- Imagen -->
+                <div class="editar-proveedores__imagen">
+                    <img src="../../../assets/Imagenes/iconos/proveedores.png" alt="Proveedor">
+                </div>
+
+                <!-- Campos -->
+                <div class="editar-proveedores__campos">
+
+                    <div class="editar-proveedor__input-grupo">
+                        <label>Nombre del proveedor</label>
+                        <input type="text" value="Nombre del proveedor" readonly class="editar-proveedores__input-texto" />
+                    </div>
+
+                    <div class="editar-proveedor__input-grupo">
+                        <label>Teléfono</label>
+                        <input type="tel" placeholder="Ej: 3004567890" required class="editar-proveedores__input-texto" />
+                    </div>
+
+                    <div class="editar-proveedor__input-grupo">
+                        <label>Correo electrónico</label>
+                        <input type="email" placeholder="correo@ejemplo.com" required class="editar-proveedores__input-texto" />
+                    </div>
+
+                    <div class="editar-proveedor__input-grupo editar-proveedores__estado">
+                        <label>Estado</label>
+                        <div class="editar-proveedores__estado-opciones">
+                            <label><input type="radio" name="estado" value="Activo"> Activo</label>
+                            <label><input type="radio" name="estado" value="Inactivo"> Inactivo</label>
+                        </div>
+                    </div>
+
+                    <div class="editar-proveedor__input-grupo">
+                        <label>Material</label>
+                        <div class="editar-proveedores__estado-opciones">
+                            <label><input type="checkbox"> Acero inoxidable</label>
+                            <label><input type="checkbox"> Plata</label>
+                            <label><input type="checkbox"> Oro laminado</label>
+                        </div>
+                    </div>
+
+                    <div class="editar-proveedor__input-grupo">
+                        <label>Producto</label>
+                        <select class="editar-proveedores__input-select">
+                            <option>Selecciona un producto</option>
+                        </select>
+                    </div>
+
+                    <div class="editar-proveedor__input-grupo">
+                        <label>Fecha de inicio</label>
+                        <input type="text" value="12/05/2023" readonly class="editar-proveedores__input-lectura" />
+                    </div>
+
+                    <!-- NUEVO BLOQUE: REGISTRAR OBSERVACIÓN -->
+                    <div class="editar-proveedor__input-grupo" style="grid-column: span 2;">
+                        <label>Nueva observación</label>
+                        <textarea 
+                            class="editar-proveedores__input-area" 
+                            name="observacion" 
+                            rows="4"
+                            placeholder="Escribe aquí lo ocurrido con el proveedor..."></textarea>
+                    </div>
+
+                </div>
             </div>
 
-            <div class="editar-proveedores__campos">
-
-                <div class="editar-proveedor__input-grupo">
-                    <label>Nombre del proveedor</label>
-                    <input type="text" value="Nombre del proveedor" readonly class="editar-proveedores__input-texto" />
-                </div>
-
-                <div class="editar-proveedor__input-grupo">
-                    <label>Teléfono</label>
-                    <input type="tel" placeholder="Ej: 3004567890" required class="editar-proveedores__input-texto" />
-                </div>
-
-                <div class="editar-proveedor__input-grupo">
-                    <label>Correo electrónico</label>
-                    <input type="email" placeholder="correo@ejemplo.com" required class="editar-proveedores__input-texto" />
-                </div>
-
-                <div class="editar-proveedor__input-grupo editar-proveedores__estado">
-                    <label>Estado</label>
-                    <div class="editar-proveedores__estado-opciones">
-                        <label><input type="radio" name="estado" value="Activo"> Activo</label>
-                        <label><input type="radio" name="estado" value="Inactivo"> Inactivo</label>
-                    </div>
-                </div>
-
-                <div class="editar-proveedor__input-grupo">
-                    <label>Material</label>
-                    <div class="editar-proveedores__estado-opciones">
-                        <label><input type="checkbox">Acero inoxidable</label>
-                        <label><input type="checkbox">Plata</label>
-                        <label><input type="checkbox">Oro laminado</label>
-                    </div>
-                </div>
-
-                <div class="editar-proveedor__input-grupo">
-                    <label>Producto</label>
-                    <select class="editar-proveedores__input-select">
-                        <option>Selecciona un producto</option>
-                    </select>
-                </div>
-
-                <div class="editar-proveedor__input-grupo">
-                    <label>Fecha de inicio</label>
-                    <input type="text" value="12/05/2023" readonly class="editar-proveedores__input-lectura" />
-                </div>
-
-                <div class="editar-proveedor__acciones">
-                    <button class="boton guardar">
-                        <i class="fa-solid fa-floppy-disk"></i> Guardar
-                    </button>
-                    <button type="reset" class="boton cancelar">  
-                        <i class="fa-solid fa-xmark"></i> Cancelar  
-                    </button>
-                </div>
+            <!-- Botones -->
+            <div class="editar-proveedor__acciones" style="margin-top: 25px;">
+                <button class="boton guardar">
+                    <i class="fa-solid fa-floppy-disk"></i> Guardar cambios
+                </button>
+                <button type="reset" class="boton cancelar">
+                    <i class="fa-solid fa-xmark"></i> Cancelar
+                </button>
             </div>
-        </div>
-    </form>
-</main>
+
+        </form>
+    </main>
+
 </body>
 </html>

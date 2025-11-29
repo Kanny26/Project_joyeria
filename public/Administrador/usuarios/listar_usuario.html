@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listar usuarios</title>
+
+    <!-- Estilos -->
+    <link rel="stylesheet" href="../../../assets/css/main.css">
+    <link rel="stylesheet" href="../../../assets/css/pages/Administrador/usuarios/listar_usuario.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar-admin"> 
+        <div class="navbar-admin__catalogo"> 
+            <img src="../../../assets/Imagenes/iconos/admin.png" alt="Admin"> 
+            <h2>Volver al inicio</h2> 
+        </div> 
+        <h1 class="navbar-admin__title">AAC27</h1> 
+        <i class="fa-solid fa-house-chimney navbar-admin__home-icon"></i> 
+    </nav>
+
+    <main class="Usuarios-listar">
+        <h2 class="Usuarios-listar__titulo">Listar Usuarios</h2>
+        <section class="Usuarios-listar__tabla-contenedor">
+            <table class="Usuarios-listar__tabla">
+                <thead>
+                    <tr>
+                        <th>Codigo</th>
+                        <th>Nombre</th>
+                        <th>Telefono</th>
+                        <th>Correo</th>
+                        <th>Rol</th>
+                        <th>Fecha inicio</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>001</td>
+                        <td>Laura Cardona</td>
+                        <td>3125647894</td>
+                        <td>laucab@gmail.com</td>
+                        <td>vendedora</td>
+                        <td>fecha contrato</td>
+                        <td>
+                            <select id="select" name="estado" class="estado">
+                                <option value="verde" class="estado estado--activo">Activo</option>
+                                <option value="rojo" class="estado estado--inactivo">Inactivo</option>
+                            </select>
+                        </td>
+                        <td class="usuarios-listar__acciones">
+                            <div class="iconos">
+                                <a href="../../../public/Administrador/usuarios/editar.html"><i class="fa-solid fa-pen-to-square"></i></a>
+                                <a href="../../../public/Administrador/usuarios/eliminar.html"><i class="fa-solid fa-trash"></i></a>
+                            </div>
+                        </td>
+                        
+                    </tr>
+                    <tr>
+                        <td>001</td>
+                        <td>Laura Cardona</td>
+                        <td>3125647894</td>
+                        <td>laucab@gmail.com</td>
+                        <td>vendedora</td>
+                        <td>fecha contrato</td>
+                        <td>
+                            <select id="select" name="estado" class="estado">
+                                <option value="verde" class="estado estado--activo">Activo</option>
+                                <option value="rojo" class="estado estado--inactivo">Inactivo</option>
+                            </select>
+                        </td>
+                        <td class="usuarios-listar__acciones">
+                            <div class="iconos">
+                                <a href="../../../public/Administrador/usuarios/editar.html"><i class="fa-solid fa-pen-to-square"></i></a>
+                                <a href="../../../public/Administrador/usuarios/eliminar.html"><i class="fa-solid fa-trash"></i></a>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>001</td>
+                        <td>Laura Cardona</td>
+                        <td>3125647894</td>
+                        <td>laucab@gmail.com</td>
+                        <td>vendedora</td>
+                        <td>fecha contrato</td>
+                        <td>
+                            <select id="select" name="estado" class="estado">
+                                <option value="verde" class="estado estado--activo">Activo</option>
+                                <option value="rojo" class="estado estado--inactivo">Inactivo</option>
+                            </select>
+                        </td>
+                        <td class="usuarios-listar__acciones">
+                            <div class="iconos">
+                                <a href="../../../public/Administrador/usuarios/editar.html"><i class="fa-solid fa-pen-to-square"></i></a>
+                                <a href="../../../public/Administrador/usuarios/eliminar.html"><i class="fa-solid fa-trash"></i></a>
+                            </div>
+                        </td>
+                    </tr>
+                    
+                </tbody>
+            </table>
+
+            
+        </section>
+        <div class="contadores">
+            <div class="contador-card">
+                <h2>Total Usuarios</h2>
+                <h3 class="contador-card__numero">3</h3>
+            </div>
+
+            <div class="contador-card">
+                <h2>Usuarios activos</h2>
+                <h3  class="contador-card__numero">2</h3>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

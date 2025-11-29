@@ -16,21 +16,22 @@ body {
 }
 
 /* CONTENEDOR GENERAL */
-.registro-proveedor {
+.registro-Usuario {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 40px;
 }
 
-.registro-proveedor__titulo{
+
+.registro-Usuario__titulo{
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 20px;
 }
 
-.registro-proveedor__titulo {
+.registro-Usuario__titulo {
     font-size: var(--tamano-titulo-card);
     color: var(--color-titulo-cards);
     margin-top: 150px;
@@ -38,17 +39,19 @@ body {
     transition: transform .3s ease, color .3s ease;
 }
 
-.registro-proveedor__titulo:hover {
+.registro-Usuario__titulo:hover {
     color: var(--color-texto-hover-cards);
 }
+
+
 /* PANEL PRINCIPAL */
-.registro-proveedor__panel {
+.registro-Usuario__panel {
     width: 850px;
     display: flex;
     justify-content: center;
 }
 
-.registro-proveedor__formulario {
+.registro-Usuario__formulario {
     width: 100%;
     background: var(--color-fondo-caja);
     border-radius: 12px;
@@ -56,7 +59,7 @@ body {
     box-shadow: var(--sombra-formulario);
 }
 
-.registro-proveedor__formulario-contenido {
+.registro-Usuario__formulario-contenido {
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -64,35 +67,35 @@ body {
 }
 
 /* ---------- GRID APLICADO ---------- */
-.registro-proveedor__form-grid {
+.registro-Usuario__form-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 25px 40px;
 }
 
 /* Botón en ancho completo */
-.registro-proveedor__boton-contenedor {
+.registro-Usuario__boton-contenedor {
     grid-column: span 2;
     display: flex;
     justify-content: center;
 }
 
 /* CAMPOS */
-.registro-proveedor__grupo-campo {
+.registro-Usuario__grupo-campo {
     display: flex;
     flex-direction: column;
     gap: 6px;
 }
 
-.registro-proveedor__grupo-campo label {
+.registro-Usuario__grupo-campo label {
     font-size: 12px;
     font-weight: 500;
     color: var(--color-texto-general);
 }
 
 /* INPUTS */
-.registro-proveedor__input-grupo,
-.editar-proveedor__input-grupo {
+.registro-Usuario__input-grupo,
+.editar-Usuario__input-grupo {
     background: var(--color-fondo-input);
     padding: 12px 14px;
     border-radius: 10px;
@@ -101,7 +104,7 @@ body {
     align-items: center;
 }
 
-.registro-proveedor__input-grupo input {
+.registro-Usuario__input-grupo input {
     flex: 1;
     border: none;
     background: transparent;
@@ -115,7 +118,7 @@ body {
 }
 
 /* RADIO / CHECKBOX */
-.editar-proveedores__estado-opciones {
+.editar-Usuarioes__estado-opciones {
     display: flex;
     flex-direction: column;
     gap: 6px;
@@ -128,23 +131,23 @@ body {
 }
 
 /* FOOTER FORMULARIO */
-.registro-proveedor__link {
+.registro-Usuario__link {
     text-align: center;
     margin-top: 20px;
 }
 
-.registro-proveedor__link p {
+.registro-Usuario__link p {
     font-size: 14px;
 }
 
-.registro-proveedor__link a {
+.registro-Usuario__link a {
     color: var(--color-texto-principal);
     text-decoration: none;
     font-weight: bold;
 }
 
 
-.registro-proveedor__link a:hover {
+.registro-Usuario__link a:hover {
     color: var(--color-link-hover);
 }
 

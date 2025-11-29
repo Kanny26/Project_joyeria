@@ -1,0 +1,45 @@
+@import url('../../../base/global.css');
+
+
+body {
+    font-family: var(--fuente-subtitulos);
+    background-color: var(--color-fondo-admin);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: var(--alto-minimo-body);
+}
+
+.grid-pagos {
+    display: grid;
+    grid-template-columns: repeat(3, 180px);
+    gap: 25px;
+    margin-top: 150px;
+    
+}
+
+.pago-card {
+    background: var(--color-fondo-card-est);
+    padding: 30px;
+    border-radius: 18px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    text-align: center;
+    transition: var(--transicion-card);
+}
+
+.pago-card h2 {
+    margin-bottom: 15px;
+}
+
+.pago-card .porcentaje {
+    font-size: 2.4rem;
+    font-weight: bold;
+}
+
+.pago-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 40px;
+}

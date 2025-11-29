@@ -90,6 +90,7 @@
   --color-scrollbar-thumb-hover: #dda17e;
   --color-scrollbar-track: #4b2c17;
 
+  --color-fondo-card-est:rgba(255,255,255,0.75); 
   --color-sombra-oscura: rgba(0, 0, 0, 0.5);
   --color-texto-general: #000000;
   --color-texto-advertencia-titulo: #c75757;

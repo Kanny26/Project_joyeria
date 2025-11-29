@@ -1,0 +1,145 @@
+@import url('../../base/global.css');
+@import url('../../Tipografias/styles.css');
+
+/* RESET */
+* {
+    margin: var(--margin_padding_reset);
+    padding: var(--margin_padding_reset);
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--fuente-titulos);
+    background-color: var(--color-fondo-admin);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: var(--alto-minimo-body);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 140px;
+}
+
+.usuarios-admin {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.usuarios-admin__titulo {
+    font-size: var(--tamano-titulo-card);
+    color: var(--color-titulo-cards);
+    margin-bottom: 40px;
+    text-shadow: var(--color-sombra-texto) 4px 4px 4px;
+    transition: transform .3s ease, color .3s ease;
+}
+
+.usuarios-admin__titulo:hover {
+    color: var(--color-texto-hover-cards);
+}
+
+/* CONTENEDOR */
+.usuarios-admin__contenedor {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--gap-cards-catalogo);
+    max-width: 1200px;
+    justify-content: center;
+}
+
+/* TARJETAS */
+.usuarios-admin__contenedor-item {
+    list-style: none;
+}
+
+.usuarios-admin__tarjeta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: var(--ancho-card);
+    padding: 20px;
+    border-radius: var(--radio-borde-card);
+    text-align: center;
+    transition: transform .3s ease;
+    text-decoration: none;
+}
+
+.usuarios-admin__tarjeta:hover {
+    transform: scale(1.03);
+}
+
+/* ICONO */
+.usuarios-admin__icono {
+    width: var(--ancho-iconos-admin);
+    height: var(--alto-iconos-admin);
+    border-radius: 50%;
+    background-image: url('../../../../assets/Imagenes/fondos/fondo_cards.jpg');
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 15px;
+    transition: transform .3s ease, box-shadow .3s ease;
+}
+
+.usuarios-admin__icono:hover {
+    transform: scale(1.1);
+    box-shadow: var(--sombra-hover);
+}
+
+.usuarios-admin__icono img {
+    width: var(--tamano-imagen-icono);
+    height: var(--tamano-imagen-icono);
+    transition: transform .3s ease;
+}
+
+/* BOTONES */
+.usuarios-admin__titulo-tarjeta {
+    background-color: var(--color-fondo-boton);
+    width: var(--ancho-h3-categorias);
+    height: var(--alto-h3-categorias);
+    border-radius: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: var(--tamano-texto-h3);
+    color: var(--color-texto-principal);
+    font-weight: var(--peso-texto-semi);
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    box-shadow: 0 2px 6px var(--color-sombra-oscura);
+}
+
+.usuarios-admin__titulo-tarjeta::before,
+.usuarios-admin__titulo-tarjeta::after {
+    content: "";
+    position: absolute;
+    width: 50%;
+    height: 100%;
+    top: 0;
+    transition: transform .3s ease;
+    z-index: 0;
+}
+
+.usuarios-admin__titulo-tarjeta::before {
+    left: 0;
+    background: var(--color-fondo-h3-izquierda);
+}
+
+.usuarios-admin__titulo-tarjeta::after {
+    right: 0;
+    background: var(--color-fondo-h3-derecha);
+}
+
+.usuarios-admin__titulo-tarjeta:hover::before {
+    transform: translateX(-100%);
+}
+
+.usuarios-admin__titulo-tarjeta:hover::after {
+    transform: translateX(100%);
+}
+
+.usuarios-admin__titulo-tarjeta:hover {
+    color: var(--color-texto-hover-cards);
+}

@@ -1,0 +1,68 @@
+@import url('../../../base/global.css');
+
+:root {
+    --color-columna: #b4b4b4;
+}
+
+
+
+body {
+    font-family: var(--fuente-titulos);
+    background-color: var(--color-fondo-admin);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: var(--alto-minimo-body);
+}
+
+.tarjeta-clientes {
+    display: flex;
+    gap: 30px;
+    padding: 35px;
+    width: 700px;
+    background: var(--color-fondo-card-est);
+    border-radius: 20px;
+    box-shadow: 0 8px 30px;
+    margin-top: 150px;
+    transition: var(--transicion-card);
+}
+
+.tarjeta-clientes:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 40px;
+}
+
+.tarjeta-clientes__titulo {
+    margin-bottom: 15px;
+}
+
+.tarjeta-clientes__texto p {
+    margin: 6px 0;
+}
+
+.tarjeta-clientes__grafico {
+    display: flex;
+    align-items: flex-end;
+    gap: 12px;
+    width: 200px;
+}
+
+.tarjeta-clientes__columna {
+    width: 45px;
+    background: var(--color-columna);
+    border-radius: 10px;
+    transition: var(--transicion-suave);
+}
+
+/* Alturas definidas según porcentaje */
+.tarjeta-clientes__columna--45 { height: 45%; }
+.tarjeta-clientes__columna--68 { height: 68%; }
+.tarjeta-clientes__columna--30 { height: 30%; }
+
+/* Hover opcional para efecto dinámico */
+.tarjeta-clientes__columna:hover {
+    opacity: 0.85;
+}

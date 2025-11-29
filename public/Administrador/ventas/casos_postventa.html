@@ -23,20 +23,23 @@
         <i class="fa-solid fa-house-chimney navbar-admin__home-icon"></i> 
     </nav>
 
-    
-
     <main class="postventa-listar">
         <div class="postventa-listar__encabezado">
             <h2 class="postventa-listar__titulo">Detalle casos postventas</h2>
         </div>
 
         <section class="postventa-listar__contenedor">
+
+            <!-- ENCABEZADO DINÁMICO -->
             <div class="reclamo__encabezado">
-                <p><strong>Factura:</strong> 000253</p>
-                <p><strong>Fecha:</strong> 17/06/2025</p>
-                <p><strong>Estado:</strong> En proceso</p>
+                <p><strong>Factura:</strong> <span id="factura"></span></p>
+                <p><strong>Fecha:</strong> <span id="fecha"></span></p>
+                <p><strong>Estado:</strong> 
+                    <span id="estado" class="estado"></span>
+                </p>
             </div>
 
+            <!-- TABLA DINÁMICA -->
             <table class="reclamo__tabla">
                 <thead>
                     <tr>
@@ -48,21 +51,22 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td>0001</td>
-                        <td>Laura Leal</td>
-                        <td>Devolucion</td>
-                        <td>Producto dañado</td>
+                        <td id="caso-id"></td>
+                        <td id="cliente"></td>
+                        <td id="tipo"></td>
+                        <td id="motivo"></td>
                     </tr>
                 </tbody>
             </table>
 
+            <!-- OBSERVACIONES DINÁMICAS -->
             <div class="reclamo__observaciones">
                 <h4>Observaciones</h4>
-                <ul>
-                    <li>El collar tenía el pico de loro flojo</li>
-                    <li>El producto ya fue cambiado y enviado de nuevo, será completado una vez esté en el destino.</li>
+                <ul id="observaciones">
+                    <!-- Aquí se agregan <li> dinámicamente -->
                 </ul>
             </div>
+
         </section>
     </main>
 
