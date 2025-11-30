@@ -1,6 +1,14 @@
-@import url('../../base/global.css');
+@import url('../../base/global.css'); /*variables globales*/
 
-* { 
+:root {
+    /* Tipografía - Tamaños */
+    --tamaño-fuente-titulo-boton-rol: var(--margen-boton-inferior);
+    --tamaño-fuente-titulo-mensaje: var(--margen-bienvenida-inferior);
+    --tamaño-fuente-boton-iniciar: 22px;
+}
+
+/* Reset */
+* {
     margin: var(--margin_padding_reset);
     padding: var(--margin_padding_reset);
     box-sizing: border-box;
@@ -19,7 +27,7 @@ body {
 }
 
 /* Contenedor principal */
-.nueva-contraseña {
+.mensaje-exito {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -28,7 +36,7 @@ body {
 }
 
 /* Panel izquierdo */
-.nueva-contraseña__panel {
+.mensaje-exito__panel-izquierdo {
     width: var(--ancho-panel-izquierdo);
     height: var(--alto-panel-izquierdo);
     background: var(--gradiente-panel-lateral);
@@ -38,7 +46,7 @@ body {
     border-radius: var(--bordes-panel-izquierdo);
 }
 
-.nueva-contraseña__panel-caja {
+.mensaje-exito__caja-logo {
     width: var(--ancho-panel-derecho-interno);
     height: var(--alto-panel-derecho-interno);
     background-color: var(--color-fondo-caja);
@@ -52,21 +60,22 @@ body {
     text-align: center;
 }
 
-.nueva-contraseña__panel-logo {
+.mensaje-exito__imagen-logo {
     width: var(--ancho-logo);
     height: var(--alto-logo);
     margin-top: var(--margen-logo-inferior);
 }
 
+
 /* Panel derecho */
-.nueva-contraseña__main {
+.mensaje-exito__panel-derecho {
     width: var(--ancho-panel-derecho);
     height: var(--alto-panel-derecho);
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    background-image: url("../../../../assets/Imagenes/fondos/banner3.jpg");
+    background-image: url("../../../Imagenes/fondos/banner5.jpg");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -75,8 +84,7 @@ body {
     opacity: var(--opacidad-imagen-fondo);
 }
 
-/* Formulario */
-.nueva-contraseña__form {
+.mensaje-exito__caja-mensaje {
     width: var(--ancho-contenedor-mensajes);
     height: var(--alto-contenedor-mensajes);
     background-color: var(--color-fondo-caja);
@@ -90,74 +98,17 @@ body {
     box-shadow: var(--sombra-caja);
 }
 
-.nueva-contraseña__form h1 {
+.mensaje-exito__caja-mensaje h1 {
     color: var(--color-texto-principal);
     font-weight: var(--peso-fuente-titulo-formularios);
     font-family: var(--fuente-titulos);
     font-size: 25px;
 }
 
-.nueva-contraseña__form p {
-    font-size: var(--tamano-parrafos);
-    font-family: var(--fuente-subtitulos);
-    margin-bottom: var(--margen-parrafo-inferior);
-    margin-top: var(--margen-parrafo-superior);
-    line-height: var(--altura-linea-parrafo);
-}
-
-/* Inputs */
-.nueva-contraseña__input-group {
-    width: var(--ancho-input);
-    height: var(--alto-input);
-    margin-top: var(--margen-input-superior);
-    display: flex;
-    align-items: center;
-    background-color: var(--color-fondo-input);
-    border-radius: var(--bordes-inputs-botones);
-    padding: var(--desplazamiento-active-boton) var(--padding-input-horizontal);
-    position: relative;
-}
-
-.nueva-contraseña__input-group i {
-    font-size: var(--tamaño-fuente-icono-input);
-    color: var(--color-iconos);
-    margin-right: var(--margen-icono-derecho);
-}
-
-.nueva-contraseña__input-group input {
-    background-color: transparent;
-    border: none;
-    outline: none;
-    font-family: var(--fuente-placeholder);
-    font-size: var(--tamano-fuente-placeholder);
-    flex: var(--indice-z-formulario);
-    padding-right: var(--padding-input-derecho);
-}
-
-.nueva-contraseña__input-group input::placeholder {
-    color: var(--color-texto-placeholders);
-}
-
-/* Enlace final */
-.nueva-contraseña__link {
-    width: var(--ancho-contenedor-botones);
-    text-align: center;
-    margin-top: var(--margen-link-registro-superior);
-    font-size: var(--tamaño-fuente-link-registro);
-}
-
-.nueva-contraseña__link a {
-    color: var(--color-texto-principal);
-    text-decoration: none;
-    font-weight: var(--peso-fuente-rol);
-}
-
-.nueva-contraseña__link a:hover {
-    color: var(--color-link-hover);
-}
-
-.nueva-contraseña__link p {
-    font-size: var(--tamano-fuente-parrafos-alternativos);
+.icon__pulgar-arriba {
+    width: var(--ancho-icono-pulgar);
+    margin-top: var(--margen-icono-pulgar-superior);
+    margin-bottom: var(--margen-icono-pulgar-superior);
 }
 
 

@@ -43,6 +43,7 @@
   --tamaño-fuente-links: 10px;
   --tamano-fuente-parrafos-alternativos: 12px;
   --tamano-texto-home-admin: 35px;
+  --tamano-texto-home-vendedor: 35px;
   --tamano-titulo-card: 50px;
   --tamano-titulo-home: 60px;
   --tamano-botones: 30px;
@@ -57,7 +58,10 @@
   /* ===================================================== */
   /*  COLORES */
   /* ===================================================== */
-
+  --fondo-splash-screen: #dba8a2;
+  --fondo-card-splash-screen: rgba(255, 255, 255, 0.95);
+  --secundario-card-splash-screen: #bd8992;
+  --color-titulo-splash-screen: #FFB6C1;
   --color-borde-imagen: #fff;
   --color-boton-principal: #69331e;
   --color-boton-principal-hover: #975236;
@@ -68,6 +72,7 @@
   
   --color-link-hover: #69331e;
   --color-fondo-admin: #B4C0C0;
+  --color-fondo-vendedor: #B4C0C0;
   --color-fondo-boton: #b4b4b4;
   --color-fondo-boton-hover: #9c9c9c;
 
@@ -79,8 +84,12 @@
   --color-fondo-input: #b5b3b2;
   --color-fondo-inputs: #b8b8b8;
   --color-fondo-panel: #a6a6a6;
+  --color-card-venta: #ffffff;
+  --color-contenedores-venta: #fafafa;
+  --color-boton-venta: #456257;
 
   --color-nav-admin: #99AD96;
+  --color-nav-vendedor: #99AD96;
   --color-fondo-tarjeta-hover: #dda17e;
   --color-fondo-tooltip: #333;
   --color-iconos: #2c1501;
@@ -184,6 +193,7 @@
   /* ===================================================== */
   --alto-panel-proveedores: 700px;
   --alto-nav-admin: 90px;
+  --alto-nav-vendedor: 90px;
   --alto-boton-login-registro: 40px;
   --alto-panel-izquierdo-interno: 700px;
   --alto-panel-derecho-interno: 700px;
@@ -193,6 +203,7 @@
   --alto-img-card-producto: 160px;
 
   --alto-iconos-admin: 200px;
+  --alto-iconos-vendedor: 200px;
   --alto-contenedor-formulario: 500px;
   --alto-contenedor-formulario-proveedor: 600px;
   --alto-contenedor-mensajes: 550px;
@@ -201,6 +212,7 @@
   --alto-icono-lateral: 55px;
   --alto-iconos-catalogo: 180px;
   --alto-imagen-admin: 70px;
+  --alto-imagen-vendedor: 70px;
   --alto-imagen-producto: 400px;
   --alto-input: 45px;
   --alto-logo: 350px;
@@ -248,12 +260,14 @@
   --alto-ancho-container-tooltips: 50px;
   --altura-linea-parrafo: 1.5;
   --ancho-nav-admin: 1500px;
+  --ancho-nav-vendedor: 1500px;
   --ancho-boton-login-registro: 280px;
   --ancho-panel-izquierdo-interno: 420px;
   --ancho-panel-derecho-interno: 420px;
   --ancho-img-card-producto:160px;
   --ancho-card-producto: 350px;
   --ancho-iconos-admin: 200px;
+  --ancho-iconos-vendedor: 200px;
   --ancho-contenedor-botones: 100%;
   --ancho-contenedor-cards: 350px;
   --ancho-contenedor-formulario: 380px;
@@ -264,6 +278,7 @@
   --ancho-icono-lateral: 55px;
   --ancho-icono-pulgar: 60%;
   --ancho-imagen-admin: 70px;
+  --ancho-imagen-vendedor: 70px;
   --ancho-iconos-catalogo: 180px;
   --ancho-imagen-boton-navegacion: 90px;
   --ancho-imagen-boton-rol: 123px;
@@ -280,6 +295,7 @@
   --desplazamiento-active-boton: 0;
   --desplazamiento-hover-boton: -1.5px;
   --circulo-admin: 91px;
+  --circulo-vendedor: 91px;
   --duracion-transicion: 0.3s;
   --duracion-transicion-boton: 0.3s;
   --duracion-transicion-boton-login: 0.3s;
@@ -318,6 +334,7 @@
   --separacion-vista: 20px;
   --tamano-icono-home: 60px;
   --tamano-imagen-admin: 90px;
+  --tamano-imagen-vendedor: 90px;
   --tamano-imagen-icono: 120px;
   --tamano-iconos-productos: 22px;
 

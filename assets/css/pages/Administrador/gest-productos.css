@@ -41,6 +41,30 @@ body {
     color: var(--color-texto-hover-cards);
 }
 
+.cards__search {
+    width: 986px;
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.cards__search-input {
+    width: 100%;
+    padding: 12px 45px 12px 15px;
+    border-radius: 25px;
+    border: 2px solid var(--color-scrollbar-thumb);
+    background: var(--color-fondo-card-productos);
+    font-size: 16px;
+    outline: none;
+    color: var(--color-texto-principal);
+}
+
+.cards__search-input::placeholder {
+    color: var(--color-texto-principal);
+}
+
+
+
 .cards__contenedor {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));

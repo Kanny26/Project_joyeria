@@ -1,0 +1,88 @@
+@import url('../../base/global.css');
+
+
+@import url('../../Tipografias/styles.css');
+
+* {
+    margin: var(--margin_padding_reset);
+    padding: var(--margin_padding_reset);
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--fuente-titulos);
+    background-color: var(--color-fondo-admin);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: var(--alto-minimo-body);
+}
+/* Filas horizontales */
+.form-product__row {
+    display: flex;
+    gap: 20px; /* Espacio entre columnas */
+    margin-bottom: 20px;
+    flex-wrap: wrap; /* Permite que en móvil se acomode verticalmente */
+}
+
+/* Cada grupo ocupa la mitad del ancho en escritorio */
+.form-product__row .form-product__group {
+    flex: 1;
+}
+
+/* Labels y inputs */
+.form-product__label {
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: #555;
+}
+
+.form-product__input {
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+    color: #333;
+    transition: border-color 0.3s;
+    width: 100%; /* Ocupa todo el ancho del grupo */
+}
+
+.form-product__input:focus {
+    border-color: #a8a8a8;
+    outline: none;
+}
+
+/* Botón */
+.form-product__btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 20px;
+    background-color: #333;
+    color: #fff;
+    font-weight: 600;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    width: 100%;
+}
+
+.form-product__btn:hover {
+    background-color: #555;
+}
+
+/* Contenedor principal */
+.form-product-container {
+    max-width: 700px;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: #f7f7f7;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
