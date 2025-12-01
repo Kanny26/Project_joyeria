@@ -21,66 +21,6 @@ body {
     padding-top: 140px;
 }
 
-/* =========================== */
-/* NAVBAR ADMIN (igual al home) */
-/* =========================== */
-
-.navbar-admin {
-    width: var(--ancho-nav-admin);
-    height: var(--alto-nav-admin);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: var(--color-nav-admin);
-    border-radius: var(--borde-general);
-    padding: 0 20px;
-    position: fixed;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: var(--z-index-panel);
-}
-
-/* Círculo izquierda */
-
-.navbar-admin__catalogo {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    cursor: pointer;
-}
-
-.navbar-admin__catalogo img {
-    width: var(--tamano-imagen-admin);
-    height: var(--tamano-imagen-admin);
-    border-radius: 50%;
-}
-
-.navbar-admin__catalogo h2 {
-    opacity: 0;
-    font-size: var(--tamano-texto-home-admin);
-    font-weight: var(--peso-fuente-semititulos);
-    color: var(--color-texto-principal);
-    transition: opacity .3s ease, transform .3s ease;
-    transform: translateY(10px);
-}
-
-.navbar-admin__catalogo:hover h2 {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-.navbar-admin__title {
-    font-size: var(--tamano-titulo-home);
-    font-weight: var(--peso-fuente-titulo-principal);
-    color: var(--color-texto-principal);
-}
-
-.navbar-admin__home-icon {
-    font-size: var(--tamano-icono-home);
-    color: var(--color-iconos-principal);
-    cursor: pointer;
-}
 
 /* =========================== */
 /* CATÁLOGO ADMIN */

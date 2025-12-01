@@ -13,7 +13,9 @@
 <nav class="navbar-admin"> 
     <div class="navbar-admin__catalogo"> 
         <img src="../../../assets/Imagenes/iconos/admin.png" alt="Admin"> 
-        <h2>Volver al inicio</h2> 
+        <a href="../org-categorias.html">
+            <h2>Volver al inicio</h2> 
+        </a>
     </div> 
     <h1 class="navbar-admin__title">AAC27</h1> 
     <i class="fa-solid fa-house-chimney navbar-admin__home-icon"></i> 
@@ -21,10 +23,18 @@
 
 <main class="cards">
     <h2 class="cards__title">Conjuntos collar-aretes</h2>
-    <div class="cards__search iconos">  
-        <input type="text" class="cards__search-input" placeholder="Introduce una subcategoría para buscar"> 
-        <i class="fa-solid fa-magnifying-glass cards__search-icon"></i> 
+    <div class="cards__barra-superior">
+    <!-- Botón Agregar Producto -->
+    <a href="../../Administrador/agregar_producto.html" class="cards__boton-agregar">
+        <i class="fa-solid fa-plus"></i> Agregar Producto
+    </a>
+
+    <!-- Barra de búsqueda -->
+    <div class="cards__busqueda">
+        <input type="text" class="cards__busqueda-input" placeholder="Buscar (15 años, bodas, compromiso...)"> 
+        <i class="fa-solid fa-magnifying-glass cards__busqueda-icono"></i> 
     </div>
+</div>
     <section class="cards__contenedor">
         <div class="cards__contenedor-content">
             <a href="../../../../public/Administrador/Catalogo/gestionar_productos/gest-productos.html"><img src="../../../../assets/Imagenes/fondos/joya1.jpg" alt="Producto"></a>

@@ -1,8 +1,6 @@
 @import url('../../base/global.css');
 
 
-@import url('../../Tipografias/styles.css');
-
 * {
     margin: var(--margin_padding_reset);
     padding: var(--margin_padding_reset);
@@ -20,69 +18,131 @@ body {
     align-items: center;
     min-height: var(--alto-minimo-body);
 }
-/* Filas horizontales */
-.form-product__row {
+
+
+.form-product-container {
     display: flex;
-    gap: 20px; /* Espacio entre columnas */
-    margin-bottom: 20px;
-    flex-wrap: wrap; /* Permite que en móvil se acomode verticalmente */
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    width: 100%;
+    max-width: 900px;
+    margin: 60px auto;
 }
 
-/* Cada grupo ocupa la mitad del ancho en escritorio */
-.form-product__row .form-product__group {
-    flex: 1;
+
+.form-product-container__title {
+    font-size: var(--tamano-titulo-card);
+    margin-bottom: 40px;
+    text-align: center;
+    color: var(--color-titulo-cards);
+    transition: transform var(--duracion-transicion), color var(--duracion-transicion);
+    text-shadow: var(--color-sombra-texto) 4px 4px 4px;
+    margin-top: 70px;
 }
 
-/* Labels y inputs */
+.form-product-container__title:hover {
+    color: var(--color-texto-hover-cards);
+}
+
+.form-product {
+    width: 100%;
+    background: #fff;
+    border-radius: 12px;
+    padding: 40px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.form-product__row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 25px 40px;
+}
+
+.form-product__group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
 .form-product__label {
-    font-weight: 600;
-    margin-bottom: 6px;
-    color: #555;
-}
-
-.form-product__input {
-    padding: 10px 12px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
     font-size: 16px;
+    font-weight: 600;
+    color: var(--color-texto-principal);
+}
+
+/* Estilo general de los inputs, selects y textarea */
+.form-product__input,
+textarea.form-product__input,
+select.form-product__input {
+    width: 100%;
+    padding: 12px 16px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+    background: #f9f9f9;
     color: #333;
-    transition: border-color 0.3s;
-    width: 100%; /* Ocupa todo el ancho del grupo */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    resize: none;
 }
 
-.form-product__input:focus {
-    border-color: #a8a8a8;
+.form-product__input:focus,
+textarea.form-product__input:focus,
+select.form-product__input:focus {
+    border-color: var(--color-iconos-hover);
+    box-shadow: 0 0 8px rgba(108,99,255,0.3);
     outline: none;
+    background: #fff;
 }
 
-/* Botón */
-.form-product__btn {
+/* Uniformidad en los selects */
+select.form-product__input {
+    appearance: none;
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 12px;
+    cursor: pointer;
+}
+
+/* Inputs con iconos */
+.input-icon {
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 12px 20px;
-    background-color: #333;
-    color: #fff;
-    font-weight: 600;
+    gap: 10px;
+    background: #f9f9f9;
+    border-radius: 10px;
+    padding: 12px 16px;
+    border: 1px solid #ddd;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.input-icon i {
+    font-size: 18px;
+    color: var(--color-iconos);
+}
+
+
+/* Botón principal */
+.form-product__btn {
+    padding: 15px;
     font-size: 16px;
+    font-weight: 600;
+    border-radius: 12px;
     border: none;
-    border-radius: 8px;
     cursor: pointer;
-    transition: background-color 0.3s;
-    width: 100%;
+    background: var(--color-boton-principal);
+    color: #fff;
+    transition: transform 0.2s ease, box-shadow 0.3s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
 }
 
 .form-product__btn:hover {
-    background-color: #555;
-}
-
-/* Contenedor principal */
-.form-product-container {
-    max-width: 700px;
-    margin: 40px auto;
-    padding: 30px;
-    background-color: #f7f7f7;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(108, 99, 255, 0.4);
 }
