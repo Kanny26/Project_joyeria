@@ -16,14 +16,16 @@
     <nav class="navbar-admin">
         <div class="navbar-admin__catalogo">
             <img src="../../../assets/Imagenes/iconos/admin.png" alt="Admin">
-            <h2>Volver al inicio</h2>
+            <a href="listar_usuario.html">
+                <h2>Volver al inicio</h2>
+            </a>
         </div>
         <h1 class="navbar-admin__title">AAC27</h1>
         <i class="fa-solid fa-house-chimney navbar-admin__home-icon"></i>
     </nav>
 
-    <main class="editar-usuarios">
-        <h1 class="editar-usuarios__titulo">Editar usuarios</h1>
+    <main class="titulo">
+        <h1 class="titulo__encabezado">Editar usuarios</h1>
 
         <form class="editar-usuarios__detalles">
 
@@ -81,10 +83,15 @@
             <!-- Botones -->
             <div class="editar-usuarios__acciones" style="margin-top: 25px;">
                 <button class="boton guardar">
-                    <i class="fa-solid fa-floppy-disk"></i> Guardar cambios
+                    <a href="mensaje_exito.html">
+                        <i class="fa-solid fa-floppy-disk"></i> Guardar cambios
+                    </a>
                 </button>
+
                 <button type="reset" class="boton cancelar">
-                    <i class="fa-solid fa-xmark"></i> Cancelar
+                    <a href="listar_usuario.html">
+                        <i class="fa-solid fa-xmark"></i> Cancelar
+                    </a>
                 </button>
             </div>
 

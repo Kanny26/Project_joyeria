@@ -1,16 +1,23 @@
 @import url('../../../base/global.css');
 
 
+* {
+    margin: var(--margin_padding_reset);
+    padding: var(--margin_padding_reset);
+    box-sizing: border-box;
+}
+
 body {
-    font-family: var(--fuente-subtitulos);
+    font-family: var(--fuente-titulos);
     background-color: var(--color-fondo-admin);
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+    min-height: var(--alto-minimo-body);
     display: flex;
     justify-content: center;
-    align-items: center;
-    min-height: var(--alto-minimo-body);
+    align-items: flex-start;
+    padding-top: 140px;
 }
 
 .grid-pagos {

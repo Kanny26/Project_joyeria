@@ -6,34 +6,18 @@
     box-sizing: border-box;
 }
 
+
 body {
     font-family: var(--fuente-titulos);
     background-color: var(--color-fondo-admin);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: var(--alto-minimo-body);
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    min-height: 100vh;
-    padding: 40px 20px;
-}
-
-/* --- Contenedor principal --- */
-.editar-proveedores {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.editar-proveedores__titulo {
-    font-size: var(--tamano-titulo-card);
-    margin-top: 150px;
-    text-align: center;
-    color: var(--color-titulo-cards);
-    transition: transform 0.3s ease, color 0.3s ease;
-    text-shadow: var(--color-sombra-texto) 4px 4px 4px;
-}
-
-.editar-proveedores__titulo:hover {
-    color: var(--color-texto-hover-cards);
+    padding-top: 140px;
 }
 
 /* --- Card --- */

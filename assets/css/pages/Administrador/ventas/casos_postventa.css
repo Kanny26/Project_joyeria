@@ -18,24 +18,6 @@ body {
     align-items: flex-start;
     padding-top: 140px;
 }
-.postventa-listar__encabezado {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
-}
-
-.postventa-listar__titulo {
-    font-size: var(--tamano-titulo-card);
-    color: var(--color-titulo-cards);
-    margin-bottom: 40px;
-    text-shadow: var(--color-sombra-texto) 4px 4px 4px;
-    transition: transform .3s ease, color .3s ease;
-}
-
-.postventa-listar__titulo:hover {
-    color: var(--color-texto-hover-cards);
-}
 
 .postventa-listar__contenedor {
     width: 1000px;
@@ -80,7 +62,7 @@ body {
     color: #333;
 }
 
-    .reclamo__observaciones ul {
+.reclamo__observaciones ul {
     list-style: disc;
     padding-left: 20px;
     color: #555;

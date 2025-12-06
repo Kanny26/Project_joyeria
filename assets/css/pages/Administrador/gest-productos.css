@@ -9,45 +9,26 @@
     box-sizing: border-box;
 }
 
+
 body {
     font-family: var(--fuente-titulos);
     background-color: var(--color-fondo-admin);
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+    min-height: var(--alto-minimo-body);
     display: flex;
     justify-content: center;
-    align-items: center;
-    min-height: var(--alto-minimo-body);
+    align-items: flex-start;
+    padding-top: 140px;
 }
 
-
-.cards {
-    display: flex; 
-    flex-direction: column;
-    align-items: center;
-    margin-top: var(--margen-top-cards);
-}
-
-.cards__title {
-    font-size: var(--tamano-titulo-card);
-    text-align: center;
-    color: var(--color-titulo-cards);
-    transition: transform var(--duracion-transicion), color var(--duracion-transicion);
-    text-shadow: var(--color-sombra-texto) 4px 4px 4px;
-}
-
-.cards__title:hover {
-    color: var(--color-texto-hover-cards);
-}
-
-/* Contenedor para el botón y la búsqueda juntos */
 .cards__barra-superior {
     display: flex;
     align-items: center;
-    gap: 15px; /* espacio entre el botón y la búsqueda */
-    margin-bottom: 20px;
-    justify-content: flex-start; /* alineado a la izquierda */
+    gap: 15px;
+    margin-bottom: 50px;
+    justify-content: flex-start; 
 }
 
 /* Botón Agregar Producto */

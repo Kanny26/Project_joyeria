@@ -12,32 +12,36 @@
 
 <body>
 
-<!-- Navbar -->
     <nav class="navbar-admin"> 
         <div class="navbar-admin__catalogo"> 
             <img src="../../../assets/Imagenes/iconos/admin.png" alt="Admin"> 
-            <h2>Volver al inicio</h2> 
+            <a href="../estadisticas.html">
+                <h2>Volver al inicio</h2> 
+            </a>
         </div> 
         <h1 class="navbar-admin__title">AAC27</h1> 
         <i class="fa-solid fa-house-chimney navbar-admin__home-icon"></i> 
     </nav>
 
-<section class="estadisticas-venta"> 
-    <h1 class="estadisticas-venta__titulo">Ventas del mes</h1> 
+<main class="titulo">
+    <h2 class="titulo__encabezado">Estadisticas sobre ventas</h2>
 
-    <div class="estadisticas-venta__valor"> 
-        <span class="estadisticas-venta__monto">$735.000</span> 
-        <span class="estadisticas-venta__crecimiento">+12% respecto al mes anterior</span> 
-    </div> 
+    <section class="estadisticas-venta"> 
+        <h1 class="estadisticas-venta__titulo">Ventas del mes</h1> 
 
-    <div class="estadisticas-venta__grafico"></div> 
+        <div class="estadisticas-venta__valor"> 
+            <span class="estadisticas-venta__monto">$735.000</span> 
+            <span class="estadisticas-venta__crecimiento">+12% respecto al mes anterior</span> 
+        </div> 
 
-    <div class="estadisticas-venta__detalles"> 
-        <p><strong>Ventas totales:</strong> 27</p> 
-        <p><strong>Ticket promedio:</strong> $27.200</p> 
-        <p><strong>Día más vendido:</strong> Lunes</p> 
-    </div> 
-</section>
+        <div class="estadisticas-venta__grafico"></div> 
 
+        <div class="estadisticas-venta__detalles"> 
+            <p><strong>Ventas totales:</strong> 27</p> 
+            <p><strong>Ticket promedio:</strong> $27.200</p> 
+            <p><strong>Día más vendido:</strong> Lunes</p> 
+        </div> 
+    </section>
+</main>
 </body> 
 </html>

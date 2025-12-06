@@ -110,10 +110,3 @@ body {
     margin-top: var(--margen-icono-pulgar-superior);
     margin-bottom: var(--margen-icono-pulgar-superior);
 }
-
-
-a {
-    text-decoration: none;
-    color: inherit;
-    font-weight: var(--peso-fuente-titulo-principal);
-}

@@ -1,0 +1,6 @@
+
+a{
+    text-decoration: none;
+    color: var( --color-texto-general);
+    font-weight: var(--peso-fuente-titulo-principal);
+}

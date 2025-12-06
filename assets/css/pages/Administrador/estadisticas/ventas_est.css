@@ -6,6 +6,13 @@
     --color-grafico-end: #dadada;
 }
 
+
+* {
+    margin: var(--margin_padding_reset);
+    padding: var(--margin_padding_reset);
+    box-sizing: border-box;
+}
+
 body {
     font-family: var(--fuente-titulos);
     background-color: var(--color-fondo-admin);

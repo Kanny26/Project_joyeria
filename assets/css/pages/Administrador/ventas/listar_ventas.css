@@ -19,25 +19,6 @@ body {
     padding-top: 140px;
 }
 
-.Ventas-listar{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
-}
-
-.Ventas-listar__titulo {
-    font-size: var(--tamano-titulo-card);
-    color: var(--color-titulo-cards);
-    margin-bottom: 40px;
-    text-shadow: var(--color-sombra-texto) 4px 4px 4px;
-    transition: transform .3s ease, color .3s ease;
-}
-
-.Ventas-listar__titulo:hover {
-    color: var(--color-texto-hover-cards);
-}
-
 .Ventas-listar__tabla-contenedor{
     width: var(--ancho-tabla-Ventas);
     overflow-x: auto;

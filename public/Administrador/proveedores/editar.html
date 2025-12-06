@@ -16,14 +16,16 @@
     <nav class="navbar-admin">
         <div class="navbar-admin__catalogo">
             <img src="../../../assets/Imagenes/iconos/admin.png" alt="Admin">
-            <h2>Volver al inicio</h2>
+            <a href="listar.html">
+                <h2>Volver al inicio</h2>
+            </a>
         </div>
         <h1 class="navbar-admin__title">AAC27</h1>
         <i class="fa-solid fa-house-chimney navbar-admin__home-icon"></i>
     </nav>
 
-    <main class="editar-proveedores">
-        <h1 class="editar-proveedores__titulo">Editar proveedor</h1>
+    <main class="titulo">
+        <h1 class="titulo__encabezado">Editar proveedor</h1>
 
         <form class="editar-proveedores__detalles">
 
@@ -36,7 +38,6 @@
 
                 <!-- Campos -->
                 <div class="editar-proveedores__campos">
-
                     <div class="editar-proveedor__input-grupo">
                         <label>Nombre del proveedor</label>
                         <input type="text" value="Nombre del proveedor" readonly class="editar-proveedores__input-texto" />
@@ -72,7 +73,18 @@
                     <div class="editar-proveedor__input-grupo">
                         <label>Producto</label>
                         <select class="editar-proveedores__input-select">
-                            <option>Selecciona un producto</option>
+                            <option>Anillos</option>
+                            <option>Aretes largos</option>
+                            <option>Collares</option>
+                            <option>Conjuntos</option>
+                            <option>Denarios</option>
+                            <option>Dijes</option>
+                            <option>Earcuff</option>
+                            <option>Manillas</option>
+                            <option>Pulseras</option>
+                            <option>Rosarios</option>
+                            <option>Tobilleras</option>
+                            <option>Topitos</option>
                         </select>
                     </div>
 
@@ -97,13 +109,17 @@
             <!-- Botones -->
             <div class="editar-proveedor__acciones" style="margin-top: 25px;">
                 <button class="boton guardar">
-                    <i class="fa-solid fa-floppy-disk"></i> Guardar cambios
+                    <a href="mensaje_exito.html">
+                        <i class="fa-solid fa-floppy-disk"></i> Guardar cambios
+                    </a>
                 </button>
+
                 <button type="reset" class="boton cancelar">
-                    <i class="fa-solid fa-xmark"></i> Cancelar
+                    <a href="listar.html">
+                        <i class="fa-solid fa-xmark"></i> Cancelar
+                    </a>
                 </button>
             </div>
-
         </form>
     </main>
 

@@ -17,14 +17,16 @@
     <nav class="navbar-admin"> 
         <div class="navbar-admin__catalogo"> 
             <img src="../../../assets/Imagenes/iconos/admin.png" alt="Admin"> 
-            <h2>Volver al inicio</h2> 
+            <a href="../ventas.html">
+                <h2>Volver al inicio</h2> 
+            </a>
         </div> 
         <h1 class="navbar-admin__title">AAC27</h1> 
         <i class="fa-solid fa-house-chimney navbar-admin__home-icon"></i> 
     </nav>
 
-    <main class="postventa-listar">
-        <h2 class="postventa-listar__titulo">Devolucion, cambios y reclamos</h2>
+    <main class="titulo">
+        <h2 class="titulo__encabezado">Devolucion, cambios y reclamos</h2>
         <section class="postventa-listar__tabla-contenedor">
             <table class="postventa-listar__tabla">
                 <thead>
@@ -47,15 +49,16 @@
                         <td>Nombre del cliente</td>
                         <td>Cambio</td>
                         <td>Producto dañado</td>
-                        <td><span class="estado estado--pendiente">Pendiente</span></td>
+                        <td>
+                            <select id="select" name="estado" class="estado">
+                                    <option value="rojo" class="estado estado--pendiente">Pendiente</option>
+                                    <option value="verde" class="estado estado--Resuelto">Resuelto</option>
+                                    <option value="amarillo"class="estado estado--en_proceso">En proceso</option>
+                            </select>
+                        </td>
                         <td class="postventa-listar__acciones">
                             <div class="iconos">
                                 <a href="../../../public/Administrador/ventas/casos_postventa.html"><i class="fas fa-eye icon-right"></i></a>
-                                <i class="fa-solid fa-check completado">
-                                    <span class="completado__texto">Completado</span>
-                                </i>
-
-                                    
                             </div>
                         </td>
                     </tr>
@@ -66,13 +69,16 @@
                         <td>Nombre del cliente</td>
                         <td>Devolucion</td>
                         <td>Cambio talla </td>
-                        <td><span class="estado estado--proceso">En proceso</span></td>
+                        <td>
+                            <select id="select" name="estado" class="estado">
+                                    <option value="rojo" class="estado estado--pendiente">Pendiente</option>
+                                    <option value="verde" class="estado estado--Resuelto">Resuelto</option>
+                                    <option value="amarillo"class="estado estado--en_proceso">En proceso</option>
+                            </select>
+                        </td>
                         <td class="postventa-listar__acciones">
                             <div class="iconos">
                                 <a href="../../../public/Administrador/ventas/casos_postventa.html"><i class="fas fa-eye icon-right"></i></a>
-                                <i class="fa-solid fa-check completado">
-                                    <span class="completado__texto">Completado</span>
-                                </i>
                             </div>
                         </td>
                     </tr>
@@ -83,13 +89,16 @@
                         <td>Nombre del cliente</td>
                         <td>Reclamo</td>
                         <td>Pedido completo</td>
-                        <td><span class="estado estado--resuelto">Resuelto</span></td>
+                        <td>
+                            <select id="select" name="estado" class="estado">
+                                    <option value="rojo" class="estado estado--pendiente">Pendiente</option>
+                                    <option value="verde" class="estado estado--Resuelto">Resuelto</option>
+                                    <option value="amarillo"class="estado estado--en_proceso">En proceso</option>
+                            </select>
+                        </td>
                         <td class="postventa-listar__acciones">
                             <div class="iconos">
                                 <a href="../../../public/Administrador/ventas/casos_postventa.html"><i class="fas fa-eye icon-right"></i></a>
-                                <i class="fa-solid fa-check completado">
-                                    <span class="completado__texto">Completado</span>
-                                </i>
                             </div>
                         </td>
                     </tr>

@@ -171,9 +171,3 @@ h1 {
 .registro-usuario__link-footer a:hover {
   color: var(--color-link-hover);
 }
-
-a {
-  text-decoration: none;
-  color: inherit;
-  font-weight: var(--peso-fuente-titulo-principal);
-}

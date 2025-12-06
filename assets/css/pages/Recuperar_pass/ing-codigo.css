@@ -137,10 +137,3 @@ body {
 .ing-codigo__input-group input::placeholder {
     color: var(--color-texto-placeholders);
 }
-
-
-a {
-    text-decoration: none;
-    color: inherit;
-    font-weight: var(--peso-fuente-titulo-principal);
-}

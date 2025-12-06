@@ -71,9 +71,9 @@
   --color-fondo-advertencia: #eee3de;
   
   --color-link-hover: #69331e;
-  --color-fondo-admin: #B4C0C0;
+  --color-fondo-admin: #937962;
   --color-fondo-vendedor: #B4C0C0;
-  --color-fondo-boton: #b4b4b4;
+  --color-fondo-boton: #d7cab8;
   --color-fondo-boton-hover: #9c9c9c;
 
   --color-fondo-caja: #d9d6d2;
@@ -88,7 +88,7 @@
   --color-contenedores-venta: #fafafa;
   --color-boton-venta: #456257;
 
-  --color-nav-admin: #99AD96;
+  --color-nav-admin: #ede9e3;
   --color-nav-vendedor: #99AD96;
   --color-fondo-tarjeta-hover: #dda17e;
   --color-fondo-tooltip: #333;
@@ -208,7 +208,7 @@
   --alto-contenedor-formulario-proveedor: 600px;
   --alto-contenedor-mensajes: 550px;
   --alto-dashboard-act: 50px;
-  --alto-h3-categorias: 50px;
+  --alto-h3-categorias: 62px;
   --alto-icono-lateral: 55px;
   --alto-iconos-catalogo: 180px;
   --alto-imagen-admin: 70px;
