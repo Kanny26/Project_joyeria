@@ -129,7 +129,8 @@ body {
     width: var(--ancho-iconos-admin);
     height: var(--alto-iconos-admin);
     border-radius: 50%;
-    background-image: url('../../../../assets/Imagenes/fondos/fondo_cards.jpg');
+    /* background-image: url('../../../../assets/Imagenes/fondos/fondo_cards.jpg'); */
+    background-color: var(--color-cards);
     margin-bottom: 15px;
 }
 

@@ -28,7 +28,7 @@ body {
 
 .registro-proveedor__formulario {
     width: 100%;
-    background: var(--color-fondo-caja);
+    background: var( --color-fondo-card-productos);
     border-radius: 12px;
     padding: 40px;
     box-shadow: var(--sombra-formulario);

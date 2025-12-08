@@ -21,17 +21,15 @@
     box-shadow: var(--sombra-boton-normal);
 }
 
-.btn:hover {
-    transform: scale(var(--escala-hover-boton));
-    filter: brightness(var(--brillo-hover-boton));
-    box-shadow: var(--sombra-boton-hover);
-}
-
 
 /*botones para acciones, editar, ver, eliminar, guardar, cancelar*/
 .boton,
+.boton.guardar,
+.boton.cancelar,
+.edit-image-btn,
+.ver-image-btn,
 .boton_view_edit,
-.boton-confirmar {
+.boton-confirmar.eliminar {
     display: flex;
     align-items: center;
     gap: var(--separacion-boton-icono);
@@ -49,56 +47,47 @@
 .boton i,
 .boton_view_edit i,
 .boton-confirmar i {
-    font-size: 1em; /* relativo al texto */
+    font-size: 1em; 
 }
 
-/* ===== Variantes ===== */
-
-/* Guardar */
-.boton.guardar {
-    background-color: var(--color-boton-principal);
-    color: var(--color-texto-principal);
-}
-.boton.guardar:hover {
-    background-color: var(--color-boton-principal-hover);
-}
-
-/* Cancelar */
-.boton.cancelar {
-    background-color: var(--color-boton-secundario);
-    color: var(--color-texto-principal);
-}
-.boton.cancelar:hover {
-    background-color: var(--color-boton-secundario-hover);
-}
-
-/* Editar producto */
-.edit-image-btn {
-    background-color: var(--color-boton-principal);
-    color: var(--color-texto-negro);
-}
-.edit-image-btn:hover {
-    background-color: var(--color-boton-principal-hover);
-}
-
-/* Ver producto */
-.ver-image-btn {
-    background-color: var(--color-boton-secundario);
-    color: var(--color-texto-negro);
-}
-.ver-image-btn:hover {
-    background-color: var(--color-boton-secundario-hover);
-}
-
-/* Eliminar producto */
+.boton.guardar,
+.boton.cancelar,
+.edit-image-btn,
+.ver-image-btn,
+.boton_view_edit,
 .boton-confirmar.eliminar {
     background-color: var(--color-boton-principal);
     color: var(--color-texto-principal);
 }
+/* Todos los botones */
+.btn,
+.boton,
+.boton.guardar,
+.boton.cancelar,
+.edit-image-btn,
+.ver-image-btn,
+.boton_view_edit,
+.boton-confirmar.eliminar {
+    background-color: var(--color-boton-principal);
+    color: var(--color-texto-principal);
+    transition: transform 0.3s, filter 0.3s, box-shadow 0.3s, background-color 0.3s;
+}
+
+/* Hover común */
+.btn:hover,
+.boton:hover,
+.boton.guardar:hover,
+.boton.cancelar:hover,
+.edit-image-btn:hover,
+.ver-image-btn:hover,
+.boton_view_edit:hover,
 .boton-confirmar.eliminar:hover {
     background-color: var(--color-boton-principal-hover);
     transform: var(--transformacion-boton-hover);
+    filter: var(--brillo-hover-boton);
+    box-shadow: var(--sombra-boton-hover);
 }
+
 
 /* Contenedor de botones */
 .product-card__acciones {
