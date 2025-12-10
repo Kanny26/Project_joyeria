@@ -72,7 +72,7 @@
   
   --color-link-hover: #69331e;
   --color-fondo-admin: #dfd2c8;
-  --color-fondo-vendedor: #B4C0C0;
+  --color-fondo-vendedor: #dfd2c8;
   --color-fondo-boton: #df8870;
   --color-fondo-boton-hover: #9c9c9c;
   --color-cards: #e9a897;
@@ -88,9 +88,10 @@
   --color-fondo-input: #ffffff;
   --color-fondo-inputs: #b8b8b8;
   --color-fondo-panel: #a6a6a6;
-  --color-card-venta: #ffffff;
-  --color-contenedores-venta: #fafafa;
-  --color-boton-venta: #456257;
+  --color-card-venta: #dba8a2;
+  --color-contenedores-venta: #eb9c93;
+  --color-boton-venta: #eba08b;
+  --color-encabezado-venta: #f5a38e;
 
   --color-nav-admin: #dfb78c;
   --color-nav-vendedor: #99AD96;

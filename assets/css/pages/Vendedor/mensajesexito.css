@@ -1,4 +1,4 @@
-@import url('../base/global.css'); /*variables globales*/
+@import url('../../base/global.css'); /*variables globales*/
 
 :root {
     /* Tipografía - Tamaños */
@@ -75,7 +75,7 @@ body {
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    background-image: url("../../Imagenes/fondos/banner5.jpg");
+    background-image: url("../../../Imagenes/fondos/banner5.jpg");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;

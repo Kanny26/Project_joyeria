@@ -81,7 +81,7 @@ body {
 .totales__input {
     width: 140px;
     padding: 10px;
-    border: 1px solid #bfc4c6;
+    border: 1px solid #ffbaba;
     border-radius: 6px;
     background: #ffffff;
 }
@@ -95,8 +95,8 @@ body {
     grid-template-columns: 3fr 1fr 1fr 1fr;
     font-weight: 600;
     padding: 10px;
-    background: #e7ebee;
-    border: 1px solid #c5c5c5;
+    background: var(--color-encabezado-venta);
+    border: 1px solid #ffbaba;
     border-radius: 6px 6px 0 0;
 }
 
@@ -123,7 +123,7 @@ body {
 
 .registro-venta__boton {
     width: 100%;
-    background-color: #5a7d6f;
+    background-color: var(--color-boton-venta);
     color: white;
     padding: 14px;
     border: none;
