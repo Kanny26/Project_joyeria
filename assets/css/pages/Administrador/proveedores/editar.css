@@ -126,3 +126,142 @@ label {
     display: flex;
     gap: 12px;
 }
+
+/* ============================================================
+   MEDIA QUERIES - DESKTOP FIRST
+   ============================================================ */
+
+/* Pantallas extra grandes (>= 1440px) */
+@media (min-width: 1440px) {
+    .editar-proveedores__detalles {
+        max-width: 1100px;
+        padding: 45px;
+    }
+}
+
+/* Escritorio – estilos base (>= 1025px) - Sin cambios, estilos base */
+
+/* Tablet (769px a 1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+    body {
+        padding-top: 120px;
+    }
+    
+    .editar-proveedores__detalles {
+        max-width: 850px;
+        padding: 35px;
+    }
+    
+    .editar-proveedores__contenido {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+    
+    .editar-proveedores__imagen {
+        justify-self: center;
+    }
+    
+    .editar-proveedores__imagen img {
+        width: 180px;
+        height: 180px;
+    }
+    
+    .editar-proveedores__campos {
+        grid-template-columns: 1fr;
+        gap: 18px;
+    }
+}
+
+/* Phablet (481px a 768px) */
+@media (min-width: 481px) and (max-width: 768px) {
+    body {
+        padding-top: 100px;
+    }
+    
+    .editar-proveedores__detalles {
+        max-width: 95%;
+        padding: 30px 25px;
+    }
+    
+    .editar-proveedores__contenido {
+        grid-template-columns: 1fr;
+        gap: 25px;
+    }
+    
+    .editar-proveedores__imagen img {
+        width: 160px;
+        height: 160px;
+    }
+    
+    .editar-proveedores__campos {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    label {
+        font-size: 0.9rem;
+    }
+    
+    .editar-proveedores__input-texto,
+    .editar-proveedores__input-select,
+    .editar-proveedores__input-lectura,
+    .editar-proveedores__input-area {
+        font-size: 0.9rem;
+        padding: 9px 12px;
+    }
+}
+
+/* Móvil pequeño (máx. 480px) */
+@media (max-width: 480px) {
+    body {
+        padding-top: 80px;
+    }
+    
+    .editar-proveedores__detalles {
+        width: 100%;
+        max-width: 100%;
+        padding: 20px 15px;
+        border-radius: 12px;
+        margin-top: 0;
+    }
+    
+    .editar-proveedores__contenido {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .editar-proveedores__imagen img {
+        width: 140px;
+        height: 140px;
+    }
+    
+    .editar-proveedores__campos {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+    
+    label {
+        font-size: 0.85rem;
+        margin-bottom: 4px;
+    }
+    
+    .editar-proveedores__input-texto,
+    .editar-proveedores__input-select,
+    .editar-proveedores__input-lectura,
+    .editar-proveedores__input-area {
+        font-size: 0.85rem;
+        padding: 8px 10px;
+        border-radius: 6px;
+    }
+    
+    .editar-proveedores__estado-opciones {
+        gap: 12px;
+        flex-direction: column;
+    }
+    
+    .editar-proveedor__acciones {
+        flex-wrap: wrap;
+        gap: 8px;
+        justify-content: center;
+    }
+}

@@ -159,3 +159,222 @@ body {
 .nueva-contraseña__link p {
     font-size: var(--tamano-fuente-parrafos-alternativos);
 }
+
+/* ============================================================
+   MEDIA QUERIES - DESKTOP FIRST
+   ============================================================ */
+
+/* Pantallas extra grandes (>= 1440px) */
+@media (min-width: 1440px) {
+    .nueva-contraseña__panel {
+        width: 600px;
+        height: 850px;
+    }
+    
+    .nueva-contraseña__main {
+        width: 600px;
+        height: 850px;
+    }
+    
+    .nueva-contraseña__form {
+        width: 450px;
+        height: 600px;
+    }
+}
+
+/* Escritorio – estilos base (>= 1025px) - Sin cambios, estilos base */
+
+/* Tablet (769px a 1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .nueva-contraseña {
+        flex-direction: column;
+        gap: 20px;
+        padding: 20px;
+    }
+    
+    .nueva-contraseña__panel {
+        width: 90%;
+        max-width: 500px;
+        height: auto;
+        min-height: 400px;
+    }
+    
+    .nueva-contraseña__panel-caja {
+        width: 90%;
+        height: auto;
+        padding: 20px;
+    }
+    
+    .nueva-contraseña__panel-logo {
+        width: 280px;
+        height: 280px;
+    }
+    
+    .nueva-contraseña__main {
+        width: 90%;
+        max-width: 500px;
+        height: 500px;
+    }
+    
+    .nueva-contraseña__form {
+        width: 90%;
+        max-width: 380px;
+        height: auto;
+        min-height: 500px;
+        padding: 25px;
+    }
+    
+    .nueva-contraseña__form h1 {
+        font-size: 22px;
+    }
+    
+    .nueva-contraseña__form p {
+        font-size: 14px;
+    }
+    
+    .nueva-contraseña__input-group {
+        width: 100%;
+        max-width: 260px;
+    }
+}
+
+/* Phablet (481px a 768px) */
+@media (min-width: 481px) and (max-width: 768px) {
+    .nueva-contraseña {
+        flex-direction: column;
+        gap: 15px;
+        padding: 15px;
+    }
+    
+    .nueva-contraseña__panel {
+        width: 95%;
+        height: auto;
+        min-height: 350px;
+    }
+    
+    .nueva-contraseña__panel-caja {
+        width: 95%;
+        height: auto;
+        padding: 15px;
+    }
+    
+    .nueva-contraseña__panel-logo {
+        width: 220px;
+        height: 220px;
+    }
+    
+    .nueva-contraseña__main {
+        width: 95%;
+        height: 450px;
+    }
+    
+    .nueva-contraseña__form {
+        width: 95%;
+        max-width: 360px;
+        height: auto;
+        min-height: 480px;
+        padding: 20px;
+    }
+    
+    .nueva-contraseña__form h1 {
+        font-size: 20px;
+    }
+    
+    .nueva-contraseña__form p {
+        font-size: 13px;
+    }
+    
+    .nueva-contraseña__input-group {
+        width: 100%;
+        max-width: 250px;
+        height: 42px;
+    }
+    
+    .nueva-contraseña__input-group input {
+        font-size: 14px;
+    }
+}
+
+/* Móvil pequeño (máx. 480px) */
+@media (max-width: 480px) {
+    body {
+        padding: 10px;
+    }
+    
+    .nueva-contraseña {
+        flex-direction: column;
+        gap: 15px;
+        padding: 10px;
+        min-height: auto;
+    }
+    
+    .nueva-contraseña__panel {
+        width: 100%;
+        height: auto;
+        min-height: 300px;
+        border-radius: 15px;
+    }
+    
+    .nueva-contraseña__panel-caja {
+        width: 95%;
+        height: auto;
+        padding: 15px 10px;
+    }
+    
+    .nueva-contraseña__panel-logo {
+        width: 180px;
+        height: 180px;
+        margin-top: 5px;
+    }
+    
+    .nueva-contraseña__main {
+        width: 100%;
+        height: 400px;
+        border-radius: 15px;
+    }
+    
+    .nueva-contraseña__form {
+        width: 95%;
+        height: auto;
+        min-height: 400px;
+        padding: 20px 15px;
+    }
+    
+    .nueva-contraseña__form h1 {
+        font-size: 18px;
+        margin-bottom: 10px;
+    }
+    
+    .nueva-contraseña__form p {
+        font-size: 12px;
+        margin-bottom: 15px;
+        margin-top: 10px;
+    }
+    
+    .nueva-contraseña__input-group {
+        width: 100%;
+        height: 40px;
+        margin-top: 15px;
+        padding: 0 12px;
+    }
+    
+    .nueva-contraseña__input-group i {
+        font-size: 16px;
+        margin-right: 8px;
+    }
+    
+    .nueva-contraseña__input-group input {
+        font-size: 13px;
+        padding-right: 25px;
+    }
+    
+    .nueva-contraseña__link {
+        width: 100%;
+        margin-top: 15px;
+        font-size: 11px;
+    }
+    
+    .nueva-contraseña__link p {
+        font-size: 11px;
+    }
+}

@@ -69,3 +69,107 @@ body {
 .tarjeta-clientes__columna:hover {
     opacity: 0.85;
 }
+
+/* ============================================================
+   MEDIA QUERIES - DESKTOP FIRST
+   ============================================================ */
+
+/* Pantallas extra grandes (>= 1440px) */
+@media (min-width: 1440px) {
+    .tarjeta-clientes {
+        width: 750px;
+        padding: 40px;
+    }
+}
+
+/* Escritorio – estilos base (>= 1025px) - Sin cambios, estilos base */
+
+/* Tablet (769px a 1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .tarjeta-clientes {
+        width: 90%;
+        max-width: 600px;
+        padding: 30px;
+        margin-top: 120px;
+        flex-direction: column;
+        gap: 25px;
+    }
+    
+    .tarjeta-clientes__titulo {
+        margin-bottom: 12px;
+    }
+    
+    .tarjeta-clientes__grafico {
+        width: 100%;
+        justify-content: center;
+        gap: 15px;
+    }
+    
+    .tarjeta-clientes__columna {
+        width: 50px;
+    }
+}
+
+/* Phablet (481px a 768px) */
+@media (min-width: 481px) and (max-width: 768px) {
+    .tarjeta-clientes {
+        width: 95%;
+        max-width: 500px;
+        padding: 25px;
+        margin-top: 100px;
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    .tarjeta-clientes__titulo {
+        margin-bottom: 10px;
+    }
+    
+    .tarjeta-clientes__texto p {
+        margin: 5px 0;
+        font-size: 0.9rem;
+    }
+    
+    .tarjeta-clientes__grafico {
+        width: 100%;
+        justify-content: center;
+        gap: 12px;
+    }
+    
+    .tarjeta-clientes__columna {
+        width: 40px;
+    }
+}
+
+/* Móvil pequeño (máx. 480px) */
+@media (max-width: 480px) {
+    .tarjeta-clientes {
+        width: 100%;
+        padding: 20px;
+        margin-top: 80px;
+        flex-direction: column;
+        gap: 18px;
+        border-radius: 18px;
+    }
+    
+    .tarjeta-clientes__titulo {
+        margin-bottom: 10px;
+        font-size: 1.1rem;
+    }
+    
+    .tarjeta-clientes__texto p {
+        margin: 4px 0;
+        font-size: 0.85rem;
+    }
+    
+    .tarjeta-clientes__grafico {
+        width: 100%;
+        justify-content: center;
+        gap: 10px;
+    }
+    
+    .tarjeta-clientes__columna {
+        width: 35px;
+        border-radius: 8px;
+    }
+}

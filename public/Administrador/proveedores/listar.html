@@ -12,22 +12,21 @@
 </head>
 
 <body>
-
     <!-- Navbar -->
-    <nav class="navbar-admin"> 
+    <nav class="navbar-admin">
         <div class="navbar-admin__catalogo"> 
-            <img src="../../../assets/Imagenes/iconos/admin.png" alt="Admin"> 
-            <a href="../proveedores.html">
-                <h2>Volver al inicio</h2> 
-            </a>
-            
+            <img src="../../../assets/Imagenes/iconos/admin.png" alt="Admin"> </a>
         </div> 
-        <h1 class="navbar-admin__title">AAC27</h1> 
-        <i class="fa-solid fa-house-chimney navbar-admin__home-icon"></i> 
+
+        <h1 class="navbar-admin__title">AAC27</h1>
+        <a href="../proveedores.html">
+            <i class="fa-solid fa-house-chimney navbar-admin__home-icon"></i>
+        </a>
     </nav>
 
     <main class="titulo">
         <h2 class="titulo__encabezado">Listar proveedores</h2>
+
         <section class="Proveedores-listar__tabla-contenedor">
             <table class="Proveedores-listar__tabla">
                 <thead>
@@ -40,95 +39,115 @@
                         <th>Fecha inicio</th>
                         <th>Estado</th>
                         <th>Acciones</th>
-                        
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td>Nombre del proveedor</td>
-                        <td>Telefono del proveedor</td>
-                        <td>Correo del proveedor</td>
-                        <td>Acero inoxidable<br>Plata</td>
-                        <td>Aretes largos<br>collares<br>anillos</td>
-                        <td>Fecha contrato</td>
-                        <td>
-                            <select id="select" name="estado" class="estado">
-                                <option value="verde" class="estado estado--activo">Activo</option>
-                                <option value="rojo" class="estado estado--inactivo">Inactivo</option>
+                        <td data-label="Nombre">Proveedor 1</td>
+                        <td data-label="Telefono">123456789</td>
+                        <td data-label="Correo">correo1@ejemplo.com</td>
+                        <td data-label="Material">Acero inoxidable<br>Plata</td>
+                        <td data-label="Productos">Aretes largos<br>Collares<br>Anillos</td>
+                        <td data-label="Fecha inicio">01/01/2023</td>
+                        <td data-label="Estado">
+                            <select name="estado" class="estado">
+                                <option value="verde" class="estado--activo">Activo</option>
+                                <option value="rojo" class="estado--inactivo">Inactivo</option>
                             </select>
                         </td>
-                        <td class="Proveedores-listar__acciones">
+                        <td data-label="Acciones" class="Proveedores-listar__acciones">
                             <div class="iconos">
-                                <a href="../../../public/Administrador/proveedores/editar.html"><i class="fa-solid fa-pen-to-square"></i></a>
+                                <a href="../../../public/Administrador/proveedores/editar.html">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </a>
                             </div>
                         </td>
                     </tr>
                     <tr>
-                        <td>Nombre del proveedor</td>
-                        <td>Telefono del proveedor</td>
-                        <td>Correo del proveedor</td>
-                        <td>Acero inoxidable<br>Plata</td>
-                        <td>Aretes largos<br>collares<br>anillos</td>
-                        <td>Fecha contrato</td>
-                        <td>
-                            <select id="select" name="estado" class="estado">
-                                <option value="verde" class="estado estado--activo">Activo</option>
-                                <option value="rojo" class="estado estado--inactivo">Inactivo</option>
+                        <td data-label="Nombre">Proveedor 2</td>
+                        <td data-label="Telefono">987654321</td>
+                        <td data-label="Correo">correo2@ejemplo.com</td>
+                        <td data-label="Material">Oro</td>
+                        <td data-label="Productos">Anillos<br>Pulseras</td>
+                        <td data-label="Fecha inicio">15/03/2023</td>
+                        <td data-label="Estado">
+                            <select name="estado" class="estado">
+                                <option value="verde" class="estado--activo">Activo</option>
+                                <option value="rojo" class="estado--inactivo">Inactivo</option>
                             </select>
                         </td>
-                        <td class="Proveedores-listar__acciones">
+                        <td data-label="Acciones" class="Proveedores-listar__acciones">
                             <div class="iconos">
-                                <a href="../../../public/Administrador/proveedores/editar.html"><i class="fa-solid fa-pen-to-square"></i></a>
+                                <a href="../../../public/Administrador/proveedores/editar.html">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </a>
                             </div>
                         </td>
                     </tr>
                     <tr>
-                        <td>Nombre del proveedor</td>
-                        <td>Telefono del proveedor</td>
-                        <td>Correo del proveedor</td>
-                        <td>Acero inoxidable<br>Plata</td>
-                        <td>Aretes largos<br>collares<br>anillos</td>
-                        <td>Fecha contrato</td>
-                        <td>
-                            <select id="select" name="estado" class="estado">
-                                <option value="verde" class="estado estado--activo">Activo</option>
-                                <option value="rojo" class="estado estado--inactivo">Inactivo</option>
+                        <td data-label="Nombre">Proveedor 3</td>
+                        <td data-label="Telefono">987654321</td>
+                        <td data-label="Correo">correo2@ejemplo.com</td>
+                        <td data-label="Material">Oro</td>
+                        <td data-label="Productos">Anillos<br>Pulseras</td>
+                        <td data-label="Fecha inicio">15/03/2023</td>
+                        <td data-label="Estado">
+                            <select name="estado" class="estado">
+                                <option value="verde" class="estado--activo">Activo</option>
+                                <option value="rojo" class="estado--inactivo">Inactivo</option>
                             </select>
                         </td>
-                        <td class="Proveedores-listar__acciones">
+                        <td data-label="Acciones" class="Proveedores-listar__acciones">
                             <div class="iconos">
-                                <a href="../../../public/Administrador/proveedores/editar.html"><i class="fa-solid fa-pen-to-square"></i></a>
+                                <a href="../../../public/Administrador/proveedores/editar.html">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </a>
                             </div>
                         </td>
                     </tr>
-                    
+                    <tr>
+                        <td data-label="Nombre">Proveedor 4</td>
+                        <td data-label="Telefono">987654321</td>
+                        <td data-label="Correo">correo2@ejemplo.com</td>
+                        <td data-label="Material">Oro</td>
+                        <td data-label="Productos">Anillos<br>Pulseras</td>
+                        <td data-label="Fecha inicio">15/03/2023</td>
+                        <td data-label="Estado">
+                            <select name="estado" class="estado">
+                                <option value="verde" class="estado--activo">Activo</option>
+                                <option value="rojo" class="estado--inactivo">Inactivo</option>
+                            </select>
+                        </td>
+                        <td data-label="Acciones" class="Proveedores-listar__acciones">
+                            <div class="iconos">
+                                <a href="../../../public/Administrador/proveedores/editar.html">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
-
-            
         </section>
+
         <div class="contadores">
             <div class="contador-card">
                 <h2>Total proveedores</h2>
-                <h3 class="contador-card__numero">3</h3>
+                <h3 class="contador-card__numero">2</h3>
             </div>
-
             <div class="contador-card">
                 <h2>Proveedores activos</h2>
-                <h3  class="contador-card__numero">2</h3>
+                <h3 class="contador-card__numero">1</h3>
             </div>
-
             <div class="contador-card">
                 <h2>Total materiales adquiridos</h2>
-                <h3  class="contador-card__numero">3</h3>
+                <h3 class="contador-card__numero">3</h3>
             </div>
-
             <div class="contador-card">
                 <h2>Total productos</h2>
-                <h3  class="contador-card__numero">3</h3>
+                <h3 class="contador-card__numero">5</h3>
             </div>
         </div>
-
     </main>
 </body>
 </html>

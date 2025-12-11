@@ -124,3 +124,123 @@ body {
 .estadisticas-admin__titulo-tarjeta:hover {
     color: var(--color-texto-hover-cards);
 }
+
+/* ============================================================
+   MEDIA QUERIES - DESKTOP FIRST
+   ============================================================ */
+
+/* Pantallas extra grandes (>= 1440px) */
+@media (min-width: 1440px) {
+    .estadisticas-admin__contenedor {
+        max-width: 1400px;
+        gap: 60px;
+    }
+}
+
+/* Escritorio – estilos base (>= 1025px) - Sin cambios, estilos base */
+
+/* Tablet (769px a 1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+    body {
+        padding-top: 120px;
+    }
+    
+    .estadisticas-admin__contenedor {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 35px;
+        max-width: 700px;
+    }
+    
+    .estadisticas-admin__tarjeta {
+        width: 100%;
+    }
+    
+    .estadisticas-admin__icono {
+        width: 170px;
+        height: 170px;
+    }
+    
+    .estadisticas-admin__icono img {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .estadisticas-admin__titulo-tarjeta {
+        width: 220px;
+        height: 58px;
+    }
+    
+    .estadisticas-admin__titulo-tarjeta {
+        font-size: 22px;
+    }
+}
+
+/* Phablet (481px a 768px) */
+@media (min-width: 481px) and (max-width: 768px) {
+    body {
+        padding-top: 100px;
+    }
+    
+    .estadisticas-admin__contenedor {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 25px;
+        max-width: 600px;
+    }
+    
+    .estadisticas-admin__tarjeta {
+        width: 100%;
+    }
+    
+    .estadisticas-admin__icono {
+        width: 150px;
+        height: 150px;
+    }
+    
+    .estadisticas-admin__icono img {
+        width: 90px;
+        height: 90px;
+    }
+    
+    .estadisticas-admin__titulo-tarjeta {
+        width: 200px;
+        height: 55px;
+        font-size: 20px;
+    }
+}
+
+/* Móvil pequeño (máx. 480px) */
+@media (max-width: 480px) {
+    body {
+        padding-top: 80px;
+    }
+    
+    .estadisticas-admin__contenedor {
+        grid-template-columns: 1fr;
+        gap: 20px;
+        max-width: 100%;
+        padding: 0 10px;
+    }
+    
+    .estadisticas-admin__tarjeta {
+        width: 100%;
+        max-width: 280px;
+        margin: 0 auto;
+    }
+    
+    .estadisticas-admin__icono {
+        width: 130px;
+        height: 130px;
+    }
+    
+    .estadisticas-admin__icono img {
+        width: 80px;
+        height: 80px;
+    }
+    
+    .estadisticas-admin__titulo-tarjeta {
+        width: 100%;
+        max-width: 200px;
+        height: 50px;
+        font-size: 18px;
+    }
+}

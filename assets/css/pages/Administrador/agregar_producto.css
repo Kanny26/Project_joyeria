@@ -146,3 +146,165 @@ select.form-product__input {
     transform: translateY(-2px);
     box-shadow: 0 6px 18px rgba(108, 99, 255, 0.4);
 }
+
+/* ============================================================
+   MEDIA QUERIES - DESKTOP FIRST
+   ============================================================ */
+
+/* Pantallas extra grandes (>= 1440px) */
+@media (min-width: 1440px) {
+    .form-product-container {
+        max-width: 1000px;
+    }
+    
+    .form-product-container__title {
+        font-size: 52px;
+    }
+}
+
+/* Escritorio – estilos base (>= 1025px) - Sin cambios, estilos base */
+
+/* Tablet (769px a 1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .form-product-container {
+        max-width: 800px;
+        margin: 50px auto;
+        gap: 25px;
+    }
+    
+    .form-product-container__title {
+        font-size: 42px;
+        margin-top: 60px;
+        margin-bottom: 35px;
+    }
+    
+    .form-product {
+        padding: 35px;
+        gap: 20px;
+    }
+    
+    .form-product__row {
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 20px 30px;
+    }
+    
+    .form-product__label {
+        font-size: 15px;
+    }
+    
+    .form-product__input,
+    textarea.form-product__input,
+    select.form-product__input {
+        font-size: 13px;
+        padding: 11px 14px;
+    }
+    
+    .form-product__btn {
+        padding: 14px;
+        font-size: 15px;
+    }
+}
+
+/* Phablet (481px a 768px) */
+@media (min-width: 481px) and (max-width: 768px) {
+    .form-product-container {
+        max-width: 95%;
+        margin: 40px auto;
+        gap: 20px;
+        padding: 0 15px;
+    }
+    
+    .form-product-container__title {
+        font-size: 36px;
+        margin-top: 50px;
+        margin-bottom: 30px;
+    }
+    
+    .form-product {
+        padding: 30px 25px;
+        gap: 18px;
+    }
+    
+    .form-product__row {
+        grid-template-columns: 1fr;
+        gap: 18px;
+    }
+    
+    .form-product__label {
+        font-size: 14px;
+    }
+    
+    .form-product__input,
+    textarea.form-product__input,
+    select.form-product__input {
+        font-size: 13px;
+        padding: 10px 12px;
+    }
+    
+    .input-icon {
+        padding: 10px 12px;
+    }
+    
+    .form-product__btn {
+        padding: 13px;
+        font-size: 14px;
+    }
+}
+
+/* Móvil pequeño (máx. 480px) */
+@media (max-width: 480px) {
+    .form-product-container {
+        max-width: 100%;
+        margin: 30px auto;
+        gap: 15px;
+        padding: 0 10px;
+    }
+    
+    .form-product-container__title {
+        font-size: 28px;
+        margin-top: 40px;
+        margin-bottom: 25px;
+    }
+    
+    .form-product {
+        padding: 20px 15px;
+        gap: 15px;
+        border-radius: 10px;
+    }
+    
+    .form-product__row {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .form-product__group {
+        gap: 6px;
+    }
+    
+    .form-product__label {
+        font-size: 13px;
+    }
+    
+    .form-product__input,
+    textarea.form-product__input,
+    select.form-product__input {
+        font-size: 12px;
+        padding: 10px 12px;
+        border-radius: 8px;
+    }
+    
+    .input-icon {
+        padding: 10px 12px;
+        gap: 8px;
+    }
+    
+    .input-icon i {
+        font-size: 16px;
+    }
+    
+    .form-product__btn {
+        padding: 12px;
+        font-size: 13px;
+        border-radius: 10px;
+    }
+}

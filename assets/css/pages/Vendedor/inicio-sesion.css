@@ -193,3 +193,220 @@ h1 {
   align-items: center;
   width: var(--ancho-contenedor-botones);
 }
+
+/* ============================================================
+   MEDIA QUERIES - DESKTOP FIRST
+   ============================================================ */
+
+/* Pantallas extra grandes (>= 1440px) */
+@media (min-width: 1440px) {
+    .inicio-sesion__panel {
+        width: 600px;
+        height: 850px;
+    }
+    
+    .inicio-sesion__contenido {
+        width: 600px;
+        height: 850px;
+    }
+    
+    .inicio-sesion__formulario {
+        width: 420px;
+        height: 550px;
+    }
+}
+
+/* Escritorio – estilos base (>= 1025px) - Sin cambios, estilos base */
+
+/* Tablet (769px a 1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .inicio-sesion {
+        flex-direction: column;
+        gap: 20px;
+        padding: 20px;
+    }
+    
+    .inicio-sesion__panel {
+        width: 90%;
+        max-width: 500px;
+        height: auto;
+        min-height: 400px;
+    }
+    
+    .inicio-sesion__panel-caja {
+        width: 90%;
+        height: auto;
+        padding: 20px;
+    }
+    
+    .inicio-sesion__panel-logo {
+        width: 280px;
+        height: 280px;
+    }
+    
+    .inicio-sesion__contenido {
+        width: 90%;
+        max-width: 500px;
+        height: 500px;
+    }
+    
+    .inicio-sesion__formulario {
+        width: 90%;
+        max-width: 360px;
+        height: auto;
+        min-height: 450px;
+        padding: 40px 30px;
+    }
+    
+    h1 {
+        font-size: 22px;
+    }
+    
+    .inicio-sesion__input-grupo {
+        width: 100%;
+        max-width: 260px;
+    }
+}
+
+/* Phablet (481px a 768px) */
+@media (min-width: 481px) and (max-width: 768px) {
+    .inicio-sesion {
+        flex-direction: column;
+        gap: 15px;
+        padding: 15px;
+    }
+    
+    .inicio-sesion__panel {
+        width: 95%;
+        height: auto;
+        min-height: 350px;
+    }
+    
+    .inicio-sesion__panel-caja {
+        width: 95%;
+        height: auto;
+        padding: 15px;
+    }
+    
+    .inicio-sesion__panel-logo {
+        width: 220px;
+        height: 220px;
+    }
+    
+    .inicio-sesion__contenido {
+        width: 95%;
+        height: 450px;
+    }
+    
+    .inicio-sesion__formulario {
+        width: 95%;
+        max-width: 340px;
+        height: auto;
+        min-height: 420px;
+        padding: 35px 25px;
+    }
+    
+    h1 {
+        font-size: 20px;
+    }
+    
+    .inicio-sesion__input-grupo {
+        width: 100%;
+        max-width: 250px;
+        height: 42px;
+    }
+    
+    .inicio-sesion__input-grupo input {
+        font-size: 14px;
+    }
+}
+
+/* Móvil pequeño (máx. 480px) */
+@media (max-width: 480px) {
+    body {
+        padding: 10px;
+    }
+    
+    .inicio-sesion {
+        flex-direction: column;
+        gap: 15px;
+        padding: 10px;
+        min-height: auto;
+    }
+    
+    .inicio-sesion__panel {
+        width: 100%;
+        height: auto;
+        min-height: 300px;
+        border-radius: 15px;
+    }
+    
+    .inicio-sesion__panel-caja {
+        width: 95%;
+        height: auto;
+        padding: 15px 10px;
+    }
+    
+    .inicio-sesion__panel-logo {
+        width: 180px;
+        height: 180px;
+        margin-top: 5px;
+    }
+    
+    .inicio-sesion__contenido {
+        width: 100%;
+        height: 400px;
+        border-radius: 15px;
+    }
+    
+    .inicio-sesion__formulario {
+        width: 95%;
+        height: auto;
+        min-height: 380px;
+        padding: 25px 20px;
+    }
+    
+    h1 {
+        font-size: 18px;
+        margin-bottom: 15px;
+    }
+    
+    .inicio-sesion__input-grupo {
+        width: 100%;
+        height: 40px;
+        margin-top: 15px;
+        padding: 0 12px;
+    }
+    
+    .inicio-sesion__input-grupo input {
+        font-size: 13px;
+        padding-right: 25px;
+    }
+    
+    .inicio-sesion__input-grupo i.icon-left {
+        font-size: 16px;
+        margin-right: 8px;
+    }
+    
+    .inicio-sesion__input-grupo i.icon-right {
+        right: 12px;
+        font-size: 16px;
+    }
+    
+    .inicio-sesion__link-recuperar {
+        width: 100%;
+        max-width: 100%;
+        font-size: 11px;
+        margin: 8px auto 15px;
+    }
+    
+    .inicio-sesion__link-registro {
+        width: 100%;
+        margin-top: 15px;
+        font-size: 11px;
+    }
+    
+    .inicio-sesion__link-registro p {
+        font-size: 11px;
+    }
+}

@@ -148,3 +148,213 @@ body {
     line-height: 1.6;
     color: #6a5140;
 }
+
+/* ============================================================
+   MEDIA QUERIES - DESKTOP FIRST
+   ============================================================ */
+
+/* Pantallas extra grandes (>= 1440px) */
+@media (min-width: 1440px) {
+    .factura {
+        width: 800px;
+        height: 800px;
+        padding: 50px;
+    }
+}
+
+/* Escritorio – estilos base (>= 1025px) - Sin cambios, estilos base */
+
+/* Tablet (769px a 1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .factura {
+        width: 90%;
+        max-width: 650px;
+        height: auto;
+        min-height: 650px;
+        padding: 35px;
+        margin-top: 120px;
+    }
+    
+    .factura__logo h1 {
+        font-size: 32px;
+    }
+    
+    .factura__info p {
+        font-size: 13px;
+    }
+    
+    .cliente-nombre {
+        font-size: 20px;
+    }
+    
+    .tabla th,
+    .tabla td {
+        font-size: 13px;
+        padding: 10px;
+    }
+    
+    .totales {
+        width: 280px;
+        font-size: 14px;
+    }
+}
+
+/* Phablet (481px a 768px) */
+@media (min-width: 481px) and (max-width: 768px) {
+    .factura {
+        width: 95%;
+        max-width: 550px;
+        height: auto;
+        min-height: 600px;
+        padding: 30px;
+        margin-top: 100px;
+        overflow-x: auto; /* Scroll horizontal si es necesario */
+    }
+    
+    .factura__header {
+        flex-direction: column;
+        gap: 15px;
+        align-items: flex-start;
+    }
+    
+    .factura__info p {
+        text-align: left;
+        font-size: 12px;
+    }
+    
+    .factura__logo h1 {
+        font-size: 28px;
+    }
+    
+    .slogan {
+        font-size: 13px;
+    }
+    
+    .cliente-nombre {
+        font-size: 18px;
+    }
+    
+    .tabla {
+        font-size: 12px;
+        min-width: 500px; /* Mantiene proporciones */
+        width: 100%;
+    }
+    
+    .tabla th,
+    .tabla td {
+        padding: 8px;
+        font-size: 12px;
+        white-space: nowrap; /* Evita cortes de texto */
+    }
+    
+    .totales {
+        width: 100%;
+        max-width: 250px;
+        font-size: 13px;
+    }
+}
+
+/* --------------------------------------------------
+   MEDIA QUERY: MÓVIL PEQUEÑO (hasta 480px)
+   Ajustes para tabla de factura:
+   - Scroll horizontal elegante
+   - Evitar texto cortado
+   - Mantener proporciones
+-------------------------------------------------- */
+@media (max-width: 480px) {
+    body {
+        padding: 10px;
+    }
+    
+    .factura {
+        width: 100%;
+        height: auto;
+        min-height: 550px;
+        padding: 20px 15px;
+        margin-top: 80px;
+        border-radius: 12px;
+    }
+    
+    .factura__header {
+        flex-direction: column;
+        gap: 12px;
+        align-items: flex-start;
+    }
+    
+    .factura__logo h1 {
+        font-size: 24px;
+        margin-bottom: 3px;
+    }
+    
+    .slogan {
+        font-size: 12px;
+    }
+    
+    .factura__info p {
+        text-align: left;
+        font-size: 11px;
+    }
+    
+    .linea-div {
+        margin: 20px 0;
+    }
+    
+    .factura__cliente {
+        margin-bottom: 25px;
+    }
+    
+    .label {
+        font-size: 12px;
+    }
+    
+    .cliente-nombre {
+        font-size: 16px;
+        margin: 5px 0 3px 0;
+    }
+    
+    .estado {
+        font-size: 12px;
+        padding: 5px 12px;
+        margin-top: 10px;
+    }
+    
+    /* Contenedor con scroll horizontal para la tabla de factura */
+    .factura {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .tabla {
+        margin-bottom: 20px;
+        font-size: 11px;
+        min-width: 500px; /* Evita que la tabla se aplaste */
+        width: 100%;
+    }
+    
+    .tabla th,
+    .tabla td {
+        padding: 6px 4px;
+        font-size: 11px;
+        white-space: nowrap; /* Evita cortes de texto en celdas */
+    }
+    
+    .totales {
+        width: 100%;
+        font-size: 12px;
+    }
+    
+    .total-final {
+        padding: 10px;
+        font-size: 13px;
+    }
+    
+    .condiciones h3 {
+        font-size: 14px;
+        margin-top: 25px;
+    }
+    
+    .condiciones p {
+        font-size: 12px;
+        margin-top: 4px;
+    }
+}

@@ -125,3 +125,142 @@ label {
     display: flex;
     gap: 12px;
 }
+
+/* ============================================================
+   MEDIA QUERIES - DESKTOP FIRST
+   ============================================================ */
+
+/* Pantallas extra grandes (>= 1440px) */
+@media (min-width: 1440px) {
+    .editar-usuarios__detalles {
+        max-width: 1100px;
+        padding: 45px;
+    }
+}
+
+/* Escritorio – estilos base (>= 1025px) - Sin cambios, estilos base */
+
+/* Tablet (769px a 1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+    body {
+        padding-top: 120px;
+    }
+    
+    .editar-usuarios__detalles {
+        max-width: 850px;
+        padding: 35px;
+    }
+    
+    .editar-usuarios__contenido {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+    
+    .editar-usuarios__imagen {
+        justify-self: center;
+    }
+    
+    .editar-usuarios__imagen img {
+        width: 180px;
+        height: 180px;
+    }
+    
+    .editar-usuarios__campos {
+        grid-template-columns: 1fr;
+        gap: 18px;
+    }
+}
+
+/* Phablet (481px a 768px) */
+@media (min-width: 481px) and (max-width: 768px) {
+    body {
+        padding-top: 100px;
+    }
+    
+    .editar-usuarios__detalles {
+        max-width: 95%;
+        padding: 30px 25px;
+    }
+    
+    .editar-usuarios__contenido {
+        grid-template-columns: 1fr;
+        gap: 25px;
+    }
+    
+    .editar-usuarios__imagen img {
+        width: 160px;
+        height: 160px;
+    }
+    
+    .editar-usuarios__campos {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    label {
+        font-size: 0.9rem;
+    }
+    
+    .editar-usuarios__input-texto,
+    .editar-usuarios__input-select,
+    .editar-usuarios__input-lectura,
+    .editar-usuarios__input-area {
+        font-size: 0.9rem;
+        padding: 9px 12px;
+    }
+}
+
+/* Móvil pequeño (máx. 480px) */
+@media (max-width: 480px) {
+    body {
+        padding-top: 80px;
+    }
+    
+    .editar-usuarios__detalles {
+        width: 100%;
+        max-width: 100%;
+        padding: 20px 15px;
+        border-radius: 12px;
+        margin-top: 0;
+    }
+    
+    .editar-usuarios__contenido {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .editar-usuarios__imagen img {
+        width: 140px;
+        height: 140px;
+    }
+    
+    .editar-usuarios__campos {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+    
+    label {
+        font-size: 0.85rem;
+        margin-bottom: 4px;
+    }
+    
+    .editar-usuarios__input-texto,
+    .editar-usuarios__input-select,
+    .editar-usuarios__input-lectura,
+    .editar-usuarios__input-area {
+        font-size: 0.85rem;
+        padding: 8px 10px;
+        border-radius: 6px;
+    }
+    
+    .editar-usuarios__estado-opciones {
+        gap: 12px;
+        flex-direction: column;
+    }
+    
+    .editar-usuarios__acciones {
+        flex-wrap: wrap;
+        gap: 8px;
+        justify-content: center;
+    }
+}

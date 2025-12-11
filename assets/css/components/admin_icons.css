@@ -63,3 +63,99 @@
 .iconos i:hover {
     color: var(--color-iconos-hover);
 }
+
+/* ============================================================
+   MEDIA QUERIES - DESKTOP FIRST
+   ============================================================ */
+
+/* Pantallas extra grandes (>= 1440px) */
+@media (min-width: 1440px) {
+    .admin__tooltips-right {
+        right: 70px;
+    }
+    
+    .icon-container {
+        width: 55px;
+        height: 55px;
+    }
+}
+
+/* Escritorio – estilos base (>= 1025px) - Sin cambios, estilos base */
+
+/* Tablet (769px a 1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .admin__tooltips-right {
+        right: 40px;
+        gap: 12px;
+    }
+    
+    .icon-container {
+        width: 45px;
+        height: 45px;
+    }
+    
+    .iconos {
+        gap: 15px;
+    }
+    
+    .iconos i {
+        font-size: 20px;
+    }
+}
+
+/* Phablet (481px a 768px) */
+@media (min-width: 481px) and (max-width: 768px) {
+    .admin__tooltips-right {
+        right: 20px;
+        gap: 10px;
+    }
+    
+    .icon-container {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .tooltip {
+        right: 50px;
+        font-size: 0.75rem;
+        padding: 5px 8px;
+    }
+    
+    .iconos {
+        gap: 12px;
+        margin-top: 20px;
+    }
+    
+    .iconos i {
+        font-size: 18px;
+    }
+}
+
+/* Móvil pequeño (máx. 480px) */
+@media (max-width: 480px) {
+    .admin__tooltips-right {
+        right: 10px;
+        gap: 8px;
+    }
+    
+    .icon-container {
+        width: 35px;
+        height: 35px;
+    }
+    
+    .tooltip {
+        right: 40px;
+        font-size: 0.7rem;
+        padding: 4px 6px;
+    }
+    
+    .iconos {
+        gap: 10px;
+        margin-top: 15px;
+        flex-wrap: wrap;
+    }
+    
+    .iconos i {
+        font-size: 16px;
+    }
+}

@@ -84,3 +84,126 @@ body {
 .eliminado__mensaje a:hover {
     color: var(--color-link-hover);
 }
+
+/* ============================================================
+   MEDIA QUERIES - DESKTOP FIRST
+   ============================================================ */
+
+/* Pantallas extra grandes (>= 1440px) */
+@media (min-width: 1440px) {
+    .eliminado__contenedor {
+        width: 1350px;
+        height: 570px;
+    }
+}
+
+/* Escritorio – estilos base (>= 1025px) - Sin cambios, estilos base */
+
+/* Tablet (769px a 1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .eliminado__titulo {
+        font-size: 42px;
+        margin-bottom: 35px;
+    }
+    
+    .eliminado__contenedor {
+        width: 95%;
+        max-width: 900px;
+        height: auto;
+        min-height: 480px;
+        grid-template-columns: 1fr;
+        gap: 25px;
+        padding: 25px;
+    }
+    
+    .eliminado__producto-imagen {
+        margin-top: 20px;
+        margin-left: 0;
+        width: 250px;
+        height: 350px;
+    }
+    
+    .eliminado__mensaje h2 {
+        font-size: 30px;
+    }
+    
+    .eliminado__mensaje a {
+        font-size: 22px;
+    }
+}
+
+/* Phablet (481px a 768px) */
+@media (min-width: 481px) and (max-width: 768px) {
+    .eliminado__titulo {
+        font-size: 36px;
+        margin-bottom: 30px;
+    }
+    
+    .eliminado__contenedor {
+        width: 95%;
+        max-width: 650px;
+        height: auto;
+        min-height: 450px;
+        grid-template-columns: 1fr;
+        gap: 20px;
+        padding: 20px;
+    }
+    
+    .eliminado__producto-imagen {
+        margin-top: 15px;
+        margin-left: 0;
+        width: 220px;
+        height: 320px;
+    }
+    
+    .eliminado__mensaje h2 {
+        font-size: 28px;
+        margin-bottom: 18px;
+    }
+    
+    .eliminado__mensaje a {
+        font-size: 20px;
+    }
+}
+
+/* Móvil pequeño (máx. 480px) */
+@media (max-width: 480px) {
+    .eliminado {
+        padding: 0 10px;
+    }
+    
+    .eliminado__titulo {
+        font-size: 28px;
+        margin-bottom: 25px;
+    }
+    
+    .eliminado__contenedor {
+        width: 100%;
+        height: auto;
+        min-height: 400px;
+        grid-template-columns: 1fr;
+        gap: 15px;
+        padding: 15px;
+        border-radius: 40px;
+    }
+    
+    .eliminado__producto-imagen {
+        margin-top: 10px;
+        margin-left: 0;
+        width: 180px;
+        height: 280px;
+    }
+    
+    .eliminado__mensaje {
+        padding: 10px;
+    }
+    
+    .eliminado__mensaje h2 {
+        font-size: 24px;
+        margin-bottom: 15px;
+    }
+    
+    .eliminado__mensaje a {
+        font-size: 18px;
+    }
+}

@@ -120,3 +120,180 @@ body {
 .tabla-ventas__fila span {
     color: #2c3e50;
 }
+
+/* ============================================================
+   MEDIA QUERIES - DESKTOP FIRST
+   ============================================================ */
+
+/* Pantallas extra grandes (>= 1440px) */
+@media (min-width: 1440px) {
+    .informe-ventas {
+        max-width: 1400px;
+    }
+}
+
+/* Escritorio – estilos base (>= 1025px) - Sin cambios, estilos base */
+
+/* Tablet (769px a 1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .informe-ventas {
+        width: 95%;
+        max-width: 1000px;
+    }
+    
+    .informe-ventas__titulo {
+        font-size: 42px;
+        margin-bottom: 35px;
+    }
+    
+    .informe-ventas__resumen-horizontal {
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 20px;
+        margin-bottom: 50px;
+    }
+    
+    .card-horizontal {
+        padding: 18px;
+        height: 110px;
+    }
+    
+    .card-horizontal__valor {
+        font-size: 1.4rem;
+    }
+    
+    .informe-ventas__subtitulo {
+        font-size: 1.3rem;
+    }
+    
+    .tabla-ventas__encabezado,
+    .tabla-ventas__fila {
+        grid-template-columns: repeat(4, 1fr);
+        padding: 10px 12px;
+        font-size: 14px;
+    }
+}
+
+/* Phablet (481px a 768px) */
+@media (min-width: 481px) and (max-width: 768px) {
+    .informe-ventas {
+        width: 98%;
+        max-width: 700px;
+    }
+    
+    .informe-ventas__titulo {
+        font-size: 36px;
+        margin-bottom: 30px;
+    }
+    
+    .informe-ventas__resumen-horizontal {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+        margin-bottom: 40px;
+    }
+    
+    .card-horizontal {
+        padding: 15px;
+        height: 100px;
+    }
+    
+    .card-horizontal__titulo {
+        font-size: 0.9rem;
+    }
+    
+    .card-horizontal__valor {
+        font-size: 1.3rem;
+    }
+    
+    .informe-ventas__tabla {
+        padding: 15px;
+    }
+    
+    .informe-ventas__subtitulo {
+        font-size: 1.2rem;
+        margin-bottom: 15px;
+    }
+    
+    .tabla-ventas__encabezado,
+    .tabla-ventas__fila {
+        grid-template-columns: repeat(4, 1fr);
+        padding: 10px;
+        font-size: 13px;
+    }
+}
+
+/* --------------------------------------------------
+   MEDIA QUERY: MÓVIL PEQUEÑO (hasta 480px)
+   Ajustes para grid simulado de tabla:
+   - Scroll horizontal elegante
+   - Evitar texto cortado
+   - Mantener proporciones
+-------------------------------------------------- */
+@media (max-width: 480px) {
+    .informe-ventas {
+        width: 100%;
+        padding: 0 10px;
+    }
+    
+    .informe-ventas__titulo {
+        font-size: 28px;
+        margin-bottom: 25px;
+    }
+    
+    .informe-ventas__resumen-horizontal {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        margin-bottom: 30px;
+    }
+    
+    .card-horizontal {
+        padding: 12px;
+        height: 90px;
+    }
+    
+    .card-horizontal__titulo {
+        font-size: 0.85rem;
+        margin-bottom: 4px;
+    }
+    
+    .card-horizontal__valor {
+        font-size: 1.2rem;
+    }
+    
+    .informe-ventas__tabla {
+        padding: 12px;
+        border-radius: 12px;
+    }
+    
+    .informe-ventas__subtitulo {
+        font-size: 1.1rem;
+        margin-bottom: 12px;
+    }
+    
+    /* Contenedor con scroll horizontal para la tabla simulada */
+    .informe-ventas__tabla {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .tabla-ventas {
+        min-width: 500px; /* Evita que el grid se aplaste */
+        width: 100%;
+    }
+    
+    .tabla-ventas__encabezado,
+    .tabla-ventas__fila {
+        grid-template-columns: repeat(4, 1fr);
+        padding: 8px 5px;
+        font-size: 11px;
+        min-width: 500px; /* Mantiene proporciones */
+    }
+    
+    .tabla-ventas__encabezado {
+        font-size: 12px;
+    }
+    
+    .tabla-ventas__encabezado span,
+    .tabla-ventas__fila span {
+        white-space: nowrap; /* Evita cortes de texto */
+    }
+}

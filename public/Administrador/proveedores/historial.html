@@ -1,6 +1,6 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
+<!DOCTYPE html> 
+<html lang="es"> 
+<head> 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Historial proveedores</title>
@@ -16,13 +16,13 @@
     <!-- Navbar -->
     <nav class="navbar-admin"> 
         <div class="navbar-admin__catalogo"> 
-            <img src="../../../assets/Imagenes/iconos/admin.png" alt="Admin"> 
-            <a href="../proveedores.html">
-                <h2>Volver al inicio</h2> 
-            </a>
+            <img src="../../../assets/Imagenes/iconos/admin.png" alt="Admin"> </a>
         </div> 
-        <h1 class="navbar-admin__title">AAC27</h1> 
-        <i class="fa-solid fa-house-chimney navbar-admin__home-icon"></i> 
+
+        <h1 class="navbar-admin__title">AAC27</h1>
+        <a href="../proveedores.html">
+            <i class="fa-solid fa-house-chimney navbar-admin__home-icon"></i>
+        </a> 
     </nav>
 
     <main class="titulo">
@@ -38,26 +38,35 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td>1234</td>
-                        <td>Nombre del proveedor</td>
-                        <td><textarea name="descripcion" class="editar-producto__input-area" rows="4">Compras mayores a 200mil para dejar a precios de por mayor...</textarea></td>
-                        
-                    </tr>
-                    <tr>
-                        <td>1234</td>
-                        <td>Nombre del proveedor</td>
-                        <td><textarea name="descripcion" class="editar-producto__input-area" rows="4">Compras mayores a 200mil para dejar a precios de por mayor...</textarea></td>
-                    </tr>
-                    <tr>
-                        <td>1234</td>
-                        <td>Nombre del proveedor</td>
-                        <td><textarea name="descripcion" class="editar-producto__input-area" rows="4">Compras mayores a 200mil para dejar a precios de por mayor...</textarea></td>
-                    </tr>
-                    
-                </tbody>
-            </table>
-
-        </section>
-    </main>
-</body>
+                        <td data-label="Codigo">1234</td>
+                        <td data-label="Nombre">Proveedor A</td>
+                        <td data-label="Observaciones">
+                            <textarea name="descripcion" class="editar-producto__input-area" rows="4">
+Compras mayores a 200mil para dejar a precios de por mayor...
+                            </textarea>
+                        </td>
+                    </tr> 
+                    <tr> 
+                        <td data-label="Codigo">1235</td> 
+                        <td data-label="Nombre">Proveedor B</td> 
+                        <td data-label="Observaciones">
+                            <textarea name="descripcion" class="editar-producto__input-area" rows="4">
+Compras mayores a 150mil para descuentos especiales...
+                            </textarea>
+                        </td> 
+                    </tr> 
+                    <tr> 
+                        <td data-label="Codigo">1236</td> 
+                        <td data-label="Nombre">Proveedor C</td> 
+                        <td data-label="Observaciones">
+                            <textarea name="descripcion" class="editar-producto__input-area" rows="4">
+Compras mayores a 300mil con envío gratuito...
+                            </textarea>
+                        </td> 
+                    </tr>  
+                </tbody> 
+            </table> 
+        </section> 
+    </main> 
+</body> 
 </html>

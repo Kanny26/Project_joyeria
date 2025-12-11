@@ -138,3 +138,212 @@ body {
 .ing-correo__input-group input::placeholder {
     color: var(--color-texto-placeholders);
 }
+
+/* ============================================================
+   MEDIA QUERIES - DESKTOP FIRST
+   ============================================================ */
+
+/* Pantallas extra grandes (>= 1440px) */
+@media (min-width: 1440px) {
+    .ing-correo__panel {
+        width: 600px;
+        height: 850px;
+    }
+    
+    .ing-correo__main {
+        width: 600px;
+        height: 850px;
+    }
+    
+    .ing-correo__caja {
+        width: 450px;
+        height: 600px;
+    }
+}
+
+/* Escritorio – estilos base (>= 1025px) - Sin cambios, estilos base */
+
+/* Tablet (769px a 1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .ing-correo {
+        flex-direction: column;
+        gap: 20px;
+        padding: 20px;
+    }
+    
+    .ing-correo__panel {
+        width: 90%;
+        max-width: 500px;
+        height: auto;
+        min-height: 400px;
+    }
+    
+    .ing-correo__panel-caja {
+        width: 90%;
+        height: auto;
+        padding: 20px;
+    }
+    
+    .ing-correo__panel-logo {
+        width: 280px;
+        height: 280px;
+    }
+    
+    .ing-correo__main {
+        width: 90%;
+        max-width: 500px;
+        height: 500px;
+    }
+    
+    .ing-correo__caja {
+        width: 90%;
+        max-width: 380px;
+        height: auto;
+        min-height: 500px;
+        padding: 25px;
+    }
+    
+    .ing-correo__caja h1 {
+        font-size: 22px;
+    }
+    
+    .ing-correo__caja p {
+        font-size: 14px;
+    }
+    
+    .ing-correo__input-group {
+        width: 100%;
+        max-width: 260px;
+    }
+}
+
+/* Phablet (481px a 768px) */
+@media (min-width: 481px) and (max-width: 768px) {
+    .ing-correo {
+        flex-direction: column;
+        gap: 15px;
+        padding: 15px;
+    }
+    
+    .ing-correo__panel {
+        width: 95%;
+        height: auto;
+        min-height: 350px;
+    }
+    
+    .ing-correo__panel-caja {
+        width: 95%;
+        height: auto;
+        padding: 15px;
+    }
+    
+    .ing-correo__panel-logo {
+        width: 220px;
+        height: 220px;
+    }
+    
+    .ing-correo__main {
+        width: 95%;
+        height: 450px;
+    }
+    
+    .ing-correo__caja {
+        width: 95%;
+        max-width: 360px;
+        height: auto;
+        min-height: 480px;
+        padding: 20px;
+    }
+    
+    .ing-correo__caja h1 {
+        font-size: 20px;
+    }
+    
+    .ing-correo__caja p {
+        font-size: 13px;
+    }
+    
+    .ing-correo__input-group {
+        width: 100%;
+        max-width: 250px;
+        height: 42px;
+    }
+    
+    .ing-correo__input-group input {
+        font-size: 14px;
+    }
+}
+
+/* Móvil pequeño (máx. 480px) */
+@media (max-width: 480px) {
+    body {
+        padding: 10px;
+    }
+    
+    .ing-correo {
+        flex-direction: column;
+        gap: 15px;
+        padding: 10px;
+        min-height: auto;
+    }
+    
+    .ing-correo__panel {
+        width: 100%;
+        height: auto;
+        min-height: 300px;
+        border-radius: 15px;
+    }
+    
+    .ing-correo__panel-caja {
+        width: 95%;
+        height: auto;
+        padding: 15px 10px;
+    }
+    
+    .ing-correo__panel-logo {
+        width: 180px;
+        height: 180px;
+        margin-top: 5px;
+    }
+    
+    .ing-correo__main {
+        width: 100%;
+        height: 400px;
+        border-radius: 15px;
+    }
+    
+    .ing-correo__caja {
+        width: 95%;
+        height: auto;
+        min-height: 400px;
+        padding: 20px 15px;
+    }
+    
+    .ing-correo__caja h1 {
+        font-size: 18px;
+        margin-bottom: 10px;
+    }
+    
+    .ing-correo__caja p {
+        font-size: 12px;
+        margin-bottom: 15px;
+        margin-top: 10px;
+    }
+    
+    .ing-correo__input-group {
+        width: 100%;
+        height: 40px;
+        margin-top: 15px;
+        padding: 0 12px;
+    }
+    
+    .ing-correo__input-group i {
+        font-size: 16px;
+        margin-right: 8px;
+    }
+    
+    .ing-correo__input-group input {
+        font-size: 13px;
+        padding-right: 25px;
+    }
+}

@@ -187,3 +187,178 @@ body {
 .contador-card__numero:hover {
     transform: scale(1.1);
 }
+
+/* ============================================================
+   MEDIA QUERIES - DESKTOP FIRST
+   ============================================================ */
+
+/* Pantallas extra grandes (>= 1440px) */
+@media (min-width: 1440px) {
+    .Usuarios-listar__tabla-contenedor {
+        width: 100%;
+        max-width: 1400px;
+    }
+    
+    .contadores {
+        max-width: 1400px;
+    }
+}
+
+/* Escritorio – estilos base (>= 1025px) - Sin cambios, estilos base */
+
+/* Tablet (769px a 1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+    body {
+        padding-top: 120px;
+    }
+    
+    .Usuarios-listar__titulo {
+        font-size: 42px;
+        margin-bottom: 35px;
+    }
+    
+    .Usuarios-listar__tabla-contenedor {
+        width: 95%;
+        max-width: 1000px;
+        padding: 8px;
+    }
+    
+    .Usuarios-listar__tabla {
+        width: 100%;
+        font-size: 14px;
+    }
+    
+    .Usuarios-listar__tabla th,
+    .Usuarios-listar__tabla td {
+        padding: 12px 8px;
+        font-size: 14px;
+    }
+    
+    .Usuarios-listar__tabla th {
+        font-size: 18px;
+    }
+    
+    .contadores {
+        gap: 20px;
+        padding: 15px;
+    }
+    
+    .contador-card {
+        min-width: 200px;
+        max-width: 240px;
+    }
+}
+
+/* Phablet (481px a 768px) */
+@media (min-width: 481px) and (max-width: 768px) {
+    body {
+        padding-top: 100px;
+    }
+    
+    .Usuarios-listar__titulo {
+        font-size: 36px;
+        margin-bottom: 30px;
+    }
+    
+    .Usuarios-listar__tabla-contenedor {
+        width: 98%;
+        padding: 5px;
+    }
+    
+    .Usuarios-listar__tabla {
+        width: 100%;
+        font-size: 13px;
+    }
+    
+    .Usuarios-listar__tabla th,
+    .Usuarios-listar__tabla td {
+        padding: 10px 6px;
+        font-size: 13px;
+    }
+    
+    .Usuarios-listar__tabla th {
+        font-size: 16px;
+    }
+    
+    .Usuarios-listar__acciones {
+        width: 120px;
+    }
+    
+    .contadores {
+        gap: 15px;
+    }
+    
+    .contador-card {
+        min-width: 180px;
+        max-width: 220px;
+    }
+}
+
+/* Móvil pequeño (máx. 480px) */
+@media (max-width: 480px) {
+    body {
+        padding-top: 80px;
+    }
+    
+    .Usuarios-listar {
+        padding: 0 10px;
+    }
+    
+    .Usuarios-listar__titulo {
+        font-size: 28px;
+        margin-bottom: 25px;
+    }
+    
+    .Usuarios-listar__tabla-contenedor {
+        width: 100%;
+        padding: 5px;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .Usuarios-listar__tabla {
+        width: 100%;
+        min-width: 600px; /* Evita que la tabla se aplaste */
+        font-size: 12px;
+    }
+    
+    .Usuarios-listar__tabla th,
+    .Usuarios-listar__tabla td {
+        padding: 8px 5px;
+        font-size: 12px;
+        white-space: nowrap; /* Evita cortes de texto en celdas */
+    }
+    
+    .Usuarios-listar__tabla th {
+        font-size: 14px;
+    }
+    
+    .estado {
+        font-size: 12px;
+        padding: 3px 8px;
+    }
+    
+    .Usuarios-listar__acciones {
+        width: 100px;
+    }
+    
+    .iconos {
+        gap: 6px;
+        flex-wrap: wrap;
+    }
+    
+    .iconos i {
+        font-size: 14px;
+    }
+    
+    .contadores {
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .contador-card {
+        width: 100%;
+        min-width: 100%;
+        max-width: 100%;
+    }
+}

@@ -208,6 +208,199 @@ body {
     transform: translateX(100%);
 }
 
+/* ============================================================
+   MEDIA QUERIES - DESKTOP FIRST
+   ============================================================ */
+
+/* Pantallas extra grandes (>= 1440px) */
+@media (min-width: 1440px) {
+    .panel-admin {
+        width: 1600px;
+    }
+    
+    .panel-admin__tarjetas-titulo {
+        font-size: 52px;
+    }
+    
+    .panel-admin__tarjetas-contenedor {
+        gap: 60px;
+    }
+}
+
+/* Escritorio – estilos base (>= 1025px) - Sin cambios, estilos base */
+
+/* Tablet (769px a 1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+    body {
+        padding-top: 120px;
+    }
+    
+    .panel-admin {
+        width: 95%;
+        max-width: 900px;
+        padding: 0 15px;
+    }
+    
+    .panel-admin__tarjetas-titulo {
+        font-size: 42px;
+        margin-bottom: 35px;
+    }
+    
+    .panel-admin__tarjetas-contenedor {
+        gap: 35px;
+        padding: 0 30px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .panel-admin__tarjeta {
+        width: 220px;
+    }
+    
+    .panel-admin__tarjeta-circulo {
+        width: 170px;
+        height: 170px;
+    }
+    
+    .panel-admin__tarjeta-circulo img {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .panel-admin__tarjeta-h3 {
+        width: 180px;
+        height: 48px;
+    }
+    
+    .panel-admin__tarjeta-h3 h3 {
+        font-size: 22px;
+    }
+}
+
+/* Phablet (481px a 768px) */
+@media (min-width: 481px) and (max-width: 768px) {
+    body {
+        padding-top: 100px;
+    }
+    
+    .panel-admin {
+        width: 95%;
+        max-width: 700px;
+        padding: 0 12px;
+        height: 75px;
+    }
+    
+    .panel-admin__tarjetas-titulo {
+        font-size: 36px;
+        margin-bottom: 30px;
+    }
+    
+    .panel-admin__tarjetas-contenedor {
+        gap: 25px;
+        padding: 0 20px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .panel-admin__tarjeta {
+        width: 200px;
+    }
+    
+    .panel-admin__tarjeta-circulo {
+        width: 150px;
+        height: 150px;
+    }
+    
+    .panel-admin__tarjeta-circulo img {
+        width: 90px;
+        height: 90px;
+    }
+    
+    .panel-admin__tarjeta-h3 {
+        width: 160px;
+        height: 45px;
+    }
+    
+    .panel-admin__tarjeta-h3 h3 {
+        font-size: 20px;
+    }
+}
+
+/* Móvil pequeño (máx. 480px) */
+@media (max-width: 480px) {
+    body {
+        padding-top: 80px;
+    }
+    
+    .panel-admin {
+        width: 95%;
+        padding: 0 10px;
+        height: 60px;
+    }
+    
+    .panel-admin__circulo {
+        width: 45px;
+        height: 45px;
+    }
+    
+    .panel-admin__circulo img {
+        width: 35px;
+        height: 35px;
+    }
+    
+    .panel-admin__circulo h2 {
+        display: none;
+    }
+    
+    .panel-admin__titulo {
+        font-size: 24px;
+    }
+    
+    .panel-admin__icono {
+        font-size: 30px;
+    }
+    
+    .panel-admin__tarjetas {
+        padding: 0 10px;
+    }
+    
+    .panel-admin__tarjetas-titulo {
+        font-size: 28px;
+        margin-bottom: 25px;
+    }
+    
+    .panel-admin__tarjetas-contenedor {
+        flex-direction: column;
+        gap: 20px;
+        padding: 0;
+    }
+    
+    .panel-admin__tarjeta {
+        width: 100%;
+        max-width: 280px;
+    }
+    
+    .panel-admin__tarjeta-circulo {
+        width: 130px;
+        height: 130px;
+    }
+    
+    .panel-admin__tarjeta-circulo img {
+        width: 80px;
+        height: 80px;
+    }
+    
+    .panel-admin__tarjeta-h3 {
+        width: 100%;
+        max-width: 200px;
+        height: 42px;
+    }
+    
+    .panel-admin__tarjeta-h3 h3 {
+        font-size: 18px;
+    }
+}
+
 /* Elementos decorativos izquierda y derecha */
 .panel-admin__tarjeta-h3-izquierda,
 .panel-admin__tarjeta-h3-derecha {
@@ -239,4 +432,197 @@ body {
 
 .panel-admin__tarjeta-h3:hover .panel-admin__tarjeta-h3-derecha {
     transform: translateX(100%);
+}
+
+/* ============================================================
+   MEDIA QUERIES - DESKTOP FIRST
+   ============================================================ */
+
+/* Pantallas extra grandes (>= 1440px) */
+@media (min-width: 1440px) {
+    .panel-admin {
+        width: 1600px;
+    }
+    
+    .panel-admin__tarjetas-titulo {
+        font-size: 52px;
+    }
+    
+    .panel-admin__tarjetas-contenedor {
+        gap: 60px;
+    }
+}
+
+/* Escritorio – estilos base (>= 1025px) - Sin cambios, estilos base */
+
+/* Tablet (769px a 1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+    body {
+        padding-top: 120px;
+    }
+    
+    .panel-admin {
+        width: 95%;
+        max-width: 900px;
+        padding: 0 15px;
+    }
+    
+    .panel-admin__tarjetas-titulo {
+        font-size: 42px;
+        margin-bottom: 35px;
+    }
+    
+    .panel-admin__tarjetas-contenedor {
+        gap: 35px;
+        padding: 0 30px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .panel-admin__tarjeta {
+        width: 220px;
+    }
+    
+    .panel-admin__tarjeta-circulo {
+        width: 170px;
+        height: 170px;
+    }
+    
+    .panel-admin__tarjeta-circulo img {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .panel-admin__tarjeta-h3 {
+        width: 180px;
+        height: 48px;
+    }
+    
+    .panel-admin__tarjeta-h3 h3 {
+        font-size: 22px;
+    }
+}
+
+/* Phablet (481px a 768px) */
+@media (min-width: 481px) and (max-width: 768px) {
+    body {
+        padding-top: 100px;
+    }
+    
+    .panel-admin {
+        width: 95%;
+        max-width: 700px;
+        padding: 0 12px;
+        height: 75px;
+    }
+    
+    .panel-admin__tarjetas-titulo {
+        font-size: 36px;
+        margin-bottom: 30px;
+    }
+    
+    .panel-admin__tarjetas-contenedor {
+        gap: 25px;
+        padding: 0 20px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .panel-admin__tarjeta {
+        width: 200px;
+    }
+    
+    .panel-admin__tarjeta-circulo {
+        width: 150px;
+        height: 150px;
+    }
+    
+    .panel-admin__tarjeta-circulo img {
+        width: 90px;
+        height: 90px;
+    }
+    
+    .panel-admin__tarjeta-h3 {
+        width: 160px;
+        height: 45px;
+    }
+    
+    .panel-admin__tarjeta-h3 h3 {
+        font-size: 20px;
+    }
+}
+
+/* Móvil pequeño (máx. 480px) */
+@media (max-width: 480px) {
+    body {
+        padding-top: 80px;
+    }
+    
+    .panel-admin {
+        width: 95%;
+        padding: 0 10px;
+        height: 60px;
+    }
+    
+    .panel-admin__circulo {
+        width: 45px;
+        height: 45px;
+    }
+    
+    .panel-admin__circulo img {
+        width: 35px;
+        height: 35px;
+    }
+    
+    .panel-admin__circulo h2 {
+        display: none;
+    }
+    
+    .panel-admin__titulo {
+        font-size: 24px;
+    }
+    
+    .panel-admin__icono {
+        font-size: 30px;
+    }
+    
+    .panel-admin__tarjetas {
+        padding: 0 10px;
+    }
+    
+    .panel-admin__tarjetas-titulo {
+        font-size: 28px;
+        margin-bottom: 25px;
+    }
+    
+    .panel-admin__tarjetas-contenedor {
+        flex-direction: column;
+        gap: 20px;
+        padding: 0;
+    }
+    
+    .panel-admin__tarjeta {
+        width: 100%;
+        max-width: 280px;
+    }
+    
+    .panel-admin__tarjeta-circulo {
+        width: 130px;
+        height: 130px;
+    }
+    
+    .panel-admin__tarjeta-circulo img {
+        width: 80px;
+        height: 80px;
+    }
+    
+    .panel-admin__tarjeta-h3 {
+        width: 100%;
+        max-width: 200px;
+        height: 42px;
+    }
+    
+    .panel-admin__tarjeta-h3 h3 {
+        font-size: 18px;
+    }
 }

@@ -99,3 +99,117 @@ body {
 .panel-productos__progreso div:hover {
     opacity: 0.85;
 }
+
+/* ============================================================
+   MEDIA QUERIES - DESKTOP FIRST
+   ============================================================ */
+
+/* Pantallas extra grandes (>= 1440px) */
+@media (min-width: 1440px) {
+    .panel-productos {
+        width: 560px;
+        padding: 45px 40px;
+    }
+}
+
+/* Escritorio – estilos base (>= 1025px) - Sin cambios, estilos base */
+
+/* Tablet (769px a 1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .barra-navegacion {
+        max-width: 900px;
+        margin-bottom: 40px;
+    }
+    
+    .panel-productos {
+        width: 90%;
+        max-width: 480px;
+        padding: 35px 30px;
+        margin-top: 120px;
+    }
+    
+    .panel-productos__titulo {
+        margin-bottom: 20px;
+    }
+    
+    .panel-productos__barra {
+        margin-bottom: 20px;
+    }
+}
+
+/* Phablet (481px a 768px) */
+@media (min-width: 481px) and (max-width: 768px) {
+    .barra-navegacion {
+        max-width: 700px;
+        margin-bottom: 35px;
+        padding: 0 15px;
+    }
+    
+    .panel-productos {
+        width: 95%;
+        max-width: 420px;
+        padding: 30px 25px;
+        margin-top: 100px;
+    }
+    
+    .panel-productos__titulo {
+        margin-bottom: 18px;
+    }
+    
+    .panel-productos__barra {
+        margin-bottom: 18px;
+    }
+    
+    .panel-productos__nombre {
+        font-size: 0.9rem;
+    }
+    
+    .panel-productos__progreso {
+        height: 12px;
+    }
+    
+    .panel-productos__valor {
+        font-size: 0.85rem;
+    }
+}
+
+/* Móvil pequeño (máx. 480px) */
+@media (max-width: 480px) {
+    .barra-navegacion {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+        max-width: 100%;
+        padding: 0 10px;
+        margin-bottom: 25px;
+    }
+    
+    .panel-productos {
+        width: 100%;
+        padding: 25px 20px;
+        margin-top: 80px;
+        border-radius: 18px;
+    }
+    
+    .panel-productos__titulo {
+        margin-bottom: 18px;
+    }
+    
+    .panel-productos__barra {
+        margin-bottom: 15px;
+    }
+    
+    .panel-productos__nombre {
+        font-size: 0.85rem;
+        margin-bottom: 5px;
+    }
+    
+    .panel-productos__progreso {
+        height: 10px;
+    }
+    
+    .panel-productos__valor {
+        font-size: 0.8rem;
+        margin-top: 4px;
+    }
+}

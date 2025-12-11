@@ -101,3 +101,137 @@ body {
     font-size: 1rem;
     margin: 4px 0;
 }
+
+/* ============================================================
+   MEDIA QUERIES - DESKTOP FIRST
+   ============================================================ */
+
+/* Pantallas extra grandes (>= 1440px) */
+@media (min-width: 1440px) {
+    .estadisticas-venta {
+        width: 520px;
+        padding: 40px;
+    }
+}
+
+/* Escritorio – estilos base (>= 1025px) - Sin cambios, estilos base */
+
+/* Tablet (769px a 1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .barra-navegacion {
+        max-width: 900px;
+        margin-bottom: 40px;
+    }
+    
+    .estadisticas-venta {
+        width: 90%;
+        max-width: 450px;
+        padding: 30px;
+        margin-top: 120px;
+    }
+    
+    .estadisticas-venta__titulo {
+        font-size: 1.6rem;
+        margin-bottom: 18px;
+    }
+    
+    .estadisticas-venta__monto {
+        font-size: 2rem;
+    }
+    
+    .estadisticas-venta__grafico {
+        height: 80px;
+    }
+}
+
+/* Phablet (481px a 768px) */
+@media (min-width: 481px) and (max-width: 768px) {
+    .barra-navegacion {
+        max-width: 700px;
+        margin-bottom: 35px;
+        padding: 0 15px;
+    }
+    
+    .barra-navegacion__titulo {
+        font-size: 1.3rem;
+    }
+    
+    .estadisticas-venta {
+        width: 95%;
+        max-width: 400px;
+        padding: 25px;
+        margin-top: 100px;
+    }
+    
+    .estadisticas-venta__titulo {
+        font-size: 1.4rem;
+        margin-bottom: 15px;
+    }
+    
+    .estadisticas-venta__monto {
+        font-size: 1.8rem;
+    }
+    
+    .estadisticas-venta__crecimiento {
+        font-size: 0.85rem;
+    }
+    
+    .estadisticas-venta__grafico {
+        height: 70px;
+        margin-bottom: 20px;
+    }
+    
+    .estadisticas-venta__detalles p {
+        font-size: 0.9rem;
+    }
+}
+
+/* Móvil pequeño (máx. 480px) */
+@media (max-width: 480px) {
+    .barra-navegacion {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+        max-width: 100%;
+        padding: 0 10px;
+        margin-bottom: 25px;
+    }
+    
+    .barra-navegacion__titulo {
+        font-size: 1.1rem;
+    }
+    
+    .barra-navegacion__icono-casa {
+        font-size: 1.2rem;
+    }
+    
+    .estadisticas-venta {
+        width: 100%;
+        padding: 20px;
+        margin-top: 80px;
+        border-radius: 15px;
+    }
+    
+    .estadisticas-venta__titulo {
+        font-size: 1.2rem;
+        margin-bottom: 15px;
+    }
+    
+    .estadisticas-venta__monto {
+        font-size: 1.6rem;
+    }
+    
+    .estadisticas-venta__crecimiento {
+        font-size: 0.8rem;
+    }
+    
+    .estadisticas-venta__grafico {
+        height: 60px;
+        margin-bottom: 18px;
+    }
+    
+    .estadisticas-venta__detalles p {
+        font-size: 0.85rem;
+        margin: 3px 0;
+    }
+}

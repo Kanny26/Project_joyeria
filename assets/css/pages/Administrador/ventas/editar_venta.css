@@ -172,5 +172,165 @@ body {
 }
 
 .contador-card__numero:hover {
-  transform: scale(1.1);
+    transform: scale(1.1);
+}
+
+/* ============================================================
+   MEDIA QUERIES - DESKTOP FIRST
+   ============================================================ */
+
+/* Pantallas extra grandes (>= 1440px) */
+@media (min-width: 1440px) {
+    .Ventas-editar__tabla-contenedor {
+        width: 100%;
+        max-width: 1400px;
+    }
+    
+    .contadores {
+        max-width: 1400px;
+    }
+}
+
+/* Escritorio – estilos base (>= 1025px) - Sin cambios, estilos base */
+
+/* Tablet (769px a 1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+    body {
+        padding-top: 120px;
+    }
+    
+    .Ventas-editar__tabla-contenedor {
+        width: 95%;
+        max-width: 1000px;
+        padding: 8px;
+    }
+    
+    .Ventas-editar__tabla {
+        width: 100%;
+        font-size: 14px;
+    }
+    
+    .Ventas-editar__tabla th,
+    .Ventas-editar__tabla td {
+        padding: 12px 8px;
+        font-size: 14px;
+    }
+    
+    .Ventas-editar__tabla th {
+        font-size: 18px;
+    }
+    
+    .contadores {
+        gap: 20px;
+    }
+    
+    .contador-card {
+        min-width: 200px;
+        max-width: 240px;
+    }
+}
+
+/* Phablet (481px a 768px) */
+@media (min-width: 481px) and (max-width: 768px) {
+    body {
+        padding-top: 100px;
+    }
+    
+    .Ventas-editar__tabla-contenedor {
+        width: 98%;
+        padding: 5px;
+    }
+    
+    .Ventas-editar__tabla {
+        width: 100%;
+        font-size: 13px;
+    }
+    
+    .Ventas-editar__tabla th,
+    .Ventas-editar__tabla td {
+        padding: 10px 6px;
+        font-size: 13px;
+    }
+    
+    .Ventas-editar__tabla th {
+        font-size: 16px;
+    }
+    
+    .Ventas-editar__acciones {
+        width: 120px;
+    }
+    
+    .contadores {
+        gap: 15px;
+    }
+    
+    .contador-card {
+        min-width: 180px;
+        max-width: 220px;
+    }
+}
+
+/* Móvil pequeño (máx. 480px) */
+@media (max-width: 480px) {
+    body {
+        padding-top: 80px;
+    }
+    
+    .Ventas-editar__tabla-contenedor {
+        width: 100%;
+        padding: 5px;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .Ventas-editar__tabla {
+        width: 100%;
+        min-width: 600px; /* Evita que la tabla se aplaste */
+        font-size: 12px;
+    }
+    
+    .Ventas-editar__tabla th,
+    .Ventas-editar__tabla td {
+        padding: 8px 5px;
+        font-size: 12px;
+        white-space: nowrap; /* Evita cortes de texto en celdas */
+    }
+    
+    .Ventas-editar__tabla th {
+        font-size: 14px;
+    }
+    
+    .estado {
+        font-size: 12px;
+        padding: 3px 8px;
+    }
+    
+    #select {
+        font-size: 12px;
+        padding: 6px;
+    }
+    
+    .Ventas-editar__acciones {
+        width: 100px;
+    }
+    
+    .iconos {
+        gap: 6px;
+        flex-wrap: wrap;
+    }
+    
+    .iconos i {
+        font-size: 14px;
+    }
+    
+    .contadores {
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .contador-card {
+        width: 100%;
+        min-width: 100%;
+        max-width: 100%;
+    }
 }

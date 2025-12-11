@@ -109,3 +109,143 @@ body {
     top: -50px;
     left: -50px;
 }
+
+/* ============================================================
+   MEDIA QUERIES - DESKTOP FIRST
+   ============================================================ */
+
+/* Pantallas extra grandes (>= 1440px) */
+@media (min-width: 1440px) {
+    .splash__tarjeta {
+        padding: 60px 50px;
+        max-width: 650px;
+    }
+    
+    .splash__titulo {
+        font-size: 2.8rem;
+    }
+    
+    .splash__descripcion {
+        font-size: 1.1rem;
+    }
+}
+
+/* Escritorio – estilos base (>= 1025px) - Sin cambios, estilos base */
+
+/* Tablet (769px a 1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .splash__tarjeta {
+        padding: 45px 35px;
+        max-width: 550px;
+    }
+    
+    .splash__titulo {
+        font-size: 2.2rem;
+    }
+    
+    .splash__descripcion {
+        font-size: 0.95rem;
+    }
+    
+    .splash__texto {
+        font-size: 1rem;
+    }
+    
+    .splash__boton {
+        padding: 12px 24px;
+        font-size: 0.95rem;
+    }
+}
+
+/* Phablet (481px a 768px) */
+@media (min-width: 481px) and (max-width: 768px) {
+    .splash__tarjeta {
+        padding: 35px 25px;
+        max-width: 450px;
+    }
+    
+    .splash__titulo {
+        font-size: 1.8rem;
+        margin-bottom: 12px;
+    }
+    
+    .splash__descripcion {
+        font-size: 0.9rem;
+        margin-bottom: 20px;
+    }
+    
+    .splash__texto {
+        font-size: 0.95rem;
+        margin-bottom: 25px;
+    }
+    
+    .splash__grupo-botones {
+        gap: 15px;
+    }
+    
+    .splash__boton {
+        padding: 12px 20px;
+        font-size: 0.9rem;
+    }
+    
+    .splash__boton-icono {
+        width: 24px;
+        height: 24px;
+        margin-right: 10px;
+    }
+}
+
+/* Móvil pequeño (máx. 480px) */
+@media (max-width: 480px) {
+    body {
+        padding: 15px;
+    }
+    
+    .splash__tarjeta {
+        padding: 25px 20px;
+        max-width: 100%;
+        border-radius: 20px;
+    }
+    
+    .splash__titulo {
+        font-size: 1.5rem;
+        margin-bottom: 10px;
+    }
+    
+    .splash__descripcion {
+        font-size: 0.85rem;
+        margin-bottom: 15px;
+        line-height: 1.4;
+    }
+    
+    .splash__texto {
+        font-size: 0.85rem;
+        margin-bottom: 20px;
+    }
+    
+    .splash__grupo-botones {
+        flex-direction: column;
+        gap: 12px;
+        width: 100%;
+    }
+    
+    .splash__boton {
+        width: 100%;
+        padding: 12px 18px;
+        font-size: 0.85rem;
+        border-radius: 18px;
+    }
+    
+    .splash__boton-icono {
+        width: 20px;
+        height: 20px;
+        margin-right: 8px;
+    }
+    
+    .splash__decoracion {
+        width: 150px;
+        height: 150px;
+        top: -30px;
+        left: -30px;
+    }
+}

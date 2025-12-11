@@ -150,3 +150,135 @@ body {
 .catalogo-admin__titulo-tarjeta:hover {
     color: var(--color-texto-hover-cards);
 }
+
+/* ============================================================
+   MEDIA QUERIES - DESKTOP FIRST
+   ============================================================ */
+
+/* Pantallas extra grandes (>= 1440px) */
+@media (min-width: 1440px) {
+    .catalogo-admin__contenedor {
+        max-width: 1400px;
+        gap: 60px;
+    }
+}
+
+/* Escritorio – estilos base (>= 1025px) - Sin cambios, estilos base */
+
+/* Tablet (769px a 1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+    body {
+        padding-top: 120px;
+    }
+    
+    .catalogo-admin__titulo {
+        font-size: 42px;
+        margin-bottom: 35px;
+    }
+    
+    .catalogo-admin__contenedor {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 30px;
+        max-width: 900px;
+    }
+    
+    .catalogo-admin__tarjeta {
+        width: 100%;
+    }
+    
+    .catalogo-admin__icono {
+        width: 150px;
+        height: 150px;
+    }
+    
+    .catalogo-admin__icono img {
+        width: 90px;
+        height: 90px;
+    }
+    
+    .catalogo-admin__titulo-tarjeta {
+        width: 200px;
+        height: 55px;
+        font-size: 20px;
+    }
+}
+
+/* Phablet (481px a 768px) */
+@media (min-width: 481px) and (max-width: 768px) {
+    body {
+        padding-top: 100px;
+    }
+    
+    .catalogo-admin__titulo {
+        font-size: 36px;
+        margin-bottom: 30px;
+    }
+    
+    .catalogo-admin__contenedor {
+        grid-template-columns: repeat(1, 2fr);
+        gap: 25px;
+        max-width: 600px;
+    }
+    
+    .catalogo-admin__tarjeta {
+        width: 100%;
+    }
+    
+    .catalogo-admin__icono {
+        width: 130px;
+        height: 130px;
+    }
+    
+    .catalogo-admin__icono img {
+        width: 80px;
+        height: 80px;
+    }
+    
+    .catalogo-admin__titulo-tarjeta {
+        width: 180px;
+        height: 50px;
+        font-size: 18px;
+    }
+}
+
+/* Móvil pequeño (máx. 480px) */
+@media (max-width: 480px) {
+    body {
+        padding-top: 80px;
+    }
+    
+    .catalogo-admin__titulo {
+        font-size: 28px;
+        margin-bottom: 25px;
+    }
+    
+    .catalogo-admin__contenedor {
+        grid-template-columns: repeat(2, 2fr);
+        gap: 20px;
+        max-width: 100%;
+        padding: 0 10px;
+    }
+    
+    .catalogo-admin__tarjeta {
+        width: 100%;
+        max-width: 280px;
+        margin: 0 auto;
+    }
+    
+    .catalogo-admin__icono {
+        width: 120px;
+        height: 120px;
+    }
+    
+    .catalogo-admin__icono img {
+        width: 70px;
+        height: 70px;
+    }
+    
+    .catalogo-admin__titulo-tarjeta {
+        width: 100%;
+        max-width: 180px;
+        height: 48px;
+        font-size: 16px;
+    }
+}
