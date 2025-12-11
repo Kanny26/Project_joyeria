@@ -246,98 +246,73 @@ body {
         padding: 12px;
     }
 }
-
-/* --------------------------------------------------
-   MEDIA QUERY: MÓVIL PEQUEÑO (hasta 480px)
-   Ajustes para grid simulado de tabla:
-   - Scroll horizontal elegante
-   - Evitar texto cortado
-   - Mantener proporciones
--------------------------------------------------- */
+/* Móvil pequeño: hasta 480px */
 @media (max-width: 480px) {
+
     .registro-venta {
         width: 100%;
         padding: 15px;
         margin-top: 80px;
         border-radius: 10px;
     }
-    
+
     .registro-venta__titulo {
         font-size: 22px;
         margin-bottom: 15px;
     }
-    
+
     .registro-venta__fila-superior {
         flex-direction: column;
         gap: 10px;
         margin-bottom: 15px;
     }
-    
+
     .registro-venta__cuadro {
         padding: 12px;
         border-radius: 8px;
     }
-    
-    .datos-cliente__fila {
-        margin-bottom: 12px;
+
+    .datos-cliente__fila,
+    .totales__fila {
+        flex-direction: column;
+        margin-bottom: 10px;
     }
-    
-    .datos-cliente__label {
+
+    .datos-cliente__label,
+    .totales__label {
         font-size: 13px;
         margin-bottom: 4px;
     }
-    
-    .datos-cliente__input {
-        font-size: 12px;
-        padding: 8px;
-    }
-    
-    .totales__fila {
-        margin-bottom: 10px;
-    }
-    
-    .totales__label {
-        font-size: 13px;
-    }
-    
+
+    .datos-cliente__input,
     .totales__input {
-        width: 90px;
+        width: 100%;
         font-size: 12px;
         padding: 7px;
     }
-    
-    /* Contenedor con scroll horizontal para la tabla simulada */
-    .registro-venta__tabla {
-        margin-bottom: 15px;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        width: 100%;
-    }
-    
-    .tabla-productos__encabezado {
-        grid-template-columns: 2fr 1fr 1fr 1fr;
-        font-size: 12px;
-        padding: 8px 5px;
-        min-width: 500px; /* Evita que el grid se aplaste */
-        width: 100%;
-    }
-    
+
+    /* Tabla productos: grid flexible que se ajusta al ancho */
+    .tabla-productos__encabezado,
     .tabla-productos__fila {
-        grid-template-columns: 2fr 1fr 1fr 1fr;
-        min-width: 500px; /* Evita que el grid se aplaste */
+        display: grid;
+        grid-template-columns: 30% 20% 20% 30%;
+        /* gap: 5px; */
         width: 100%;
     }
-    
-    .tabla-productos__columna,
-    .tabla-productos__fila span {
-        white-space: nowrap; /* Evita cortes de texto */
-    }
-    
-    .tabla-productos__input {
+
+    .tabla-productos__columna {
+        text-align: left;
         font-size: 12px;
-        padding: 6px 5px;
+        padding: 4px 2px;
     }
-    
+
+    .tabla-productos__input {
+        width: 100%;
+        font-size: 12px;
+        padding: 6px;
+        box-sizing: border-box;
+    }
+
     .registro-venta__boton {
         font-size: 15px;
         padding: 12px;

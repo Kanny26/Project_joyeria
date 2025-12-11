@@ -19,6 +19,7 @@ body {
     padding-top: 140px;
 }
 
+/* Tabla */
 .Ventas-listar__tabla-contenedor{
     width: var(--ancho-tabla-Ventas);
     overflow-x: auto;
@@ -30,10 +31,8 @@ body {
 
 .Ventas-listar__tabla{
     width: var(--ancho-interno-tabla-Ventas);
-    height: var(--alto-interno-tabla-Ventas);
     border-collapse: collapse;
     border-radius: 12px;
-    overflow: hidden;
 }
 
 .Ventas-listar__tabla th, 
@@ -41,7 +40,7 @@ body {
     padding: 15px 10px;
     text-align: center;
     border-left: 1px solid saddlebrown;
-    border-bottom: 1px solid saddlebrown
+    border-bottom: 1px solid saddlebrown;
 }
 
 .Ventas-listar__tabla th {
@@ -58,6 +57,7 @@ body {
     border: 1px solid saddlebrown;
 }
 
+/* Estado */
 .estado {
     padding: 5px 12px;
     border-radius: 10px;
@@ -74,21 +74,18 @@ body {
     background-color: rgb(236, 93, 93);
 }
 
-/* Columna de acciones */
+/* Acciones */
 .Ventas-listar__acciones {
     width: 150px;
 }
 
-/* Contenedor de iconos */
 .iconos {
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 12px;
-    margin: 0 auto;
 }
 
-/* Estilos de los iconos */
 .iconos i {
     font-size: 18px;
     padding: 6px;
@@ -97,6 +94,7 @@ body {
     transition: transform .2s ease;
 }
 
+/* Contadores */
 .contadores {
     display: flex;
     justify-content: center;
@@ -149,3 +147,71 @@ body {
     transform: scale(1.1);
 }
 
+/* ===== Media Queries para móviles ===== */
+@media screen and (max-width: 768px) {
+
+    body {
+        padding-top: 100px;
+    }
+
+    /* Contenedor de tabla */
+    .Ventas-listar__tabla-contenedor {
+        width: 95%;
+        padding: 0;
+        box-shadow: none;
+    }
+
+    /* Ocultar encabezado */
+    .Ventas-listar__tabla thead {
+        display: none;
+    }
+
+    .Ventas-listar__tabla tbody,
+    .Ventas-listar__tabla tr,
+    .Ventas-listar__tabla td {
+        display: block;
+        width: 100%;
+    }
+
+    .Ventas-listar__tabla tr {
+        margin-bottom: 20px;
+        border: 1px solid var(--color-fondo-card-productos);
+        border-radius: 15px;
+        padding: 10px;
+        background-color: var(--color-fondo-card-productos);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    .Ventas-listar__tabla td {
+        text-align: right;
+        padding: 10px 15px;
+        position: relative;
+        border: none;
+        border-bottom: 1px solid rgba(0,0,0,0.1);
+    }
+
+    .Ventas-listar__tabla td::before {
+        content: attr(data-label);
+        float: left;
+        font-weight: 600;
+        color: #333;
+    }
+
+    .Ventas-listar__acciones {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        margin-top: 10px;
+    }
+
+    /* Contadores verticales */
+    .contadores {
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .contador-card {
+        max-width: 90%;
+    }
+}

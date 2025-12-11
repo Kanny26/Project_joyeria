@@ -19,6 +19,7 @@ body {
   padding-top: 140px;
 }
 
+/* Tabla */
 .Ventas-editar__tabla-contenedor {
   width: var(--ancho-tabla-Ventas);
   overflow-x: auto;
@@ -30,7 +31,6 @@ body {
 
 .Ventas-editar__tabla {
   width: var(--ancho-interno-tabla-Ventas);
-  height: var(--alto-interno-tabla-Ventas);
   border-collapse: collapse;
   border-radius: 12px;
   overflow: hidden;
@@ -41,7 +41,7 @@ body {
   padding: 15px 10px;
   text-align: center;
   border-left: 1px solid saddlebrown;
-  border-bottom: 1px solid saddlebrown
+  border-bottom: 1px solid saddlebrown;
 }
 
 .Ventas-editar__tabla th {
@@ -58,6 +58,7 @@ body {
   border: 1px solid saddlebrown;
 }
 
+/* Estado y select */
 .estado {
   padding: 5px 12px;
   border-radius: 10px;
@@ -73,6 +74,8 @@ body {
   color: rgb(0, 0, 0);
   padding: 8px;
   border-radius: 5px; 
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .estado--pagado {
@@ -87,42 +90,18 @@ body {
   background-color: rgb(236, 93, 93);
 }
 
+/* Cambiar color dinámicamente en select */
 #select:has(option[value="rojo"]:checked) {
   background-color: rgb(236, 93, 93);
 }
 #select:has(option[value="amarillo"]:checked) {
   background-color: rgb(249, 255, 126);
 }
-
 #select:has(option[value="verde"]:checked) {
   background-color: rgb(120, 172, 120);
 }
 
-
-
-/* Columna de acciones */
-.Ventas-editar__acciones {
-  width: 150px;
-}
-
-/* Contenedor de iconos */
-.iconos {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 12px;
-  margin: 0 auto;
-}
-
-/* Estilos de los iconos */
-.iconos i {
-  font-size: 18px;
-  padding: 6px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: transform .2s ease;
-}
-
+/* Contadores */
 .contadores {
   display: flex;
   justify-content: center;
@@ -175,162 +154,62 @@ body {
     transform: scale(1.1);
 }
 
-/* ============================================================
-   MEDIA QUERIES - DESKTOP FIRST
-   ============================================================ */
+/* ===== Media Queries ===== */
+@media screen and (max-width: 768px) {
 
-/* Pantallas extra grandes (>= 1440px) */
-@media (min-width: 1440px) {
-    .Ventas-editar__tabla-contenedor {
-        width: 100%;
-        max-width: 1400px;
-    }
-    
-    .contadores {
-        max-width: 1400px;
-    }
-}
-
-/* Escritorio – estilos base (>= 1025px) - Sin cambios, estilos base */
-
-/* Tablet (769px a 1024px) */
-@media (min-width: 769px) and (max-width: 1024px) {
-    body {
-        padding-top: 120px;
-    }
-    
-    .Ventas-editar__tabla-contenedor {
-        width: 95%;
-        max-width: 1000px;
-        padding: 8px;
-    }
-    
-    .Ventas-editar__tabla {
-        width: 100%;
-        font-size: 14px;
-    }
-    
-    .Ventas-editar__tabla th,
-    .Ventas-editar__tabla td {
-        padding: 12px 8px;
-        font-size: 14px;
-    }
-    
-    .Ventas-editar__tabla th {
-        font-size: 18px;
-    }
-    
-    .contadores {
-        gap: 20px;
-    }
-    
-    .contador-card {
-        min-width: 200px;
-        max-width: 240px;
-    }
-}
-
-/* Phablet (481px a 768px) */
-@media (min-width: 481px) and (max-width: 768px) {
     body {
         padding-top: 100px;
     }
-    
-    .Ventas-editar__tabla-contenedor {
-        width: 98%;
-        padding: 5px;
-    }
-    
-    .Ventas-editar__tabla {
-        width: 100%;
-        font-size: 13px;
-    }
-    
-    .Ventas-editar__tabla th,
-    .Ventas-editar__tabla td {
-        padding: 10px 6px;
-        font-size: 13px;
-    }
-    
-    .Ventas-editar__tabla th {
-        font-size: 16px;
-    }
-    
-    .Ventas-editar__acciones {
-        width: 120px;
-    }
-    
-    .contadores {
-        gap: 15px;
-    }
-    
-    .contador-card {
-        min-width: 180px;
-        max-width: 220px;
-    }
-}
 
-/* Móvil pequeño (máx. 480px) */
-@media (max-width: 480px) {
-    body {
-        padding-top: 80px;
-    }
-    
     .Ventas-editar__tabla-contenedor {
-        width: 100%;
-        padding: 5px;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
+        width: 95%;
+        padding: 0;
+        box-shadow: none;
     }
-    
-    .Ventas-editar__tabla {
-        width: 100%;
-        min-width: 600px; /* Evita que la tabla se aplaste */
-        font-size: 12px;
+
+    .Ventas-editar__tabla thead {
+        display: none;
     }
-    
-    .Ventas-editar__tabla th,
+
+    .Ventas-editar__tabla tbody,
+    .Ventas-editar__tabla tr,
     .Ventas-editar__tabla td {
-        padding: 8px 5px;
-        font-size: 12px;
-        white-space: nowrap; /* Evita cortes de texto en celdas */
+        display: block;
+        width: 100%;
     }
-    
-    .Ventas-editar__tabla th {
-        font-size: 14px;
+
+    .Ventas-editar__tabla tr {
+        margin-bottom: 20px;
+        border: 1px solid var(--color-fondo-card-productos);
+        border-radius: 15px;
+        padding: 10px;
+        background-color: var(--color-fondo-card-productos);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
-    
-    .estado {
-        font-size: 12px;
-        padding: 3px 8px;
+
+    .Ventas-editar__tabla td {
+        text-align: right;
+        padding: 10px 15px;
+        position: relative;
+        border: none;
+        border-bottom: 1px solid rgba(0,0,0,0.1);
     }
-    
-    #select {
-        font-size: 12px;
-        padding: 6px;
+
+    .Ventas-editar__tabla td::before {
+        content: attr(data-label);
+        float: left;
+        font-weight: 600;
+        color: #333;
     }
-    
-    .Ventas-editar__acciones {
-        width: 100px;
-    }
-    
-    .iconos {
-        gap: 6px;
-        flex-wrap: wrap;
-    }
-    
-    .iconos i {
-        font-size: 14px;
-    }
-    
+
+    /* Contadores verticales */
     .contadores {
         flex-direction: column;
-        gap: 12px;
+        align-items: center;
+        gap: 15px;
     }
-    
+
     .contador-card {
-        width: 100%;
-        min-width: 100%;
-        max-width: 100%;
+        max-width: 90%;
     }
 }

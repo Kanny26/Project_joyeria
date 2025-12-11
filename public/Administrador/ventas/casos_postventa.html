@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Casos postventas</title>
 
-    <!-- Estilos -->
     <link rel="stylesheet" href="../../../assets/css/main.css">
     <link rel="stylesheet" href="../../../assets/css/pages/Administrador/ventas/casos_postventa.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -13,62 +12,129 @@
 
 <body>
 
-    <nav class="navbar-admin"> 
-        <div class="navbar-admin__catalogo"> 
-            <img src="../../../assets/Imagenes/iconos/admin.png" alt="Admin"> 
-            <a href="../ventas.html">
-                <h2>Volver al inicio</h2> 
-            </a>
-        </div> 
-        <h1 class="navbar-admin__title">AAC27</h1> 
-        <i class="fa-solid fa-house-chimney navbar-admin__home-icon"></i> 
-    </nav>
+<nav class="navbar-admin">
+    <div class="navbar-admin__catalogo">
+        <img src="../../../assets/Imagenes/iconos/admin.png" alt="Admin">
+    </div>
+    <h1 class="navbar-admin__title">AAC27</h1>
+    <a href="../ventas.html">
+        <i class="fa-solid fa-house-chimney navbar-admin__home-icon"></i>
+    </a>
+</nav>
 
-    <main class="titulo">
-        <h2 class="titulo__encabezado">Detalle casos postventas</h2>
+<main class="titulo">
+    <h2 class="titulo__encabezado">Detalle casos postventas</h2>
 
+    <section class="postventa-listar__contenedor">
 
-        <section class="postventa-listar__contenedor">
+        <!-- TABLA PARA PC -->
+        <table class="reclamo__tabla">
+            <thead>
+                <tr>
+                    <th>Factura</th>
+                    <th>Fecha</th>
+                    <th>Estado</th>
+                    <th>Caso</th>
+                    <th>Cliente</th>
+                    <th>Tipo</th>
+                    <th>Motivo</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>00123</td>
+                    <td>10/12/2025</td>
+                    <td>Pendiente</td>
+                    <td>001</td>
+                    <td>Juan Pérez</td>
+                    <td>Cambio</td>
+                    <td>Producto dañado</td>
+                </tr>
+                <tr>
+                    <td>00124</td>
+                    <td>11/12/2025</td>
+                    <td>Resuelto</td>
+                    <td>002</td>
+                    <td>María Gómez</td>
+                    <td>Devolución</td>
+                    <td>Cambio de talla</td>
+                </tr>
+                <tr>
+                    <td>00125</td>
+                    <td>12/12/2025</td>
+                    <td>En proceso</td>
+                    <td>003</td>
+                    <td>Carlos López</td>
+                    <td>Reclamo</td>
+                    <td>Pedido incompleto</td>
+                </tr>
+            </tbody>
+        </table>
 
-            <!-- ENCABEZADO DINÁMICO -->
-            <div class="reclamo__encabezado">
-                <p><strong>Factura:</strong> <span id="factura"></span></p>
-                <p><strong>Fecha:</strong> <span id="fecha"></span></p>
-                <p><strong>Estado:</strong> 
-                    <span id="estado" class="estado"></span>
-                </p>
+        <!-- CARDS PARA MÓVIL -->
+        <div class="reclamo__cards">
+            <div class="reclamo__card">
+                <p class="label">Factura</p>
+                <p class="valor">00123</p>
+                <p class="label">Fecha</p>
+                <p class="valor">10/12/2025</p>
+                <p class="label">Estado</p>
+                <p class="valor">Pendiente</p>
+                <p class="label">Caso</p>
+                <p class="valor">001</p>
+                <p class="label">Cliente</p>
+                <p class="valor">Juan Pérez</p>
+                <p class="label">Tipo</p>
+                <p class="valor">Cambio</p>
+                <p class="label">Motivo</p>
+                <p class="valor">Producto dañado</p>
             </div>
-
-            <!-- TABLA DINÁMICA -->
-            <table class="reclamo__tabla">
-                <thead>
-                    <tr>
-                        <th>Caso</th>
-                        <th>Cliente</th>
-                        <th>Tipo</th>
-                        <th>Reclamo</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td id="caso-id"></td>
-                        <td id="cliente"></td>
-                        <td id="tipo"></td>
-                        <td id="motivo"></td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <!-- OBSERVACIONES DINÁMICAS -->
-            <div class="reclamo__observaciones">
-                <h4>Observaciones</h4>
-                <ul id="observaciones">
-                    <!-- Aquí se agregan <li> dinámicamente -->
-                </ul>
+            <div class="reclamo__card">
+                <p class="label">Factura</p>
+                <p class="valor">00124</p>
+                <p class="label">Fecha</p>
+                <p class="valor">11/12/2025</p>
+                <p class="label">Estado</p>
+                <p class="valor">Resuelto</p>
+                <p class="label">Caso</p>
+                <p class="valor">002</p>
+                <p class="label">Cliente</p>
+                <p class="valor">María Gómez</p>
+                <p class="label">Tipo</p>
+                <p class="valor">Devolución</p>
+                <p class="label">Motivo</p>
+                <p class="valor">Cambio de talla</p>
             </div>
+            <div class="reclamo__card">
+                <p class="label">Factura</p>
+                <p class="valor">00125</p>
+                <p class="label">Fecha</p>
+                <p class="valor">12/12/2025</p>
+                <p class="label">Estado</p>
+                <p class="valor">En proceso</p>
+                <p class="label">Caso</p>
+                <p class="valor">003</p>
+                <p class="label">Cliente</p>
+                <p class="valor">Carlos López</p>
+                <p class="label">Tipo</p>
+                <p class="valor">Reclamo</p>
+                <p class="label">Motivo</p>
+                <p class="valor">Pedido incompleto</p>
+            </div>
+        </div>
 
-        </section>
-    </main>
+        <!-- OBSERVACIONES -->
+        <div class="reclamo__observaciones">
+            <h4>Observaciones</h4>
+            <ul>
+                <li>Producto llegó dañado.</li>
+                <li>Cliente solicita cambio de talla.</li>
+                <li>Reclamo por pedido incompleto.</li>
+            </ul>
+        </div>
+
+    </section>
+</main>
 
 </body>
 </html>

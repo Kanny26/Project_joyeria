@@ -171,212 +171,69 @@ h1 {
 .registro-usuario__link-footer a:hover {
   color: var(--color-link-hover);
 }
+/* ==================== Móvil (max-width: 600px) ==================== */
+@media (max-width: 600px) {
+    /* Contenedor principal: flex en columna */
+    .registro-usuario {
+        flex-direction: column;
+        gap: 0;
+        padding: 20px 10px;
+    }
 
-/* ============================================================
-   MEDIA QUERIES - DESKTOP FIRST
-   ============================================================ */
-
-/* Pantallas extra grandes (>= 1440px) */
-@media (min-width: 1440px) {
+    /* Ocultar panel izquierdo (logo) */
     .registro-usuario__panel-izquierdo {
-        width: 600px;
-        height: 850px;
+        display: none;
     }
-    
+
+    /* Panel derecho ocupa todo el ancho */
     .registro-usuario__panel-derecho {
-        width: 600px;
-        height: 850px;
-    }
-    
-    .registro-usuario__formulario {
-        width: 420px;
+        width: 350px;
         height: 550px;
+        border-radius: 12px;
+        padding: 20px 0;
+        background-size: cover;
     }
-}
 
-/* Escritorio – estilos base (>= 1025px) - Sin cambios, estilos base */
-
-/* Tablet (769px a 1024px) */
-@media (min-width: 769px) and (max-width: 1024px) {
-    .registro-usuario {
-        flex-direction: column;
-        gap: 20px;
-        padding: 20px;
-    }
-    
-    .registro-usuario__panel-izquierdo {
-        width: 90%;
-        max-width: 500px;
-        height: auto;
-        min-height: 400px;
-    }
-    
-    .registro-usuario__panel-caja {
-        width: 90%;
-        height: auto;
-        padding: 20px;
-    }
-    
-    .registro-usuario__panel-logo {
-        width: 280px;
-        height: 280px;
-    }
-    
-    .registro-usuario__panel-derecho {
-        width: 90%;
-        max-width: 500px;
-        height: 500px;
-    }
-    
+    /* Formulario */
     .registro-usuario__formulario {
-        width: 90%;
-        max-width: 360px;
+        width: 300px;
         height: auto;
-        min-height: 450px;
-        padding: 40px 30px;
+        border-radius: 12px;
     }
-    
+
+    .registro-usuario__formulario-contenido {
+        width: 90%;
+    }
+
     h1 {
-        font-size: 22px;
+        font-size: 1.8rem;
+        text-align: center;
     }
-    
+
+    /* Inputs */
     .registro-usuario__input-grupo {
         width: 100%;
-        max-width: 260px;
-    }
-}
-
-/* Phablet (481px a 768px) */
-@media (min-width: 481px) and (max-width: 768px) {
-    .registro-usuario {
-        flex-direction: column;
-        gap: 15px;
-        padding: 15px;
-    }
-    
-    .registro-usuario__panel-izquierdo {
-        width: 95%;
-        height: auto;
-        min-height: 350px;
-    }
-    
-    .registro-usuario__panel-caja {
-        width: 95%;
-        height: auto;
-        padding: 15px;
-    }
-    
-    .registro-usuario__panel-logo {
-        width: 220px;
-        height: 220px;
-    }
-    
-    .registro-usuario__panel-derecho {
-        width: 95%;
-        height: 450px;
-    }
-    
-    .registro-usuario__formulario {
-        width: 95%;
-        max-width: 340px;
-        height: auto;
-        min-height: 420px;
-        padding: 35px 25px;
-    }
-    
-    h1 {
-        font-size: 20px;
-    }
-    
-    .registro-usuario__input-grupo {
-        width: 100%;
-        max-width: 250px;
-        height: 42px;
-    }
-    
-    .registro-usuario__input-grupo input {
-        font-size: 14px;
-    }
-}
-
-/* Móvil pequeño (máx. 480px) */
-@media (max-width: 480px) {
-    body {
-        padding: 10px;
-    }
-    
-    .registro-usuario {
-        flex-direction: column;
-        gap: 15px;
-        padding: 10px;
-        min-height: auto;
-    }
-    
-    .registro-usuario__panel-izquierdo {
-        width: 100%;
-        height: auto;
-        min-height: 300px;
-        border-radius: 15px;
-    }
-    
-    .registro-usuario__panel-caja {
-        width: 95%;
-        height: auto;
-        padding: 15px 10px;
-    }
-    
-    .registro-usuario__panel-logo {
-        width: 180px;
-        height: 180px;
-        margin-top: 5px;
-    }
-    
-    .registro-usuario__panel-derecho {
-        width: 100%;
-        height: 400px;
-        border-radius: 15px;
-    }
-    
-    .registro-usuario__formulario {
-        width: 95%;
-        height: auto;
-        min-height: 380px;
-        padding: 25px 20px;
-    }
-    
-    h1 {
-        font-size: 18px;
-        margin-bottom: 15px;
-    }
-    
-    .registro-usuario__input-grupo {
-        width: 100%;
-        height: 40px;
-        margin-top: 15px;
+        height: 45px;
+        margin-top: 10px;
         padding: 0 12px;
     }
-    
+
     .registro-usuario__input-grupo input {
-        font-size: 13px;
-        padding-right: 25px;
+        font-size: 0.9rem;
     }
-    
-    .registro-usuario__input-grupo i.icon-left {
-        font-size: 16px;
-        margin-right: 8px;
-    }
-    
+
+    .registro-usuario__input-grupo i.icon-left,
     .registro-usuario__input-grupo i.icon-right {
-        right: 12px;
-        font-size: 16px;
+        font-size: 0.9rem;
     }
-    
+
+    /* Footer */
     .registro-usuario__link-footer {
+        font-size: 0.85rem;
         margin-top: 15px;
-        font-size: 11px;
     }
-    
+
     .registro-usuario__link-footer p {
-        font-size: 11px;
+        font-size: 0.85rem;
     }
 }

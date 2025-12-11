@@ -19,7 +19,7 @@ body {
     padding-top: 140px;
 }
 
-.usuarios-listar__tabla-contenedor{
+.usuarios-listar__tabla-contenedor {
     width: var(--ancho-tabla-usuarios);
     overflow-x: auto;
     border-radius: 15px;
@@ -28,7 +28,7 @@ body {
     padding: 10px;
 }
 
-.usuarios-listar__tabla{
+.usuarios-listar__tabla {
     width: var(--ancho-interno-tabla-usuarios);
     height: var(--alto-interno-tabla-usuarios);
     border-collapse: collapse;
@@ -41,7 +41,7 @@ body {
     padding: 15px 10px;
     text-align: center;
     border-left: 1px solid saddlebrown;
-    border-bottom: 1px solid saddlebrown
+    border-bottom: 1px solid saddlebrown;
 }
 
 .usuarios-listar__tabla th {
@@ -58,173 +58,71 @@ body {
     border: 1px solid saddlebrown;
 }
 
-.estado {
-    padding: 5px 12px;
-    border-radius: 10px;
-    color: rgb(0, 0, 0);
-    font-size: 16px;
-    font-weight: var(--peso-texto-semi);
-}
-
-.estado--activo{
-    background-color: rgb(120, 172, 120);
-}
-
-.estado--inactivo{
-    background-color: rgb(236, 93, 93);
-}
-
-/* Columna de acciones */
-.usuarios-listar__acciones {
-    width: 150px;
-}
-
-/* Contenedor de iconos */
-.iconos {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 12px;
-    margin: 0 auto;
-}
-
-/* Estilos de los iconos */
-.iconos i {
-    font-size: 18px;
-    padding: 6px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: transform .2s ease;
-}
-
 .editar-producto__input-area {
-    width: 800px;
-    height: 50px;
+    width: 800px; /* Desktop */
     padding: 12px;
     border-radius: var(--radio-bordes-input);
     border:2px solid #ccc;
-    font-size: 20px;
+    font-size: 16px;
     background: none;
     transition: var(--duracion-transicion);
     resize: none;
-    border-style: none;
 }
 
-/* ============================================================
-   MEDIA QUERIES - DESKTOP FIRST
-   ============================================================ */
+/* ===== Media Queries para móviles ===== */
+@media screen and (max-width: 768px) {
 
-/* Pantallas extra grandes (>= 1440px) */
-@media (min-width: 1440px) {
-    .usuarios-listar__tabla-contenedor {
-        width: 100%;
-        max-width: 1400px;
-    }
-}
-
-/* Escritorio – estilos base (>= 1025px) - Sin cambios, estilos base */
-
-/* Tablet (769px a 1024px) */
-@media (min-width: 769px) and (max-width: 1024px) {
-    body {
-        padding-top: 120px;
-    }
-    
-    .usuarios-listar__tabla-contenedor {
-        width: 95%;
-        max-width: 1000px;
-        padding: 8px;
-    }
-    
-    .usuarios-listar__tabla {
-        width: 100%;
-        font-size: 14px;
-    }
-    
-    .usuarios-listar__tabla th,
-    .usuarios-listar__tabla td {
-        padding: 12px 8px;
-        font-size: 14px;
-    }
-    
-    .editar-producto__input-area {
-        width: 100%;
-        max-width: 600px;
-    }
-}
-
-/* Phablet (481px a 768px) */
-@media (min-width: 481px) and (max-width: 768px) {
     body {
         padding-top: 100px;
     }
-    
-    .usuarios-listar__tabla-contenedor {
-        width: 98%;
-        padding: 5px;
-    }
-    
-    .usuarios-listar__tabla {
-        width: 100%;
-        font-size: 13px;
-    }
-    
-    .usuarios-listar__tabla th,
-    .usuarios-listar__tabla td {
-        padding: 10px 6px;
-        font-size: 13px;
-    }
-    
-    .editar-producto__input-area {
-        width: 100%;
-        max-width: 500px;
-        font-size: 16px;
-    }
-}
 
-/* --------------------------------------------------
-   MEDIA QUERY: MÓVIL PEQUEÑO (hasta 480px)
-   Ajustes para tabla de historial:
-   - Scroll horizontal elegante
-   - Textarea responsive dentro de tabla
-   - Evitar texto cortado
--------------------------------------------------- */
-@media (max-width: 480px) {
-    body {
-        padding-top: 80px;
-    }
-    
     .usuarios-listar__tabla-contenedor {
-        width: 100%;
-        padding: 5px;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
+        width: 95%;
+        padding: 0;
+        box-shadow: none;
     }
-    
-    .usuarios-listar__tabla {
-        width: 100%;
-        min-width: 600px; /* Evita que la tabla se aplaste */
-        font-size: 12px;
+
+    /* Ocultar encabezado de tabla */
+    .usuarios-listar__tabla thead {
+        display: none;
     }
-    
-    .usuarios-listar__tabla th,
+
+    .usuarios-listar__tabla tbody,
+    .usuarios-listar__tabla tr,
     .usuarios-listar__tabla td {
-        padding: 8px 5px;
-        font-size: 12px;
-        white-space: nowrap; /* Evita cortes de texto en celdas normales */
-    }
-    
-    /* Textarea dentro de tabla - permite wrap */
-    .usuarios-listar__tabla td .editar-producto__input-area {
-        white-space: normal; /* Permite wrap en textarea */
+        display: block;
         width: 100%;
-        min-width: 300px; /* Ancho mínimo para textarea */
-        max-width: 100%;
     }
-    
+
+    /* Cada fila como card */
+    .usuarios-listar__tabla tr {
+        margin-bottom: 20px;
+        border: 1px solid var(--color-fondo-card-productos);
+        border-radius: 15px;
+        padding: 10px;
+        background-color: var(--color-fondo-card-productos);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    .usuarios-listar__tabla td {
+        text-align: right;
+        padding: 10px 15px;
+        position: relative;
+        border: none;
+        border-bottom: 1px solid rgba(0,0,0,0.1);
+    }
+
+    .usuarios-listar__tabla td::before {
+        content: attr(data-label);
+        float: left;
+        font-weight: 600;
+        color: #333;
+    }
+
+    /* Ajuste de textarea */
     .editar-producto__input-area {
         width: 100%;
         font-size: 14px;
-        height: 45px;
+        padding: 10px;
     }
 }

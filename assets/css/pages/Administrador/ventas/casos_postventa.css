@@ -1,41 +1,42 @@
 @import url('../../../base/global.css');
 
 * {
-    margin: var(--margin_padding_reset);
-    padding: var(--margin_padding_reset);
+    margin: 0;
+    padding: 0;
     box-sizing: border-box;
 }
 
 body {
     font-family: var(--fuente-titulos);
     background-color: var(--color-fondo-admin);
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    min-height: var(--alto-minimo-body);
+    min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: flex-start;
     padding-top: 140px;
 }
 
+/* Contenedor principal */
 .postventa-listar__contenedor {
     width: 1000px;
-    background-color: #ffffff;
+    background-color: var(--color-fondo-card-productos);
     padding: 30px;
     border-radius: 15px;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+    margin: 20px auto;
 }
 
+/* Encabezado */
 .reclamo__encabezado {
     display: flex;
     justify-content: space-between;
     font-size: 20px;
     margin-bottom: 25px;
-    color: #000000;
-    gap:50px;
+    gap: 50px;
+    color: #000;
 }
 
+/* Tabla PC */
 .reclamo__tabla {
     width: 100%;
     border-collapse: collapse;
@@ -51,11 +52,12 @@ body {
 }
 
 .reclamo__tabla th {
-    background-color: #f5f5f5;
+    background-color: var(--color-cards);
     font-weight: 600;
     color: #333;
 }
 
+/* Observaciones */
 .reclamo__observaciones h4 {
     font-size: 18px;
     margin-bottom: 10px;
@@ -73,157 +75,68 @@ body {
     font-size: 0.95rem;
 }
 
-/* ============================================================
-   MEDIA QUERIES - DESKTOP FIRST
-   ============================================================ */
-
-/* Pantallas extra grandes (>= 1440px) */
-@media (min-width: 1440px) {
-    .postventa-listar__contenedor {
-        width: 1100px;
-    }
+/* Cards Móvil */
+.reclamo__cards {
+    display: none;
 }
 
-/* Escritorio – estilos base (>= 1025px) - Sin cambios, estilos base */
+/* ===== MEDIA QUERIES ===== */
 
-/* Tablet (769px a 1024px) */
-@media (min-width: 769px) and (max-width: 1024px) {
-    body {
-        padding-top: 120px;
-    }
-    
+/* TABLET */
+@media (max-width: 1024px) {
     .postventa-listar__contenedor {
         width: 90%;
-        max-width: 850px;
         padding: 25px;
     }
-    
-    .reclamo__encabezado {
-        font-size: 18px;
-        margin-bottom: 20px;
-        gap: 30px;
-    }
-    
+
     .reclamo__tabla th,
     .reclamo__tabla td {
         font-size: 16px;
         padding: 10px;
     }
-    
-    .reclamo__observaciones h4 {
-        font-size: 16px;
-    }
-    
-    .reclamo__observaciones li {
-        font-size: 0.9rem;
-    }
 }
 
-/* --------------------------------------------------
-   MEDIA QUERY: PHABLET (481px a 768px)
-   Ajustes intermedios para tablas:
-   - Mejorar altura de secciones
-   - Facilitar lectura en pantallas medianas
--------------------------------------------------- */
-@media (min-width: 481px) and (max-width: 768px) {
-    body {
-        padding-top: 100px;
+/* MÓVIL */
+@media (max-width: 480px) {
+
+    /* Ocultar tabla */
+    .reclamo__tabla {
+        display: none;
     }
-    
-    .postventa-listar__contenedor {
-        width: 95%;
-        max-width: 700px;
-        padding: 20px;
-        /* Scroll horizontal si es necesario */
-        overflow-x: auto;
-    }
-    
-    .reclamo__encabezado {
+
+    /* Mostrar cards */
+    .reclamo__cards {
+        display: flex;
         flex-direction: column;
         gap: 15px;
-        font-size: 16px;
-        margin-bottom: 18px;
     }
-    
-    .reclamo__tabla {
-        margin-bottom: 20px;
-        min-width: 600px; /* Mantiene proporciones en phablet */
-        width: 100%;
-    }
-    
-    .reclamo__tabla th,
-    .reclamo__tabla td {
-        font-size: 14px;
-        padding: 10px 8px;
-        white-space: nowrap; /* Evita cortes de texto */
-    }
-    
-    .reclamo__observaciones h4 {
-        font-size: 15px;
-    }
-    
-    .reclamo__observaciones li {
-        font-size: 0.85rem;
-    }
-}
 
-/* --------------------------------------------------
-   MEDIA QUERY: MÓVIL PEQUEÑO (hasta 480px)
-   Ajustes para tablas:
-   - Scroll horizontal elegante
-   - Evitar texto cortado
-   - Mantener proporciones
--------------------------------------------------- */
-@media (max-width: 480px) {
-    body {
-        padding-top: 80px;
-    }
-    
-    .postventa-listar__contenedor {
-        width: 100%;
-        padding: 15px;
+    .reclamo__card {
+        background-color: var(--color-cards);
+        padding: 15px 20px;
         border-radius: 12px;
-        /* Scroll horizontal para la tabla */
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-    }
-    
-    .reclamo__encabezado {
-        flex-direction: column;
-        gap: 12px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         font-size: 14px;
-        margin-bottom: 15px;
+        color: #333;
     }
-    
-    .reclamo__tabla {
-        margin-bottom: 15px;
-        min-width: 500px; /* Evita que la tabla se aplaste en móvil */
-        width: 100%;
+
+    .reclamo__card .label {
+        font-weight: 600;
+        margin-top: 6px;
     }
-    
-    .reclamo__tabla th,
-    .reclamo__tabla td {
-        font-size: 12px;
-        padding: 8px 6px;
-        white-space: nowrap; /* Evita cortes de texto en celdas */
-    }
-    
-    .reclamo__tabla th {
-        font-size: 13px;
-    }
-    
-    .reclamo__observaciones h4 {
-        font-size: 14px;
-        margin-bottom: 8px;
-    }
-    
-    .reclamo__observaciones ul {
-        padding-left: 18px;
-    }
-    
-    .reclamo__observaciones li {
-        font-size: 0.8rem;
+
+    .reclamo__card .valor {
         margin-bottom: 6px;
     }
-}
 
+    /* Encabezado flexible */
+    .reclamo__encabezado {
+        flex-direction: column;
+        font-size: 16px;
+        gap: 12px;
+    }
+
+    .reclamo__observaciones {
+        font-size: 14px;
+    }
+}
