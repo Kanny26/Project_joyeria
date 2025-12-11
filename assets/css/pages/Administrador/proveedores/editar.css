@@ -127,22 +127,8 @@ label {
     gap: 12px;
 }
 
-/* ============================================================
-   MEDIA QUERIES - DESKTOP FIRST
-   ============================================================ */
-
-/* Pantallas extra grandes (>= 1440px) */
-@media (min-width: 1440px) {
-    .editar-proveedores__detalles {
-        max-width: 1100px;
-        padding: 45px;
-    }
-}
-
-/* Escritorio – estilos base (>= 1025px) - Sin cambios, estilos base */
-
 /* Tablet (769px a 1024px) */
-@media (min-width: 769px) and (max-width: 1024px) {
+@media (max-width: 1024px) {
     body {
         padding-top: 120px;
     }
@@ -157,10 +143,6 @@ label {
         gap: 30px;
     }
     
-    .editar-proveedores__imagen {
-        justify-self: center;
-    }
-    
     .editar-proveedores__imagen img {
         width: 180px;
         height: 180px;
@@ -173,7 +155,7 @@ label {
 }
 
 /* Phablet (481px a 768px) */
-@media (min-width: 481px) and (max-width: 768px) {
+@media (max-width: 768px) {
     body {
         padding-top: 100px;
     }
@@ -183,19 +165,9 @@ label {
         padding: 30px 25px;
     }
     
-    .editar-proveedores__contenido {
-        grid-template-columns: 1fr;
-        gap: 25px;
-    }
-    
     .editar-proveedores__imagen img {
         width: 160px;
         height: 160px;
-    }
-    
-    .editar-proveedores__campos {
-        grid-template-columns: 1fr;
-        gap: 15px;
     }
     
     label {
@@ -207,7 +179,8 @@ label {
     .editar-proveedores__input-lectura,
     .editar-proveedores__input-area {
         font-size: 0.9rem;
-        padding: 9px 12px;
+        padding: 10px 12px;
+        border-radius: 8px;
     }
 }
 
@@ -225,23 +198,21 @@ label {
         margin-top: 0;
     }
     
-    .editar-proveedores__contenido {
-        grid-template-columns: 1fr;
-        gap: 20px;
-    }
-    
     .editar-proveedores__imagen img {
-        width: 140px;
-        height: 140px;
+        width: 80px;
+        height: 80px;
     }
     
     .editar-proveedores__campos {
-        grid-template-columns: 1fr;
+        display: flex;
+        flex-direction: column;
+        align-items: normal;
         gap: 12px;
+        padding: 10px;
     }
     
     label {
-        font-size: 0.85rem;
+        font-size: 12px;
         margin-bottom: 4px;
     }
     
@@ -249,7 +220,7 @@ label {
     .editar-proveedores__input-select,
     .editar-proveedores__input-lectura,
     .editar-proveedores__input-area {
-        font-size: 0.85rem;
+        font-size: 10px;
         padding: 8px 10px;
         border-radius: 6px;
     }

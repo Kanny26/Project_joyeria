@@ -59,22 +59,22 @@ body {
 .Usuarios-listar__tabla td {
     padding: 15px 10px;
     text-align: center;
-    border-left: 1px solid saddlebrown;
-    border-bottom: 1px solid saddlebrown;
+    /* border-left: 1px solid saddlebrown;
+    border-bottom: 1px solid saddlebrown; */
 }
 
 .Usuarios-listar__tabla th {
     background-color: var(--color-fondo-tarjeta-hover);
     font-weight: 700;
     font-size: var(--tamano-label);
-    border: 1px solid saddlebrown;
+    /* border: 1px solid saddlebrown; */
 }
 
 .Usuarios-listar__tabla tbody {
     background-color: var(--color-fondo-tarjeta-hover);
     font-weight: 500;
     font-size: 16px;
-    border: 1px solid saddlebrown;
+    /* border: 1px solid saddlebrown; */
 }
 
 .estado {
@@ -214,12 +214,11 @@ body {
     }
 
     .Usuarios-listar__tabla tr {
-        margin-bottom: 20px;
-        border: 1px solid var(--color-fondo-card-productos);
-        border-radius: 15px;
+        margin-bottom: 50px;
+        border: 1px solid #ccc;
+        border-radius: 10px;
         padding: 10px;
-        background-color: var(--color-fondo-card-productos);
-        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        background: var(--color-fondo-tarjeta-hover);
     }
 
     .Usuarios-listar__tabla td {
@@ -227,14 +226,13 @@ body {
         padding: 10px 15px;
         position: relative;
         border: none;
-        border-bottom: 1px solid rgba(0,0,0,0.1);
     }
 
     .Usuarios-listar__tabla td::before {
         content: attr(data-label);
         float: left;
         font-weight: 600;
-        color: #333;
+        /* color: #333; */
     }
 
     .estado, #select {

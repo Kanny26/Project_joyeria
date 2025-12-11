@@ -13,24 +13,12 @@
     <nav class="navbar-admin"> 
         <div class="navbar-admin__catalogo"> 
             <img src="../../../assets/Imagenes/iconos/admin.png" alt="Admin"> 
-            <a href="org-categorias.html"> 
-                <h2>Volver al inicio</h2> 
-            </a>
         </div> 
         <h1 class="navbar-admin__title">AAC27</h1> 
+        <a href="org-categorias.html"> 
         <i class="fa-solid fa-house-chimney navbar-admin__home-icon"></i> 
+        </a>
     </nav>
-
-    <div class="admin__tooltips-right"> 
-        <div class="icon-container"> 
-            <i class="fa-solid fa-magnifying-glass search__icon"></i> 
-            <span class="tooltip">Buscar</span> 
-        </div> 
-        <div class="icon-container"> 
-            <i class="fa-solid fa-filter filter__icon"></i> 
-            <span class="tooltip">Filtrar</span> 
-        </div> 
-    </div>
     <main class="eliminar-producto">
         <h1 class="eliminar-producto__titulo">Eliminar producto</h1>
         <section class="eliminar-producto__card">
@@ -41,12 +29,16 @@
 
                 <div class="eliminar-producto__acciones"> 
                     <button class="boton editar-imagen"> 
-                        <i class="fa-solid fa-pen"></i> 
-                        Editar producto 
+                        <a href="editar.html">
+                            <i class="fa-solid fa-pen"></i> Editar producto 
+                        </a>
+                        
                     </button> 
-                    <button class="boton ver-imagen"> 
-                        <i class="fa-solid fa-eye"></i> 
-                        Ver producto 
+                    <button class="boton ver-imagen">
+                        <a href="ver-producto.html">
+                            <i class="fa-solid fa-eye"></i> Ver producto 
+                        </a>
+                        
                     </button> 
                 </div>
             </div>
@@ -82,10 +74,16 @@
 
                 <div class="eliminar-producto__acciones">
                     <button class="boton-confirmar eliminar">  
-                        <i class="fa-solid fa-trash-can"></i> Eliminar producto  
+                        <a href="eliminado.html">
+                            <i class="fa-solid fa-trash-can"></i> Eliminar producto  
+                        </a>
+                        
                     </button>
                     <button type="reset" class="boton cancelar">  
-                        <i class="fa-solid fa-xmark"></i> Cancelar  
+                        <a href="ver-producto.html">
+                            <i class="fa-solid fa-xmark"></i> Cancelar  
+                        </a>
+                        
                     </button>
                 </div>
 

@@ -40,24 +40,25 @@ body {
 .eliminado__titulo:hover {
     color: var(--color-texto-hover-cards);
 }
-
 .eliminado__contenedor {
     display: grid;
-    grid-template-columns: var(--grid-columnas-eliminar);
-    gap: var(--separacion-card);
+    grid-template-columns: 1.1fr 1fr; /* Imagen a la izquierda / texto a la derecha */
+    gap: 40px;
     background: var(--color-fondo-card-productos);
     border-radius: var(--radio-borde-card);
-    width: 1250px;
-    height: 520px;
-
+    width: 1100px;       /* Tamaño equilibrado */
+    min-height: 520px;   /* Ajuste fluido */
+    padding: 40px;       /* ESPACIADO interno */
+    align-items: center; /* Centra verticalmente */
 }
 
 .eliminado__producto-imagen {
-    margin-top: 60px;
-    margin-left: 200px;
-    width: var(--ancho-imagen-producto);
-    height: var(--alto-imagen-producto);
+    width: 380px;
+    height: 460px;
+    object-fit: cover;
     border-radius: var(--radio-bordes-imagen);
+    margin: 0;
+    margin: 0 auto;
 }
 
 .eliminado__mensaje {
@@ -65,6 +66,7 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    padding: 20px;
 }
 
 .eliminado__mensaje h2 {
@@ -85,11 +87,6 @@ body {
     color: var(--color-link-hover);
 }
 
-/* ============================================================
-   MEDIA QUERIES - DESKTOP FIRST
-   ============================================================ */
-
-/* Pantallas extra grandes (>= 1440px) */
 @media (min-width: 1440px) {
     .eliminado__contenedor {
         width: 1350px;
@@ -97,112 +94,124 @@ body {
     }
 }
 
-/* Escritorio – estilos base (>= 1025px) - Sin cambios, estilos base */
-
-/* Tablet (769px a 1024px) */
 @media (min-width: 769px) and (max-width: 1024px) {
+
     .eliminado__titulo {
         font-size: 42px;
-        margin-bottom: 35px;
+        margin-top: 60px;
     }
-    
+
     .eliminado__contenedor {
         width: 95%;
         max-width: 900px;
         height: auto;
         min-height: 480px;
+        border-radius: 10px;
         grid-template-columns: 1fr;
-        gap: 25px;
+        text-align: center;
         padding: 25px;
+        gap: 25px;
     }
-    
+
     .eliminado__producto-imagen {
-        margin-top: 20px;
-        margin-left: 0;
+        margin: 0 auto;
         width: 250px;
         height: 350px;
     }
-    
+
     .eliminado__mensaje h2 {
         font-size: 30px;
     }
-    
+
     .eliminado__mensaje a {
         font-size: 22px;
     }
 }
 
-/* Phablet (481px a 768px) */
+/* ============================
+   PHABLET (481px – 768px)
+   ============================ */
 @media (min-width: 481px) and (max-width: 768px) {
+
     .eliminado__titulo {
         font-size: 36px;
         margin-bottom: 30px;
     }
-    
+
     .eliminado__contenedor {
         width: 95%;
         max-width: 650px;
         height: auto;
         min-height: 450px;
+
+        /* Imagen arriba */
         grid-template-columns: 1fr;
-        gap: 20px;
+        text-align: center;
         padding: 20px;
+        gap: 20px;
+        border-radius: 10px;
     }
-    
+
     .eliminado__producto-imagen {
-        margin-top: 15px;
-        margin-left: 0;
+        margin: 0 auto;
         width: 220px;
         height: 320px;
     }
-    
+
     .eliminado__mensaje h2 {
         font-size: 28px;
         margin-bottom: 18px;
     }
-    
+
     .eliminado__mensaje a {
         font-size: 20px;
     }
 }
 
-/* Móvil pequeño (máx. 480px) */
+/* ============================
+   MÓVIL PEQUEÑO (0 – 480px)
+   ============================ */
 @media (max-width: 480px) {
+
     .eliminado {
         padding: 0 10px;
     }
-    
+
     .eliminado__titulo {
         font-size: 28px;
         margin-bottom: 25px;
     }
-    
+
     .eliminado__contenedor {
         width: 100%;
         height: auto;
         min-height: 400px;
+
+        /* Imagen arriba */
         grid-template-columns: 1fr;
-        gap: 15px;
+
         padding: 15px;
+        gap: 15px;
         border-radius: 40px;
+        text-align: center;
+        border-radius: 10px;
     }
-    
+
     .eliminado__producto-imagen {
-        margin-top: 10px;
-        margin-left: 0;
-        width: 180px;
-        height: 280px;
+        margin: 0 auto;
+        width: 150px;
+        height: 220px;
     }
-    
+
     .eliminado__mensaje {
         padding: 10px;
     }
-    
+
     .eliminado__mensaje h2 {
         font-size: 24px;
         margin-bottom: 15px;
     }
-    
+
     .eliminado__mensaje a {
         font-size: 18px;
     }

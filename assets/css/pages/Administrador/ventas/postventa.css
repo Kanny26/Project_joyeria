@@ -29,9 +29,10 @@ body {
 
 /* Card individual */
 .postventa-cards__card {
-    background-color: var(--color-fondo-card-productos);
+    background-color: var(--color-fondo-tarjeta-hover);
     padding: 20px;
     border-radius: 15px;
+    border: 1px solid #ccc; 
     box-shadow: 0 5px 15px rgba(0,0,0,0.2);
     display: flex;
     flex-direction: column;
@@ -139,10 +140,22 @@ body {
 
 /* Tablet */
 @media (max-width: 1024px) {
-    .postventa-cards__contenedor { gap: 15px; padding: 15px; }
-    .postventa-cards__card { padding: 18px; }
-    .postventa-cards__caso { font-size: 16px; }
-    .postventa-cards__card p { font-size: 13px; }
+    .postventa-cards__contenedor { 
+        gap: 15px; 
+        padding: 15px;
+    }
+
+    .postventa-cards__card { 
+        padding: 18px; 
+    }
+
+    .postventa-cards__caso {
+        font-size: 16px;
+    }
+
+    .postventa-cards__card p {
+        font-size: 13px; 
+    }
 }
 
 /* Móvil */
@@ -152,8 +165,17 @@ body {
         gap: 10px;
         padding: 10px;
     }
-    .postventa-cards__card { padding: 60px; }
-    .postventa-cards__caso { font-size: 15px; }
-    .postventa-cards__card p { font-size: 12px; }
-    .postventa-cards__acciones i { font-size: 18px; }
+    .postventa-cards__card { 
+        width: 250px;
+        /* padding: 60px;  */
+    }
+    .postventa-cards__caso {
+        font-size: 15px; 
+    }
+    .postventa-cards__card p { 
+        font-size: 15px; 
+    }
+    .postventa-cards__acciones i { 
+        font-size: 18px; 
+    }
 }

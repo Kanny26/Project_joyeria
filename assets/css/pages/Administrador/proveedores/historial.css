@@ -77,9 +77,6 @@ body {
 .estado--activo { background-color: rgb(120, 172, 120); }
 .estado--inactivo { background-color: rgb(236, 93, 93); }
 
-/* =========================
-   MEDIA QUERIES
-========================= */
 
 /* Tablets: <1024px */
 @media (max-width: 1024px) {
@@ -112,12 +109,11 @@ body {
     }
 
     .Proveedores-listar__tabla tbody tr {
-        display: block;
-        margin-bottom: 12px;
-        background-color: var(--color-fondo-card-productos);
-        border-radius: 8px;
+        margin-bottom: 50px;
+        border: 1px solid #ccc;
+        border-radius: 10px;
         padding: 10px;
-        box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+        background: var(--color-fondo-tarjeta-hover);
     }
 
     .Proveedores-listar__tabla td {
@@ -132,7 +128,6 @@ body {
     .Proveedores-listar__tabla td::before {
         content: attr(data-label);
         font-weight: 600;
-        color: #555;
         flex-basis: 40%;
     }
 

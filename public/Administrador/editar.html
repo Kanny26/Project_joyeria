@@ -13,25 +13,13 @@
     <nav class="navbar-admin"> 
         <div class="navbar-admin__catalogo"> 
             <img src="../../../assets/Imagenes/iconos/admin.png" alt="Admin"> 
-            <a href="org-categorias.html"> 
-                <h2>Volver al inicio</h2> 
-            </a>
         </div> 
         <h1 class="navbar-admin__title">AAC27</h1> 
-        <i class="fa-solid fa-house-chimney navbar-admin__home-icon"></i> 
+        <a href="org-categorias.html">
+            <i class="fa-solid fa-house-chimney navbar-admin__home-icon"></i> 
+        </a>
+        
     </nav>
-
-    <div class="admin__tooltips-right"> 
-        <div class="icon-container"> 
-            <i class="fa-solid fa-magnifying-glass search__icon"></i> 
-            <span class="tooltip">Buscar</span> 
-        </div> 
-        <div class="icon-container"> 
-            <i class="fa-solid fa-filter filter__icon"></i> 
-            <span class="tooltip">Filtrar</span> 
-        </div> 
-    </div>
-
 
 <main class="editar-producto">
     <h1 class="editar-producto__titulo">Editar producto</h1>
@@ -43,7 +31,7 @@
                 <img src="../../../../../assets/Imagenes/fondos/joya1.jpg" alt="Anillo alianza de sueños">
 
                 <!-- Label actúa como botón -->
-                <label for="nuevaImagen" class="editar-producto__boton-imagen">
+                <label for="nuevaImagen" class="editar-producto__label">
                     <i class="fa-solid fa-pen"></i> Cambiar imagen
                 </label>
 
@@ -81,10 +69,15 @@
 
             <div class="editar-producto__acciones">
                 <button class="boton guardar">
-                    <i class="fa-solid fa-floppy-disk"></i> Guardar
+                    <a  href="ver-producto.html">
+                        <i class="fa-solid fa-floppy-disk"></i> Guardar
+                    </a>
                 </button>
+                
                 <button type="reset" class="boton cancelar">  
-                    <i class="fa-solid fa-xmark"></i> Cancelar  
+                    <a  href="ver-producto.html">
+                        <i class="fa-solid fa-xmark"></i> Cancelar  
+                    </a>
                 </button>
             </div>
 
