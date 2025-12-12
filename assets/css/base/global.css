@@ -58,47 +58,47 @@
   /* ===================================================== */
   /*  COLORES */
   /* ===================================================== */
-  --fondo-splash-screen: #dba8a2;
-  --fondo-card-splash-screen: rgba(255, 255, 255, 0.95);
-  --secundario-card-splash-screen: #bd8992;
-  --color-titulo-splash-screen: #FFB6C1;
+  --fondo-splash-screen: #adadad;
+  --fondo-card-splash-screen: rgba(238, 232, 232, 0.95);
+  --secundario-card-splash-screen: #b4b4b4;
+  --color-titulo-splash-screen: #3d3d3d;
   --color-borde-imagen: #fff;
-  --color-boton-principal: #dfb78c;
-  --color-boton-principal-hover: #c2795d;
-  --color-boton-secundario: #df997e;
-  --color-boton-secundario-hover: #c27e69;
-  --color-estrellas: #ffff00;
-  --color-fondo-advertencia: #eee3de;
+  --color-boton-principal: #8f8f8fd0;
+  --color-boton-principal-hover: #494949ee;
+  --color-boton-secundario: #D9D9D9;
+  --color-boton-secundario-hover: #777777;
+  --color-estrellas: #000000;
+  --color-fondo-advertencia: #b9b9b9;
   
-  --color-link-hover: #69331e;
-  --color-fondo-admin: #dfd2c8;
+  --color-link-hover: rgb(51, 51, 51)d0;
+  --color-fondo-admin: #969696dc;
   --color-fondo-vendedor: #dfd2c8;
-  --color-fondo-boton: #df8870;
+  --color-fondo-boton: #8f8f8fd0;
   --color-fondo-boton-hover: #9c9c9c;
-  --color-cards: #e9a897;
-  --color-fondo-circulo-hover: #d1907c;
-  --color-fondo-contadores: #cf9675;
-  --color-fondo-num-contadores:linear-gradient(145deg, #aa7146, #aa6948);
-  --borde-contadores:  #aa6948;
+  --color-cards: #948e8e;
+  --color-fondo-circulo-hover: #b9b7b7;
+  --color-fondo-contadores: #D9D9D9;
+  --color-fondo-num-contadores:linear-gradient(145deg, #b3b3b3, #808080);
+  --borde-contadores:  rgb(107, 107, 107);
 
-  --color-fondo-caja: #d9d6d2;
-  --color-fondo-card-productos:  #d8a9a8;
+  --color-fondo-caja:#cfcfcf;
+  --color-fondo-card-productos:  #D9D9D9;
   --color-fondo-general: #8a828267;
   --color-fondo-icono: #fff;
   --color-fondo-input: #ffffff;
   --color-fondo-inputs: #b8b8b8;
   --color-fondo-panel: #a6a6a6;
-  --color-card-venta: #dba8a2;
-  --color-contenedores-venta: #eb9c93;
-  --color-boton-venta: #eba08b;
-  --color-encabezado-venta: #f5a38e;
+  --color-card-venta: #d6d6d6;
+  --color-contenedores-venta: #5e5e5e;
+  --color-boton-venta: #5e5e5e;
+  --color-encabezado-venta: #c0b7b4;
 
-  --color-nav-admin: #dfb78c;
+  --color-nav-admin: #8b8b8b;
   --color-nav-vendedor: #99AD96;
-  --color-fondo-tarjeta-hover: #dda17e;
+  --color-fondo-tarjeta-hover: rgb(199, 199, 199);
   --color-fondo-tooltip: #333;
-  --color-iconos: #833e2b;
-  --color-iconos-hover: #b96b11;
+  --color-iconos: #000807;
+  --color-iconos-hover: #474747;
   --color-iconos-principal: #000000;
   --color-scrollbar-thumb: #8c6c5a;
   --color-scrollbar-thumb-hover: #dda17e;
@@ -108,8 +108,8 @@
   --color-sombra-oscura: rgba(0, 0, 0, 0.5);
   --color-texto-general: #000000;
   --color-texto-advertencia-titulo: #c75757;
-  --color-texto-cards-productos: #ffffff;
-  --color-texto-hover-cards: #914021;
+  --color-texto-cards-productos: #000000;
+  --color-texto-hover-cards: #000000;
   --color-texto-placeholder: #696969;
   --color-texto-principal: #000000;
   --color-texto-tooltip: #ffffff;
@@ -121,11 +121,11 @@
   );
   --gradiente-panel-izquierdo: linear-gradient(
     135deg,
-    #6d4f3e,
-    #623b25,
-    #653e2f
+    #b2a392,
+    #6e665d,
+    #4a4a4a
   );
-  --gradiente-panel-lateral: linear-gradient(135deg, #6d4f3e, #623b25, #653e2f);
+  --gradiente-panel-lateral: linear-gradient(135deg, #b2a392, #6e665d, #4a4a4a);
   --sombra-boton-active: 0 2px 6px rgba(0, 0, 0, 0.12);
   --sombra-boton-hover: 0 8px 20px rgba(0, 0, 0, 0.3);
   --sombra-boton-normal: 0 5px 15px rgba(0, 0, 0, 0.2);

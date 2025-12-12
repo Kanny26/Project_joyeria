@@ -1,12 +1,14 @@
-@import url('../../base/global.css');
-@import url('../../Tipografias/styles.css');
-
+@import url('../../base/global.css'); 
+@import url('../../Tipografias/styles.css'); 
+ 
+/* Reset general */
 * {
     margin: var(--margin_padding_reset);
     padding: var(--margin_padding_reset);
     box-sizing: border-box;
 }
 
+/* Estilos generales del body */
 body {
     font-family: var(--fuente-titulos);
     background-color: var(--color-fondo-vendedor);
@@ -19,7 +21,7 @@ body {
     min-height: var(--alto-minimo-body);
 }
 
-/* Título centrado */
+/* Título principal centrado */
 .panel-vendedor__titulo {
     flex: 1;
     text-align: center;
@@ -28,19 +30,21 @@ body {
     color: var(--color-texto-principal);
 }
 
-/* Icono de casa */
+/* Icono de inicio */
 .panel-vendedor__icono {
     font-size: var(--tamano-icono-home);
     color: var(--color-iconos-principal);
     cursor: pointer;
 }
 
+/* Contenedor general de las tarjetas */
 .panel-vendedor__tarjetas {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
+/* Título de la sección de tarjetas */
 .panel-vendedor__tarjetas-titulo {
     font-size: var(--tamano-titulo-card);
     margin-bottom: 40px;
@@ -54,6 +58,7 @@ body {
     color: var(--color-texto-hover-cards);
 }
 
+/* Contenedor de todas las tarjetas */
 .panel-vendedor__tarjetas-contenedor {
     display: flex; 
     gap: var(--gap-cards-catalogo);
@@ -61,6 +66,7 @@ body {
     padding: 0 40px;
 }
 
+/* Estilo base de cada tarjeta */
 .panel-vendedor__tarjeta {
     display: flex;
     flex-direction: column;
@@ -72,7 +78,7 @@ body {
     text-align: center;
 }
 
-/* Círculo del icono */
+/* Círculo que contiene el icono */
 .panel-vendedor__tarjeta-circulo {
     display: flex;
     align-items: center;
@@ -80,7 +86,6 @@ body {
     width: var(--ancho-iconos-vendedor);
     height: var(--alto-iconos-vendedor);
     border-radius: 50%;
-    /* background-image: url('../../../../assets/Imagenes/fondos/fondo_cards.jpg'); */
     background-color: var(--color-cards);
     margin-bottom: 15px;
 }
@@ -97,8 +102,7 @@ body {
     transition: transform var(--transicion-general);
 }
 
-
-/* Contenedor de h3 */
+/* Contenedor para el h3 animado */
 .panel-vendedor__tarjeta-h3 {
     position: relative;
     width: var(--ancho-dashboard-act);
@@ -115,7 +119,7 @@ body {
     box-shadow: 0 2px 6px var(--color-sombra-oscura);
 }
 
-/* Texto centrado */
+/* Texto del h3 */
 .panel-vendedor__tarjeta-h3 h3 {
     position: relative;
     color: var(--color-texto-principal);
@@ -126,7 +130,7 @@ body {
     transition: color var(--transicion-general);
 }
 
-/* Elementos decorativos izquierda y derecha */
+/* Fondos animados del h3 (izquierda y derecha) */
 .panel-vendedor__tarjeta-h3-izquierda,
 .panel-vendedor__tarjeta-h3-derecha {
     position: absolute;
@@ -146,7 +150,7 @@ body {
     background: var(--color-fondo-h3-derecha);
 }
 
-/* Hover efecto */
+/* Efectos hover del h3 */
 .panel-vendedor__tarjeta-h3:hover h3 {
     color: var(--color-texto-hover-cards);
 }
@@ -160,55 +164,46 @@ body {
 }
 
 /* ============================================================
-   MEDIA QUERIES - DESKTOP FIRST
+   MEDIA QUERIES
    ============================================================ */
 
-/* Pantallas extra grandes (>= 1440px) */
+/* Pantallas grandes (>= 1440px) */
 @media (min-width: 1440px) {
     .panel-vendedor__tarjetas-titulo {
         font-size: 52px;
     }
-    
     .panel-vendedor__tarjetas-contenedor {
         gap: 60px;
     }
 }
 
-/* Escritorio – estilos base (>= 1025px) - Sin cambios, estilos base */
-
-/* Tablet (769px a 1024px) */
+/* Tablets (769px a 1024px) */
 @media (min-width: 769px) and (max-width: 1024px) {
     .panel-vendedor__tarjetas-titulo {
         font-size: 42px;
         margin-bottom: 35px;
     }
-    
     .panel-vendedor__tarjetas-contenedor {
         gap: 35px;
         padding: 0 30px;
         flex-wrap: wrap;
         justify-content: center;
     }
-    
     .panel-vendedor__tarjeta {
         width: 220px;
     }
-    
     .panel-vendedor__tarjeta-circulo {
         width: 170px;
         height: 170px;
     }
-    
     .panel-vendedor__tarjeta-circulo img {
         width: 100px;
         height: 100px;
     }
-    
     .panel-vendedor__tarjeta-h3 {
         width: 180px;
         height: 48px;
     }
-    
     .panel-vendedor__tarjeta-h3 h3 {
         font-size: 22px;
     }
@@ -220,261 +215,69 @@ body {
         font-size: 36px;
         margin-bottom: 30px;
     }
-    
     .panel-vendedor__tarjetas-contenedor {
         gap: 25px;
         padding: 0 20px;
         flex-wrap: wrap;
         justify-content: center;
     }
-    
     .panel-vendedor__tarjeta {
         width: 200px;
     }
-    
     .panel-vendedor__tarjeta-circulo {
         width: 150px;
         height: 150px;
     }
-    
     .panel-vendedor__tarjeta-circulo img {
         width: 90px;
         height: 90px;
     }
-    
     .panel-vendedor__tarjeta-h3 {
         width: 160px;
         height: 45px;
     }
-    
     .panel-vendedor__tarjeta-h3 h3 {
         font-size: 20px;
     }
 }
 
-/* Móvil pequeño (máx. 480px) */
+/* Móviles pequeños (<= 480px) */
 @media (max-width: 480px) {
     .panel-vendedor__titulo {
         font-size: 24px;
     }
-    
     .panel-vendedor__icono {
         font-size: 30px;
     }
-    
     .panel-vendedor__tarjetas {
         padding: 0 10px;
     }
-    
     .panel-vendedor__tarjetas-titulo {
         font-size: 28px;
         margin-bottom: 25px;
     }
-    
     .panel-vendedor__tarjetas-contenedor {
         flex-direction: column;
         gap: 20px;
         padding: 0;
     }
-    
     .panel-vendedor__tarjeta {
         width: 100%;
         max-width: 280px;
     }
-    
     .panel-vendedor__tarjeta-circulo {
         width: 130px;
         height: 130px;
     }
-    
     .panel-vendedor__tarjeta-circulo img {
         width: 80px;
         height: 80px;
     }
-    
     .panel-vendedor__tarjeta-h3 {
         width: 100%;
         max-width: 200px;
         height: 42px;
     }
-    
-    .panel-vendedor__tarjeta-h3 h3 {
-        font-size: 18px;
-    }
-}
-
-/* Elementos decorativos izquierda y derecha */
-.panel-vendedor__tarjeta-h3-izquierda,
-.panel-vendedor__tarjeta-h3-derecha {
-    position: absolute;
-    top: 0;
-    width: 50%;
-    height: 100%;
-    transition: transform var(--transicion-general);
-}
-
-.panel-vendedor__tarjeta-h3-izquierda {
-    left: 0;
-    background: var(--color-fondo-h3-izquierda);
-}
-
-.panel-vendedor__tarjeta-h3-derecha {
-    right: 0;
-    background: var(--color-fondo-h3-derecha);
-}
-
-/* Hover efecto */
-.panel-vendedor__tarjeta-h3:hover h3 {
-    color: var(--color-texto-hover-cards);
-}
-
-.panel-vendedor__tarjeta-h3:hover .panel-vendedor__tarjeta-h3-izquierda {
-    transform: translateX(-100%);
-}
-
-.panel-vendedor__tarjeta-h3:hover .panel-vendedor__tarjeta-h3-derecha {
-    transform: translateX(100%);
-}
-
-/* ============================================================
-   MEDIA QUERIES - DESKTOP FIRST
-   ============================================================ */
-
-/* Pantallas extra grandes (>= 1440px) */
-@media (min-width: 1440px) {
-    .panel-vendedor__tarjetas-titulo {
-        font-size: 52px;
-    }
-    
-    .panel-vendedor__tarjetas-contenedor {
-        gap: 60px;
-    }
-}
-
-/* Escritorio – estilos base (>= 1025px) - Sin cambios, estilos base */
-
-/* Tablet (769px a 1024px) */
-@media (min-width: 769px) and (max-width: 1024px) {
-    .panel-vendedor__tarjetas-titulo {
-        font-size: 42px;
-        margin-bottom: 35px;
-    }
-    
-    .panel-vendedor__tarjetas-contenedor {
-        gap: 35px;
-        padding: 0 30px;
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-    
-    .panel-vendedor__tarjeta {
-        width: 220px;
-    }
-    
-    .panel-vendedor__tarjeta-circulo {
-        width: 170px;
-        height: 170px;
-    }
-    
-    .panel-vendedor__tarjeta-circulo img {
-        width: 100px;
-        height: 100px;
-    }
-    
-    .panel-vendedor__tarjeta-h3 {
-        width: 180px;
-        height: 48px;
-    }
-    
-    .panel-vendedor__tarjeta-h3 h3 {
-        font-size: 22px;
-    }
-}
-
-/* Phablet (481px a 768px) */
-@media (min-width: 481px) and (max-width: 768px) {
-    .panel-vendedor__tarjetas-titulo {
-        font-size: 36px;
-        margin-bottom: 30px;
-    }
-    
-    .panel-vendedor__tarjetas-contenedor {
-        gap: 25px;
-        padding: 0 20px;
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-    
-    .panel-vendedor__tarjeta {
-        width: 200px;
-    }
-    
-    .panel-vendedor__tarjeta-circulo {
-        width: 150px;
-        height: 150px;
-    }
-    
-    .panel-vendedor__tarjeta-circulo img {
-        width: 90px;
-        height: 90px;
-    }
-    
-    .panel-vendedor__tarjeta-h3 {
-        width: 160px;
-        height: 45px;
-    }
-    
-    .panel-vendedor__tarjeta-h3 h3 {
-        font-size: 20px;
-    }
-}
-
-/* Móvil pequeño (máx. 480px) */
-@media (max-width: 480px) {
-    .panel-vendedor__titulo {
-        font-size: 24px;
-    }
-    
-    .panel-vendedor__icono {
-        font-size: 30px;
-    }
-    
-    .panel-vendedor__tarjetas {
-        padding: 0 10px;
-    }
-    
-    .panel-vendedor__tarjetas-titulo {
-        font-size: 28px;
-        margin-bottom: 25px;
-    }
-    
-    .panel-vendedor__tarjetas-contenedor {
-        flex-direction: column;
-        gap: 20px;
-        padding: 0;
-    }
-    
-    .panel-vendedor__tarjeta {
-        width: 100%;
-        max-width: 280px;
-    }
-    
-    .panel-vendedor__tarjeta-circulo {
-        width: 130px;
-        height: 130px;
-    }
-    
-    .panel-vendedor__tarjeta-circulo img {
-        width: 80px;
-        height: 80px;
-    }
-    
-    .panel-vendedor__tarjeta-h3 {
-        width: 100%;
-        max-width: 200px;
-        height: 42px;
-    }
-    
     .panel-vendedor__tarjeta-h3 h3 {
         font-size: 18px;
     }

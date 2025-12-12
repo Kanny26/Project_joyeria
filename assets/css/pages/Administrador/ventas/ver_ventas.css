@@ -96,7 +96,7 @@ body {
 }
 
 .tabla th{
-    background: #f3d7c2;
+    background: var(--color-encabezado-venta);
     padding: 12px;
     font-size: 14px;
     text-align: left;

@@ -99,7 +99,7 @@ body {
     flex: 1;
     min-width: 220px;
     max-width: 260px;
-    background: #ac826a;
+    background: var(--color-fondo-contadores);
     border-radius: 20px;
     padding: 25px 20px;
     display: flex;
@@ -107,7 +107,7 @@ body {
     align-items: center;
     text-align: center;
     transition: all 0.3s ease;
-    border-left: 5px solid #aa6948;
+    border-left: 5px solid var(--borde-contadores);
 }
 
 .contador-card:hover {
@@ -128,7 +128,7 @@ body {
     color: #ffffff;
     padding: 15px 25px;
     border-radius: 50px; 
-    background: linear-gradient(145deg, #44240b, #aa6948);
+    background: var(--color-fondo-num-contadores);
     transition: all 0.3s ease;
 }
 

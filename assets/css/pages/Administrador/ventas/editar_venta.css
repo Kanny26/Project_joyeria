@@ -115,17 +115,17 @@ body {
 
 .contador-card {
   flex: 1;
-  min-width: 220px;
-  max-width: 260px;
-  background: #ac826a;
-  border-radius: 20px;
-  padding: 25px 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  transition: all 0.3s ease;
-  border-left: 5px solid #aa6948;
+    min-width: 220px;
+    max-width: 260px;
+    background: var(--color-fondo-contadores);
+    border-radius: 20px;
+    padding: 25px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    transition: all 0.3s ease;
+    border-left: 5px solid var(--borde-contadores);
 }
 
 .contador-card:hover {
@@ -142,12 +142,12 @@ body {
 
 .contador-card__numero {
   font-size: 32px;
-  font-weight: 700;
-  color: #ffffff;
-  padding: 15px 25px;
-  border-radius: 50px;
-  background: linear-gradient(145deg, #44240b, #aa6948);
-  transition: all 0.3s ease;
+    font-weight: 700;
+    color: #ffffff;
+    padding: 15px 25px;
+    border-radius: 50px; 
+    background: var(--color-fondo-num-contadores);
+    transition: all 0.3s ease;
 }
 
 .contador-card__numero:hover {

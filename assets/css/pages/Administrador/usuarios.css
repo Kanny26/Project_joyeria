@@ -1,7 +1,7 @@
-@import url('../../base/global.css');
-@import url('../../Tipografias/styles.css');
-
-/* RESET */
+@import url('../../base/global.css'); 
+@import url('../../Tipografias/styles.css'); 
+ 
+/* RESET general del proyecto */
 * {
     margin: var(--margin_padding_reset);
     padding: var(--margin_padding_reset);
@@ -11,30 +11,22 @@
 body {
     font-family: var(--fuente-titulos);
     background-color: var(--color-fondo-admin);
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
     min-height: var(--alto-minimo-body);
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    padding-top: 140px;
+    padding-top: 140px; /* evita que el header cubra el contenido */
 }
 
-/* CONTENEDOR */
+/* Grid principal donde se ubican las tarjetas */
 .usuarios-admin__contenedor {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: var(--gap-cards-catalogo);
     max-width: 1200px;
-    justify-content: center;
 }
 
-/* TARJETAS */
-.usuarios-admin__contenedor-item {
-    list-style: none;
-}
-
+/* Cada tarjeta del módulo */
 .usuarios-admin__tarjeta {
     display: flex;
     flex-direction: column;
@@ -44,19 +36,17 @@ body {
     border-radius: var(--radio-borde-card);
     text-align: center;
     transition: transform .3s ease;
-    text-decoration: none;
 }
 
 .usuarios-admin__tarjeta:hover {
-    transform: scale(1.03);
+    transform: scale(1.03); /* efecto sutil al pasar el mouse */
 }
 
-/* ICONO */
+/* Contenedor circular del ícono */
 .usuarios-admin__icono {
     width: var(--ancho-iconos-admin);
     height: var(--alto-iconos-admin);
     border-radius: 50%;
-    /* background-image: url('../../../../assets/Imagenes/fondos/fondo_cards.jpg'); */
     background-color: var(--color-cards);
     display: flex;
     justify-content: center;
@@ -66,17 +56,11 @@ body {
 }
 
 .usuarios-admin__icono:hover {
-    transform: scale(1.1);
+    transform: scale(1.1); /* resalta el icono */
     box-shadow: var(--sombra-hover);
 }
 
-.usuarios-admin__icono img {
-    width: var(--tamano-imagen-icono);
-    height: var(--tamano-imagen-icono);
-    transition: transform .3s ease;
-}
-
-/* BOTONES */
+/* Botón/título animado de la tarjeta */
 .usuarios-admin__titulo-tarjeta {
     background-color: var(--color-fondo-boton);
     width: var(--ancho-h3-categorias);
@@ -89,11 +73,12 @@ body {
     color: var(--color-texto-principal);
     font-weight: var(--peso-texto-semi);
     position: relative;
-    overflow: hidden;
+    overflow: hidden; /* evita desbordes de la animación */
     cursor: pointer;
     box-shadow: 0 2px 6px var(--color-sombra-oscura);
 }
 
+/* Fondos animados laterales */
 .usuarios-admin__titulo-tarjeta::before,
 .usuarios-admin__titulo-tarjeta::after {
     content: "";
@@ -102,7 +87,6 @@ body {
     height: 100%;
     top: 0;
     transition: transform .3s ease;
-    z-index: 0;
 }
 
 .usuarios-admin__titulo-tarjeta::before {
@@ -116,7 +100,7 @@ body {
 }
 
 .usuarios-admin__titulo-tarjeta:hover::before {
-    transform: translateX(-100%);
+    transform: translateX(-100%); /* animación hacia afuera */
 }
 
 .usuarios-admin__titulo-tarjeta:hover::after {
@@ -128,57 +112,36 @@ body {
 }
 
 /* ============================================================
-   MEDIA QUERIES - DESKTOP FIRST
+   MEDIA QUERIES - Ajustes por dispositivo
    ============================================================ */
 
-/* Pantallas extra grandes (>= 1440px) */
+/* Extra grandes */
 @media (min-width: 1440px) {
     .usuarios-admin__contenedor {
         max-width: 1400px;
-        gap: 60px;
+        gap: 60px; /* más separación en layouts amplios */
     }
 }
 
-/* Escritorio – estilos base (>= 1025px) - Sin cambios, estilos base */
-
-/* Tablet (769px a 1024px) */
+/* Tablet */
 @media (min-width: 769px) and (max-width: 1024px) {
-    body {
-        padding-top: 120px;
-    }
+    body { padding-top: 120px; }
     
     .usuarios-admin__contenedor {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(2, 1fr); /* 2 columnas */
         gap: 35px;
         max-width: 700px;
-    }
-    
-    .usuarios-admin__tarjeta {
-        width: 100%;
     }
     
     .usuarios-admin__icono {
         width: 170px;
         height: 170px;
     }
-    
-    .usuarios-admin__icono img {
-        width: 100px;
-        height: 100px;
-    }
-    
-    .usuarios-admin__titulo-tarjeta {
-        width: 220px;
-        height: 58px;
-        font-size: 22px;
-    }
 }
 
-/* Phablet (481px a 768px) */
+/* Phablet */
 @media (min-width: 481px) and (max-width: 768px) {
-    body {
-        padding-top: 100px;
-    }
+    body { padding-top: 100px; }
     
     .usuarios-admin__contenedor {
         grid-template-columns: repeat(2, 1fr);
@@ -186,60 +149,24 @@ body {
         max-width: 600px;
     }
     
-    .usuarios-admin__tarjeta {
-        width: 100%;
-    }
-    
     .usuarios-admin__icono {
         width: 150px;
         height: 150px;
     }
-    
-    .usuarios-admin__icono img {
-        width: 90px;
-        height: 90px;
-    }
-    
-    .usuarios-admin__titulo-tarjeta {
-        width: 200px;
-        height: 55px;
-        font-size: 20px;
-    }
 }
 
-/* Móvil pequeño (máx. 480px) */
+/* Móvil */
 @media (max-width: 480px) {
-    body {
-        padding-top: 80px;
-    }
+    body { padding-top: 80px; }
     
     .usuarios-admin__contenedor {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(2, 1fr); /* mantiene 2 columnas */
         gap: 20px;
-        max-width: 100%;
         padding: 0 10px;
-    }
-    
-    .usuarios-admin__tarjeta {
-        width: 100%;
-        max-width: 280px;
-        margin: 0 auto;
     }
     
     .usuarios-admin__icono {
         width: 130px;
         height: 130px;
-    }
-    
-    .usuarios-admin__icono img {
-        width: 80px;
-        height: 80px;
-    }
-    
-    .usuarios-admin__titulo-tarjeta {
-        width: 100%;
-        max-width: 200px;
-        height: 50px;
-        font-size: 18px;
     }
 }

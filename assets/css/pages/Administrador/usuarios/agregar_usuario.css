@@ -29,7 +29,7 @@ body {
 
 .registro-Usuario__formulario {
     width: 100%;
-    background: var(--color-cards);
+    background: var(--color-fondo-card-productos);
     border-radius: 12px;
     padding: 40px;
     box-shadow: var(--sombra-formulario);

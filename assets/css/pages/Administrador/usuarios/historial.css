@@ -40,15 +40,15 @@ body {
 .usuarios-listar__tabla td {
     padding: 15px 10px;
     text-align: center;
-    border-left: 1px solid saddlebrown;
-    border-bottom: 1px solid saddlebrown;
+    border-left: 1px solid var(--borde-contadores);
+    border-bottom: 1px solid var(--borde-contadores);
 }
 
 .usuarios-listar__tabla th {
     background-color: var(--color-fondo-tarjeta-hover);
     font-weight: 700;
     font-size: var(--tamano-label);
-    border: 1px solid saddlebrown;
+    border: 1px solid var(--borde-contadores);
 }
 
 .usuarios-listar__tabla tbody {

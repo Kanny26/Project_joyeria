@@ -1,12 +1,14 @@
-@import url('../../base/global.css'); /*variables globales*/
-@import url('../../Tipografias/styles.css');
+@import url('../../base/global.css'); /* Importa variables globales del proyecto */
+@import url('../../Tipografias/styles.css'); /* Importa tipografías personalizadas */
 
+/* Reset básico + modelo de caja consistente */
 * {
     margin: var(--margin_padding_reset);
     padding: var(--margin_padding_reset);
     box-sizing: border-box;
 }
 
+/* Estilos globales del body: fondo, alineación y altura mínima */
 body {
     font-family: var(--fuente-titulos);
     background: var(--gradiente-fondo-principal);
@@ -19,7 +21,11 @@ body {
     min-height: var(--alto-minimo-body);
 }
 
-/* Contenedor principal */
+/* ============================================================
+   CONTENEDORES PRINCIPALES
+   ============================================================ */
+
+/* Contenedor general que divide panel izquierdo y derecho */
 .ing-correo {
     display: flex;
     justify-content: center;
@@ -28,7 +34,11 @@ body {
     gap: var(--separacion-paneles);
 }
 
-/* Panel izquierdo */
+/* ============================================================
+   PANEL IZQUIERDO
+   ============================================================ */
+
+/* Panel visual informativo de la izquierda */
 .ing-correo__panel {
     width: var(--ancho-panel-izquierdo);
     height: var(--alto-panel-izquierdo);
@@ -39,6 +49,7 @@ body {
     border-radius: var(--bordes-panel-izquierdo);
 }
 
+/* Caja interna del panel: contiene logo e información */
 .ing-correo__panel-caja {
     width: var(--ancho-panel-derecho-interno);
     height: var(--alto-panel-derecho-interno);
@@ -53,13 +64,18 @@ body {
     text-align: center;
 }
 
+/* Logo dentro del panel izquierdo */
 .ing-correo__panel-logo {
     width: var(--ancho-logo);
     height: var(--alto-logo);
     margin-top: var(--margen-logo-inferior);
 }
 
-/* Panel derecho */
+/* ============================================================
+   PANEL DERECHO (FORMULARIO)
+   ============================================================ */
+
+/* Panel derecho con imagen de fondo y capa transparente */
 .ing-correo__main {
     width: var(--ancho-panel-derecho);
     height: var(--alto-panel-derecho);
@@ -76,7 +92,7 @@ body {
     opacity: var(--opacidad-imagen-fondo);
 }
 
-/* Caja del formulario */
+/* Caja del formulario principal */
 .ing-correo__caja {
     width: var(--ancho-contenedor-mensajes);
     height: var(--alto-contenedor-mensajes);
@@ -91,6 +107,7 @@ body {
     box-shadow: var(--sombra-caja);
 }
 
+/* Título del formulario */
 .ing-correo__caja h1 {
     color: var(--color-texto-principal);
     font-weight: var(--peso-fuente-titulo-formularios);
@@ -98,6 +115,7 @@ body {
     font-size: 25px;
 }
 
+/* Texto descriptivo */
 .ing-correo__caja p {
     font-size: var(--tamano-parrafos);
     font-family: var(--fuente-subtitulos);
@@ -106,7 +124,11 @@ body {
     line-height: var(--altura-linea-parrafo);
 }
 
-/* Input */
+/* ============================================================
+   INPUT DEL FORMULARIO
+   ============================================================ */
+
+/* Contenedor del input con ícono e interacción */
 .ing-correo__input-group {
     width: var(--ancho-input);
     height: var(--alto-input);
@@ -119,12 +141,14 @@ body {
     position: relative;
 }
 
+/* Icono dentro del input */
 .ing-correo__input-group i {
     font-size: var(--tamaño-fuente-icono-input);
     color: var(--color-iconos);
     margin-right: var(--margen-icono-derecho);
 }
 
+/* Input editable */
 .ing-correo__input-group input {
     background-color: transparent;
     border: none;
@@ -140,10 +164,10 @@ body {
 }
 
 /* ============================================================
-   MEDIA QUERIES - DESKTOP FIRST
+   MEDIA QUERIES RESPONSIVAS
    ============================================================ */
 
-/* Pantallas extra grandes (>= 1440px) */
+/* Dispositivos grandes (>=1440px): ajusta paneles y caja al formato más grande */
 @media (min-width: 1440px) {
     .ing-correo__panel {
         width: 600px;
@@ -161,9 +185,7 @@ body {
     }
 }
 
-/* Escritorio – estilos base (>= 1025px) - Sin cambios, estilos base */
-
-/* Tablet (769px a 1024px) */
+/* Tablet (769px–1024px): reorganiza en columna y reduce tamaños */
 @media (min-width: 769px) and (max-width: 1024px) {
     .ing-correo {
         flex-direction: column;
@@ -217,7 +239,7 @@ body {
     }
 }
 
-/* Phablet (481px a 768px) */
+/* Phablet (481px–768px): panel se reduce y se adapta al ancho disponible */
 @media (min-width: 481px) and (max-width: 768px) {
     .ing-correo {
         flex-direction: column;
@@ -274,7 +296,7 @@ body {
     }
 }
 
-/* Móvil pequeño (máx. 480px) */
+/* Móvil pequeño (<=480px): oculta panel izquierdo y optimiza formularios */
 @media (max-width: 480px) {
     body {
         padding: 10px;
@@ -288,23 +310,7 @@ body {
     }
     
     .ing-correo__panel {
-        /* width: 100%;
-        height: auto;
-        min-height: 300px;
-        border-radius: 15px; */
-        display: none;
-    }
-    
-    .ing-correo__panel-caja {
-        width: 95%;
-        height: auto;
-        padding: 15px 10px;
-    }
-    
-    .ing-correo__panel-logo {
-        width: 180px;
-        height: 180px;
-        margin-top: 5px;
+        display: none; /* En móviles, solo se muestra el panel del formulario */
     }
     
     .ing-correo__main {

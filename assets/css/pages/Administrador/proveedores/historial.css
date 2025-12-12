@@ -39,7 +39,7 @@ body {
 .Proveedores-listar__tabla td {
     padding: 12px 10px;
     text-align: center;
-    border: 1px solid saddlebrown;
+    border: 1px solid rgb(0, 0, 0);
 }
 
 .Proveedores-listar__tabla th {
