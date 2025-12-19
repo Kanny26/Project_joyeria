@@ -1,0 +1,149 @@
+.admin__tooltips-right {
+    position: fixed;
+    right: var(--posicion-lateral-iconos);
+    top: 50%;
+    transform: var(--transformacion-centrar-y);
+    display: flex;
+    flex-direction: column;
+    gap: var(--separacion-iconos-laterales);
+    z-index: var(--z-index-iconos);
+}
+
+.icon-container {
+    background: var(--color-fondo-icono);
+    border-radius: var(--radio-bordes-icono-lateral);
+    width: var(--alto-ancho-container-tooltips);
+    height: var(--alto-ancho-container-tooltips);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: var(--sombra-general);
+    cursor: pointer;
+    position: relative;
+    transition: var(--transicion-icono);
+}
+
+.icon-container:hover {
+    transform: scale(var(--escala-icono-hover));
+}
+
+.tooltip {
+    position: absolute;
+    right: var(--posicion-tooltip);
+    background: var(--color-fondo-tooltip);
+    color: var(--color-texto-tooltip);
+    padding: var(--padding-tooltip);
+    border-radius: var(--radio-bordes-tooltip);
+    font-size: var(--desplazamiento-active-boton).85rem;
+    opacity: var(--opacidad-tooltip-inicial);
+    transition: var(--duracion-transicion);
+}
+
+.icon-container:hover .tooltip {
+    opacity: var(--opacidad-tooltip-hover);
+}
+
+
+/*iconos i*/
+
+.iconos {
+    display: flex;
+    justify-content: center;
+    margin-top: 25px;
+    gap: var(--gap-iconos);
+}
+
+.iconos i {
+    font-size: var(--tamano-iconos-productos);
+    color: var(--color-iconos);
+    cursor: pointer;
+    /* margin-top: 10px; */
+}
+
+.iconos i:hover {
+    color: var(--color-iconos-hover);
+}
+
+/* ============================================================
+    MEDIA QUERIES - ENFOQUE DESKTOP-FIRST
+    ============================================================ */
+
+/* Tablet */
+@media (max-width: 1024px) {
+    .admin__tooltips-right {
+        right: 40px;
+        gap: 12px;
+    }
+
+    .icon-container {
+        width: 45px;
+        height: 45px;
+    }
+
+    .iconos {
+        gap: 15px;
+        margin-top: 20px;
+    }
+
+    .iconos i {
+        font-size: 20px;
+    }
+}
+
+/* Phablet */
+@media (max-width: 768px) {
+    .admin__tooltips-right {
+        right: 20px;
+        gap: 10px;
+    }
+
+    .icon-container {
+        width: 40px;
+        height: 40px;
+    }
+
+    .iconos {
+        gap: 12px;
+    }
+
+    .iconos i {
+        font-size: 18px;
+    }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+    .admin__tooltips-right {
+        /* En móvil, los iconos laterales pueden obstruir. Considerar reposicionar o ajustar mucho */
+        right: 10px;
+        top: auto;
+        bottom: 20px;
+        transform: none;
+        flex-direction: row;
+        width: 100%;
+        justify-content: center;
+        background: rgba(255, 255, 255, 0.8);
+        padding: 10px;
+        border-radius: 20px 20px 0 0;
+    }
+
+    .icon-container {
+        width: 35px;
+        height: 35px;
+        box-shadow: none;
+    }
+
+    .tooltip {
+        display: none;
+        /* Ocultar tooltips en móvil para evitar superposiciones */
+    }
+
+    .iconos {
+        flex-wrap: wrap;
+        margin-top: 15px;
+    }
+
+    .iconos i {
+        font-size: 16px;
+    }
+}

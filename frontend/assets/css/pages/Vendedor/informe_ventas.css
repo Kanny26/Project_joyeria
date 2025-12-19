@@ -1,0 +1,187 @@
+@import url('../../base/global.css');
+
+* {
+    margin: var(--margin_padding_reset);
+    padding: var(--margin_padding_reset);
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--fuente-titulos);
+    background-color: var(--color-fondo-vendedor);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: var(--alto-minimo-body);
+}
+
+/* CONTENEDOR PRINCIPAL */
+.informe-ventas {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 90%;
+    max-width: 1300px;
+}
+
+.informe-ventas__titulo {
+    font-size: var(--tamano-titulo-card);
+    margin-bottom: 40px;
+    text-align: center;
+    color: var(--color-titulo-cards);
+    transition: transform var(--duracion-transicion), color var(--duracion-transicion);
+    text-shadow: var(--color-sombra-texto) 4px 4px 4px;
+}
+
+.informe-ventas__titulo:hover {
+    color: var(--color-texto-hover-cards);
+}
+
+/* RESUMEN HORIZONTAL */
+.informe-ventas__resumen-horizontal {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 25px;
+    width: 100%;
+    margin-bottom: 60px;
+}
+
+/* CARDS */
+.card-horizontal {
+    background: linear-gradient(145deg, #ffffff, #f0f3f8);
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 120px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card-horizontal:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 15px 25px rgba(0, 0, 0, 0.15);
+}
+
+.card-horizontal__titulo {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #7f8c8d;
+    margin-bottom: 5px;
+}
+
+.card-horizontal__valor {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #2c3e50;
+}
+
+/* TABLA VENTAS */
+.informe-ventas__tabla {
+    width: 100%;
+    background: #ffffff;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+}
+
+.informe-ventas__subtitulo {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 20px;
+}
+
+.tabla-ventas__encabezado,
+.tabla-ventas__fila {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    padding: 12px 15px;
+}
+
+.tabla-ventas__encabezado {
+    font-weight: 600;
+    color: #34495e;
+    border-bottom: 2px solid #ecf0f1;
+}
+
+.tabla-ventas__fila {
+    border-bottom: 1px solid #ecf0f1;
+    transition: background 0.2s ease;
+}
+
+.tabla-ventas__fila:hover {
+    background-color: #f0f3f8;
+    cursor: pointer;
+}
+
+.tabla-ventas__fila span {
+    color: #2c3e50;
+}
+
+/* ============================================================
+    MEDIA QUERIES - ENFOQUE DESKTOP-FIRST
+    ============================================================ */
+
+/* Tablet */
+@media (max-width: 1024px) {
+    .informe-ventas {
+        width: 95%;
+    }
+}
+
+/* Phablet */
+@media (max-width: 768px) {
+    body {
+        padding-top: 110px;
+    }
+
+    .informe-ventas__titulo {
+        font-size: 35px;
+        margin-bottom: 30px;
+    }
+
+    .informe-ventas__resumen-horizontal {
+        gap: 15px;
+        margin-bottom: 40px;
+    }
+
+    .card-horizontal {
+        height: auto;
+        padding: 15px;
+    }
+
+    .tabla-ventas__encabezado,
+    .tabla-ventas__fila {
+        padding: 10px;
+        font-size: 14px;
+    }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+    body {
+        padding-top: 90px;
+    }
+
+    .informe-ventas__titulo {
+        font-size: 28px;
+        margin-bottom: 25px;
+    }
+
+    /* Tabla con scroll en móvil */
+    .informe-ventas__tabla {
+        padding: 10px;
+        overflow-x: auto;
+    }
+
+    .tabla-ventas__encabezado,
+    .tabla-ventas__fila {
+        min-width: 500px;
+        grid-template-columns: repeat(4, 1fr);
+    }
+}

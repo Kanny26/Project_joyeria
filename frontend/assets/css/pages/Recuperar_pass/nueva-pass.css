@@ -1,0 +1,255 @@
+@import url('../../base/global.css');
+
+* {
+    margin: var(--margin_padding_reset);
+    padding: var(--margin_padding_reset);
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--fuente-titulos);
+    background: var(--gradiente-fondo-principal);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: var(--alto-minimo-body);
+}
+
+/* Contenedor principal */
+.nueva-contraseña {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: var(--alto-minimo-contenedor);
+    gap: var(--separacion-paneles);
+}
+
+/* Panel izquierdo */
+.nueva-contraseña__panel {
+    width: var(--ancho-panel-izquierdo);
+    height: var(--alto-panel-izquierdo);
+    background: var(--gradiente-panel-lateral);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: var(--bordes-panel-izquierdo);
+}
+
+.nueva-contraseña__panel-caja {
+    width: var(--ancho-panel-derecho-interno);
+    height: var(--alto-panel-derecho-interno);
+    background-color: var(--color-fondo-caja);
+    border-radius: var(--bordes-caja-panel-izquierda-derecha);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--padding-caja-vertical) var(--padding-caja-horizontal);
+    box-shadow: var(--sombra-caja-panel);
+    text-align: center;
+}
+
+.nueva-contraseña__panel-logo {
+    width: var(--ancho-logo);
+    height: var(--alto-logo);
+    margin-top: var(--margen-logo-inferior);
+}
+
+/* Panel derecho */
+.nueva-contraseña__main {
+    width: var(--ancho-panel-derecho);
+    height: var(--alto-panel-derecho);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background-image: url("../../../../assets/Imagenes/fondos/banner3.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    border-radius: var(--bordes-panel-derecho);
+    position: relative;
+    opacity: var(--opacidad-imagen-fondo);
+}
+
+/* Formulario */
+.nueva-contraseña__form {
+    width: var(--ancho-contenedor-mensajes);
+    height: var(--alto-contenedor-mensajes);
+    background-color: var(--color-fondo-caja);
+    border-radius: var(--bordes-caja-panel-izquierda-derecha);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: var(--padding-caja-mensaje);
+    box-shadow: var(--sombra-caja);
+}
+
+.nueva-contraseña__form h1 {
+    color: var(--color-texto-principal);
+    font-weight: var(--peso-fuente-titulo-formularios);
+    font-family: var(--fuente-titulos);
+    font-size: 25px;
+}
+
+.nueva-contraseña__form p {
+    font-size: var(--tamano-parrafos);
+    font-family: var(--fuente-subtitulos);
+    margin-bottom: var(--margen-parrafo-inferior);
+    margin-top: var(--margen-parrafo-superior);
+    line-height: var(--altura-linea-parrafo);
+}
+
+/* Inputs */
+.nueva-contraseña__input-group {
+    width: var(--ancho-input);
+    height: var(--alto-input);
+    margin-top: var(--margen-input-superior);
+    display: flex;
+    align-items: center;
+    background-color: var(--color-fondo-input);
+    border-radius: var(--bordes-inputs-botones);
+    padding: var(--desplazamiento-active-boton) var(--padding-input-horizontal);
+    position: relative;
+}
+
+.nueva-contraseña__input-group i {
+    font-size: var(--tamaño-fuente-icono-input);
+    color: var(--color-iconos);
+    margin-right: var(--margen-icono-derecho);
+}
+
+.nueva-contraseña__input-group input {
+    background-color: transparent;
+    border: none;
+    outline: none;
+    font-family: var(--fuente-placeholder);
+    font-size: var(--tamano-fuente-placeholder);
+    flex: var(--indice-z-formulario);
+    padding-right: var(--padding-input-derecho);
+}
+
+.nueva-contraseña__input-group input::placeholder {
+    color: var(--color-texto-placeholders);
+}
+
+/* Enlace final */
+.nueva-contraseña__link {
+    width: var(--ancho-contenedor-botones);
+    text-align: center;
+    margin-top: var(--margen-link-registro-superior);
+    font-size: var(--tamaño-fuente-link-registro);
+}
+
+.nueva-contraseña__link a {
+    color: var(--color-texto-principal);
+    text-decoration: none;
+    font-weight: var(--peso-fuente-rol);
+}
+
+.nueva-contraseña__link a:hover {
+    color: var(--color-link-hover);
+}
+
+.nueva-contraseña__link p {
+    font-size: var(--tamano-fuente-parrafos-alternativos);
+}
+
+/* ============================================================
+    MEDIA QUERIES - ENFOQUE DESKTOP-FIRST
+    ============================================================ */
+
+/* Tablet */
+@media (max-width: 1024px) {
+    .nueva-contraseña {
+        flex-direction: column;
+        gap: 30px;
+    }
+
+    .nueva-contraseña__panel,
+    .nueva-contraseña__main {
+        width: 90%;
+        height: auto;
+        min-height: 550px;
+    }
+
+    .nueva-contraseña__form {
+        width: 90%;
+        max-width: 400px;
+    }
+}
+
+/* Phablet */
+@media (max-width: 768px) {
+    .nueva-contraseña {
+        gap: 20px;
+    }
+
+    .nueva-contraseña__panel,
+    .nueva-contraseña__main {
+        width: 100%;
+        min-height: 450px;
+        border-radius: 20px;
+    }
+
+    .nueva-contraseña__panel-caja {
+        width: 95%;
+        padding: 30px 15px;
+    }
+
+    .nueva-contraseña__panel-logo {
+        width: 250px;
+        height: 250px;
+    }
+
+    .nueva-contraseña__form {
+        width: 95%;
+        max-width: 350px;
+        padding: 25px;
+    }
+
+    .nueva-contraseña__form h1 {
+        font-size: 22px;
+    }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+    body {
+        padding: 15px;
+    }
+
+    .nueva-contraseña__panel,
+    .nueva-contraseña__main {
+        min-height: 380px;
+        border-radius: 15px;
+    }
+
+    .nueva-contraseña__main {
+        padding: 20px;
+    }
+
+    .nueva-contraseña__panel-logo {
+        width: 200px;
+        height: 200px;
+    }
+
+    .nueva-contraseña__form {
+        width: 100%;
+        padding: 20px 15px;
+    }
+
+    .nueva-contraseña__input-group {
+        width: 100%;
+        height: 40px;
+    }
+
+    .nueva-contraseña__input-group input {
+        font-size: 13px;
+    }
+}

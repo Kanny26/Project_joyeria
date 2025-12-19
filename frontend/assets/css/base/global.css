@@ -1,0 +1,512 @@
+/* ============================================================
+    VARIABLES GLOBALES DEL PROYECTO
+    ------------------------------------------------------------
+    Este archivo contiene todas las variables globales usadas
+    en el proyecto. Aquí defines colores, tipografía, tamaños,
+    bordes, sombras y otros valores reutilizables.
+    ============================================================ */
+
+@import url("https://fonts.googleapis.com/css2?family=Funnel+Display:wght@300..800&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Oswald:wght@200..700&display=swap");
+
+@import url("https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:ital,wght@0,200..800;1,200..800&family=Funnel+Display:wght@300..800&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Oswald:wght@200..700&display=swap");
+
+@import url("https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:ital,wght@0,200..800;1,200..800&family=Funnel+Display:wght@300..800&family=Lexend+Mega:wght@100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Oswald:wght@200..700&display=swap");
+
+@import url("https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:ital,wght@0,200..800;1,200..800&family=Funnel+Display:wght@300..800&family=Lexend+Mega:wght@100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Oswald:wght@200..700&family=Poiret+One&display=swap");
+
+:root {
+  /*reseteo*/
+  --margin_padding_reset: 0;
+  /* ===================================================== */
+  /*  TIPOGRAFÍA - FUENTES Y PESOS FUENTES*/
+  /* ===================================================== */
+  --fuente-descripciones: "Rubik", sans-serif;
+  --fuente-precios: "Rubik", sans-serif;
+  --fuente-placeholder: "Montserrat", sans-serif;
+  --fuente-subtitulos: "Lexend Mega", sans-serif;
+  --fuente-titulos: "Montserrat", sans-serif;
+  --peso-fuente-boton: 600;
+  --peso-fuente-boton-registro: 700;
+  --peso-fuente-rol: 700;
+  --peso-fuente-semibold: 600;
+  --peso-fuente-semititulos: 600;
+  --peso-fuente-texto-catalogo: 600;
+  --peso-fuente-boton: 600;
+  --peso-fuente-titulo-principal: 600;
+  --peso-fuente-titulo-formularios: 600;
+  --peso-texto-semi: 600;
+  --peso-texto-titulo: 700;
+  --tamano-texto-info: 35px;
+  --tamano-texto-h3: 25px;
+  --tamano-parrafos: 15px;
+  --tamano-fuente-placeholder: 15px;
+  --tamaño-fuente-links: 10px;
+  --tamano-fuente-parrafos-alternativos: 12px;
+  --tamano-texto-home-admin: 35px;
+  --tamano-texto-home-vendedor: 35px;
+  --tamano-titulo-card: 50px;
+  --tamano-titulo-home: 60px;
+  --tamano-botones: 30px;
+  --tamano-letra-botones: 18px;
+  --tamano-titulo-cards: 45px;
+  --tamano-nombre-producto-cards: 25px;
+  --tamano-contenido-producto: 18px;
+  --tamano-label: 20px;
+
+
+
+  /* ===================================================== */
+  /*  COLORES */
+  /* ===================================================== */
+  --fondo-splash-screen: #dba8a2;
+  --fondo-card-splash-screen: rgba(255, 255, 255, 0.95);
+  --secundario-card-splash-screen: #bd8992;
+  --color-titulo-splash-screen: #FFB6C1;
+  --color-borde-imagen: #fff;
+  --color-boton-principal: #dfb78c;
+  --color-boton-principal-hover: #c2795d;
+  --color-boton-secundario: #df997e;
+  --color-boton-secundario-hover: #c27e69;
+  --color-estrellas: #ffff00;
+  --color-fondo-advertencia: #eee3de;
+
+  --color-link-hover: #69331e;
+  --color-fondo-admin: #dfd2c8;
+  --color-fondo-vendedor: #dfd2c8;
+  --color-fondo-boton: #df8870;
+  --color-fondo-boton-hover: #9c9c9c;
+  --color-cards: #e9a897;
+  --color-fondo-circulo-hover: #d1907c;
+  --color-fondo-contadores: #cf9675;
+  --color-fondo-num-contadores: linear-gradient(145deg, #aa7146, #aa6948);
+  --borde-contadores: #aa6948;
+
+  --color-fondo-caja: #d9d6d2;
+  --color-fondo-card-productos: #da966f;
+  --color-fondo-general: #8a828267;
+  --color-fondo-icono: #fff;
+  --color-fondo-input: #ffffff;
+  --color-fondo-inputs: #b8b8b8;
+  --color-fondo-panel: #a6a6a6;
+  --color-card-venta: #dba8a2;
+  --color-contenedores-venta: #eb9c93;
+  --color-boton-venta: #eba08b;
+  --color-encabezado-venta: #f5a38e;
+
+  --color-nav-admin: #dfb78c;
+  --color-nav-vendedor: #99AD96;
+  --color-fondo-tarjeta-hover: #dda17e;
+  --color-fondo-tooltip: #333;
+  --color-iconos: #833e2b;
+  --color-iconos-hover: #b96b11;
+  --color-iconos-principal: #000000;
+  --color-scrollbar-thumb: #8c6c5a;
+  --color-scrollbar-thumb-hover: #dda17e;
+  --color-scrollbar-track: #4b2c17;
+
+  --color-fondo-card-est: rgba(255, 255, 255, 0.75);
+  --color-sombra-oscura: rgba(0, 0, 0, 0.5);
+  --color-texto-general: #000000;
+  --color-texto-advertencia-titulo: #c75757;
+  --color-texto-cards-productos: #ffffff;
+  --color-texto-hover-cards: #914021;
+  --color-texto-placeholder: #696969;
+  --color-texto-principal: #000000;
+  --color-texto-tooltip: #ffffff;
+  --color-titulo-cards: #000000;
+  --gradiente-fondo-principal: linear-gradient(135deg,
+      #8c6c5a,
+      #a99481,
+      #c9c2ba);
+  --gradiente-panel-izquierdo: linear-gradient(135deg,
+      #6d4f3e,
+      #623b25,
+      #653e2f);
+  --gradiente-panel-lateral: linear-gradient(135deg, #6d4f3e, #623b25, #653e2f);
+  --sombra-boton-active: 0 2px 6px rgba(0, 0, 0, 0.12);
+  --sombra-boton-hover: 0 8px 20px rgba(0, 0, 0, 0.3);
+  --sombra-boton-normal: 0 5px 15px rgba(0, 0, 0, 0.2);
+  --sombra-caja: 0 0 20px rgba(0, 0, 0, 0.3);
+  --sombra-caja-panel: 0 4px 15px rgba(0, 0, 0, 0.2);
+  --sombra-card-productos: 0 10px 25px rgba(112, 93, 93, 0.15);
+
+
+  --sombra-formulario: 0 4px 15px rgba(0, 0, 0, 0.2);
+  --sombra-icono: 0 6px 18px rgba(0, 0, 0, 0.15);
+  --sombra-icono-hover: 0 8px 25px rgba(0, 0, 0, 0.2);
+
+  --sombra-imagen-card: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --sombra-imagen-circular: 0 6px 15px rgba(0, 0, 0, 0.4);
+
+  --tipo-transicion: ease;
+
+  /* ===================================================== */
+  /*  TAMAÑOS Y ESPACIADOS */
+  /* ===================================================== */
+  --margen-bienvenida-inferior: 30px;
+  --margen-boton-inferior: 20px;
+  --margen-boton-login-horizontal: auto;
+  --margen-boton-login-inferior: 0;
+  --margen-boton-login-superior: 15px;
+
+  --margen-boton-registro-horizontal: 0;
+  --margen-boton-registro-inferior: 20px;
+  --margen-boton-registro-superior: 30px;
+
+  --margen-botones-rol-superior: 25px;
+
+  --margen-bottom-item-detalle: 5px;
+  --margen-icono-derecho: 10px;
+  --margen-icono-izquierdo: 10px;
+  --margen-icono-pulgar-superior: 20px;
+
+  --margen-input-superior: 20px;
+
+  --margen-link-recuperar-inferior: 20px;
+  --margen-link-recuperar-superior: 10px;
+
+  --margen-link-registro-superior: 20px;
+  --margen-logo-inferior: 8px;
+  --margen-parrafo-inferior: 20px;
+  --margen-parrafo-superior: 20px;
+
+  --margen-top-botones-accion: 20px;
+  --margen-top-cards: 150px;
+
+  --padding-advertencia: 18px 20px;
+  --padding-boton: 10px 20px;
+  --padding-boton-grande: 15px 18px;
+
+  --padding-caja-horizontal: 0;
+  --padding-caja-mensaje: 30px;
+
+  --padding-caja-vertical: 25px;
+  --padding-card-producto: 28px;
+  --padding-detalles: 10px;
+  --padding-formulario-horizontal: 0;
+  --padding-formulario-vertical: 56px;
+  --padding-input-derecho: 30px;
+  --padding-input-horizontal: 15px;
+  --padding-tarjeta: 20px 25px;
+  --padding-tooltip: 6px 10px;
+
+  /* ===================================================== */
+  /*  ALTURAS */
+  /* ===================================================== */
+  --alto-panel-proveedores: 700px;
+  --alto-nav-admin: 90px;
+  --alto-nav-vendedor: 90px;
+  --alto-boton-login-registro: 40px;
+  --alto-panel-izquierdo-interno: 700px;
+  --alto-panel-derecho-interno: 700px;
+  --alto-panel-izquierdo-interno: 700px;
+  --alto-card: 250px;
+  --alto-card-producto: 490px;
+  --alto-img-card-producto: 160px;
+
+  --alto-iconos-admin: 200px;
+  --alto-iconos-vendedor: 200px;
+  --alto-contenedor-formulario: 500px;
+  --alto-contenedor-formulario-proveedor: 600px;
+  --alto-contenedor-mensajes: 550px;
+  --alto-dashboard-act: 50px;
+  --alto-h3-categorias: 62px;
+  --alto-icono-lateral: 55px;
+  --alto-iconos-catalogo: 180px;
+  --alto-imagen-admin: 70px;
+  --alto-imagen-vendedor: 70px;
+  --alto-imagen-producto: 400px;
+  --alto-input: 45px;
+  --alto-logo: 350px;
+  --alto-minimo-body: 100vh;
+  --alto-minimo-contenedor: 100vh;
+  --alto-panel-derecho: 800px;
+  --alto-panel-izquierdo: 800px;
+  --alto-scrollbar: 5px;
+
+  /* ===================================================== */
+  /* BORDES Y RADIOS */
+  /* ===================================================== */
+  --radio-borde-card: 50px;
+  --borde-general: 20px;
+  --radio-bordes-boton: 10px;
+  --radio-bordes-boton-grande: 12px;
+  --radio-card-productos: 25px;
+  --radio-bordes-icono: 50%;
+  --radio-bordes-icono-lateral: 50%;
+  --radio-bordes-imagen: 10px;
+  --bordes-img-card-producto: 50%;
+  --radio-bordes-input: 8px;
+  --radio-bordes-panel: 30px;
+  --bordes-panel-derecho: 0 30px 30px 0;
+  --bordes-panel-izquierdo: 30px 0 0 30px;
+  --bordes-caja-panel-izquierda-derecha: 20px;
+  --bordes-inputs-botones: 20px;
+  --radio-bordes-scrollbar: 10px;
+  --radio-bordes-tooltip: 6px;
+
+  /* ===================================================== */
+  /*  SOMBRAS */
+  /* ===================================================== */
+  --sombra-general: 0 4px 10px var(--color-sombra-oscura);
+  --sombra-hover: 0 8px 20px var(--color-sombra-suave);
+
+  /* ===================================================== */
+  /*  OTROS */
+  /* ===================================================== */
+  --ancho-contenedor-formulario-proveedores: 450px;
+  --ancho-panel-proveedores: 800px;
+  --ancho-tabla-proveedores: 1352px;
+  --ancho-interno-tabla-proveedores: 1330px;
+  --alto-interno-tabla-proveedores: 250px;
+  --alto-ancho-container-tooltips: 50px;
+  --altura-linea-parrafo: 1.5;
+  --ancho-nav-admin: 1500px;
+  --ancho-nav-vendedor: 1500px;
+  --ancho-boton-login-registro: 280px;
+  --ancho-panel-izquierdo-interno: 420px;
+  --ancho-panel-derecho-interno: 420px;
+  --ancho-img-card-producto: 160px;
+  --ancho-card-producto: 350px;
+  --ancho-iconos-admin: 200px;
+  --ancho-iconos-vendedor: 200px;
+  --ancho-contenedor-botones: 100%;
+  --ancho-contenedor-cards: 350px;
+  --ancho-contenedor-formulario: 380px;
+  --ancho-contenedor-mensajes: 400px;
+
+  --ancho-dashboard-act: 200px;
+  --ancho-h3-categorias: 250px;
+  --ancho-icono-lateral: 55px;
+  --ancho-icono-pulgar: 60%;
+  --ancho-imagen-admin: 70px;
+  --ancho-imagen-vendedor: 70px;
+  --ancho-iconos-catalogo: 180px;
+  --ancho-imagen-boton-navegacion: 90px;
+  --ancho-imagen-boton-rol: 123px;
+  --ancho-imagen-producto: 300px;
+  --ancho-imagen-proveedor: 350px;
+  --ancho-input: 280px;
+  --ancho-logo: 350px;
+  --ancho-maximo-boton-registro: 280px;
+  --ancho-max-contenedor-productos: 1300px;
+  --ancho-panel-derecho: 550px;
+  --ancho-panel-izquierdo: 550px;
+  --ancho-scrollbar: 10px;
+  --brillo-hover-boton: 1.1;
+  --desplazamiento-active-boton: 0;
+  --desplazamiento-hover-boton: -1.5px;
+  --circulo-admin: 91px;
+  --circulo-vendedor: 91px;
+  --duracion-transicion: 0.3s;
+  --duracion-transicion-boton: 0.3s;
+  --duracion-transicion-boton-login: 0.3s;
+  --duracion-transicion-boton-registro: 0.3s;
+  --escala-hover-boton: 1.05;
+  --escala-icono-hover: 1.1;
+  --grid-columnas-eliminar: 1fr 1fr;
+  --grosor-borde-img-producto: 5px;
+  --opacidad-imagen-fondo: 0.9;
+  --opacidad-texto-catalogo-hover: 1;
+  --opacidad-texto-catalogo-inicial: 0;
+  --opacidad-tooltip-hover: 1;
+  --opacidad-tooltip-inicial: 0;
+
+  --posicion-bottom-texto-catalogo: 30px;
+  --posicion-icono-derecho: 15px;
+  --posicion-lateral-iconos: 60px;
+  --posicion-left-texto-catalogo: 160px;
+  --posicion-right-iconos: 60px;
+  --posicion-right-tooltip: 65px;
+  --posicion-tooltip: 60px;
+  --posicion-top-iconos: 50%;
+  --separacion-acciones: 15px;
+  --separacion-advertencia: 15px;
+  --separacion-boton-icono: 6px;
+  --separacion-card: 40px;
+  --gap-cards-productos: 150px;
+  --separacion-contenido: 120px;
+  --gap-estrellas: 6px;
+  --gap-cards-catalogo: 50px;
+  --gap-iconos: 18px;
+  --separacion-iconos-laterales: 15px;
+  --separacion-paneles: 0px;
+  --gap-interno-tarjetas: 25px;
+  --gap-info-cards: 50px;
+  --separacion-vista: 20px;
+  --tamano-icono-home: 60px;
+  --tamano-imagen-admin: 90px;
+  --tamano-imagen-vendedor: 90px;
+  --tamano-imagen-icono: 120px;
+  --tamano-iconos-productos: 22px;
+
+
+  --transformacion-boton-hover: translateY(-2px);
+  --transformacion-centrar-y: translateY(-50%);
+  --transformacion-icono-hover: scale(1.1);
+  --transformacion-texto-catalogo-hover: translateX(-50%) translateY(0);
+  --transformacion-texto-catalogo-inicial: translateX(-50%) translateY(10px);
+  --transicion-boton: background 0.3s ease, transform 0.2s ease;
+  --transicion-card: all 0.4s ease;
+  --transicion-general: 0.3s ease;
+  --transicion-icono: transform 0.3s ease, box-shadow 0.3s ease;
+  --transicion-opacidad-transform: opacity var(--duracion-transicion) var(--tipo-transicion),
+    transform var(--duracion-transicion) var(--tipo-transicion);
+  --transicion-texto-catalogo: opacity 0.3s ease, transform 0.3s ease;
+  --z-index-iconos: 1000;
+  --z-index-panel: 10;
+}
+
+/* ============================================================
+    MEDIA QUERIES - ENFOQUE DESKTOP-FIRST
+    ------------------------------------------------------------
+    Sistema oficial de breakpoints:
+    Tablet  -> max-width: 1024px
+    Phablet -> max-width: 768px
+    Mobile  -> max-width: 480px
+    ============================================================ */
+
+/* Tablet */
+@media (max-width: 1024px) {
+  :root {
+    /* Ajustes de tipografía */
+    --tamano-texto-info: 30px;
+    --tamano-texto-h3: 22px;
+    --tamano-titulo-home: 52px;
+    --tamano-titulo-cards: 38px;
+    --tamano-nombre-producto-cards: 22px;
+    --tamano-contenido-producto: 16px;
+    --tamano-label: 18px;
+    --tamano-letra-botones: 16px;
+    --tamano-texto-home-admin: 30px;
+    --tamano-texto-home-vendedor: 30px;
+
+    /* Ajustes de anchos */
+    --ancho-nav-admin: 100%;
+    --ancho-nav-vendedor: 100%;
+    --ancho-panel-izquierdo: 480px;
+    --ancho-panel-derecho: 480px;
+    --ancho-contenedor-formulario: 360px;
+    --ancho-contenedor-mensajes: 380px;
+    --ancho-card-producto: 320px;
+    --ancho-logo: 300px;
+    --ancho-max-contenedor-productos: 900px;
+
+    /* Ajustes de alturas */
+    --alto-logo: 300px;
+    --alto-nav-admin: 80px;
+    --alto-nav-vendedor: 80px;
+    --alto-card-producto: 470px;
+    --alto-imagen-producto: 360px;
+    --alto-iconos-admin: 180px;
+    --alto-iconos-vendedor: 180px;
+
+    /* Ajustes de espaciado */
+    --padding-card-producto: 24px;
+    --padding-formulario-vertical: 45px;
+    --gap-cards-productos: 120px;
+    --gap-cards-catalogo: 45px;
+    --separacion-contenido: 100px;
+
+    /* Ajustes de márgenes */
+    --margen-top-cards: 120px;
+  }
+}
+
+/* Phablet */
+@media (max-width: 768px) {
+  :root {
+    /* Ajustes de tipografía */
+    --tamano-texto-info: 28px;
+    --tamano-texto-h3: 20px;
+    --tamano-parrafos: 14px;
+    --tamano-titulo-home: 48px;
+    --tamano-titulo-cards: 35px;
+    --tamano-nombre-producto-cards: 20px;
+    --tamano-contenido-producto: 16px;
+    --tamano-label: 18px;
+    --tamano-letra-botones: 16px;
+    --tamano-texto-home-admin: 28px;
+    --tamano-texto-home-vendedor: 28px;
+
+    /* Ajustes de anchos */
+    --ancho-nav-admin: 100%;
+    --ancho-nav-vendedor: 100%;
+    --ancho-panel-izquierdo: 90%;
+    --ancho-panel-derecho: 90%;
+    --ancho-contenedor-formulario: 340px;
+    --ancho-contenedor-mensajes: 360px;
+    --ancho-card-producto: 300px;
+    --ancho-logo: 280px;
+    --ancho-input: 260px;
+    --ancho-max-contenedor-productos: 700px;
+
+    /* Ajustes de alturas */
+    --alto-logo: 280px;
+    --alto-nav-admin: 75px;
+    --alto-nav-vendedor: 75px;
+    --alto-card-producto: 450px;
+    --alto-imagen-producto: 340px;
+    --alto-iconos-admin: 160px;
+    --alto-iconos-vendedor: 160px;
+
+    /* Ajustes de espaciado */
+    --padding-card-producto: 22px;
+    --padding-formulario-vertical: 40px;
+    --gap-cards-productos: 100px;
+    --gap-cards-catalogo: 40px;
+    --separacion-contenido: 80px;
+
+    /* Ajustes de márgenes */
+    --margen-top-cards: 100px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  :root {
+    /* Ajustes de tipografía para pantallas pequeñas */
+    --tamano-texto-info: 24px;
+    --tamano-texto-h3: 18px;
+    --tamano-parrafos: 13px;
+    --tamano-titulo-home: 40px;
+    --tamano-titulo-cards: 30px;
+    --tamano-nombre-producto-cards: 18px;
+    --tamano-contenido-producto: 14px;
+    --tamano-label: 16px;
+    --tamano-letra-botones: 14px;
+    --tamano-texto-home-admin: 24px;
+    --tamano-texto-home-vendedor: 24px;
+
+    /* Ajustes de anchos para contenedores */
+    --ancho-nav-admin: 100%;
+    --ancho-nav-vendedor: 100%;
+    --ancho-panel-izquierdo: 100%;
+    --ancho-panel-derecho: 100%;
+    --ancho-contenedor-formulario: 90%;
+    --ancho-contenedor-mensajes: 90%;
+    --ancho-card-producto: 280px;
+    --ancho-input: 100%;
+    --ancho-logo: 250px;
+    --ancho-max-contenedor-productos: 100%;
+
+    /* Ajustes de alturas */
+    --alto-logo: 250px;
+    --alto-nav-admin: 70px;
+    --alto-nav-vendedor: 70px;
+    --alto-card-producto: 420px;
+    --alto-imagen-producto: 300px;
+    --alto-iconos-admin: 140px;
+    --alto-iconos-vendedor: 140px;
+
+    /* Ajustes de espaciado */
+    --padding-card-producto: 18px;
+    --padding-formulario-vertical: 30px;
+    --gap-cards-productos: 80px;
+    --gap-cards-catalogo: 30px;
+    --separacion-contenido: 60px;
+
+    /* Ajustes de márgenes */
+    --margen-top-cards: 80px;
+  }
+}

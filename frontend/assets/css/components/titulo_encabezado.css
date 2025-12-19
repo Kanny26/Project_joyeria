@@ -1,0 +1,51 @@
+.titulo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.titulo__encabezado {
+    font-size: var(--tamano-titulo-card);
+    color: var(--color-titulo-cards);
+    margin-bottom: 40px;
+    margin-left: 40px;
+    text-shadow: var(--color-sombra-texto) 4px 4px 4px;
+    transition: transform .3s ease, color .3s ease;
+}
+
+.titulo__encabezado:hover {
+    color: var(--color-texto-hover-cards);
+}
+
+/* ============================================================
+    MEDIA QUERIES - ENFOQUE DESKTOP-FIRST
+    ============================================================ */
+
+/* Tablet */
+@media (max-width: 1024px) {
+    .titulo__encabezado {
+        font-size: 40px;
+        margin-bottom: 30px;
+        margin-left: 30px;
+    }
+}
+
+/* Phablet */
+@media (max-width: 768px) {
+    .titulo__encabezado {
+        font-size: 32px;
+        margin-bottom: 25px;
+        margin-left: 20px;
+    }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+    .titulo__encabezado {
+        font-size: 26px;
+        margin-left: 0;
+        margin-bottom: 20px;
+        text-align: center;
+        text-shadow: none;
+    }
+}

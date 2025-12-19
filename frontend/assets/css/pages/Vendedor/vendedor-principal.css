@@ -1,0 +1,242 @@
+@import url('../../base/global.css');
+@import url('../../Tipografias/styles.css');
+
+* {
+    margin: var(--margin_padding_reset);
+    padding: var(--margin_padding_reset);
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--fuente-titulos);
+    background-color: var(--color-fondo-vendedor);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: var(--alto-minimo-body);
+}
+
+/* Título centrado */
+.panel-vendedor__titulo {
+    flex: 1;
+    text-align: center;
+    font-size: var(--tamano-titulo-home);
+    font-weight: var(--peso-fuente-titulo-principal);
+    color: var(--color-texto-principal);
+}
+
+/* Icono de casa */
+.panel-vendedor__icono {
+    font-size: var(--tamano-icono-home);
+    color: var(--color-iconos-principal);
+    cursor: pointer;
+}
+
+.panel-vendedor__tarjetas {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.panel-vendedor__tarjetas-titulo {
+    font-size: var(--tamano-titulo-card);
+    margin-bottom: 40px;
+    text-align: center;
+    color: var(--color-titulo-cards);
+    transition: transform var(--duracion-transicion), color var(--duracion-transicion);
+    text-shadow: var(--color-sombra-texto) 4px 4px 4px;
+}
+
+.panel-vendedor__tarjetas-titulo:hover {
+    color: var(--color-texto-hover-cards);
+}
+
+.panel-vendedor__tarjetas-contenedor {
+    display: flex;
+    gap: var(--gap-cards-catalogo);
+    justify-items: center;
+    padding: 0 40px;
+}
+
+.panel-vendedor__tarjeta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: var(--ancho-card);
+    height: auto;
+    padding: 20px;
+    border-radius: var(--radio-borde-card);
+    text-align: center;
+}
+
+/* Círculo del icono */
+.panel-vendedor__tarjeta-circulo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--ancho-iconos-vendedor);
+    height: var(--alto-iconos-vendedor);
+    border-radius: 50%;
+    /* background-image: url('../../../../assets/Imagenes/fondos/fondo_cards.jpg'); */
+    background-color: var(--color-cards);
+    margin-bottom: 15px;
+}
+
+.panel-vendedor__tarjeta-circulo:hover {
+    transform: scale(1.1);
+    box-shadow: var(--sombra-hover);
+    background-color: var(--color-fondo-circulo-hover);
+}
+
+.panel-vendedor__tarjeta-circulo img {
+    width: var(--tamano-imagen-icono);
+    height: var(--tamano-imagen-icono);
+    transition: transform var(--transicion-general);
+}
+
+
+/* Contenedor de h3 */
+.panel-vendedor__tarjeta-h3 {
+    position: relative;
+    width: var(--ancho-dashboard-act);
+    height: var(--alto-dashboard-act);
+    border-radius: 20px;
+    overflow: hidden;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--color-fondo-boton);
+    background-size: 200% 100%;
+    background-position: right bottom;
+    box-shadow: 0 2px 6px var(--color-sombra-oscura);
+}
+
+/* Texto centrado */
+.panel-vendedor__tarjeta-h3 h3 {
+    position: relative;
+    color: var(--color-texto-principal);
+    font-size: var(--tamano-texto-h3);
+    font-weight: var(--peso-texto-semi);
+    text-align: center;
+    z-index: 1;
+    transition: color var(--transicion-general);
+}
+
+/* Elementos decorativos izquierda y derecha */
+.panel-vendedor__tarjeta-h3-izquierda,
+.panel-vendedor__tarjeta-h3-derecha {
+    position: absolute;
+    top: 0;
+    width: 50%;
+    height: 100%;
+    transition: transform var(--transicion-general);
+}
+
+.panel-vendedor__tarjeta-h3-izquierda {
+    left: 0;
+    background: var(--color-fondo-h3-izquierda);
+}
+
+.panel-vendedor__tarjeta-h3-derecha {
+    right: 0;
+    background: var(--color-fondo-h3-derecha);
+}
+
+/* Hover efecto */
+.panel-vendedor__tarjeta-h3:hover h3 {
+    color: var(--color-texto-hover-cards);
+}
+
+.panel-vendedor__tarjeta-h3:hover .panel-vendedor__tarjeta-h3-izquierda {
+    transform: translateX(-100%);
+}
+
+.panel-vendedor__tarjeta-h3:hover .panel-vendedor__tarjeta-h3-derecha {
+    transform: translateX(100%);
+}
+
+/* Elementos decorativos izquierda y derecha */
+.panel-vendedor__tarjeta-h3-izquierda,
+.panel-vendedor__tarjeta-h3-derecha {
+    position: absolute;
+    top: 0;
+    width: 50%;
+    height: 100%;
+    transition: transform var(--transicion-general);
+}
+
+.panel-vendedor__tarjeta-h3-izquierda {
+    left: 0;
+    background: var(--color-fondo-h3-izquierda);
+}
+
+.panel-vendedor__tarjeta-h3-derecha {
+    right: 0;
+    background: var(--color-fondo-h3-derecha);
+}
+
+/* Hover efecto */
+.panel-vendedor__tarjeta-h3:hover h3 {
+    color: var(--color-texto-hover-cards);
+}
+
+.panel-vendedor__tarjeta-h3:hover .panel-vendedor__tarjeta-h3-izquierda {
+    transform: translateX(-100%);
+}
+
+.panel-vendedor__tarjeta-h3:hover .panel-vendedor__tarjeta-h3-derecha {
+    transform: translateX(100%);
+}
+
+/* ============================================================
+    MEDIA QUERIES - ENFOQUE DESKTOP-FIRST
+    ============================================================ */
+
+/* Tablet */
+@media (max-width: 1024px) {
+    .panel-vendedor__tarjetas-contenedor {
+        gap: 30px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}
+
+/* Phablet */
+@media (max-width: 768px) {
+    body {
+        padding-top: 110px;
+    }
+
+    .panel-vendedor__tarjetas-titulo {
+        font-size: 40px;
+        margin-bottom: 30px;
+    }
+
+    .panel-vendedor__tarjetas-contenedor {
+        flex-direction: column;
+        width: 100%;
+        padding: 0 20px;
+    }
+
+    .panel-vendedor__tarjeta {
+        width: 100%;
+        max-width: 350px;
+    }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+    .panel-vendedor__tarjetas-titulo {
+        font-size: 32px;
+        margin-bottom: 25px;
+    }
+
+    .panel-vendedor__tarjeta-circulo {
+        width: 150px;
+        height: 150px;
+    }
+}
