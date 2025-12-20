@@ -31,7 +31,7 @@ public class Main {
                                  " | Estado: " + (estado == 1 ? "activo" : "inactivo") +
                                  " | Creado: " + (fechaCreacion != null ? fechaCreacion.toString() : "N/A") +
                                  " | Doc: " + (documento != null ? documento : "Sin documento"));
-            }
+            }       
 
             if (!hayDatos) {
                 System.out.println(" La tabla 'usuario' está vacía.");

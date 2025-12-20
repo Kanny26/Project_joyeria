@@ -27,15 +27,29 @@
                         <h1>Iniciar Sesión</h1>
                     </header>
 
-                    <form action="../Administrador/admin-principal.html" method="get">
+                    <!-- FORMULARIO CORREGIDO -->
+                    <form action="LoginServlet" method="post">
+
                         <div class="inicio-sesion__input-grupo">
                             <i class="fas fa-user icon-left"></i>
-                            <input type="text" placeholder="Nombre de usuario" id="usuario" required />
+                            <input
+                                type="text"
+                                name="nombre"
+                                id="usuario"
+                                placeholder="Nombre de usuario"
+                                required
+                            />
                         </div>
 
                         <div class="inicio-sesion__input-grupo">
                             <i class="fas fa-lock icon-left"></i>
-                            <input type="password" id="password" placeholder="Contraseña" required />
+                            <input
+                                type="password"
+                                name="pass"
+                                id="password"
+                                placeholder="Contraseña"
+                                required
+                            />
                             <i class="fas fa-eye icon-right"></i>
                         </div>
 
@@ -44,8 +58,9 @@
                         </a>
 
                         <button type="submit" class="btn">
-                            <a href="../Administrador/admin-principal.html">Iniciar Sesión </a>
+                            Iniciar Sesión
                         </button>
+
                     </form>
 
                     <footer class="inicio-sesion__link-registro">
