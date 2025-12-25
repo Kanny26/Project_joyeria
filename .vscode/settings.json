@@ -1,10 +1,12 @@
 {
     "java.project.sourcePaths": [
-        "backend/src",
-        "backend"
+        "backend/src"
     ],
     "java.project.referencedLibraries": [
-        "lib/**/*.jar",
-        "backend/lib/mysql-connector-j-9.5.0.jar"
+        "backend/lib/**/*.jar"
+    ],
+    "java.format.settings.url": ".vscode/java-formatter.xml",
+    "java.configuration.runtimes": [
+        
     ]
 }

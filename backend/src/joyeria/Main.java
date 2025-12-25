@@ -28,11 +28,11 @@ public class Main {
                 String documento = rs.getString("documento"); // Puede ser null
 
                 System.out.println(" ID: " + id + 
-                                 " | Nombre: " + nombre + 
-                                 " | Estado: " + (estado == 1 ? "activo" : "inactivo") +
-                                 " | Creado: " + (fechaCreacion != null ? fechaCreacion.toString() : "N/A") +
-                                 " | Doc: " + (documento != null ? documento : "Sin documento"));
-            }       
+                                " | Nombre: " + nombre + 
+                                " | Estado: " + (estado == 1 ? "activo" : "inactivo") +
+                                " | Creado: " + (fechaCreacion != null ? fechaCreacion.toString() : "N/A") +
+                                " | Doc: " + (documento != null ? documento : "Sin documento"));
+            }
 
             if (!hayDatos) {
                 System.out.println(" La tabla 'usuario' está vacía.");
