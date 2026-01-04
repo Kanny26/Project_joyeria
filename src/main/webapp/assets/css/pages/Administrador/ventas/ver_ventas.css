@@ -1,0 +1,342 @@
+@import url('../../../base/global.css');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--fuente-titulos);
+    background-color: var(--color-fondo-admin);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+}
+
+.factura{
+    background-color: var(--color-card-venta);
+    margin-top: 160px;
+    width: 750px;
+    height: 750px;
+    padding: 45px;
+    border-radius: 14px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+}
+
+/* ENCABEZADO */
+.factura__header{
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.factura__logo h1{
+    font-size: 36px;
+    color: var(--color-texto-general);
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+}
+
+.slogan{
+    font-size: 14px;
+    color: var(--color-texto-general);
+}
+
+.factura__info p{
+    text-align: right;
+    font-size: 14px;
+}
+
+/* LÍNEA */
+.linea-div{
+    width: 100%;
+    height: 2px;
+    background: var(--color-texto-general);
+    margin: 25px 0;
+}
+
+/* CLIENTE */
+.factura__cliente{
+    margin-bottom: 35px;
+}
+
+.label{
+    font-size: 14px;
+    color: var(--color-texto-general);
+    font-weight: 600;
+}
+
+.cliente-nombre{
+    font-size: 22px;
+    margin: 6px 0 4px 0;
+    color: var(--color-texto-general);
+}
+
+.estado{
+    display: inline-block;
+    margin-top: 12px;
+    padding: 6px 16px;
+    border-radius: 18px;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.estado--pagado{
+    background: #d6f5d6;
+    color: #2f8a2f;
+    border: 1px solid #a8e6a8;
+}
+
+/* TABLA */
+.tabla{
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 25px;
+}
+
+.tabla th{
+    background: var(--color-encabezado-venta);
+    padding: 12px;
+    font-size: 14px;
+    text-align: left;
+    color: #5c3d2e;
+}
+
+.tabla td{
+    padding: 12px;
+    border-bottom: 1px solid #f0e3d9;
+    font-size: 14px;
+}
+
+.tabla tbody tr{
+    background: #fff7f1;
+}
+
+/* TOTALES */
+.totales{
+    width: 300px;
+    margin-left: auto;
+    font-size: 15px;
+}
+
+.totales p{
+    display: flex;
+    justify-content: space-between;
+    margin: 6px 0;
+}
+
+.total-final{
+    margin-top: 10px;
+    background: var(--color-texto-general);
+    color: #fff;
+    padding: 12px;
+    border-radius: 6px;
+    font-weight: 700;
+}
+
+/* CONDICIONES */
+.condiciones h3{
+    margin-top: 30px;
+    font-size: 16px;
+    color: var(--color-texto-general);
+}
+
+.condiciones p{
+    font-size: 14px;
+    margin-top: 5px;
+    line-height: 1.6;
+    color: #6a5140;
+}
+
+/* Pantallas extra grandes (>= 1440px) */
+@media (min-width: 1440px) {
+    .factura {
+        width: 800px;
+        height: auto;
+        padding: 50px;
+    }
+}
+
+/* Tablet (769px a 1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .factura {
+        width: 90%;
+        max-width: 650px;
+        height: auto;
+        padding: 35px;
+        margin-top: 120px;
+    }
+
+    .factura__header {
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-start;
+    }
+
+    .factura__logo h1 {
+        font-size: 32px;
+    }
+
+    .slogan {
+        font-size: 13px;
+    }
+
+    .factura__info p {
+        font-size: 13px;
+        text-align: left;
+    }
+
+    .cliente-nombre {
+        font-size: 20px;
+    }
+
+    .tabla th,
+    .tabla td {
+        font-size: 13px;
+        padding: 10px 8px;
+    }
+
+    .totales {
+        width: 100%;
+        max-width: 280px;
+        font-size: 14px;
+    }
+}
+
+/* Phablet (481px a 768px) */
+@media (min-width: 481px) and (max-width: 768px) {
+    .factura {
+        width: 95%;
+        max-width: 550px;
+        padding: 30px;
+        margin-top: 100px;
+        overflow-x: auto;
+    }
+
+    .factura__header {
+        flex-direction: column;
+        gap: 12px;
+        align-items: flex-start;
+    }
+
+    .factura__logo h1 {
+        font-size: 28px;
+    }
+
+    .slogan {
+        font-size: 12px;
+    }
+
+    .factura__info p {
+        font-size: 12px;
+        text-align: left;
+    }
+
+    .cliente-nombre {
+        font-size: 18px;
+    }
+
+    .tabla {
+        width: 100%;
+        min-width: 450px;
+        font-size: 12px;
+    }
+
+    .tabla th,
+    .tabla td {
+        padding: 8px 6px;
+        white-space: nowrap;
+    }
+
+    .totales {
+        width: 100%;
+        max-width: 250px;
+        font-size: 13px;
+    }
+}
+/* Móvil pequeño (<= 480px) */
+@media (max-width: 480px) {
+    body {
+        padding: 10px;
+    }
+
+    .factura {
+        width: 100%;
+        padding: 15px;
+        margin-top: 80px;
+        border-radius: 12px;
+        overflow-x: auto; /* Scroll horizontal para la tabla */
+    }
+
+    .factura__header {
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-start;
+    }
+
+    .factura__logo h1 {
+        font-size: 22px;
+    }
+
+    .slogan {
+        font-size: 11px;
+    }
+
+    .factura__info p {
+        font-size: 11px;
+        text-align: left;
+    }
+
+    .linea-div {
+        margin: 20px 0;
+    }
+
+    .cliente-nombre {
+        font-size: 16px;
+    }
+
+    .label {
+        font-size: 12px;
+    }
+
+    .estado {
+        font-size: 12px;
+        padding: 5px 10px;
+    }
+
+    /* ---------------- TABLA ---------------- */
+    .tabla {
+        width: 100%;
+        min-width: 350px; /* Anchura mínima para la tabla */
+        font-size: 11px;
+        margin-bottom: 20px;
+        border-collapse: collapse;
+    }
+
+    .tabla th,
+    .tabla td {
+        padding: 5px 6px;
+        white-space: nowrap; /* Evita que el texto se rompa */
+    }
+
+    /* ---------------- TOTALES ---------------- */
+    .totales {
+        width: 100%;
+        font-size: 12px;
+    }
+
+    .total-final {
+        font-size: 13px;
+        padding: 10px;
+    }
+
+    /* ---------------- CONDICIONES ---------------- */
+    .condiciones h3 {
+        font-size: 14px;
+    }
+
+    .condiciones p {
+        font-size: 12px;
+    }
+}

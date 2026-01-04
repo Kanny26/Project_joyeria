@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Postventa</title>
+
+    <!-- Estilos -->
+    <link rel="stylesheet" href="../../../assets/css/main.css">
+    <link rel="stylesheet" href="../../../assets/css/pages/Administrador/ventas/postventa.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar-admin"> 
+        <div class="navbar-admin__catalogo"> 
+            <img src="../../../assets/Imagenes/iconos/admin.png" alt="Admin">
+        </div> 
+        <h1 class="navbar-admin__title">AAC27</h1> 
+        <a href="../ventas.html">
+            <i class="fa-solid fa-house-chimney navbar-admin__home-icon"></i> 
+        </a>
+    </nav>
+
+    <!-- Título -->
+    <main class="titulo">
+        <h2 class="titulo__encabezado">Devolución, Cambios y Reclamos</h2>
+
+        <!-- Contenedor de Cards -->
+        <section class="postventa-cards__contenedor">
+
+            <!-- Card de ejemplo 1 -->
+            <article class="postventa-cards__card">
+                <h3 class="postventa-cards__caso">Caso #001</h3>
+                <p><strong>Fecha:</strong> 2025-12-10</p>
+                <p><strong>Vendedor:</strong> Juan Pérez</p>
+                <p><strong>Cliente:</strong> María López</p>
+                <p><strong>Tipo:</strong> Cambio</p>
+                <p><strong>Motivo:</strong> Producto dañado</p>
+                <p>
+                    <strong>Estado:</strong>
+                    <select class="estado">
+                        <option value="pendiente" class="estado--pendiente">Pendiente</option>
+                        <option value="en_proceso" class="estado--en_proceso">En proceso</option>
+                        <option value="resuelto" class="estado--resuelto">Resuelto</option>
+                    </select>
+                </p>
+                <div class="postventa-cards__acciones">
+                    <a href="../../../public/Administrador/ventas/casos_postventa.html">
+                        <i class="fas fa-eye"></i>
+                    </a>
+                </div>
+            </article>
+
+            <!-- Card de ejemplo 2 -->
+            <article class="postventa-cards__card">
+                <h3 class="postventa-cards__caso">Caso #002</h3>
+                <p><strong>Fecha:</strong> 2025-12-09</p>
+                <p><strong>Vendedor:</strong> Laura Gómez</p>
+                <p><strong>Cliente:</strong> Carlos Ruiz</p>
+                <p><strong>Tipo:</strong> Devolución</p>
+                <p><strong>Motivo:</strong> Cambio de talla</p>
+                <p>
+                    <strong>Estado:</strong>
+                    <select class="estado">
+                        <option value="pendiente" class="estado--pendiente">Pendiente</option>
+                        <option value="en_proceso" class="estado--en_proceso">En proceso</option>
+                        <option value="resuelto" class="estado--resuelto">Resuelto</option>
+                    </select>
+                </p>
+                <div class="postventa-cards__acciones">
+                    <a href="../../../public/Administrador/ventas/casos_postventa.html">
+                        <i class="fas fa-eye"></i>
+                    </a>
+                </div>
+            </article>
+
+            <!-- Card de ejemplo 3 -->
+            <article class="postventa-cards__card">
+                <h3 class="postventa-cards__caso">Caso #003</h3>
+                <p><strong>Fecha:</strong> 2025-12-08</p>
+                <p><strong>Vendedor:</strong> Pedro Martínez</p>
+                <p><strong>Cliente:</strong> Ana Torres</p>
+                <p><strong>Tipo:</strong> Reclamo</p>
+                <p><strong>Motivo:</strong> Pedido incompleto</p>
+                <p>
+                    <strong>Estado:</strong>
+                    <select class="estado">
+                        <option value="pendiente" class="estado--pendiente">Pendiente</option>
+                        <option value="en_proceso" class="estado--en_proceso">En proceso</option>
+                        <option value="resuelto" class="estado--resuelto">Resuelto</option>
+                    </select>
+                </p>
+                <div class="postventa-cards__acciones">
+                    <a href="../../../public/Administrador/ventas/casos_postventa.html">
+                        <i class="fas fa-eye"></i>
+                    </a>
+                </div>
+            </article>
+
+        </section>
+
+        <!-- Contadores -->
+        <div class="contadores">
+            <div class="contador-card">
+                <h2>Total postventa</h2>
+                <h3 class="contador-card__numero">3</h3>
+            </div>
+
+            <div class="contador-card">
+                <h2>Pagos pendientes</h2>
+                <h3 class="contador-card__numero">2</h3>
+            </div>
+
+            <div class="contador-card">
+                <h2>Pagos en efectivo</h2>
+                <h3 class="contador-card__numero">3</h3>
+            </div>
+
+            <div class="contador-card">
+                <h2>Pagos por transferencia</h2>
+                <h3 class="contador-card__numero">3</h3>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

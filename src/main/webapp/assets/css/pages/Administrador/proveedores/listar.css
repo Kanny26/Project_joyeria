@@ -1,0 +1,208 @@
+@import url('../../../base/global.css');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--fuente-titulos);
+    background-color: var(--color-fondo-admin);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 140px;
+}
+
+.Proveedores-listar__tabla-contenedor{
+    width: var(--ancho-tabla-proveedores);
+    overflow-x: auto;
+    border-radius: 15px;
+    background-color: var(--color-fondo-card-productos);
+    box-shadow: 0 6px 10px rgba(0,0,0,0.2);
+    padding: 10px;
+}
+
+.Proveedores-listar__tabla{
+    width: var(--ancho-interno-tabla-proveedores);
+    border-collapse: collapse;
+}
+
+.Proveedores-listar__tabla th, 
+.Proveedores-listar__tabla td {
+    padding: 15px 10px;
+    text-align: center;
+    /* border-left: 1px solid saddlebrown; */
+    /* border-bottom: 1px solid saddlebrown; */
+}
+
+.Proveedores-listar__tabla th {
+    background-color: var(--color-fondo-tarjeta-hover);
+    font-weight: 700;
+}
+
+.Proveedores-listar__tabla tbody {
+    background-color: var(--color-fondo-tarjeta-hover);
+    font-weight: 500;
+}
+
+.estado {
+    padding: 5px 12px;
+    border-radius: 10px;
+    color: #000;
+    font-size: 16px;
+}
+
+.estado--activo { background-color: rgb(120, 172, 120); }
+.estado--inactivo { background-color: rgb(236, 93, 93); }
+
+.Proveedores-listar__acciones {
+    width: 150px;
+}
+
+.iconos {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+}
+
+.iconos i {
+    font-size: 18px;
+    padding: 6px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform .2s ease;
+}
+
+/* ============================
+   CONTADORES
+=========================== */
+.contadores {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    gap: 25px;
+    padding: 20px;
+    flex-wrap: wrap;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.contador-card {
+    flex: 1;
+    min-width: 220px;
+    max-width: 260px;
+    background: var(--color-fondo-contadores);
+    border-radius: 20px;
+    padding: 25px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    border-left: 5px solid var(--borde-contadores);
+    transition: all 0.3s ease;
+}
+
+.contador-card__numero {
+    font-size: 32px;
+    font-weight: 700;
+    color: #fff;
+    padding: 15px 25px;
+    border-radius: 50px;
+    background: var(--color-fondo-num-contadores);
+}
+
+@media (max-width: 1024px){
+    .Proveedores-listar__tabla-contenedor { width: 95%; }
+    .Proveedores-listar__tabla th, 
+    .Proveedores-listar__tabla td { font-size: 14px; padding: 12px 8px; }
+    .contador-card { min-width: 180px; max-width: 220px; padding: 20px 15px; }
+    .contador-card__numero { font-size: 28px; padding: 12px 20px; }
+}
+
+/* MÓVILES Y TABLETS PEQUEÑAS (768px ↓) — tabla → cards */
+@media (max-width: 768px){
+
+    body { padding-top: 100px; }
+
+    /* Convertir tabla a cards */
+    .Proveedores-listar__tabla, 
+    .Proveedores-listar__tabla thead, 
+    .Proveedores-listar__tabla tbody, 
+    .Proveedores-listar__tabla th, 
+    .Proveedores-listar__tabla td, 
+    .Proveedores-listar__tabla tr {
+        display: block;
+        width: 100%;
+    }
+
+    /* Ocultar encabezado */
+    .Proveedores-listar__tabla thead tr {
+        display: none;
+    }
+
+    /* Caja-card de cada registro */
+    .Proveedores-listar__tabla tbody tr {
+        margin-bottom: 50px;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        padding: 10px;
+        background: var(--color-fondo-tarjeta-hover);
+    }
+
+    /* Labels en cada fila */
+    .Proveedores-listar__tabla td {
+        text-align: right;
+        padding-left: 50%;
+        position: relative;
+        font-size: 14px;
+        border: none;
+    }
+
+    .Proveedores-listar__tabla td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 15px;
+        width: 45%;
+        text-align: left;
+        font-weight: 600;
+        font-size: 13px;
+        color: #000;
+    }
+
+    /* Contadores en columna */
+    .contadores {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .contador-card {
+        min-width: 90%;
+        max-width: 90%;
+    }
+
+    .contador-card__numero {
+        font-size: 24px;
+        padding: 10px 18px;
+    }
+}
+
+@media (max-width: 480px){
+    .Proveedores-listar__tabla-contenedor { 
+        width: 95%;
+        margin-left: 10px; 
+    }
+
+    .Proveedores-listar__tabla td {
+        font-size: 12px;
+        padding-left: 25%;
+        gap: 20px
+    }
+    .contador-card__numero {
+        font-size: 20px;
+        padding: 8px 15px;
+    }
+}

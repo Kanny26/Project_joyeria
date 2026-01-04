@@ -1,0 +1,251 @@
+@import url(../css/base/global.css);
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, var(--fondo-splash-screen), #FFD1DC);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
+    position: relative;
+}
+
+/* Bloque: splash */
+.splash {
+    position: relative;
+}
+
+.splash__tarjeta {
+    text-align: center;
+    background: var(--fondo-card-splash-screen);
+    backdrop-filter: blur(15px);
+    padding: 50px 40px;
+    border-radius: 30px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    max-width: 600px;
+}
+
+/* Elemento: título principal */
+.splash__titulo {
+    font-size: 2.5rem;
+    color: var(--color-titulo-splash-screen);
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+/* Elemento: descripción */
+.splash__descripcion {
+    font-size: 1rem;
+    color: var(--color-texto-principal);
+    margin-bottom: 25px;
+    line-height: 1.5;
+}
+.splash__texto {
+    font-size: 1.1rem;
+    color: var(--color-texto-principal);
+    margin-bottom: 30px;
+}
+
+/* Elemento: grupo de botones */
+.splash__grupo-botones {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+/* Elemento: botón */
+.splash__boton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 28px;
+    font-size: 1rem;
+    border-radius: 22px;
+    text-decoration: none;
+    color: var(--color-texto-principal);
+    background: linear-gradient(145deg, var(--fondo-card-splash-screen), var(--secundario-card-splash-screen));
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+    font-weight: 600;
+    position: relative;
+}
+
+/* Modificador: botón hover */
+.splash__boton--hover:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 20px rgba(0,0,0,0.15);
+    background: linear-gradient(145deg, var(--secundario-card-splash-screen), var(--fondo-card-splash-screen));
+}
+
+/* Modificador: botón activo */
+.splash__boton--activo:active {
+    transform: scale(0.95);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+/* Elemento: icono dentro del botón */
+.splash__boton-icono {
+    width: 28px;
+    height: 28px;
+    margin-right: 12px;
+}
+
+/* Elemento: decoración de fondo */
+.splash__decoracion {
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, rgba(255,182,193,0.3) 0%, transparent 70%);
+    border-radius: 50%;
+    top: -50px;
+    left: -50px;
+}
+
+/* ============================================================
+   MEDIA QUERIES - DESKTOP FIRST
+   ============================================================ */
+
+/* Pantallas extra grandes (>= 1440px) */
+@media (min-width: 1440px) {
+    .splash__tarjeta {
+        padding: 60px 50px;
+        max-width: 650px;
+    }
+    
+    .splash__titulo {
+        font-size: 2.8rem;
+    }
+    
+    .splash__descripcion {
+        font-size: 1.1rem;
+    }
+}
+
+/* Escritorio – estilos base (>= 1025px) - Sin cambios, estilos base */
+
+/* Tablet (769px a 1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .splash__tarjeta {
+        padding: 45px 35px;
+        max-width: 550px;
+    }
+    
+    .splash__titulo {
+        font-size: 2.2rem;
+    }
+    
+    .splash__descripcion {
+        font-size: 0.95rem;
+    }
+    
+    .splash__texto {
+        font-size: 1rem;
+    }
+    
+    .splash__boton {
+        padding: 12px 24px;
+        font-size: 0.95rem;
+    }
+}
+
+/* Phablet (481px a 768px) */
+@media (min-width: 481px) and (max-width: 768px) {
+    .splash__tarjeta {
+        padding: 35px 25px;
+        max-width: 450px;
+    }
+    
+    .splash__titulo {
+        font-size: 1.8rem;
+        margin-bottom: 12px;
+    }
+    
+    .splash__descripcion {
+        font-size: 0.9rem;
+        margin-bottom: 20px;
+    }
+    
+    .splash__texto {
+        font-size: 0.95rem;
+        margin-bottom: 25px;
+    }
+    
+    .splash__grupo-botones {
+        gap: 15px;
+    }
+    
+    .splash__boton {
+        padding: 12px 20px;
+        font-size: 0.9rem;
+    }
+    
+    .splash__boton-icono {
+        width: 24px;
+        height: 24px;
+        margin-right: 10px;
+    }
+}
+
+/* Móvil pequeño (máx. 480px) */
+@media (max-width: 480px) {
+    body {
+        padding: 15px;
+    }
+    
+    .splash__tarjeta {
+        padding: 25px 20px;
+        max-width: 100%;
+        border-radius: 20px;
+    }
+    
+    .splash__titulo {
+        font-size: 1.5rem;
+        margin-bottom: 10px;
+    }
+    
+    .splash__descripcion {
+        font-size: 0.85rem;
+        margin-bottom: 15px;
+        line-height: 1.4;
+    }
+    
+    .splash__texto {
+        font-size: 0.85rem;
+        margin-bottom: 20px;
+    }
+    
+    .splash__grupo-botones {
+        flex-direction: column;
+        gap: 12px;
+        width: 100%;
+    }
+    
+    .splash__boton {
+        width: 100%;
+        padding: 12px 18px;
+        font-size: 0.85rem;
+        border-radius: 18px;
+    }
+    
+    .splash__boton-icono {
+        width: 20px;
+        height: 20px;
+        margin-right: 8px;
+    }
+    
+    .splash__decoracion {
+        width: 150px;
+        height: 150px;
+        top: -30px;
+        left: -30px;
+    }
+}

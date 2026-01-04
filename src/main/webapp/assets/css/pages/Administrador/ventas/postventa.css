@@ -1,0 +1,181 @@
+@import url('../../../base/global.css');
+
+* {
+    margin: var(--margin_padding_reset);
+    padding: var(--margin_padding_reset);
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--fuente-titulos);
+    background-color: var(--color-fondo-admin);
+    min-height: var(--alto-minimo-body);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 140px;
+}
+
+/* Contenedor de cards */
+.postventa-cards__contenedor {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    justify-items: center;
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Card individual */
+.postventa-cards__card {
+    background-color: var(--color-fondo-tarjeta-hover);
+    padding: 20px;
+    border-radius: 15px;
+    border: 1px solid #ccc; 
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    transition: transform 0.3s ease;
+}
+
+.postventa-cards__card:hover {
+    transform: translateY(-5px);
+}
+
+.postventa-cards__caso {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.postventa-cards__card p {
+    font-size: 14px;
+    margin: 5px 0;
+}
+
+/* Iconos de acciones */
+.postventa-cards__acciones {
+    margin-top: 10px;
+    align-self: flex-end;
+}
+
+.postventa-cards__acciones i {
+    font-size: 20px;
+    color: var(--color-texto-principal);
+    transition: color 0.3s ease;
+}
+
+.postventa-cards__acciones i:hover {
+    color: var(--color-boton-secundario-hover);
+}
+
+/* Estados */
+.estado--pendiente { background-color: rgb(236, 93, 93); color: #000; }
+.estado--en_proceso { background-color: rgb(249, 255, 126); color: #000; }
+.estado--resuelto { background-color: rgb(120, 172, 120); color: #fff; }
+
+.estado {
+    padding: 6px 8px;
+    border-radius: 5px;
+    border: none;
+}
+
+/* Contadores */
+.contadores {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    gap: 25px;
+    padding: 20px;
+    flex-wrap: wrap;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.contador-card {
+    flex: 1;
+    min-width: 220px;
+    max-width: 260px;
+    background: var(--color-fondo-contadores);
+    border-radius: 20px;
+    padding: 25px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    transition: all 0.3s ease;
+    border-left: 5px solid var(--borde-contadores);
+}
+
+.contador-card:hover {
+    transform: translateY(-5px);
+}
+
+.contador-card h2 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #000000;
+    margin-bottom: 15px;
+    letter-spacing: 0.5px;
+}
+
+.contador-card__numero {
+    font-size: 32px;
+    font-weight: 700;
+    color: #ffffff;
+    padding: 15px 25px;
+    border-radius: 50px; 
+    background: var(--color-fondo-num-contadores);
+    transition: all 0.3s ease;
+}
+
+.contador-card__numero:hover {
+    transform: scale(1.1);
+}
+
+/* ===== MEDIA QUERIES ===== */
+
+/* Tablet */
+@media (max-width: 1024px) {
+    .postventa-cards__contenedor { 
+        gap: 15px; 
+        padding: 15px;
+    }
+
+    .postventa-cards__card { 
+        padding: 18px; 
+    }
+
+    .postventa-cards__caso {
+        font-size: 16px;
+    }
+
+    .postventa-cards__card p {
+        font-size: 13px; 
+    }
+}
+
+/* Móvil */
+@media (max-width: 480px) {
+    .postventa-cards__contenedor {
+        grid-template-columns: 1fr;
+        gap: 10px;
+        padding: 10px;
+    }
+    .postventa-cards__card { 
+        width: 250px;
+        /* padding: 60px;  */
+    }
+    .postventa-cards__caso {
+        font-size: 15px; 
+    }
+    .postventa-cards__card p { 
+        font-size: 15px; 
+    }
+    .postventa-cards__acciones i { 
+        font-size: 18px; 
+    }
+}

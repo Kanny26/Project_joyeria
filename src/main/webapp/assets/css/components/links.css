@@ -1,0 +1,40 @@
+
+a{
+    text-decoration: none;
+    color: var( --color-texto-general);
+    font-weight: var(--peso-fuente-titulo-principal);
+}
+
+/* ============================================================
+   MEDIA QUERIES - DESKTOP FIRST
+   ============================================================ */
+
+/* Pantallas extra grandes (>= 1440px) */
+@media (min-width: 1440px) {
+    a {
+        font-size: 1.05em;
+    }
+}
+
+/* Escritorio – estilos base (>= 1025px) - Sin cambios, estilos base */
+
+/* Tablet (769px a 1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+    a {
+        font-size: 0.95em;
+    }
+}
+
+/* Phablet (481px a 768px) */
+@media (min-width: 481px) and (max-width: 768px) {
+    a {
+        font-size: 0.9em;
+    }
+}
+
+/* Móvil pequeño (máx. 480px) */
+@media (max-width: 480px) {
+    a {
+        font-size: 0.85em;
+    }
+}

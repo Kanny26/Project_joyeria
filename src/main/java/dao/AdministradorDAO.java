@@ -1,0 +1,42 @@
+package dao;
+
+import model.Administrador;
+import config.ConexionDB;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
+import org.mindrot.jbcrypt.BCrypt;
+
+public class AdministradorDAO {
+
+    public Administrador validar(String nombre, String password) {
+        Administrador admin = null;
+        String sql = "SELECT usuario_id, nombre, pass FROM Usuario WHERE nombre=? AND estado=1";
+
+        try (Connection con = ConexionDB.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, nombre);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                String passBD = rs.getString("pass");
+
+                // Validar con BCrypt
+                if (BCrypt.checkpw(password, passBD)) {
+                    admin = new Administrador();
+                    admin.setId(rs.getInt("usuario_id"));
+                    admin.setNombre(rs.getString("nombre"));
+                    admin.setPass(passBD);
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return admin;
+    }
+}

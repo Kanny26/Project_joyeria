@@ -1,0 +1,66 @@
+
+.titulo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.titulo__encabezado {
+    font-size: var(--tamano-titulo-card);
+    color: var(--color-titulo-cards);
+    margin-bottom: 40px;
+    margin-left: 40px;
+    text-shadow: var(--color-sombra-texto) 4px 4px 4px;
+    transition: transform .3s ease, color .3s ease;
+}
+
+.titulo__encabezado:hover {
+    color: var(--color-texto-hover-cards);
+}
+
+/* ============================================================
+   MEDIA QUERIES - DESKTOP FIRST
+   ============================================================ */
+
+/* Pantallas extra grandes (>= 1440px) */
+@media (min-width: 1440px) {
+    .titulo__encabezado {
+        font-size: 52px;
+    }
+}
+
+/* Escritorio – estilos base (>= 1025px) - Sin cambios, estilos base */
+
+/* Tablet (769px a 1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .titulo__encabezado {
+        font-size: 42px;
+        margin-bottom: 35px;
+        margin-left: 30px;
+    }
+}
+
+/* Phablet (481px a 768px) */
+@media (min-width: 481px) and (max-width: 768px) {
+    .titulo__encabezado {
+        font-size: 36px;
+        margin-bottom: 30px;
+        margin-left: 20px;
+    }
+}
+
+/* Móvil pequeño (máx. 480px) */
+@media (max-width: 480px) {
+    .titulo {
+        align-items: flex-start;
+        padding: 0 10px;
+    }
+    
+    .titulo__encabezado {
+        font-size: 28px;
+        margin-bottom: 25px;
+        margin-left: 0;
+        text-align: center;
+        width: 100%;
+    }
+}

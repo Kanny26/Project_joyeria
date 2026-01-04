@@ -1,0 +1,294 @@
+@import url('../../base/global.css'); 
+@import url('../../Tipografias/styles.css'); 
+ 
+/* ============================================================
+   RESET GENERAL – Elimina márgenes por defecto y normaliza cajas
+   ============================================================ */
+* {
+    margin: var(--margin_padding_reset);
+    padding: var(--margin_padding_reset);
+    box-sizing: border-box;
+}
+
+/* ============================================================
+   BODY – Configuración base de la vista del administrador
+   ============================================================ */
+body {
+    font-family: var(--fuente-titulos);
+    background-color: var(--color-fondo-admin);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    min-height: var(--alto-minimo-body);
+
+    /* Centra el contenido pero permite que inicie más abajo */
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 140px;
+}
+
+/* ============================================================
+   CONTENEDOR PRINCIPAL – Rejilla de tarjetas para opciones admin
+   ============================================================ */
+.Ventas-admin__contenedor {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);   /* Dos columnas por defecto */
+    gap: var(--gap-cards-catalogo);
+    max-width: 1200px;
+    justify-content: center;
+}
+
+/* Cada item del grid */
+.Ventas-admin__contenedor-item {
+    list-style: none;
+}
+
+/* ============================================================
+   TARJETA – Componente principal (icono + botón)
+   ============================================================ */
+.Ventas-admin__tarjeta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    width: var(--ancho-card);
+    padding: 20px;
+
+    border-radius: var(--radio-borde-card);
+    text-align: center;
+    text-decoration: none;
+
+    transition: transform .3s ease;
+}
+
+/* Animación principal */
+.Ventas-admin__tarjeta:hover {
+    transform: scale(1.03);
+}
+
+/* ============================================================
+   ICONO – Círculo con imagen representativa de cada opción
+   ============================================================ */
+.Ventas-admin__icono {
+    width: var(--ancho-iconos-admin);
+    height: var(--alto-iconos-admin);
+    border-radius: 50%;
+    background-color: var(--color-cards);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    margin-bottom: 15px;
+    transition: transform .3s ease, box-shadow .3s ease;
+}
+
+/* Efecto hover del icono */
+.Ventas-admin__icono:hover {
+    transform: scale(1.1);
+    box-shadow: var(--sombra-hover);
+}
+
+/* Tamaño del ícono interno */
+.Ventas-admin__icono img {
+    width: var(--tamano-imagen-icono);
+    height: var(--tamano-imagen-icono);
+    transition: transform .3s ease;
+}
+
+/* ============================================================
+   BOTÓN/TÍTULO – Nombre de la sección dentro de cada tarjeta
+   ============================================================ */
+.Ventas-admin__titulo-tarjeta {
+    background-color: var(--color-fondo-boton);
+    width: var(--ancho-h3-categorias);
+    height: var(--alto-h3-categorias);
+
+    border-radius: 20px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: var(--tamano-texto-h3);
+    color: var(--color-texto-principal);
+    font-weight: var(--peso-texto-semi);
+
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+
+    box-shadow: 0 2px 6px var(--color-sombra-oscura);
+}
+
+/* Capas animadas del botón (efecto deslizante) */
+.Ventas-admin__titulo-tarjeta::before,
+.Ventas-admin__titulo-tarjeta::after {
+    content: "";
+    position: absolute;
+    width: 50%;
+    height: 100%;
+    top: 0;
+    transition: transform .3s ease;
+    z-index: 0;
+}
+
+.Ventas-admin__titulo-tarjeta::before {
+    left: 0;
+    background: var(--color-fondo-h3-izquierda);
+}
+
+.Ventas-admin__titulo-tarjeta::after {
+    right: 0;
+    background: var(--color-fondo-h3-derecha);
+}
+
+/* Animaciones del fondo dividido */
+.Ventas-admin__titulo-tarjeta:hover::before {
+    transform: translateX(-100%);
+}
+
+.Ventas-admin__titulo-tarjeta:hover::after {
+    transform: translateX(100%);
+}
+
+/* Cambio de color del texto al pasar el mouse */
+.Ventas-admin__titulo-tarjeta:hover {
+    color: var(--color-texto-hover-cards);
+}
+
+/* ============================================================
+   MEDIA QUERIES – Ajustes Responsivos (Desktop First)
+   ============================================================ */
+
+/* ============================
+   Extra grandes (>= 1440px)
+   ============================ */
+@media (min-width: 1440px) {
+    .Ventas-admin__contenedor {
+        max-width: 1400px;
+        gap: 60px;
+    }
+}
+
+/* ============================
+   Tablet (769px - 1024px)
+   ============================ */
+@media (min-width: 769px) and (max-width: 1024px) {
+
+    /* Reduce padding superior para tablets */
+    body {
+        padding-top: 120px;
+    }
+
+    /* Reorganiza tarjetas en una sola columna */
+    .Ventas-admin__contenedor {
+        grid-template-columns: 1fr;
+        gap: 35px;
+        max-width: 500px;
+    }
+
+    .Ventas-admin__tarjeta {
+        width: 100%;
+    }
+
+    /* Iconos más pequeños */
+    .Ventas-admin__icono {
+        width: 170px;
+        height: 170px;
+    }
+
+    .Ventas-admin__icono img {
+        width: 100px;
+        height: 100px;
+    }
+
+    /* Botón más reducido */
+    .Ventas-admin__titulo-tarjeta {
+        width: 220px;
+        height: 58px;
+        font-size: 22px;
+    }
+}
+
+/* ============================
+   Phablet (481px - 768px)
+   ============================ */
+@media (min-width: 481px) and (max-width: 768px) {
+
+    body {
+        padding-top: 100px;
+    }
+
+    .Ventas-admin__contenedor {
+        grid-template-columns: 1fr;
+        gap: 25px;
+        max-width: 450px;
+    }
+
+    .Ventas-admin__tarjeta {
+        width: 100%;
+    }
+
+    .Ventas-admin__icono {
+        width: 150px;
+        height: 150px;
+    }
+
+    .Ventas-admin__icono img {
+        width: 90px;
+        height: 90px;
+    }
+
+    .Ventas-admin__titulo-tarjeta {
+        width: 200px;
+        height: 55px;
+        font-size: 20px;
+    }
+}
+
+/* ============================
+   Móvil pequeño (<= 480px)
+   ============================ */
+@media (max-width: 480px) {
+
+    body {
+        padding-top: 80px;
+    }
+
+    /* Vuelve al grid de 2 columnas pero más compacto */
+    .Ventas-admin__contenedor {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+        max-width: 100%;
+        padding: 0 10px;
+    }
+
+    /* Tarjetas más pequeñas y centradas */
+    .Ventas-admin__tarjeta {
+        width: 100%;
+        max-width: 280px;
+        margin: 0 auto;
+    }
+
+    /* Icono más pequeño */
+    .Ventas-admin__icono {
+        width: 130px;
+        height: 130px;
+    }
+
+    .Ventas-admin__icono img {
+        width: 80px;
+        height: 80px;
+    }
+
+    /* Botón compacto */
+    .Ventas-admin__titulo-tarjeta {
+        width: 100%;
+        max-width: 200px;
+        height: 50px;
+        font-size: 18px;
+    }
+}

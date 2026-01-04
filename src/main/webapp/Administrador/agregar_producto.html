@@ -1,0 +1,100 @@
+<!DOCTYPE html>  
+<html lang="es">  
+<head>  
+    <meta charset="UTF-8"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+    <title>Agregar producto</title> 
+    <link rel="stylesheet" href="../../../assets/css/main.css" />
+    <link rel="stylesheet" href="../../assets/css/pages/Administrador/agregar_producto.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head> 
+<body>
+
+<nav class="navbar-admin"> 
+    <div class="navbar-admin__catalogo"> 
+        <img src="../../../assets/Imagenes/iconos/admin.png" alt="Admin"> 
+        <a href="org-categorias.html"> 
+            <h2>Volver al inicio</h2> 
+        </a>
+    </div> 
+    <h1 class="navbar-admin__title">AAC27</h1> 
+    <i class="fa-solid fa-house-chimney navbar-admin__home-icon"></i> 
+</nav>
+<main class="form-product-container">
+    <h2 class="form-product-container__title">Agregar Nuevo Producto</h2>
+
+    <form class="form-product" action="#" method="get">
+
+        <div class="form-product__row">
+            <div class="form-product__group">
+                <label for="nombre" class="form-product__label">Nombre:</label>
+                <div class="input-icon">
+                    <i class="fa-solid fa-gem"></i>
+                    <input type="text" id="nombre" name="nombre" class="form-product__input" placeholder="Ej: Anillo de oro" required>
+                </div>
+            </div>
+
+            <div class="form-product__group">
+                <label for="categoria" class="form-product__label">Categoría:</label>
+                <div class="input-icon">
+                    <i class="fa-solid fa-tags"></i>
+                    <select id="categoria" name="categoria" class="form-product__input" required>
+                        <option value="">Selecciona</option>
+                        <option value="anillos">Anillos</option>
+                        <option value="aretes_largos">Aretes largos</option>
+                        <option value="collares">Collares</option>
+                        <option value="conjuntos">Conjuntos collar-aretes</option>
+                        <option value="denarios">Denarios</option>
+                        <option value="dijes">Dijes</option>
+                        <option value="earcuff">Earcuff</option>
+                        <option value="manillas">Manillas</option>
+                        <option value="pulseras">Pulseras</option>
+                        <option value="rosarios">Rosarios</option>
+                        <option value="tobilleras">Tobilleras</option>
+                        <option value="topitos">Topitos</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-product__row">
+            <div class="form-product__group">
+                <label for="material" class="form-product__label">Material:</label>
+                <input type="text" id="material" name="material" class="form-product__input" placeholder="Oro, Plata, Acero" required>
+            </div>
+
+            <div class="form-product__group">
+                <label for="precio" class="form-product__label">Precio:</label>
+                <div class="input-icon">
+                    <i class="fa-solid fa-dollar-sign"></i>
+                    <input type="number" id="precio" name="precio" class="form-product__input" placeholder="120000" required>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-product__row">
+            <div class="form-product__group">
+                <label for="stock" class="form-product__label">Stock:</label>
+                <input type="number" id="stock" name="stock" class="form-product__input" placeholder="10" required>
+            </div>
+
+            <div class="form-product__group">
+                <label for="imagen" class="form-product__label">Imagen:</label>
+                <input type="file" id="imagen" name="imagen" class="form-product__input" accept="image/*" required>
+            </div>
+        </div>
+
+        <div class="form-product__group form-product__row-full">
+            <label for="descripcion" class="form-product__label">Descripción:</label>
+            <textarea id="descripcion" name="descripcion" class="form-product__input" rows="4" placeholder="Ej: Anillo elegante de oro 18k"></textarea>
+        </div>
+
+        <button type="submit" class="btn">
+            <a href="../Administrador/accesorios/mensaje_exito.html">Agregar Producto</a>
+            
+        </button>
+    </form>
+</main>
+
+</body>
+</html>

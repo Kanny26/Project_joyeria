@@ -1,0 +1,239 @@
+@import url('../../base/global.css'); /*variables globales*/
+
+/* estilos generales y layout */
+* {
+  margin: var(--margin_padding_reset);
+  padding: var(--margin_padding_reset);
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--fuente-titulos);
+  background: var(--gradiente-fondo-principal);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: var(--alto-minimo-body);
+}
+
+/* Contenedor principal */
+.registro-usuario {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: var(--alto-minimo-contenedor);
+  gap: var(--separacion-paneles);
+}
+
+/* Panel izquierdo */
+.registro-usuario__panel-izquierdo {
+  width: var(--ancho-panel-izquierdo);
+  height: var(--alto-panel-izquierdo);
+  background: var(--gradiente-panel-izquierdo);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: var(--bordes-panel-izquierdo);
+}
+
+/* Caja interna panel izquierdo */
+.registro-usuario__panel-caja {
+  width: var(--ancho-panel-izquierdo-interno);
+  height: var(--alto-panel-izquierdo-interno);
+  background-color: var(--color-fondo-caja);
+  border-radius: var(--bordes-caja-panel-izquierda-derecha);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--padding-caja-vertical) var(--padding-caja-horizontal);
+  text-align: center;
+  box-shadow: var(--sombra-caja-panel);
+}
+
+.registro-usuario__panel-logo {
+  width: var(--ancho-logo);
+  height: var(--alto-logo);
+  margin-top: var(--margen-logo-inferior);
+}
+
+/* Panel derecho */
+.registro-usuario__panel-derecho {
+  width: var(--ancho-panel-derecho);
+  height: var(--alto-panel-derecho);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  background-image: url("../../../Imagenes/fondos/banner4.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: var(--opacidad-imagen-fondo);
+  border-radius: var(--bordes-panel-derecho);
+  position: relative;
+}
+
+/* Formulario derecho */
+.registro-usuario__formulario {
+  width: var(--ancho-contenedor-formulario);
+  height: var(--alto-contenedor-formulario);
+  background-color: var(--color-fondo-caja);
+  border-radius: var(--bordes-caja-panel-izquierda-derecha);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: var(--padding-formulario-vertical)
+    var(--padding-formulario-horizontal);
+  box-shadow: var(--sombra-formulario);
+  z-index: var(--indice-z-formulario);
+  position: relative;
+}
+
+.registro-usuario__formulario-contenido {
+  width: var(--ancho-contenedor-botones);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: var(--fuente-subtitulos);
+}
+
+h1 {
+  color: var(--color-texto-principal);
+  font-weight: var(--peso-fuente-titulo-formularios);
+  font-family: var(--fuente-titulos);
+  font-size: 25px;
+}
+
+/* Inputs */
+.registro-usuario__input-grupo {
+  width: var(--ancho-input);
+  height: var(--alto-input);
+  margin-top: var(--margen-input-superior);
+  display: flex;
+  align-items: center;
+  background-color: var(--color-fondo-input);
+  border-radius: var(--bordes-inputs-botones);
+  padding: var(--desplazamiento-active-boton) var(--padding-input-horizontal);
+  position: relative;
+}
+
+.registro-usuario__input-grupo input {
+  background-color: transparent;
+  border: none;
+  outline: none;
+  font-family: var(--fuente-placeholder);
+  font-size: var(--tamano-fuente-placeholder);
+  flex: var(--indice-z-formulario);
+  padding-right: var(--padding-input-derecho);
+  color: var(--color-texto-negro);
+}
+
+.registro-usuario__input-grupo input::placeholder {
+  color: var(--color-texto-placeholders);
+}
+
+.registro-usuario__input-grupo i.icon-left {
+  font-size: var(--tamaño-icono-input);
+  color: var(--color-iconos);
+  margin-right: var(--margen-icono-derecho);
+}
+
+.registro-usuario__input-grupo i.icon-right {
+  position: absolute;
+  right: var(--posicion-icono-derecho);
+  font-size: var(--tamaño-icono-input);
+  color: var(--color-iconos);
+  cursor: pointer;
+}
+
+/* Footer */
+.registro-usuario__link-footer {
+  margin-top: var(--margen-link-registro-superior);
+  font-size: var(--tamaño-fuente-link-footer);
+  text-align: center;
+}
+
+.registro-usuario__link-footer a {
+  color: var(--color-texto-principal);
+  text-decoration: none;
+  text-decoration-line: none;
+  font-weight: var(--peso-fuente-rol);
+}
+
+.registro-usuario__link-footer p {
+  font-size: var(--tamano-fuente-parrafos-alternativos);
+}
+
+.registro-usuario__link-footer a:hover {
+  color: var(--color-link-hover);
+}
+/* ==================== Móvil (max-width: 600px) ==================== */
+@media (max-width: 600px) {
+    /* Contenedor principal: flex en columna */
+    .registro-usuario {
+        flex-direction: column;
+        gap: 0;
+        padding: 20px 10px;
+    }
+
+    /* Ocultar panel izquierdo (logo) */
+    .registro-usuario__panel-izquierdo {
+        display: none;
+    }
+
+    /* Panel derecho ocupa todo el ancho */
+    .registro-usuario__panel-derecho {
+        width: 350px;
+        height: 550px;
+        border-radius: 12px;
+        padding: 20px 0;
+        background-size: cover;
+    }
+
+    /* Formulario */
+    .registro-usuario__formulario {
+        width: 300px;
+        height: auto;
+        border-radius: 12px;
+    }
+
+    .registro-usuario__formulario-contenido {
+        width: 90%;
+    }
+
+    h1 {
+        font-size: 1.8rem;
+        text-align: center;
+    }
+
+    /* Inputs */
+    .registro-usuario__input-grupo {
+        width: 100%;
+        height: 45px;
+        margin-top: 10px;
+        padding: 0 12px;
+    }
+
+    .registro-usuario__input-grupo input {
+        font-size: 0.9rem;
+    }
+
+    .registro-usuario__input-grupo i.icon-left,
+    .registro-usuario__input-grupo i.icon-right {
+        font-size: 0.9rem;
+    }
+
+    /* Footer */
+    .registro-usuario__link-footer {
+        font-size: 0.85rem;
+        margin-top: 15px;
+    }
+
+    .registro-usuario__link-footer p {
+        font-size: 0.85rem;
+    }
+}

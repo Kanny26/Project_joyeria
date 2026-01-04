@@ -1,0 +1,213 @@
+@import url('../../../base/global.css');
+
+* {
+  margin: var(--margin_padding_reset);
+  padding: var(--margin_padding_reset);
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--fuente-titulos);
+  background-color: var(--color-fondo-admin);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: var(--alto-minimo-body);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 140px;
+}
+
+/* Tabla */
+.Ventas-editar__tabla-contenedor {
+  width: var(--ancho-tabla-Ventas);
+  overflow-x: auto;
+  border-radius: 15px;
+  background-color: var(--color-fondo-card-productos);
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+  padding: 10px;
+}
+
+.Ventas-editar__tabla {
+  width: var(--ancho-interno-tabla-Ventas);
+  border-collapse: collapse;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.Ventas-editar__tabla th,
+.Ventas-editar__tabla td {
+  padding: 15px 10px;
+  text-align: center;
+  /* border-left: 1px solid saddlebrown;
+  border-bottom: 1px solid saddlebrown; */
+}
+
+.Ventas-editar__tabla th {
+  background-color: var(--color-fondo-tarjeta-hover);
+  font-weight: 700;
+  font-size: var(--tamano-label);
+  /* border: 1px solid saddlebrown; */
+}
+
+.Ventas-editar__tabla tbody {
+  background-color: var(--color-fondo-tarjeta-hover);
+  font-weight: 500;
+  font-size: 16px;
+  /* border: 1px solid saddlebrown; */
+}
+
+/* Estado y select */
+.estado {
+  padding: 5px 12px;
+  border-radius: 10px;
+  color: rgb(0, 0, 0);
+  font-size: 16px;
+  font-weight: var(--peso-texto-semi);
+  text-decoration: none;
+  border: none;
+  background-color: rgb(153, 150, 197);
+}
+
+#select {
+  color: rgb(0, 0, 0);
+  padding: 8px;
+  border-radius: 5px; 
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.estado--pagado {
+  background-color: rgb(120, 172, 120);
+}
+
+.estado--en_proceso {
+  background-color: rgb(249, 255, 126);
+}
+
+.estado--pendiente {
+  background-color: rgb(236, 93, 93);
+}
+
+/* Cambiar color dinámicamente en select */
+#select:has(option[value="rojo"]:checked) {
+  background-color: rgb(236, 93, 93);
+}
+#select:has(option[value="amarillo"]:checked) {
+  background-color: rgb(249, 255, 126);
+}
+#select:has(option[value="verde"]:checked) {
+  background-color: rgb(120, 172, 120);
+}
+
+/* Contadores */
+.contadores {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  gap: 25px;
+  padding: 20px;
+  flex-wrap: wrap;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.contador-card {
+  flex: 1;
+    min-width: 220px;
+    max-width: 260px;
+    background: var(--color-fondo-contadores);
+    border-radius: 20px;
+    padding: 25px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    transition: all 0.3s ease;
+    border-left: 5px solid var(--borde-contadores);
+}
+
+.contador-card:hover {
+  transform: translateY(-5px);
+}
+
+.contador-card h2 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #000000;
+  margin-bottom: 15px;
+  letter-spacing: 0.5px;
+}
+
+.contador-card__numero {
+  font-size: 32px;
+    font-weight: 700;
+    color: #ffffff;
+    padding: 15px 25px;
+    border-radius: 50px; 
+    background: var(--color-fondo-num-contadores);
+    transition: all 0.3s ease;
+}
+
+.contador-card__numero:hover {
+    transform: scale(1.1);
+}
+
+/* ===== Media Queries ===== */
+@media screen and (max-width: 768px) {
+
+    body {
+        padding-top: 100px;
+    }
+
+    .Ventas-editar__tabla-contenedor {
+        width: 95%;
+        margin-left: 10px; 
+    }
+
+    .Ventas-editar__tabla thead {
+        display: none;
+    }
+
+    .Ventas-editar__tabla tbody,
+    .Ventas-editar__tabla tr,
+    .Ventas-editar__tabla td {
+        display: block;
+        width: 100%;
+    }
+
+    .Ventas-editar__tabla tr {
+        margin-bottom: 50px;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        padding: 10px;
+        background: var(--color-fondo-tarjeta-hover);
+    }
+
+    .Ventas-editar__tabla td {
+        text-align: right;
+        padding: 10px 15px;
+        position: relative;
+        border: none;
+        border-bottom: 1px solid rgba(0,0,0,0.1);
+    }
+
+    .Ventas-editar__tabla td::before {
+        content: attr(data-label);
+        float: left;
+        font-weight: 600;
+        color: #333;
+    }
+
+    /* Contadores verticales */
+    .contadores {
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .contador-card {
+        max-width: 90%;
+    }
+}
