@@ -1,13 +1,16 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="java.util.*, model.Usuario" %>
+
 <%
-    List<Usuario> usuarios = (List<Usuario>) request.getAttribute("usuarios");
+	List<Usuario> usuarios = (List<Usuario>) request.getAttribute("usuarios");
+	if (usuarios == null) usuarios = new ArrayList<>();
     Integer totalUsuariosObj = (Integer) request.getAttribute("totalUsuarios");
     Integer usuariosActivosObj = (Integer) request.getAttribute("usuariosActivos");
 
     int totalUsuarios = (totalUsuariosObj != null) ? totalUsuariosObj : 0;
     int usuariosActivos = (usuariosActivosObj != null) ? usuariosActivosObj : 0;
 %>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -43,14 +46,14 @@
                     <th>Telefono</th>
                     <th>Correo</th>
                     <th>Rol</th>
-                    <th>Fecha inicio</th>
+                    <th>Fecha creación</th>
                     <th>Estado</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
                 <%
-                    if (usuarios != null) {
+                    if (usuarios != null && !usuarios.isEmpty()) {
                         for (Usuario u : usuarios) {
                 %>
                 <tr>
@@ -58,11 +61,9 @@
                     <td data-label="Nombre"><%= u.getNombre() %></td>
                     <td data-label="Telefono"><%= u.getTelefono() != null ? u.getTelefono() : "-" %></td>
                     <td data-label="Correo"><%= u.getCorreo() != null ? u.getCorreo() : "-" %></td>
-                    <td data-label="Rol"><%= u.getRol() %></td>
-                    <td data-label="Fecha inicio"><%= u.getFechaInicio() != null ? u.getFechaInicio() : "-" %></td>
-                    <td data-label="Estado">
-                        <%= u.isEstado() ? "Activo" : "Inactivo" %>
-                    </td>
+                    <td data-label="Rol"><%= u.getRol() != null ? u.getRol() : "-" %></td>
+                    <td data-label="Fecha creación"><%= u.getFechaCreacion() != null ? u.getFechaCreacion() : "-" %></td>
+                    <td data-label="Estado"><%= u.isEstado() ? "Activo" : "Inactivo" %></td>
                     <td data-label="Acciones" class="Usuarios-listar__acciones">
                         <div class="iconos">
                             <a href="<%= request.getContextPath() %>/UsuarioServlet?accion=editar&id=<%= u.getUsuarioId() %>">
@@ -73,6 +74,12 @@
                 </tr>
                 <%
                         }
+                    } else {
+                %>
+                <tr>
+                    <td colspan="8">No hay usuarios registrados.</td>
+                </tr>
+                <%
                     }
                 %>
             </tbody>

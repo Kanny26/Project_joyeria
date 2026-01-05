@@ -26,7 +26,7 @@
                 Administrador
             </a>
 
-            <a href="<%=request.getContextPath()%>/Vendedor/inicio-sesion.jsp" class="splash__boton splash__boton--hover">
+            <a href="<%=request.getContextPath()%>/vendedor/inicio-sesion.jsp" class="splash__boton splash__boton--hover">
                 <img src="<%=request.getContextPath()%>/assets/Imagenes/iconos/Seller.png" alt="Vendedor" class="splash__boton-icono">
                 Vendedor
             </a>

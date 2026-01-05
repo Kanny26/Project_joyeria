@@ -48,7 +48,16 @@
                             <label>Nombre</label>
                             <div class="registro-Usuario__input-grupo">
                                 <i class="fas fa-user icon-left"></i>
-                                <input type="text" name="nombre" placeholder="Nombre de Usuario" required />
+                                <input type="text" name="nombre" placeholder="Nombre completo" required />
+                            </div>
+                        </div>
+
+                        <!-- Documento (opcional) -->
+                        <div class="registro-Usuario__grupo-campo">
+                            <label>Documento</label>
+                            <div class="registro-Usuario__input-grupo">
+                                <i class="fas fa-id-card icon-left"></i>
+                                <input type="text" name="documento" placeholder="Documento de identidad" />
                             </div>
                         </div>
 
@@ -66,16 +75,26 @@
                             <label>Teléfono</label>
                             <div class="registro-Usuario__input-grupo">
                                 <i class="fas fa-phone icon-left"></i>
-                                <input type="tel" name="telefono" placeholder="Teléfono del Usuario" required />
+                                <input type="tel" name="telefono" placeholder="Teléfono del Usuario" />
                             </div>
                         </div>
+
+                        <!-- Fecha de registro (para vendedor puede ser hoy por defecto) -->
+                        <div class="registro-Usuario__grupo-campo">
+                            <label>Fecha de registro</label>
+                            <div class="registro-Usuario__input-grupo">
+                                <i class="fas fa-calendar icon-left"></i>
+                                <input type="date" name="fechaRegistro" />
+                            </div>
+                        </div>
+
 
                         <!-- Estado -->
                         <div class="registro-Usuario__grupo-campo">
                             <label>Estado</label>
                             <div class="registro-Usuario__input-grupo">
                                 <label class="radio-op">
-                                    <input type="radio" name="estado" value="Activo" required> Activo
+                                    <input type="radio" name="estado" value="Activo" checked required> Activo
                                 </label>
                                 <label class="radio-op">
                                     <input type="radio" name="estado" value="Inactivo" required> Inactivo
@@ -83,25 +102,26 @@
                             </div>
                         </div>
 
-                        <!-- Fecha de inicio -->
+                        <!-- Rol -->
                         <div class="registro-Usuario__grupo-campo">
-                            <label>Fecha de inicio</label>
+                            <label>Rol</label>
                             <div class="registro-Usuario__input-grupo">
-                                <i class="fas fa-calendar icon-left"></i>
-                                <input type="date" name="fechaInicio" required />
+                                <select name="rol" required>
+                                    <option value="vendedor">Vendedor</option>
+                                    <option value="administrador">Administrador</option>
+                                    <option value="proveedor">Proveedor</option>
+                                    <option value="cliente">Cliente</option>
+                                </select>
                             </div>
                         </div>
-                        
-                        <!-- rol de usuario -->
+
+                        <!-- Contraseña (opcional, si se deja vacía se genera una temporal) -->
                         <div class="registro-Usuario__grupo-campo">
-							<label>Rol:
-						        <select name="rol">
-						            <option value="vendedor">Vendedor</option>
-						            <option value="administrador">Administrador</option>
-						            <option value="proveedor">Proveedor</option>
-						            <option value="cliente">Cliente</option>
-						        </select>
-						    </label>
+                            <label>Contraseña</label>
+                            <div class="registro-Usuario__input-grupo">
+                                <i class="fas fa-lock icon-left"></i>
+                                <input type="password" name="contrasena" placeholder="Contraseña (opcional)" />
+                            </div>
                         </div>
 
                         <!-- Botón -->
@@ -116,3 +136,4 @@
     </main>
 </body>
 </html>
+

@@ -150,5 +150,7 @@ public class Usuario {
     public void setObservaciones(String observaciones) {
         this.observaciones = observaciones;
     }
+    
+    
 }
 

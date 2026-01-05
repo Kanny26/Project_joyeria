@@ -62,7 +62,7 @@
         
         <!-- Historial -->
         <article class="usuarios-admin__contenedor-item">
-            <a href="<%= request.getContextPath() %>/UsuarioServlet?accion=historial" class="usuarios-admin__tarjeta">
+            <a href="<%= request.getContextPath() %>/DesempenoServlet" class="usuarios-admin__tarjeta">
                 <div class="usuarios-admin__icono">
                     <img src="<%= request.getContextPath() %>/assets/Imagenes/iconos/historial.png" alt="Historial">
                 </div>
