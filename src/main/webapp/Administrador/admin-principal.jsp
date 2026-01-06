@@ -51,7 +51,7 @@
     <section class="panel-admin__tarjetas-contenedor">
         <div class="panel-admin__tarjeta">
             <div class="panel-admin__tarjeta-circulo">
-                <a href="<%=request.getContextPath()%>/Administrador/org-categorias.jsp">
+                <a href="<%=request.getContextPath()%>/CategoriaServlet">
                     <img src="<%=request.getContextPath()%>/assets/Imagenes/iconos/catalogar.png" alt="Administrar catalogo">
                 </a>
             </div>
