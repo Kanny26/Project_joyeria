@@ -8,7 +8,6 @@ public class Producto {
     private int stock;
     private double precioUnitario;
     private String imagen;
-
     private Categoria categoria;
     private Material material;
 
@@ -22,7 +21,6 @@ public class Producto {
         this.productoId = productoId;
     }
 
-    // Alias para JSP
     public int getId() {
         return productoId;
     }
@@ -43,20 +41,20 @@ public class Producto {
         this.precioUnitario = precioUnitario;
     }
 
+    public void setimagen(String imagen) {
+    	this.imagen = imagen;
+    }
+    
+    public String getimagen() {
+        return imagen;
+    }
+    
     public int getStock() {
         return stock;
     }
 
     public void setStock(int stock) {
         this.stock = stock;
-    }
-
-    public String getImagen() {
-        return imagen;
-    }
-
-    public void setImagen(String imagen) {
-        this.imagen = imagen;
     }
 
     public Categoria getCategoria() {

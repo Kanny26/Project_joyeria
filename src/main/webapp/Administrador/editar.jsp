@@ -1,48 +1,53 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
-<%@ page import="model.Categoria" %>
+<%@ page import="model.Producto, java.util.List, model.Material" %>
 
 <%
-    Categoria categoria = (Categoria) request.getAttribute("categoria");
+    Producto producto = (Producto) request.getAttribute("producto");
+    List<Material> materiales = (List<Material>) request.getAttribute("materiales");
 %>
 
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Editar Producto</title>
-
+    <title>Editar producto</title>
     <link rel="stylesheet" href="<%=request.getContextPath()%>/assets/css/main.css">
-    <link rel="stylesheet" href="<%=request.getContextPath()%>/assets/css/pages/Administrador/agregar_producto.css">
 </head>
 
 <body>
 
-<nav class="navbar-admin">
-    <img src="<%=request.getContextPath()%>/assets/Imagenes/iconos/admin.png">
-    <h1 class="navbar-admin__title">AAC27</h1>
-</nav>
+<h2>Editar producto</h2>
 
-<main class="form-product-container">
-    <h2>Editar Categoría</h2>
+<form action="<%=request.getContextPath()%>/ProductoServlet" method="post">
+    <input type="hidden" name="action" value="actualizar">
+    <input type="hidden" name="productoId" value="<%= producto.getProductoId() %>">
+    <input type="hidden" name="categoriaId" value="<%= producto.getCategoria().getCategoriaId() %>">
 
-	<form action="CategoriaServlet" method="post">
-	    <input type="hidden" name="action" value="actualizar">
-	    <input type="hidden" name="id" value="<%= categoria.getId() %>">
-	
-	    <label>Nombre:</label><br>
-	    <input type="text" name="nombre" value="<%= categoria.getNombre() %>" required><br><br>
-	
-	    <label>Estado:</label><br>
-	    <select name="estado">
-	        <option value="1" <%= categoria.getEstado()==1?"selected":"" %>>Activo</option>
-	        <option value="0" <%= categoria.getEstado()==0?"selected":"" %>>Inactivo</option>
-	    </select><br><br>
-	
-	    <button type="submit">Actualizar</button>
-	</form>
+    <label>Nombre</label>
+    <input type="text" name="nombre" value="<%= producto.getNombre() %>" required>
 
-	<a href="CategoriaServlet">Volver</a>
-</main>
+    <label>Precio</label>
+    <input type="number" step="0.01" name="precioUnitario"
+           value="<%= producto.getPrecioUnitario() %>" required>
+
+    <label>Stock</label>
+    <input type="number" name="stock" value="<%= producto.getStock() %>" required>
+
+    <label>Material</label>
+    <select name="materialId" required>
+        <% for (Material m : materiales) { %>
+            <option value="<%= m.getMaterialId() %>"
+                <%= producto.getMaterial().getMaterialId() == m.getMaterialId() ? "selected" : "" %>>
+                <%= m.getNombre() %>
+            </option>
+        <% } %>
+    </select>
+
+    <label>Descripción</label>
+    <textarea name="descripcion"><%= producto.getDescripcion() %></textarea>
+
+    <button type="submit">Actualizar</button>
+</form>
 
 </body>
 </html>
