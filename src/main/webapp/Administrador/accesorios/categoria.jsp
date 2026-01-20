@@ -21,11 +21,9 @@
 <head>
     <meta charset="UTF-8">
     <title><%= categoria.getNombre() %></title>
-
     <link rel="stylesheet" href="<%=request.getContextPath()%>/assets/css/main.css">
     <link rel="stylesheet" href="<%=request.getContextPath()%>/assets/css/pages/Administrador/gest-productos.css">
 </head>
-
 <body>
 
 <nav class="navbar-admin">
@@ -34,12 +32,10 @@
         <h2>Volver al inicio</h2>
     </div>
     <h1 class="navbar-admin__title">AAC27</h1>
-
     <div class="navbar-admin__usuario">
         <i class="fas fa-user"></i>
         <span><%= admin.getNombre() %></span>
     </div>
-
     <a href="<%=request.getContextPath()%>/index.jsp">
         <i class="fa-solid fa-house-chimney navbar-admin__home-icon"></i>
     </a>
@@ -49,44 +45,40 @@
     <h2 class="titulo__encabezado"><%= categoria.getNombre() %></h2>
 
     <div class="cards__barra-superior">
-        <a href="<%=request.getContextPath()%>/ProductoServlet?action=nuevo&categoria=<%= categoria.getId() %>"
+        <a href="<%=request.getContextPath()%>/ProductoServlet?action=nuevo&categoria=<%= categoria.getCategoriaId() %>"
            class="cards__boton-agregar">
             + Agregar Producto
         </a>
     </div>
 
     <section class="cards__contenedor">
-
-		<% if (productos == null) { %>
-		    <p>Error: no se recibieron productos</p>
-		
-		<% } else if (productos.isEmpty()) { %>
-		    <p>No hay productos en esta categoría</p>
-		
-		<% } else {
-		    for (Producto p : productos) { %>
-		
-		    <div class="cards__contenedor-content">
-		        <img src="<%=request.getContextPath()%>/<%= p.getImagen() %>">
-		
-		        <h3><%= p.getNombre() %></h3>
-		        <h4><%= p.getMaterial().getNombre() %></h4>
-		        <h4>$<%= p.getPrecioUnitario() %></h4>
-		        <h4>Stock: <%= p.getStock() %></h4>
-		
-		        <div class="iconos">
-		            <a href="<%=request.getContextPath()%>/ProductoServlet?action=ver&id=<%= p.getProductoId() %>">👁</a>
-		            <a href="<%=request.getContextPath()%>/ProductoServlet?action=editar&id=<%= p.getProductoId() %>">✏</a>
-		            <a href="<%=request.getContextPath()%>/ProductoServlet?action=eliminar&id=<%= p.getProductoId() %>"
-		               onclick="return confirm('¿Eliminar producto?')">🗑</a>
-		        </div>
-		    </div>
-		
-		<% } } %>
-		
-		</section>
-
+        <% if (productos == null) { %>
+            <p>Error: no se recibieron productos</p>
+        <% } else if (productos.isEmpty()) { %>
+            <p>No hay productos en esta categoría</p>
+        <% } else {
+            for (Producto p : productos) {
+                String img = p.getImagen();
+                if (img == null || img.isEmpty()) {
+                    img = "default.jpg";
+                }
+        %>
+        <div class="cards__contenedor-content">
+            <img src="<%=request.getContextPath()%>/imagenes/<%= img %>" alt="Producto">
+            <h3><%= p.getNombre() %></h3>
+            <h4><%= p.getMaterial().getNombre() %></h4>
+            <h4>Venta: $<%= p.getPrecioVenta() %></h4>
+            <small>Costo: $<%= p.getPrecioUnitario() %></small>
+            <h4>Stock: <%= p.getStock() %></h4>
+            <div class="iconos">
+                <a href="<%=request.getContextPath()%>/ProductoServlet?action=ver&id=<%= p.getProductoId() %>">👁</a>
+                <a href="<%=request.getContextPath()%>/ProductoServlet?action=editar&id=<%= p.getProductoId() %>">✏</a>
+                <a href="<%=request.getContextPath()%>/ProductoServlet?action=eliminar&id=<%= p.getProductoId() %>"
+                   onclick="return confirm('¿Eliminar producto?')">🗑</a>
+            </div>
+        </div>
+        <% } } %>
+    </section>
 </main>
-
 </body>
 </html>

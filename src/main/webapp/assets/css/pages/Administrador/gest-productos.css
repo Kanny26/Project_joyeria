@@ -111,13 +111,12 @@ body {
     overflow: hidden;
 }
 
+.cards__contenedor-content * {
+	pointer-events: auto;
+}
 /* para asegurar que el texto quede encima */
 .cards__contenedor-content h3,
 .cards__contenedor-content h4,
-.cards__contenedor-content .iconos {
-    position: relative;
-    z-index: 1;
-}
 
 /* === IMAGEN CIRCULAR === */
 .cards__contenedor-content img {
@@ -153,6 +152,13 @@ body {
     color: var(--color-titulo-cards);
     transition: transform var(--duracion-transicion), color var(--duracion-transicion);
     text-shadow: var(--color-sombra-texto) 4px 4px 4px;
+}
+
+.iconos a {
+    pointer-events: auto;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 1.2rem;
 }
 
 /* Estilos para la barra de desplazamiento personalizada */

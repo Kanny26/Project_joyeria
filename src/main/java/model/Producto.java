@@ -1,12 +1,15 @@
 package model;
 
+import java.math.BigDecimal;
+
 public class Producto {
 
     private int productoId;
     private String nombre;
     private String descripcion;
     private int stock;
-    private double precioUnitario;
+    private BigDecimal precioUnitario;
+    private BigDecimal precioVenta;
     private String imagen;
     private Categoria categoria;
     private Material material;
@@ -33,19 +36,27 @@ public class Producto {
         this.nombre = nombre;
     }
 
-    public double getPrecioUnitario() {
+    public BigDecimal  getPrecioUnitario() {
         return precioUnitario;
     }
 
-    public void setPrecioUnitario(double precioUnitario) {
+    public void setPrecioUnitario(BigDecimal  precioUnitario) {
         this.precioUnitario = precioUnitario;
     }
 
-    public void setimagen(String imagen) {
-    	this.imagen = imagen;
+    public BigDecimal  getPrecioVenta() {
+        return precioVenta;
     }
-    
-    public String getimagen() {
+
+    public void setPrecioVenta(BigDecimal  precioVenta) {
+        this.precioVenta = precioVenta;
+    }
+
+    public void setImagen(String imagen) {
+        this.imagen = imagen;
+    }
+
+    public String getImagen() {
         return imagen;
     }
     

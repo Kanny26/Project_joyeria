@@ -87,6 +87,17 @@
                        required>
             </div>
 
+			<div class="form-product__group">
+			    <label class="form-product__label">Precio de venta</label>
+			    <input type="number"
+			           name="precioVenta"
+			           class="form-product__input"
+			           placeholder="Precio de venta"
+			           min="0"
+			           step="0.01"
+			           required>
+			</div>
+						
             <div class="form-product__group">
                 <label class="form-product__label">Stock</label>
                 <input type="number"
@@ -110,14 +121,13 @@
                     <% } %>
                 </select>
             </div>
-
-            <!-- 🔴 NUEVO: imagen -->
+            
             <div class="form-product__group">
                 <label class="form-product__label">Imagen del producto</label>
                 <input type="file"
                        name="imagen"
                        class="form-product__input"
-                       accept="image/*"
+                       accept="/imagenes/*"
                        required>
             </div>
 

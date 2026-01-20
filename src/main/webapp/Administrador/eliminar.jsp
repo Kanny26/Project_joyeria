@@ -27,20 +27,16 @@
                     <img src="../../assets/Imagenes/fondos/joya1.jpg" alt="Anillo alianza de sueños">
                 </div>
 
-                <div class="eliminar-producto__acciones"> 
-                    <button class="boton editar-imagen"> 
-                        <a href="editar.html">
-                            <i class="fa-solid fa-pen"></i> Editar producto 
-                        </a>
-                        
-                    </button> 
-                    <button class="boton ver-imagen">
-                        <a href="ver-producto.html">
-                            <i class="fa-solid fa-eye"></i> Ver producto 
-                        </a>
-                        
-                    </button> 
-                </div>
+                <div class="eliminar-producto__acciones">
+				    <a href="<%=request.getContextPath()%>/ProductoServlet?action=eliminar&id=<%= producto.getProductoId() %>"
+				       onclick="return confirm('¿Estás seguro de eliminar este producto? Esta acción no se puede deshacer.')">
+				       <i class="fa-solid fa-trash-can"></i> Eliminar producto
+				    </a>
+				    <a href="<%=request.getContextPath()%>/ProductoServlet?action=ver&id=<%= producto.getProductoId() %>">
+				       <i class="fa-solid fa-xmark"></i> Cancelar
+				    </a>
+				</div>
+
             </div>
 
             <div class="eliminar-producto__info">
