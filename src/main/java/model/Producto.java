@@ -1,10 +1,13 @@
 package model;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
 
 public class Producto {
 
     private int productoId;
+    private String codigo;
     private String nombre;
     private String descripcion;
     private int stock;
@@ -13,6 +16,8 @@ public class Producto {
     private String imagen;
     private Categoria categoria;
     private Material material;
+    private LocalDateTime fechaRegistro;
+
 
     public Producto() {}
 
@@ -26,6 +31,14 @@ public class Producto {
 
     public int getId() {
         return productoId;
+    }
+    
+    public String getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
     }
 
     public String getNombre() {
@@ -91,5 +104,14 @@ public class Producto {
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
     }
+    
+    public LocalDateTime getFechaRegistro() {
+        return fechaRegistro;
+    }
+
+    public void setFechaRegistro(LocalDateTime fechaRegistro) {
+        this.fechaRegistro = fechaRegistro;
+    }
+
 }
 

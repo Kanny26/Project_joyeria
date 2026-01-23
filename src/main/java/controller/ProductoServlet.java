@@ -9,7 +9,6 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
-
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -18,9 +17,9 @@ import java.util.List;
 
 @WebServlet("/ProductoServlet")
 @MultipartConfig(
-    fileSizeThreshold = 1024 * 1024,
-    maxFileSize = 1024 * 1024 * 5,
-    maxRequestSize = 1024 * 1024 * 10
+    fileSizeThreshold = 1024 * 1024,        // 1 MB
+    maxFileSize = 1024 * 1024 * 5,          // 5 MB
+    maxRequestSize = 1024 * 1024 * 10       // 10 MB
 )
 public class ProductoServlet extends HttpServlet {
 
@@ -191,29 +190,42 @@ public class ProductoServlet extends HttpServlet {
         Producto p = new Producto();
         p.setNombre(request.getParameter("nombre"));
         p.setDescripcion(request.getParameter("descripcion"));
-        p.setStock(Integer.parseInt(request.getParameter("stock")));
-        p.setPrecioUnitario(new BigDecimal(request.getParameter("precioUnitario")));
-        p.setPrecioVenta(new BigDecimal(request.getParameter("precioVenta")));
+
+        // Estos campos deben estar en el formulario (aunque sean ocultos)
+        String stockStr = request.getParameter("stock");
+        String precioUnitarioStr = request.getParameter("precioUnitario");
+        String precioVentaStr = request.getParameter("precioVenta");
+
+        p.setStock(stockStr != null && !stockStr.isEmpty() ? Integer.parseInt(stockStr) : 0);
+        p.setPrecioUnitario(precioUnitarioStr != null && !precioUnitarioStr.isEmpty() ? new BigDecimal(precioUnitarioStr) : BigDecimal.ZERO);
+        p.setPrecioVenta(precioVentaStr != null && !precioVentaStr.isEmpty() ? new BigDecimal(precioVentaStr) : BigDecimal.ZERO);
 
         Categoria c = new Categoria();
-        c.setCategoriaId(Integer.parseInt(request.getParameter("categoriaId")));
+        String catIdStr = request.getParameter("categoriaId");
+        c.setCategoriaId(catIdStr != null && !catIdStr.isEmpty() ? Integer.parseInt(catIdStr) : 0);
         p.setCategoria(c);
 
         Material m = new Material();
-        m.setMaterialId(Integer.parseInt(request.getParameter("materialId")));
+        String matIdStr = request.getParameter("materialId");
+        m.setMaterialId(matIdStr != null && !matIdStr.isEmpty() ? Integer.parseInt(matIdStr) : 0);
         p.setMaterial(m);
 
+        // Manejo de imagen
         Part filePart = request.getPart("imagen");
         if (filePart != null && filePart.getSize() > 0) {
-        	String uploadPath = getServletContext().getRealPath("/imagenes") + File.separator;
+            String uploadPath = getServletContext().getRealPath("/imagenes") + File.separator;
             File uploadDir = new File(uploadPath);
-            if (!uploadDir.exists()) uploadDir.mkdirs();
+            if (!uploadDir.exists()) {
+                uploadDir.mkdirs();
+            }
             String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
             filePart.write(uploadPath + fileName);
             p.setImagen(fileName);
         } else {
+            // Conservar imagen actual si no se sube una nueva
             p.setImagen(request.getParameter("imagenActual"));
         }
+
         return p;
     }
 }

@@ -9,30 +9,28 @@
 body {
     font-family: var(--fuente-titulos);
     background-color: var(--color-fondo-admin);
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     min-height: var(--alto-minimo-body);
 }
 
 /* --- Contenedor principal --- */
 .editar-producto {
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding-top: 120px; /* separa del navbar */
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
+
 .editar-producto__titulo {
-    font-size: var(--tamano-titulo-card);
-    margin-bottom: 40px;
-    text-align: center;
+    font-size: 36px;
+    margin-bottom: 24px;
     color: var(--color-titulo-cards);
-    transition: transform var(--duracion-transicion), color var(--duracion-transicion);
-    text-shadow: var(--color-sombra-texto) 4px 4px 4px;
+    text-shadow: var(--color-sombra-texto) 2px 2px 3px;
 }
+
 
 .editar-producto__titulo:hover {
     color: var(--color-texto-hover-cards);
@@ -42,20 +40,22 @@ body {
 .editar-producto__detalles {
     background-color: var(--color-fondo-card-productos);
     border-radius: var(--radio-borde-card);
-    width: 1200px;
-    height: 550px;
+    width: 100%;
+    max-width: 900px;
+    padding: 30px;
     display: flex;
     flex-direction: column;
-    gap: 25px;
+    gap: 24px;
 }
+
 
 .editar-producto__contenido {
     display: flex;
-    flex-direction: row;
-    justify-content: center;
     align-items: flex-start;
-    gap: 100px;
+    justify-content: center;
+    gap: 40px;
 }
+
 
 
 .editar-producto__imagen {
@@ -65,13 +65,12 @@ body {
 }
 
 .editar-producto__imagen img {
-    margin-left: 120px;
-    margin-right: 60px;
-    margin-top: 20px;
-    width: var(--ancho-imagen-producto);
+    width: 375px;
+    max-width: 100%;
     border-radius: var(--radio-bordes-imagen);
     box-shadow: var(--sombra-imagen-card);
 }
+
 
 .editar-producto__boton-imagen {
     margin-left: 120px;
@@ -90,12 +89,13 @@ body {
 
 /* --- Formulario --- */
 .editar-producto__campos {
-    flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    margin-top: 25px;
+    gap: 10px;
+    max-width: 420px;
+    width: 100%;
 }
+
 
 label {
     font-size: var(--tamano-label);
@@ -103,32 +103,29 @@ label {
 }
 
 
-.editar-producto__label{
-    height: 36px;
-    width: 220px;
-    padding: 8px 15px;
-    margin-top: 10px;
-    margin-left: 20px;
-    background-color: var(--color-boton-principal);
-    border-radius: 10px;
-    text-align: center;
-    font-size: 16px;
+.editar-producto__label {
+    margin-top: 12px;
+    padding: 8px 14px;
+    width: auto;
+    font-size: 14px;
+    cursor: pointer;
 }
+
 
 .editar-producto__input-texto,
 .editar-producto__input-select,
 .editar-producto__input-area {
-    width: 500px;
-    height: 50px;
-    padding: 10px 12px;
+    width: 100%;
+    height: 42px;
+    padding: 8px 12px;
+    font-size: 14px;
     border-radius: var(--radio-bordes-input);
-    border:2px solid #ccc;
-    font-size: var(--tamano-fuente-placeholder);
     background: var(--color-fondo-icono);
-    transition: var(--duracion-transicion);
-    resize: none;
-    border-style: none;
 }
+.editar-producto__input-area {
+    height: auto;
+}
+
 
 /* --- Reseñas y botones --- */
 .editar-producto__reseñas {
@@ -138,18 +135,16 @@ label {
     color: var(--color-estrellas);
     font-size: var(--tamano-iconos-productos);
 }
-
 .editar-producto__acciones {
     display: flex;
     gap: 12px;
+    margin-top: 10px;
 }
 
 
 @media (min-width: 1440px) {
     .editar-producto__detalles {
-        width: 1300px;
-        height: 600px;
-        border-radius: 20px;
+        max-width: 1000px;
     }
     
     .editar-producto__label{
@@ -164,10 +159,10 @@ label {
         font-size: 16px;
     }
     .editar-producto__imagen img {
-        margin-left: 87px;
-        margin-right: 70px;
+        margin-left: 34px;
+        margin-right: 25px;
         margin-top: 70px;
-        width: 255px;
+        width: 360px;
 
     }
     
@@ -218,10 +213,13 @@ label {
     }
 
     .editar-producto__campos {
-        width: 100%;
-        max-width: 450px;
-        gap: 12px;
-    }
+	    display: flex;
+	    flex-direction: column;
+	    gap: 10px;
+	    max-width: 420px;
+	    width: 100%;
+	}
+
 
     .editar-producto__input-texto,
     .editar-producto__input-select,
