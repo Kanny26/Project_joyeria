@@ -55,8 +55,13 @@ public class ProductoServlet extends HttpServlet {
             case "editar":
                 mostrarFormularioEditar(request, response);
                 break;
-            case "eliminar":
-                eliminarProducto(request, response);
+            case "confirmarEliminar":
+                int id = Integer.parseInt(request.getParameter("id"));
+                Producto producto = productoDAO.obtenerPorId(id);
+
+                request.setAttribute("producto", producto);
+                request.getRequestDispatcher("/Administrador/eliminar.jsp")
+                       .forward(request, response);
                 break;
             default:
                 response.sendRedirect(request.getContextPath() + "/CategoriaServlet");
@@ -81,10 +86,14 @@ public class ProductoServlet extends HttpServlet {
             case "actualizar":
                 actualizarProducto(request, response);
                 break;
+            case "eliminar":
+                eliminarProductoPost(request, response);
+                break;
             default:
                 response.sendRedirect(request.getContextPath() + "/CategoriaServlet");
         }
     }
+
 
     private void mostrarFormularioNuevo(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -141,8 +150,7 @@ public class ProductoServlet extends HttpServlet {
         request.getRequestDispatcher("/Administrador/editar.jsp").forward(request, response);
     }
 
-    private void eliminarProducto(HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
+    private void eliminarProducto(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String idStr = request.getParameter("id");
         if (idStr == null || !idStr.matches("\\d+")) {
             response.sendRedirect(request.getContextPath() + "/CategoriaServlet");
@@ -158,7 +166,33 @@ public class ProductoServlet extends HttpServlet {
             response.sendRedirect(request.getContextPath() + "/CategoriaServlet");
         }
     }
+    
+    private void eliminarProductoPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
 
+        String idStr = request.getParameter("id");
+
+        if (idStr == null || !idStr.matches("\\d+")) {
+            response.sendRedirect(request.getContextPath() + "/CategoriaServlet");
+            return;
+        }
+
+        int id = Integer.parseInt(idStr);
+        Producto producto = productoDAO.obtenerPorId(id);
+
+        if (producto != null) {
+            productoDAO.eliminar(id);
+
+            // Pasamos el producto eliminado al JSP con forward
+            request.setAttribute("producto", producto);
+            request.getRequestDispatcher("/Administrador/eliminado.jsp")
+                   .forward(request, response);
+        } else {
+            response.sendRedirect(request.getContextPath() + "/CategoriaServlet");
+        }
+    }
+
+    
     private void guardarProducto(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
         Producto p = construirProductoDesdeRequest(request);

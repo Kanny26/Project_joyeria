@@ -128,8 +128,7 @@
                 <a href="<%=request.getContextPath()%>/ProductoServlet?action=editar&id=<%= p.getProductoId() %>">
                     <i class="fa-solid fa-pen-to-square"></i>
                 </a>
-                <a href="<%=request.getContextPath()%>/ProductoServlet?action=eliminar&id=<%= p.getProductoId() %>"
-                   onclick="return confirm('¿Eliminar producto?')">
+                <a href="<%=request.getContextPath()%>/ProductoServlet?action=confirmarEliminar&id=<%= p.getProductoId() %>">
                     <i class="fa-solid fa-trash"></i>
                 </a>
             </div>

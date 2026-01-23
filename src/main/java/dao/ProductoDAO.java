@@ -269,7 +269,7 @@ public class ProductoDAO {
         p.setPrecioUnitario(rs.getBigDecimal("precio_unitario"));
         p.setPrecioVenta(rs.getBigDecimal("precio_venta"));
         p.setImagen(rs.getString("imagen"));
-        p.setFechaRegistro(rs.getTimestamp("fecha_registro").toLocalDateTime());
+        p.setFechaRegistro(rs.getDate("fecha_registro").toLocalDate());
 
         Categoria c = new Categoria();
         c.setCategoriaId(rs.getInt("categoria_id"));

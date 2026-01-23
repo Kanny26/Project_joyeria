@@ -223,74 +223,121 @@ public class UsuarioDAO {
         return null;
     }
 
-    // ===============================
-    // EDITAR USUARIO
-    // ===============================
-    public boolean editarUsuario(Usuario usuario) {
-        Connection conn = null;
-        try {
-            conn = ConexionDB.getConnection();
-            conn.setAutoCommit(false);
+ // ===============================
+ // EDITAR USUARIO
+ // ===============================
+ // ===============================
+ // EDITAR USUARIO COMPLETO
+ // ===============================
+ public boolean editarUsuario(Usuario usuario) {
+     Connection conn = null;
+     try {
+         conn = ConexionDB.getConnection();
+         conn.setAutoCommit(false);
 
-            // 1. Actualizar tabla Usuario
-            String sqlUsuario = "UPDATE Usuario SET nombre=?, estado=? WHERE usuario_id=?";
-            try (PreparedStatement ps = conn.prepareStatement(sqlUsuario)) {
-                ps.setString(1, usuario.getNombre());
-                ps.setBoolean(2, usuario.isEstado());
-                ps.setInt(3, usuario.getUsuarioId());
-                ps.executeUpdate();
-            }
+         // 1. Actualizar tabla Usuario (sin rol)
+         String sqlUsuario = "UPDATE Usuario SET nombre=?, estado=? WHERE usuario_id=?";
+         try (PreparedStatement ps = conn.prepareStatement(sqlUsuario)) {
+             ps.setString(1, usuario.getNombre());
+             ps.setBoolean(2, usuario.isEstado());
+             ps.setInt(3, usuario.getUsuarioId());
+             ps.executeUpdate();
+         }
 
-            // 2. Eliminar y reinsertar teléfono (asumimos un solo teléfono)
-            try (PreparedStatement psDelTel = conn.prepareStatement("DELETE FROM Telefono_Usuario WHERE usuario_id=?")) {
-                psDelTel.setInt(1, usuario.getUsuarioId());
-                psDelTel.executeUpdate();
-            }
-            if (usuario.getTelefono() != null && !usuario.getTelefono().trim().isEmpty()) {
-                try (PreparedStatement psInsTel = conn.prepareStatement("INSERT INTO Telefono_Usuario (telefono, usuario_id) VALUES (?, ?)")) {
-                    psInsTel.setString(1, usuario.getTelefono().trim());
-                    psInsTel.setInt(2, usuario.getUsuarioId());
-                    psInsTel.executeUpdate();
-                }
-            }
+         // 2. Actualizar tabla Rol con nombre incremental
+         String sqlRolSelect = "SELECT * FROM Rol WHERE usuario_id=?";
+         try (PreparedStatement psCheck = conn.prepareStatement(sqlRolSelect)) {
+             psCheck.setInt(1, usuario.getUsuarioId());
+             ResultSet rs = psCheck.executeQuery();
 
-            // 3. Eliminar y reinsertar correo
-            try (PreparedStatement psDelCor = conn.prepareStatement("DELETE FROM Correo_Usuario WHERE usuario_id=?")) {
-                psDelCor.setInt(1, usuario.getUsuarioId());
-                psDelCor.executeUpdate();
-            }
-            if (usuario.getCorreo() != null && !usuario.getCorreo().trim().isEmpty()) {
-                try (PreparedStatement psInsCor = conn.prepareStatement("INSERT INTO Correo_Usuario (email, usuario_id) VALUES (?, ?)")) {
-                    psInsCor.setString(1, usuario.getCorreo().trim());
-                    psInsCor.setInt(2, usuario.getUsuarioId());
-                    psInsCor.executeUpdate();
-                }
-            }
+             if (rs.next()) {
+                 // Rol ya existe, actualizamos cargo y nombre
+                 String sqlUpdateRol = "UPDATE Rol SET cargo=?, nombre=? WHERE usuario_id=?";
+                 try (PreparedStatement psUpdate = conn.prepareStatement(sqlUpdateRol)) {
+                     psUpdate.setString(1, usuario.getRol());
 
-            conn.commit();
-            return true;
+                     // Mantener el número actual si existe
+                     String nombreActual = rs.getString("nombre");
+                     String[] partes = nombreActual.split("_");
+                     String numero = (partes.length > 1) ? partes[1] : "1";
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-            if (conn != null) {
-                try {
-                    conn.rollback();
-                } catch (SQLException ex) {
-                    ex.printStackTrace();
-                }
-            }
-            return false;
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.setAutoCommit(true);
-                    conn.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
+                     psUpdate.setString(2, usuario.getRol().toLowerCase() + "_" + numero);
+                     psUpdate.setInt(3, usuario.getUsuarioId());
+                     psUpdate.executeUpdate();
+                 }
+             } else {
+                 // Rol no existe, insertamos con nombre incremental
+                 String sqlCount = "SELECT COUNT(*) FROM Rol WHERE cargo=?";
+                 int nextNumber = 1;
+                 try (PreparedStatement psCount = conn.prepareStatement(sqlCount)) {
+                     psCount.setString(1, usuario.getRol());
+                     ResultSet rsCount = psCount.executeQuery();
+                     if (rsCount.next()) {
+                         nextNumber = rsCount.getInt(1) + 1; // siguiente número incremental
+                     }
+                 }
+
+                 String sqlInsertRol = "INSERT INTO Rol (cargo, usuario_id, nombre) VALUES (?, ?, ?)";
+                 try (PreparedStatement psInsert = conn.prepareStatement(sqlInsertRol)) {
+                     psInsert.setString(1, usuario.getRol());
+                     psInsert.setInt(2, usuario.getUsuarioId());
+                     psInsert.setString(3, usuario.getRol().toLowerCase() + "_" + nextNumber);
+                     psInsert.executeUpdate();
+                 }
+             }
+         }
+
+         // 3. Actualizar teléfono
+         try (PreparedStatement psDelTel = conn.prepareStatement(
+                 "DELETE FROM Telefono_Usuario WHERE usuario_id=?")) {
+             psDelTel.setInt(1, usuario.getUsuarioId());
+             psDelTel.executeUpdate();
+         }
+
+         if (usuario.getTelefono() != null && !usuario.getTelefono().trim().isEmpty()) {
+             try (PreparedStatement psInsTel = conn.prepareStatement(
+                     "INSERT INTO Telefono_Usuario (telefono, usuario_id) VALUES (?, ?)")) {
+                 psInsTel.setString(1, usuario.getTelefono().trim());
+                 psInsTel.setInt(2, usuario.getUsuarioId());
+                 psInsTel.executeUpdate();
+             }
+         }
+
+         // 4. Actualizar correo
+         try (PreparedStatement psDelCor = conn.prepareStatement(
+                 "DELETE FROM Correo_Usuario WHERE usuario_id=?")) {
+             psDelCor.setInt(1, usuario.getUsuarioId());
+             psDelCor.executeUpdate();
+         }
+
+         if (usuario.getCorreo() != null && !usuario.getCorreo().trim().isEmpty()) {
+             try (PreparedStatement psInsCor = conn.prepareStatement(
+                     "INSERT INTO Correo_Usuario (email, usuario_id) VALUES (?, ?)")) {
+                 psInsCor.setString(1, usuario.getCorreo().trim());
+                 psInsCor.setInt(2, usuario.getUsuarioId());
+                 psInsCor.executeUpdate();
+             }
+         }
+
+         // Confirmar transacción
+         conn.commit();
+         return true;
+
+     } catch (SQLException e) {
+         e.printStackTrace();
+         if (conn != null) {
+             try { conn.rollback(); } catch (SQLException ex) { ex.printStackTrace(); }
+         }
+         return false;
+     } finally {
+         if (conn != null) {
+             try {
+                 conn.setAutoCommit(true);
+                 conn.close();
+             } catch (SQLException e) { e.printStackTrace(); }
+         }
+     }
+ }
 
     public int contarUsuarios() {
         try (Connection c = ConexionDB.getConnection();

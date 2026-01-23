@@ -50,19 +50,21 @@
             for (Categoria c : categorias) { %>
 
             <article class="catalogo-admin__contenedor-item">
-			    <a href="<%=request.getContextPath()%>/CategoriaServlet?id=<%= c.getCategoriaId() %>">"
+			    <a href="<%=request.getContextPath()%>/CategoriaServlet?id=<%= c.getCategoriaId() %>"
 			       class="catalogo-admin__tarjeta">
-				<div class=catalogo-admin__icono>
-					<img src="<%=request.getContextPath()%>/assets/Imagenes/iconos/<%= c.getIcono() %>"
-			             alt="<%= c.getNombre() %>">
 			
-				</div>
-			      
+			        <div class="catalogo-admin__icono">
+			            <img src="<%=request.getContextPath()%>/assets/Imagenes/iconos/<%= c.getIcono() %>"
+			                 alt="<%= c.getNombre() %>" />
+			        </div>
+			
 			        <h3 class="catalogo-admin__titulo-tarjeta">
 			            <%= c.getNombre() %>
 			        </h3>
+			
 			    </a>
 			</article>
+
 
 
         <% } } else { %>

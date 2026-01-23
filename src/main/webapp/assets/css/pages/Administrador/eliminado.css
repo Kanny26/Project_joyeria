@@ -42,7 +42,7 @@ body {
 }
 .eliminado__contenedor {
     display: grid;
-    grid-template-columns: 1.1fr 1fr; /* Imagen a la izquierda / texto a la derecha */
+    grid-template-columns: 1.1fr 2fr; /* Imagen a la izquierda / texto a la derecha */
     gap: 40px;
     background: var(--color-fondo-card-productos);
     border-radius: var(--radio-borde-card);
@@ -85,6 +85,13 @@ body {
 
 .eliminado__mensaje a:hover {
     color: var(--color-link-hover);
+}
+
+.eliminar-producto__imagen img {
+    margin-top: 24px;
+    width: var(--ancho-imagen-producto);
+    height: var(--alto-imagen-producto);
+    border-radius: var(--radio-bordes-imagen);
 }
 
 @media (min-width: 1440px) {

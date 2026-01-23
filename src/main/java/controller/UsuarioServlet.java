@@ -74,7 +74,7 @@ public class UsuarioServlet extends HttpServlet {
             usuarioDAO.agregarUsuario(u);
             resp.sendRedirect("UsuarioServlet");
 
-        } else if ("editar".equals(accion)) {
+        }else if ("editar".equals(accion)) {
             try {
                 int usuarioId = Integer.parseInt(req.getParameter("id"));
                 String observaciones = req.getParameter("observaciones");
@@ -87,25 +87,27 @@ public class UsuarioServlet extends HttpServlet {
                 u.setTelefono(req.getParameter("telefono"));
                 u.setEstado("Activo".equals(req.getParameter("estado")));
 
+                // --- NUEVO: actualizar rol ---
+                String rol = req.getParameter("rol");
+                u.setRol(rol);
+                // ------------------------------
+
                 boolean exito = usuarioDAO.editarUsuario(u);
 
                 // 2. Actualizar/crear desempeño con observaciones
                 if (exito) {
-                    // Usamos un nuevo DAO o método para desempeño
                     Desempeno_Vendedor desempeno = desempenoDAO.obtenerUltimoDesempenoPorUsuario(usuarioId);
                     
                     if (desempeno != null) {
-                        // Actualizar observación del registro existente
                         desempeno.setObservaciones(observaciones);
                         desempenoDAO.actualizarDesempeno(desempeno);
                     } else {
-                        // Crear nuevo registro (con datos mínimos)
                         desempeno = new Desempeno_Vendedor();
                         desempeno.setUsuarioId(usuarioId);
                         desempeno.setVentasTotales(BigDecimal.ZERO);
                         desempeno.setComisionPorcentaje(BigDecimal.ZERO);
                         desempeno.setComisionGanada(BigDecimal.ZERO);
-                        desempeno.setPeriodo(new java.sql.Date(System.currentTimeMillis())); // hoy
+                        desempeno.setPeriodo(new java.sql.Date(System.currentTimeMillis()));
                         desempeno.setObservaciones(observaciones);
                         desempenoDAO.insertarDesempeno(desempeno);
                     }
@@ -117,5 +119,6 @@ public class UsuarioServlet extends HttpServlet {
                 resp.sendRedirect(req.getContextPath() + "/UsuarioServlet?error=editar");
             }
         }
+
     }
 }

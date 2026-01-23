@@ -54,43 +54,50 @@
 
                 <!-- Campos del formulario -->
                 <div class="editar-producto__campos">
-                    
-                    <label>Nombre</label>
-                    <input type="text" name="nombre" 
-                           value="<%= usuario.getNombre() != null ? usuario.getNombre() : "" %>" 
-                           class="editar-producto__input-texto" required>
 
-                    <label>Correo electrónico</label>
-                    <input type="email" name="correo" 
-                           value="<%= usuario.getCorreo() != null ? usuario.getCorreo() : "" %>" 
-                           class="editar-producto__input-texto" required>
+				    <label>Nombre</label>
+				    <input type="text" name="nombre" 
+				           value="<%= usuario.getNombre() != null ? usuario.getNombre() : "" %>" 
+				           class="editar-producto__input-texto" required>
+				
+				    <label>Correo electrónico</label>
+				    <input type="email" name="correo" 
+				           value="<%= usuario.getCorreo() != null ? usuario.getCorreo() : "" %>" 
+				           class="editar-producto__input-texto" required>
+				
+				    <label>Teléfono</label>
+				    <input type="tel" name="telefono" 
+				           value="<%= usuario.getTelefono() != null ? usuario.getTelefono() : "" %>" 
+				           class="editar-producto__input-texto" required>
+				
+				    <label>Rol</label>
+				    <select name="rol" class="editar-producto__input-select" required>
+				        <option value="Administrador" <%= "Administrador".equals(usuario.getRol()) ? "selected" : "" %>>Administrador</option>
+				        <option value="Vendedor" <%= "Vendedor".equals(usuario.getRol()) ? "selected" : "" %>>Vendedor</option>
+				        <option value="Proveedor" <%= "Proveedor".equals(usuario.getRol()) ? "selected" : "" %>>Proveedor</option>
+				        <option value="Cliente" <%= "Cliente".equals(usuario.getRol()) ? "selected" : "" %>>Cliente</option>
+				    </select>
+				
+				    <label>Estado</label>
+				    <select name="estado" class="editar-producto__input-select">
+				        <option value="Activo" <%= usuario.isEstado() ? "selected" : "" %>>Activo</option>
+				        <option value="Inactivo" <%= !usuario.isEstado() ? "selected" : "" %>>Inactivo</option>
+				    </select>
+				
+				    <label>Observaciones de desempeño</label>
+				    <textarea name="observaciones" class="editar-producto__input-area" rows="3"><%= "" %></textarea>
+				
+				    <!-- Acciones: Guardar y Cancelar -->
+				    <div class="editar-producto__acciones">
+				        <button type="submit" class="boton guardar">
+				            <i class="fa-solid fa-floppy-disk"></i> Guardar
+				        </button>
+				        <a href="<%= request.getContextPath() %>/UsuarioServlet" class="boton cancelar">
+				            <i class="fa-solid fa-xmark"></i> Cancelar
+				        </a>
+				    </div>
+				</div>
 
-                    <label>Teléfono</label>
-                    <input type="tel" name="telefono" 
-                           value="<%= usuario.getTelefono() != null ? usuario.getTelefono() : "" %>" 
-                           class="editar-producto__input-texto" required>
-
-                    <label>Estado</label>
-                    <select name="estado" class="editar-producto__input-select">
-                        <option value="Activo" <%= usuario.isEstado() ? "selected" : "" %>>Activo</option>
-                        <option value="Inactivo" <%= !usuario.isEstado() ? "selected" : "" %>>Inactivo</option>
-                    </select>
-                    <label>Observaciones de desempeño</label>
-					<textarea name="observaciones" class="editar-producto__input-area" rows="3"><%= 
-					    "" 
-					%></textarea>
-
-                    <!-- Acciones: Guardar y Cancelar -->
-                    <div class="editar-producto__acciones">
-                        <button type="submit" class="boton guardar">
-                            <i class="fa-solid fa-floppy-disk"></i> Guardar
-                        </button>
-                        
-                        <a href="<%= request.getContextPath() %>/UsuarioServlet" class="boton cancelar">
-                            <i class="fa-solid fa-xmark"></i> Cancelar
-                        </a>
-                    </div>
-                </div>
             </div>
         </form>
     </main>
