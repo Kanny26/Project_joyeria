@@ -55,6 +55,10 @@ body {
     transition: transform .3s ease, box-shadow .3s ease;
 }
 
+.usuarios-admin__icono img {
+    width: var(--tamano-imagen-icono);
+    height: var(--tamano-imagen-icono);
+}
 .usuarios-admin__icono:hover {
     transform: scale(1.1); /* resalta el icono */
     box-shadow: var(--sombra-hover);
