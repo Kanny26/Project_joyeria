@@ -28,32 +28,40 @@
 
     <h2 class="titulo__encabezado">Gestionar Ventas</h2>
 
-    <section class="Ventas-admin__contenedor">
+    <section class="iconos-contenedor">
 
-        <article class="Ventas-admin__contenedor-item">
-            <a href="../Administrador/ventas/listar_ventas.html"
-                class="Ventas-admin__tarjeta">
-                
-                <div class="Ventas-admin__icono">
-                    <img src="../../assets/Imagenes/iconos/listar_ventas.png" alt="Listar Ventas">
-                </div>
+	    <!-- Listar ventas -->
+	    <article class="iconos-item">
+	        <a href="<%= request.getContextPath() %>/Administrador/ventas/listar"
+	           class="icono-boton">
+	
+	            <div class="icono-boton__circulo">
+	                <img class="icono-boton__img"
+	                     src="<%= request.getContextPath() %>/assets/Imagenes/iconos/listar_ventas.png"
+	                     alt="Listar ventas">
+	            </div>
+	
+	            <h3 class="icono-boton__titulo">Listar ventas</h3>
+	        </a>
+	    </article>
+	
+	    <!-- Postventa -->
+	    <article class="iconos-item">
+	        <a href="<%= request.getContextPath() %>/Administrador/ventas/postventa"
+	           class="icono-boton">
+	
+	            <div class="icono-boton__circulo">
+	                <img class="icono-boton__img"
+	                     src="<%= request.getContextPath() %>/assets/Imagenes/iconos/postventa.png"
+	                     alt="Postventa">
+	            </div>
+	
+	            <h3 class="icono-boton__titulo">Postventa</h3>
+	        </a>
+	    </article>
+	
+	</section>
 
-                <h3 class="Ventas-admin__titulo-tarjeta">Listar Ventas</h3>
-            </a>
-        </article>
-
-        <article class="Ventas-admin__contenedor-item">
-            <a href="../Administrador/ventas/postventa.html"
-                class="Ventas-admin__tarjeta">
-                
-                <div class="Ventas-admin__icono">
-                    <img src="../../assets/Imagenes/iconos/postventa.png" alt="Devoluciones y reclamos">
-                </div>
-
-                <h3 class="Ventas-admin__titulo-tarjeta">Postventa</h3>
-            </a>
-        </article>
-    </section>
 </main>
 
 

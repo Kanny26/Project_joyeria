@@ -38,39 +38,55 @@
 <main class="titulo">
     <h2 class="titulo__encabezado">Gestionar usuarios</h2>
 
-    <section class="usuarios-admin__contenedor">
+    <section class="iconos-contenedor">
+	
+	    <!-- Agregar usuario -->
+	    <article class="iconos-item">
+	        <a href="<%= request.getContextPath() %>/UsuarioServlet?accion=nuevo"
+	           class="icono-boton">
+	
+	            <div class="icono-boton__circulo">
+	                <img class="icono-boton__img"
+	                     src="<%= request.getContextPath() %>/assets/Imagenes/iconos/agregar-usuario.png"
+	                     alt="Agregar usuario">
+	            </div>
+	
+	            <h3 class="icono-boton__titulo">Agregar usuario</h3>
+	        </a>
+	    </article>
+	
+	    <!-- Listar usuarios -->
+	    <article class="iconos-item">
+	        <a href="<%= request.getContextPath() %>/UsuarioServlet?accion=listar"
+	           class="icono-boton">
+	
+	            <div class="icono-boton__circulo">
+	                <img class="icono-boton__img"
+	                     src="<%= request.getContextPath() %>/assets/Imagenes/iconos/Usuarios.png"
+	                     alt="Listar usuarios">
+	            </div>
+	
+	            <h3 class="icono-boton__titulo">Listar usuarios</h3>
+	        </a>
+	    </article>
+	
+	    <!-- Historial -->
+	    <article class="iconos-item">
+	        <a href="<%= request.getContextPath() %>/DesempenoServlet"
+	           class="icono-boton">
+	
+	            <div class="icono-boton__circulo">
+	                <img class="icono-boton__img"
+	                     src="<%= request.getContextPath() %>/assets/Imagenes/iconos/historial.png"
+	                     alt="Historial de usuarios">
+	            </div>
+	
+	            <h3 class="icono-boton__titulo">Historial</h3>
+	        </a>
+	    </article>
+	
+	</section>
 
-        <!-- Agregar Usuario -->
-        <article class="usuarios-admin__contenedor-item">
-            <a href="<%= request.getContextPath() %>/UsuarioServlet?accion=nuevo" class="usuarios-admin__tarjeta">
-                <div class="usuarios-admin__icono">
-                    <img src="<%= request.getContextPath() %>/assets/Imagenes/iconos/agregar-usuario.png" alt="Agregar usuarios">
-                </div>
-                <h3 class="usuarios-admin__titulo-tarjeta">Agregar usuario</h3>
-            </a>
-        </article>
-        
-        <!-- Listar Usuarios -->
-        <article class="usuarios-admin__contenedor-item">
-            <a href="<%= request.getContextPath() %>/UsuarioServlet?accion=listar" class="usuarios-admin__tarjeta">
-                <div class="usuarios-admin__icono">
-                    <img src="<%= request.getContextPath() %>/assets/Imagenes/iconos/Usuarios.png" alt="Listar usuarios">
-                </div>
-                <h3 class="usuarios-admin__titulo-tarjeta">Listar usuarios</h3>
-            </a>
-        </article>
-        
-        <!-- Historial -->
-        <article class="usuarios-admin__contenedor-item">
-            <a href="<%= request.getContextPath() %>/DesempenoServlet" class="usuarios-admin__tarjeta">
-                <div class="usuarios-admin__icono">
-                    <img src="<%= request.getContextPath() %>/assets/Imagenes/iconos/historial.png" alt="Historial">
-                </div>
-                <h3 class="usuarios-admin__titulo-tarjeta">Historial</h3>
-            </a>
-        </article>
-
-    </section>
 
     <!-- Tabla de usuarios (solo si estamos listando) -->
     <%

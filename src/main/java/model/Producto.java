@@ -3,117 +3,119 @@ package model;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+/**
+ * Clase modelo Producto
+ * Representa un producto del inventario con su información comercial y relacional
+ */
 public class Producto {
 
+    // Identificador único del producto
     private int productoId;
+
+    // Código interno del producto
     private String codigo;
+
+    // Nombre del producto
     private String nombre;
+
+    // Descripción del producto
     private String descripcion;
+
+    // Cantidad disponible en inventario
     private int stock;
+
+    // Precio de compra o costo unitario
     private BigDecimal precioUnitario;
+
+    // Precio de venta al público
     private BigDecimal precioVenta;
+
+    // Ruta o nombre de la imagen del producto
     private String imagen;
+
+    // Categoría asociada al producto
     private Categoria categoria;
-    private Material material;         // Para módulos avanzados (opcional)
-    private String materialNombre;     // Solo el nombre del material (para listados)
-    private LocalDate fechaRegistro;   // Cambiado a LocalDate
+
+    // Material asociado (uso avanzado u opcional)
+    private Material material;
+
+    // Nombre del material usado para listados simples
+    private String materialNombre;
+
+    // Fecha de registro del producto
+    private LocalDate fechaRegistro;
+
+    // Identificador del proveedor asociado
     private int proveedorId;
 
-    public Producto() {}
+    /**
+     * Constructor vacío
+     * Requerido para DAOs, JSP y frameworks
+     */
+    public Producto() {
+    }
 
-    // Getters y setters estándar
+    /* ===============================
+       GETTERS
+       =============================== */
+
+    // Retorna el id del producto
     public int getProductoId() {
         return productoId;
     }
 
-    public void setProductoId(int productoId) {
-        this.productoId = productoId;
-    }
-
+    // Alias del id para compatibilidad con JSP
     public int getId() {
         return productoId;
     }
 
+    // Retorna el código del producto
     public String getCodigo() {
         return codigo;
     }
 
-    public void setCodigo(String codigo) {
-        this.codigo = codigo;
-    }
-
+    // Retorna el nombre del producto
     public String getNombre() {
         return nombre;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public BigDecimal getPrecioUnitario() {
-        return precioUnitario;
-    }
-
-    public void setPrecioUnitario(BigDecimal precioUnitario) {
-        this.precioUnitario = precioUnitario;
-    }
-
-    public BigDecimal getPrecioVenta() {
-        return precioVenta;
-    }
-
-    public void setPrecioVenta(BigDecimal precioVenta) {
-        this.precioVenta = precioVenta;
-    }
-
-    public String getImagen() {
-        return imagen;
-    }
-
-    public void setImagen(String imagen) {
-        this.imagen = imagen;
-    }
-
-    public int getStock() {
-        return stock;
-    }
-
-    public void setStock(int stock) {
-        this.stock = stock;
-    }
-
-    public Categoria getCategoria() {
-        return categoria;
-    }
-
-    public void setCategoria(Categoria categoria) {
-        this.categoria = categoria;
-    }
-
-    public Material getMaterial() {
-        return material;
-    }
-
-    public void setMaterial(Material material) {
-        this.material = material;
-    }
-
+    // Retorna la descripción del producto
     public String getDescripcion() {
         return descripcion;
     }
 
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
+    // Retorna el stock disponible
+    public int getStock() {
+        return stock;
     }
 
-    public LocalDate getFechaRegistro() {
-        return fechaRegistro;
+    // Retorna el precio unitario
+    public BigDecimal getPrecioUnitario() {
+        return precioUnitario;
     }
 
-    public void setFechaRegistro(LocalDate fechaRegistro) {
-        this.fechaRegistro = fechaRegistro;
+    // Retorna el precio de venta
+    public BigDecimal getPrecioVenta() {
+        return precioVenta;
     }
 
+    // Retorna la imagen del producto
+    public String getImagen() {
+        return imagen;
+    }
+
+    // Retorna la categoría asociada
+    public Categoria getCategoria() {
+        return categoria;
+    }
+
+    // Retorna el material asociado
+    public Material getMaterial() {
+        return material;
+    }
+
+    // Retorna el nombre del material
+    // Prioriza el objeto Material si existe
     public String getMaterialNombre() {
         if (material != null) {
             return material.getNombre();
@@ -121,15 +123,83 @@ public class Producto {
         return materialNombre;
     }
 
-    public void setMaterialNombre(String materialNombre) {
-        this.materialNombre = materialNombre;
+    // Retorna la fecha de registro
+    public LocalDate getFechaRegistro() {
+        return fechaRegistro;
     }
 
+    // Retorna el id del proveedor
     public int getProveedorId() {
         return proveedorId;
     }
 
+    /* ===============================
+       SETTERS
+       =============================== */
+
+    // Asigna el id del producto
+    public void setProductoId(int productoId) {
+        this.productoId = productoId;
+    }
+
+    // Asigna el código del producto
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
+    }
+
+    // Asigna el nombre del producto
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    // Asigna la descripción del producto
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
+    // Asigna el stock
+    public void setStock(int stock) {
+        this.stock = stock;
+    }
+
+    // Asigna el precio unitario
+    public void setPrecioUnitario(BigDecimal precioUnitario) {
+        this.precioUnitario = precioUnitario;
+    }
+
+    // Asigna el precio de venta
+    public void setPrecioVenta(BigDecimal precioVenta) {
+        this.precioVenta = precioVenta;
+    }
+
+    // Asigna la imagen del producto
+    public void setImagen(String imagen) {
+        this.imagen = imagen;
+    }
+
+    // Asigna la categoría
+    public void setCategoria(Categoria categoria) {
+        this.categoria = categoria;
+    }
+
+    // Asigna el material
+    public void setMaterial(Material material) {
+        this.material = material;
+    }
+
+    // Asigna el nombre del material
+    public void setMaterialNombre(String materialNombre) {
+        this.materialNombre = materialNombre;
+    }
+
+    // Asigna la fecha de registro
+    public void setFechaRegistro(LocalDate fechaRegistro) {
+        this.fechaRegistro = fechaRegistro;
+    }
+
+    // Asigna el id del proveedor
     public void setProveedorId(int proveedorId) {
         this.proveedorId = proveedorId;
     }
 }
+

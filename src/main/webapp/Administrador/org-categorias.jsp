@@ -44,34 +44,32 @@
 <main class="titulo">
     <h2 class="titulo__encabezado">Gestionar Categorías</h2>
 
-    <section class="catalogo-admin__contenedor">
+    <section class="iconos-contenedor">
+		
+		<% if (categorias != null && !categorias.isEmpty()) {
+		   for (Categoria c : categorias) { %>
+		
+		    <article class="iconos-item">
+		        <a href="<%=request.getContextPath()%>/CategoriaServlet?id=<%= c.getCategoriaId() %>"
+		           class="icono-boton">
+		
+		            <div class="icono-boton__circulo">
+		                <img class="icono-boton__img"
+		                     src="<%=request.getContextPath()%>/assets/Imagenes/iconos/<%= c.getIcono() %>"
+		                     alt="<%= c.getNombre() %>">
+		            </div>
+		
+		            <h3 class="icono-boton__titulo"><%= c.getNombre() %></h3>
+		
+		        </a>
+		    </article>
+		
+		<% } } else { %>
+		    <p>No hay categorías registradas</p>
+		<% } %>
+		
+		</section>
 
-        <% if (categorias != null && !categorias.isEmpty()) {
-            for (Categoria c : categorias) { %>
-
-            <article class="catalogo-admin__contenedor-item">
-			    <a href="<%=request.getContextPath()%>/CategoriaServlet?id=<%= c.getCategoriaId() %>"
-			       class="catalogo-admin__tarjeta">
-			
-			        <div class="catalogo-admin__icono">
-			            <img src="<%=request.getContextPath()%>/assets/Imagenes/iconos/<%= c.getIcono() %>"
-			                 alt="<%= c.getNombre() %>" />
-			        </div>
-			
-			        <h3 class="catalogo-admin__titulo-tarjeta">
-			            <%= c.getNombre() %>
-			        </h3>
-			
-			    </a>
-			</article>
-
-
-
-        <% } } else { %>
-            <p>No hay categorías registradas</p>
-        <% } %>
-
-    </section>
 </main>
 
 </body>

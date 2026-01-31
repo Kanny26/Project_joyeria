@@ -1,13 +1,19 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="modelo.Proveedor, java.util.List" %>
+<%@ page import="model.Proveedor, java.util.List" %>
+
 <%
     Object admin = session.getAttribute("admin");
     if (admin == null) {
         response.sendRedirect(request.getContextPath() + "/Administrador/inicio-sesion.jsp");
         return;
     }
-    List<Proveedor> proveedores = (List<Proveedor>) request.getAttribute("proveedores");
-    if (proveedores == null) proveedores = java.util.Collections.emptyList();
+
+    List<Proveedor> proveedores =
+        (List<Proveedor>) request.getAttribute("proveedores");
+
+    if (proveedores == null) {
+        proveedores = java.util.Collections.emptyList();
+    }
 %>
 
 <!DOCTYPE html>
@@ -20,6 +26,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
+
 <nav class="navbar-admin">
     <div class="navbar-admin__catalogo"> 
         <img src="<%=request.getContextPath()%>/assets/Imagenes/iconos/admin.png" alt="Admin">
@@ -48,22 +55,27 @@
                 </tr>
             </thead>
             <tbody>
-                <% for (Proveedor p : proveedores) { %>
+
+            <% for (Proveedor p : proveedores) { %>
                 <tr>
                     <td data-label="Nombre"><%= p.getNombre() %></td>
                     <td data-label="Telefono"><%= p.getTelefono() %></td>
                     <td data-label="Correo"><%= p.getCorreo() %></td>
+
                     <td data-label="Material">
                         <% for (String m : p.getMateriales()) { %>
                             <%= m %><br>
                         <% } %>
                     </td>
+
                     <td data-label="Productos">
                         <% for (String pr : p.getProductos()) { %>
                             <%= pr %><br>
                         <% } %>
                     </td>
+
                     <td data-label="Fecha inicio"><%= p.getFechaInicio() %></td>
+
                     <td data-label="Estado">
                         <form method="post" action="<%=request.getContextPath()%>/Administrador/proveedores">
                             <input type="hidden" name="action" value="actualizarEstado">
@@ -74,32 +86,33 @@
                             </select>
                         </form>
                     </td>
+
                     <td data-label="Acciones" class="Proveedores-listar__acciones">
-                        <div class="iconos">
-                            <a href="<%=request.getContextPath()%>/Administrador/proveedores/editar?id=<%= p.getUsuarioId() %>">
-                                <i class="fa-solid fa-pen-to-square"></i>
-                            </a>
-                        </div>
+                        <a href="<%=request.getContextPath()%>/Administrador/proveedores/editar?id=<%= p.getUsuarioId() %>">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                        </a>
                     </td>
                 </tr>
-                <% } %>
+            <% } %>
+
             </tbody>
         </table>
     </section>
 
-    <!-- Contadores (simulados) -->
     <div class="contadores">
         <div class="contador-card">
             <h2>Total proveedores</h2>
             <h3 class="contador-card__numero"><%= proveedores.size() %></h3>
         </div>
+
         <div class="contador-card">
             <h2>Proveedores activos</h2>
             <h3 class="contador-card__numero">
-                <%= proveedores.stream().filter(Proveedor::isEstado).count() %>
+                <%-- proveedores.stream().filter(Proveedor::isEstado).count() --%>
             </h3>
         </div>
     </div>
 </main>
+
 </body>
 </html>

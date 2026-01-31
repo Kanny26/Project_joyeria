@@ -48,43 +48,54 @@
     <h2 class="panel-admin__tarjetas-titulo">
         ¡Bienvenido, <%= admin.getNombre() %>! Haz clic en lo que deseas gestionar hoy.
     </h2>
-    <section class="panel-admin__tarjetas-contenedor">
-        <div class="panel-admin__tarjeta">
-            <div class="panel-admin__tarjeta-circulo">
-                <a href="<%=request.getContextPath()%>/CategoriaServlet">
-                    <img src="<%=request.getContextPath()%>/assets/Imagenes/iconos/catalogar.png" alt="Administrar catalogo">
-                </a>
-            </div>
-            <div class="panel-admin__tarjeta-h3"><h3>Categorías</h3></div>
-        </div>
+    <section class="iconos-contenedor">
+	
+	    <article class="iconos-item">
+	        <a href="<%=request.getContextPath()%>/CategoriaServlet" class="icono-boton">
+	            <div class="icono-boton__circulo">
+	                <img class="icono-boton__img"
+	                     src="<%=request.getContextPath()%>/assets/Imagenes/iconos/catalogar.png"
+	                     alt="Administrar catálogo">
+	            </div>
+	            <h3 class="icono-boton__titulo">Categorías</h3>
+	        </a>
+	    </article>
+	
+	    <article class="iconos-item">
+	        <a href="<%=request.getContextPath()%>/Administrador/proveedores.jsp" class="icono-boton">
+	            <div class="icono-boton__circulo">
+	                <img class="icono-boton__img"
+	                     src="<%=request.getContextPath()%>/assets/Imagenes/iconos/gestionar_proveedores.png"
+	                     alt="Proveedores">
+	            </div>
+	            <h3 class="icono-boton__titulo">Proveedores</h3>
+	        </a>
+	    </article>
+	
+	    <article class="iconos-item">
+	        <a href="<%=request.getContextPath()%>/Administrador/ventas.jsp" class="icono-boton">
+	            <div class="icono-boton__circulo">
+	                <img class="icono-boton__img"
+	                     src="<%=request.getContextPath()%>/assets/Imagenes/iconos/ventas.png"
+	                     alt="Ventas">
+	            </div>
+	            <h3 class="icono-boton__titulo">Ventas</h3>
+	        </a>
+	    </article>
+	
+	    <article class="iconos-item">
+	        <a href="<%=request.getContextPath()%>/Administrador/usuarios.jsp" class="icono-boton">
+	            <div class="icono-boton__circulo">
+	                <img class="icono-boton__img"
+	                     src="<%=request.getContextPath()%>/assets/Imagenes/iconos/Usuarios.png"
+	                     alt="Usuarios">
+	            </div>
+	            <h3 class="icono-boton__titulo">Usuarios</h3>
+	        </a>
+	    </article>
+	
+	</section>
 
-        <div class="panel-admin__tarjeta">
-            <div class="panel-admin__tarjeta-circulo">
-                <a href="<%=request.getContextPath()%>/Administrador/proveedores.jsp">
-                    <img src="<%=request.getContextPath()%>/assets/Imagenes/iconos/gestionar_proveedores.png" alt="Gestionar proveedores">
-                </a>
-            </div>
-            <div class="panel-admin__tarjeta-h3"><h3>Proveedores</h3></div>
-        </div>
-
-        <div class="panel-admin__tarjeta">
-            <div class="panel-admin__tarjeta-circulo">
-                <a href="<%=request.getContextPath()%>/Administrador/ventas.jsp">
-                    <img src="<%=request.getContextPath()%>/assets/Imagenes/iconos/ventas.png" alt="Seguimiento ventas">
-                </a>
-            </div>
-            <div class="panel-admin__tarjeta-h3"><h3>Ventas</h3></div>
-        </div>
-
-        <div class="panel-admin__tarjeta">
-            <div class="panel-admin__tarjeta-circulo">
-                <a href="<%=request.getContextPath()%>/Administrador/usuarios.jsp">
-                    <img src="<%=request.getContextPath()%>/assets/Imagenes/iconos/Usuarios.png" alt="Gestionar usuarios">
-                </a>
-            </div>
-            <div class="panel-admin__tarjeta-h3"><h3>Usuarios</h3></div>
-        </div>
-    </section>
 </main>
 
 </body>

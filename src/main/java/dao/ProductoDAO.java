@@ -1,105 +1,185 @@
 package dao;
 
 import config.ConexionDB;
-import model.*;
+import model.Categoria;
+import model.Material;
+import model.Producto;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * DAO encargado de la gestión de productos.
+ * 
+ * Responsabilidades:
+ * - Consultar productos (por categoría, búsqueda global, por ID)
+ * - Registrar, actualizar y eliminar productos
+ * - Generar códigos automáticos por categoría
+ * - Centralizar el mapeo ResultSet → Producto
+ */
 public class ProductoDAO {
-	
-	// En ProductoDAO.java
-	public List<Producto> listarPorCategoria(int categoriaId) {
-	    List<Producto> lista = new ArrayList<>();
-	    String sql = """
-	        SELECT p.producto_id, p.codigo, p.nombre, p.descripcion, p.stock,
-	               p.precio_unitario, p.precio_venta, p.imagen, p.fecha_registro,
-	               c.categoria_id, c.nombre AS categoria_nombre,
-	               m.material_id, m.nombre AS material_nombre
-	        FROM producto p
-	        INNER JOIN categoria c ON p.categoria_id = c.categoria_id
-	        INNER JOIN material m ON p.material_id = m.material_id
-	        WHERE p.categoria_id = ?
-	        ORDER BY p.nombre
-	    """;
 
-	    try (Connection con = ConexionDB.getConnection();
-	         PreparedStatement ps = con.prepareStatement(sql)) {
-	        ps.setInt(1, categoriaId);
-	        ResultSet rs = ps.executeQuery();
-	        while (rs.next()) {
-	            lista.add(mapearProducto(rs));
-	        }
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	    }
-	    return lista;
-	}
-	
-	public List<Producto> buscarGlobal(String termino) {
-	    List<Producto> lista = new ArrayList<>();
-	    String sql = """
-	        SELECT p.producto_id, p.codigo, p.nombre, p.descripcion, p.stock,
-	               p.precio_unitario, p.precio_venta, p.imagen, p.fecha_registro,
-	               c.categoria_id, c.nombre AS categoria_nombre,
-	               m.material_id, m.nombre AS material_nombre
-	        FROM producto p
-	        INNER JOIN categoria c ON p.categoria_id = c.categoria_id
-	        INNER JOIN material m ON p.material_id = m.material_id
-	        WHERE p.nombre LIKE ?
-	           OR p.codigo LIKE ?
-	           OR p.descripcion LIKE ?
-	           OR c.nombre LIKE ?
-	           OR m.nombre LIKE ?
-	        ORDER BY p.nombre
-	    """;
+    /* ===============================
+       LISTAR POR CATEGORÍA
+       =============================== */
 
-	    try (Connection con = ConexionDB.getConnection();
-	         PreparedStatement ps = con.prepareStatement(sql)) {
-	        String likeTerm = "%" + termino + "%";
-	        for (int i = 1; i <= 5; i++) ps.setString(i, likeTerm);
-	        ResultSet rs = ps.executeQuery();
-	        while (rs.next()) lista.add(mapearProducto(rs));
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	    }
-	    return lista;
-	}
+    /**
+     * Obtiene todos los productos pertenecientes a una categoría específica.
+     *
+     * @param categoriaId ID de la categoría
+     * @return lista de productos asociados
+     */
+    public List<Producto> listarPorCategoria(int categoriaId) {
 
-	// Buscar solo en una categoría
-	public List<Producto> buscarEnCategoria(int categoriaId, String termino) {
-	    List<Producto> lista = new ArrayList<>();
-	    String sql = """
-	        SELECT p.producto_id, p.codigo, p.nombre, p.descripcion, p.stock,
-	               p.precio_unitario, p.precio_venta, p.imagen, p.fecha_registro,
-	               c.categoria_id, c.nombre AS categoria_nombre,
-	               m.material_id, m.nombre AS material_nombre
-	        FROM producto p
-	        INNER JOIN categoria c ON p.categoria_id = c.categoria_id
-	        INNER JOIN material m ON p.material_id = m.material_id
-	        WHERE p.categoria_id = ?
-	          AND (p.nombre LIKE ? OR p.codigo LIKE ? OR p.descripcion LIKE ?)
-	        ORDER BY p.nombre
-	    """;
+        List<Producto> lista = new ArrayList<>();
 
-	    try (Connection con = ConexionDB.getConnection();
-	         PreparedStatement ps = con.prepareStatement(sql)) {
-	        ps.setInt(1, categoriaId);
-	        String likeTerm = "%" + termino + "%";
-	        ps.setString(2, likeTerm);
-	        ps.setString(3, likeTerm);
-	        ps.setString(4, likeTerm);
-	        ResultSet rs = ps.executeQuery();
-	        while (rs.next()) lista.add(mapearProducto(rs));
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	    }
-	    return lista;
-	}
+        String sql = """
+            SELECT p.producto_id, p.codigo, p.nombre, p.descripcion, p.stock,
+                   p.precio_unitario, p.precio_venta, p.imagen, p.fecha_registro,
+                   c.categoria_id, c.nombre AS categoria_nombre,
+                   m.material_id, m.nombre AS material_nombre
+            FROM producto p
+            INNER JOIN categoria c ON p.categoria_id = c.categoria_id
+            INNER JOIN material m ON p.material_id = m.material_id
+            WHERE p.categoria_id = ?
+            ORDER BY p.nombre
+        """;
+
+        try (Connection con = ConexionDB.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, categoriaId);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                lista.add(mapearProducto(rs));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return lista;
+    }
+
+    /* ===============================
+       BÚSQUEDA GLOBAL
+       =============================== */
+
+    /**
+     * Realiza una búsqueda global de productos usando un término libre.
+     * Busca en nombre, código, descripción, categoría y material.
+     *
+     * @param termino texto a buscar
+     * @return lista de productos coincidentes
+     */
+    public List<Producto> buscarGlobal(String termino) {
+
+        List<Producto> lista = new ArrayList<>();
+
+        String sql = """
+            SELECT p.producto_id, p.codigo, p.nombre, p.descripcion, p.stock,
+                   p.precio_unitario, p.precio_venta, p.imagen, p.fecha_registro,
+                   c.categoria_id, c.nombre AS categoria_nombre,
+                   m.material_id, m.nombre AS material_nombre
+            FROM producto p
+            INNER JOIN categoria c ON p.categoria_id = c.categoria_id
+            INNER JOIN material m ON p.material_id = m.material_id
+            WHERE p.nombre LIKE ?
+               OR p.codigo LIKE ?
+               OR p.descripcion LIKE ?
+               OR c.nombre LIKE ?
+               OR m.nombre LIKE ?
+            ORDER BY p.nombre
+        """;
+
+        try (Connection con = ConexionDB.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            String likeTerm = "%" + termino + "%";
+
+            for (int i = 1; i <= 5; i++) {
+                ps.setString(i, likeTerm);
+            }
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                lista.add(mapearProducto(rs));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return lista;
+    }
+
+    /* ===============================
+       BÚSQUEDA EN CATEGORÍA
+       =============================== */
+
+    /**
+     * Busca productos dentro de una categoría específica.
+     *
+     * @param categoriaId ID de la categoría
+     * @param termino texto a buscar
+     * @return lista de productos coincidentes
+     */
+    public List<Producto> buscarEnCategoria(int categoriaId, String termino) {
+
+        List<Producto> lista = new ArrayList<>();
+
+        String sql = """
+            SELECT p.producto_id, p.codigo, p.nombre, p.descripcion, p.stock,
+                   p.precio_unitario, p.precio_venta, p.imagen, p.fecha_registro,
+                   c.categoria_id, c.nombre AS categoria_nombre,
+                   m.material_id, m.nombre AS material_nombre
+            FROM producto p
+            INNER JOIN categoria c ON p.categoria_id = c.categoria_id
+            INNER JOIN material m ON p.material_id = m.material_id
+            WHERE p.categoria_id = ?
+              AND (p.nombre LIKE ? OR p.codigo LIKE ? OR p.descripcion LIKE ?)
+            ORDER BY p.nombre
+        """;
+
+        try (Connection con = ConexionDB.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, categoriaId);
+            String likeTerm = "%" + termino + "%";
+
+            ps.setString(2, likeTerm);
+            ps.setString(3, likeTerm);
+            ps.setString(4, likeTerm);
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                lista.add(mapearProducto(rs));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return lista;
+    }
+
     /* ===============================
        OBTENER POR ID
        =============================== */
+
+    /**
+     * Obtiene un producto por su ID.
+     *
+     * @param id ID del producto
+     * @return producto encontrado o null
+     */
     public Producto obtenerPorId(int id) {
 
         String sql = """
@@ -131,8 +211,16 @@ public class ProductoDAO {
     }
 
     /* ===============================
-       GUARDAR PRODUCTO NUEVO
+       GUARDAR PRODUCTO
        =============================== */
+
+    /**
+     * Registra un nuevo producto en la base de datos.
+     * El código del producto se genera automáticamente según la categoría.
+     *
+     * @param p producto a guardar
+     * @param proveedorId ID del proveedor
+     */
     public void guardar(Producto p, int proveedorId) {
 
         String sql = """
@@ -170,7 +258,14 @@ public class ProductoDAO {
     /* ===============================
        ACTUALIZAR PRODUCTO
        =============================== */
+
+    /**
+     * Actualiza los datos principales de un producto existente.
+     *
+     * @param p producto con datos actualizados
+     */
     public void actualizar(Producto p) {
+
         String sql = """
             UPDATE producto
             SET nombre = ?, descripcion = ?, stock = ?, precio_unitario = ?, precio_venta = ?,
@@ -200,6 +295,12 @@ public class ProductoDAO {
     /* ===============================
        ELIMINAR PRODUCTO
        =============================== */
+
+    /**
+     * Elimina un producto por su ID.
+     *
+     * @param id ID del producto
+     */
     public void eliminar(int id) {
 
         String sql = "DELETE FROM producto WHERE producto_id = ?";
@@ -218,10 +319,16 @@ public class ProductoDAO {
     /* ===============================
        GENERAR CÓDIGO AUTOMÁTICO
        =============================== */
+
+    /**
+     * Genera un código único de producto basado en la categoría.
+     * Ejemplo: ANI01, ANI02, etc.
+     */
     private String generarCodigoProducto(Connection con, int categoriaId) throws SQLException {
 
-        String prefijoSql = "SELECT UPPER(LEFT(nombre, 3)) FROM categoria WHERE categoria_id = ?";
         String prefijo = "";
+
+        String prefijoSql = "SELECT UPPER(LEFT(nombre, 3)) FROM categoria WHERE categoria_id = ?";
 
         try (PreparedStatement ps = con.prepareStatement(prefijoSql)) {
             ps.setInt(1, categoriaId);
@@ -257,6 +364,10 @@ public class ProductoDAO {
     /* ===============================
        MAPEO CENTRALIZADO
        =============================== */
+
+    /**
+     * Convierte un ResultSet en un objeto Producto completamente armado.
+     */
     private Producto mapearProducto(ResultSet rs) throws SQLException {
 
         Producto p = new Producto();

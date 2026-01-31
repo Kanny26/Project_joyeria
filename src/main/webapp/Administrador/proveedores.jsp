@@ -35,47 +35,30 @@
     <main class="titulo">
         <h2 class="titulo__encabezado">Gestionar Proveedores</h2>
 
-        <section class="proveedores-admin__contenedor">
-            <article class="proveedores-admin__contenedor-item">
-                <a href="<%= request.getContextPath() %>/Administrador/proveedores/listar"
-                   class="proveedores-admin__tarjeta">
-                    <div class="proveedores-admin__icono">
-                        <img src="<%= request.getContextPath() %>/assets/Imagenes/iconos/listar_proveedores.png" alt="Listar proveedores">
-                    </div>
-                    <h3 class="proveedores-admin__titulo-tarjeta">Listar proveedores</h3>
-                </a>
-            </article>
+        <section class="iconos-contenedor">
 
-            <article class="proveedores-admin__contenedor-item">
-                <a href="<%= request.getContextPath() %>/Administrador/proveedores/agregar"
-                   class="proveedores-admin__tarjeta">
-                    <div class="proveedores-admin__icono">
-                        <img src="<%= request.getContextPath() %>/assets/Imagenes/iconos/agregar_proveedores.png" alt="Agregar proveedores">
-                    </div>
-                    <h3 class="proveedores-admin__titulo-tarjeta">Agregar proveedores</h3>
-                </a>
-            </article>
+		    <article class="iconos-item">
+		        <a href="<%= request.getContextPath() %>/Administrador/proveedores/listar" class="icono-boton">
+		            <div class="icono-boton__circulo">
+		                <img class="icono-boton__img"
+		                     src="<%= request.getContextPath() %>/assets/Imagenes/iconos/listar_proveedores.png">
+		            </div>
+		            <h3 class="icono-boton__titulo">Listar proveedores</h3>
+		        </a>
+		    </article>
+		
+		    <article class="iconos-item">
+		        <a href="<%= request.getContextPath() %>/Administrador/proveedores/agregar" class="icono-boton">
+		            <div class="icono-boton__circulo">
+		                <img class="icono-boton__img"
+		                     src="<%= request.getContextPath() %>/assets/Imagenes/iconos/agregar_proveedores.png">
+		            </div>
+		            <h3 class="icono-boton__titulo">Agregar proveedores</h3>
+		        </a>
+		    </article>
+		
+		</section>
 
-            <article class="proveedores-admin__contenedor-item">
-                <a href="<%= request.getContextPath() %>/Administrador/proveedores/compras"
-                   class="proveedores-admin__tarjeta">
-                    <div class="proveedores-admin__icono">
-                        <img src="<%= request.getContextPath() %>/assets/Imagenes/iconos/resumen.png" alt="Compras realizadas">
-                    </div>
-                    <h3 class="proveedores-admin__titulo-tarjeta">Compras realizadas</h3>
-                </a>
-            </article>
-
-            <article class="proveedores-admin__contenedor-item">
-                <a href="<%= request.getContextPath() %>/Administrador/proveedores/historial"
-                   class="proveedores-admin__tarjeta">
-                    <div class="proveedores-admin__icono">
-                        <img src="<%= request.getContextPath() %>/assets/Imagenes/iconos/historial.png" alt="Historial">
-                    </div>
-                    <h3 class="proveedores-admin__titulo-tarjeta">Historial</h3>
-                </a>
-            </article>
-        </section>
     </main>
 </body>
 </html>

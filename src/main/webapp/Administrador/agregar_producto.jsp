@@ -12,6 +12,17 @@
     List<Material> materiales = (List<Material>) request.getAttribute("materiales");
     Categoria categoria = (Categoria) request.getAttribute("categoria");
 %>
+<%
+    String error = (String) request.getAttribute("error");
+    if (error != null) {
+%>
+    <div class="alert alert-danger">
+        <%= error %>
+    </div>
+<%
+    }
+%>
+
 
 <!DOCTYPE html>
 <html lang="es">

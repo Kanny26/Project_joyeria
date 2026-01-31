@@ -71,11 +71,11 @@
   --color-fondo-advertencia: #b9b9b9;
   
   --color-link-hover: rgb(51, 51, 51)d0;
-  --color-fondo-admin: #969696dc;
+  --color-fondo-admin: linear-gradient(129deg,rgba(166, 136, 153, 1) 5%, rgba(214, 178, 180, 1) 73%);
   --color-fondo-vendedor: #dfd2c8;
-  --color-fondo-boton: #8f8f8fd0;
+  --color-fondo-boton: #B6C0C5;
   --color-fondo-boton-hover: #9c9c9c;
-  --color-cards: #948e8e;
+  --color-cards:#ACB3B8;
   --color-fondo-circulo-hover: #b9b7b7;
   --color-fondo-contadores: #D9D9D9;
   --color-fondo-num-contadores:linear-gradient(145deg, #b3b3b3, #808080);
@@ -93,7 +93,7 @@
   --color-boton-venta: #5e5e5e;
   --color-encabezado-venta: #c0b7b4;
 
-  --color-nav-admin: #8b8b8b;
+  --color-nav-admin: #E9CDD2;
   --color-nav-vendedor: #99AD96;
   --color-fondo-tarjeta-hover: rgb(199, 199, 199);
   --color-fondo-tooltip: #333;
@@ -207,7 +207,7 @@
   --alto-card-producto: 530px;
   --alto-img-card-producto: 160px;
 
-  --alto-iconos-admin: 150px;
+  --alto-iconos-admin: 250px;
   --alto-iconos-vendedor: 200px;
   --alto-contenedor-formulario: 500px;
   --alto-contenedor-formulario-proveedor: 600px;
@@ -271,7 +271,7 @@
   --ancho-panel-derecho-interno: 420px;
   --ancho-img-card-producto:160px;
   --ancho-card-producto: 350px;
-  --ancho-iconos-admin: 150px;
+  --ancho-iconos-admin: 250px;
   --ancho-iconos-vendedor: 200px;
   --ancho-contenedor-botones: 100%;
   --ancho-contenedor-cards: 350px;

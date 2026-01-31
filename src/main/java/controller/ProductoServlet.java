@@ -195,29 +195,61 @@ public class ProductoServlet extends HttpServlet {
     
     private void guardarProducto(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
+
         Producto p = construirProductoDesdeRequest(request);
+
+        String error = validarProducto(p);
+        if (error != null) {
+            request.setAttribute("error", error);
+            request.setAttribute("producto", p);
+            request.setAttribute("materiales", materialDAO.listarMateriales());
+            request.getRequestDispatcher("/Administrador/agregar_producto.jsp")
+                   .forward(request, response);
+            return;
+        }
+
         HttpSession session = request.getSession();
         Administrador admin = (Administrador) session.getAttribute("admin");
+
         if (admin == null) {
             response.sendRedirect(request.getContextPath() + "/Administrador/inicio-sesion.jsp");
             return;
         }
+
         productoDAO.guardar(p, admin.getId());
-        response.sendRedirect(request.getContextPath() + "/CategoriaServlet?id=" + p.getCategoria().getCategoriaId());
+        response.sendRedirect(request.getContextPath()
+            + "/CategoriaServlet?id=" + p.getCategoria().getCategoriaId());
     }
+
 
     private void actualizarProducto(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
+
         Producto p = construirProductoDesdeRequest(request);
+
         String idStr = request.getParameter("productoId");
         if (idStr == null || !idStr.matches("\\d+")) {
             response.sendRedirect(request.getContextPath() + "/CategoriaServlet");
             return;
         }
+
         p.setProductoId(Integer.parseInt(idStr));
+
+        String error = validarProducto(p);
+        if (error != null) {
+            request.setAttribute("error", error);
+            request.setAttribute("producto", p);
+            request.setAttribute("materiales", materialDAO.listarMateriales());
+            request.getRequestDispatcher("/Administrador/editar.jsp")
+                   .forward(request, response);
+            return;
+        }
+
         productoDAO.actualizar(p);
-        response.sendRedirect(request.getContextPath() + "/CategoriaServlet?id=" + p.getCategoria().getCategoriaId());
+        response.sendRedirect(request.getContextPath()
+            + "/CategoriaServlet?id=" + p.getCategoria().getCategoriaId());
     }
+
 
     private Producto construirProductoDesdeRequest(HttpServletRequest request)
             throws IOException, ServletException {
@@ -262,4 +294,38 @@ public class ProductoServlet extends HttpServlet {
 
         return p;
     }
+    
+    private String validarProducto(Producto p) {
+
+        if (p.getNombre() == null || p.getNombre().trim().isEmpty()) {
+            return "El nombre del producto es obligatorio";
+        }
+
+        if (p.getDescripcion() == null || p.getDescripcion().trim().isEmpty()) {
+            return "La descripción es obligatoria";
+        }
+
+        if (p.getStock() < 0) {
+            return "El stock no puede ser negativo";
+        }
+
+        if (p.getPrecioUnitario().compareTo(BigDecimal.ZERO) <= 0) {
+            return "El precio unitario debe ser mayor a 0";
+        }
+
+        if (p.getPrecioVenta().compareTo(p.getPrecioUnitario()) < 0) {
+            return "El precio de venta no puede ser menor al precio unitario";
+        }
+
+        if (p.getCategoria() == null || p.getCategoria().getCategoriaId() <= 0) {
+            return "Debe seleccionar una categoría válida";
+        }
+
+        if (p.getMaterial() == null || p.getMaterial().getMaterialId() <= 0) {
+            return "Debe seleccionar un material válido";
+        }
+
+        return null; // TODO OK
+    }
+
 }

@@ -16,6 +16,17 @@
         return;
     }
 %>
+<%
+    String error = (String) request.getAttribute("error");
+    if (error != null) {
+%>
+    <div class="alert alert-danger">
+        <%= error %>
+    </div>
+<%
+    }
+%>
+
 
 <!DOCTYPE html>
 <html lang="es">

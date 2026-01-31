@@ -1,5 +1,18 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%
+    String error = request.getParameter("error");
+    if ("true".equals(error)) {
+%>
+    <div style="color:red;">Usuario o contraseña incorrectos</div>
+<%
+    } else if ("campos".equals(error)) {
+%>
+    <div style="color:red;">Todos los campos son obligatorios</div>
+<%
+    }
+%>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>

@@ -9,7 +9,7 @@
 
 body {
     font-family: var(--fuente-titulos);
-    background-color: var(--color-fondo-admin);
+    background: var(--color-fondo-admin);
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;

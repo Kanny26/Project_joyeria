@@ -1,10 +1,10 @@
 package controller;
 
-import dao.UsuarioDAO;
 import dao.DesempenoDAO;
+import dao.UsuarioDAO;
 import model.Desempeno_Vendedor;
 import model.Usuario;
-import config.ConexionDB;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
@@ -12,6 +12,11 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
+
+/**
+ * Servlet encargado de la gestión de usuarios del sistema.
+ * Incluye validaciones básicas de datos de entrada.
+ */
 @WebServlet("/UsuarioServlet")
 public class UsuarioServlet extends HttpServlet {
 
@@ -33,26 +38,31 @@ public class UsuarioServlet extends HttpServlet {
 
         switch (accion) {
             case "nuevo":
-                req.getRequestDispatcher("/Administrador/usuarios/agregar_usuario.jsp").forward(req, resp);
+                req.getRequestDispatcher("/Administrador/usuarios/agregar_usuario.jsp")
+                        .forward(req, resp);
                 break;
 
             case "editar":
                 int id = Integer.parseInt(req.getParameter("id"));
                 req.setAttribute("usuario", usuarioDAO.obtenerUsuarioPorId(id));
-                req.getRequestDispatcher("/Administrador/usuarios/editar_usuario.jsp").forward(req, resp);
+                req.getRequestDispatcher("/Administrador/usuarios/editar_usuario.jsp")
+                        .forward(req, resp);
                 break;
 
             case "historial":
-                List<Map<String, Object>> historial = usuarioDAO.obtenerHistorialUsuariosConDesempeno();
+                List<Map<String, Object>> historial =
+                        usuarioDAO.obtenerHistorialUsuariosConDesempeno();
                 req.setAttribute("historial", historial);
-                req.getRequestDispatcher("/Administrador/usuarios/historial.jsp").forward(req, resp);
+                req.getRequestDispatcher("/Administrador/usuarios/historial.jsp")
+                        .forward(req, resp);
                 break;
-                
+
             default:
                 req.setAttribute("usuarios", usuarioDAO.listarUsuarios());
                 req.setAttribute("totalUsuarios", usuarioDAO.contarUsuarios());
                 req.setAttribute("usuariosActivos", usuarioDAO.contarUsuariosActivos());
-                req.getRequestDispatcher("/Administrador/usuarios/listar_usuario.jsp").forward(req, resp);
+                req.getRequestDispatcher("/Administrador/usuarios/listar_usuario.jsp")
+                        .forward(req, resp);
         }
     }
 
@@ -62,42 +72,98 @@ public class UsuarioServlet extends HttpServlet {
 
         String accion = req.getParameter("accion");
 
+        /* =========================
+           AGREGAR USUARIO
+           ========================= */
         if ("agregar".equals(accion)) {
+
+            String nombre = req.getParameter("nombre");
+            String correo = req.getParameter("correo");
+            String telefono = req.getParameter("telefono");
+            String documento = req.getParameter("documento");
+            String contrasena = req.getParameter("contrasena");
+
+            // ---- VALIDACIONES ----
+            if (nombre == null || nombre.trim().isEmpty()
+                    || correo == null || correo.trim().isEmpty()
+                    || telefono == null || telefono.trim().isEmpty()) {
+
+                req.setAttribute("error", "Todos los campos obligatorios deben completarse");
+                req.getRequestDispatcher("/Administrador/usuarios/agregar_usuario.jsp")
+                        .forward(req, resp);
+                return;
+            }
+
+            if (!correo.matches("^[^@]+@[^@]+\\.[^@]+$")) {
+                req.setAttribute("error", "El correo no tiene un formato válido");
+                req.getRequestDispatcher("/Administrador/usuarios/agregar_usuario.jsp")
+                        .forward(req, resp);
+                return;
+            }
+            // ----------------------
+
             Usuario u = new Usuario();
-            u.setNombre(req.getParameter("nombre"));
-            u.setCorreo(req.getParameter("correo"));
-            u.setTelefono(req.getParameter("telefono"));
-            u.setDocumento(req.getParameter("documento"));
-            u.setContrasena(req.getParameter("contrasena"));
+            u.setNombre(nombre);
+            u.setCorreo(correo);
+            u.setTelefono(telefono);
+            u.setDocumento(documento);
+            u.setContrasena(contrasena);
             u.setEstado("Activo".equals(req.getParameter("estado")));
 
             usuarioDAO.agregarUsuario(u);
             resp.sendRedirect("UsuarioServlet");
+        }
 
-        }else if ("editar".equals(accion)) {
+        /* =========================
+           EDITAR USUARIO
+           ========================= */
+        else if ("editar".equals(accion)) {
+
             try {
                 int usuarioId = Integer.parseInt(req.getParameter("id"));
+                String nombre = req.getParameter("nombre");
+                String correo = req.getParameter("correo");
+                String telefono = req.getParameter("telefono");
+                String rol = req.getParameter("rol");
                 String observaciones = req.getParameter("observaciones");
 
-                // 1. Actualizar datos del usuario (nombre, correo, etc.)
+                // ---- VALIDACIONES ----
+                if (nombre == null || nombre.trim().isEmpty()
+                        || correo == null || correo.trim().isEmpty()
+                        || rol == null || rol.trim().isEmpty()) {
+
+                    req.setAttribute("error", "Nombre, correo y rol son obligatorios");
+                    req.setAttribute("usuario",
+                            usuarioDAO.obtenerUsuarioPorId(usuarioId));
+                    req.getRequestDispatcher("/Administrador/usuarios/editar_usuario.jsp")
+                            .forward(req, resp);
+                    return;
+                }
+
+                if (!correo.matches("^[^@]+@[^@]+\\.[^@]+$")) {
+                    req.setAttribute("error", "Formato de correo inválido");
+                    req.setAttribute("usuario",
+                            usuarioDAO.obtenerUsuarioPorId(usuarioId));
+                    req.getRequestDispatcher("/Administrador/usuarios/editar_usuario.jsp")
+                            .forward(req, resp);
+                    return;
+                }
+                // ----------------------
+
                 Usuario u = new Usuario();
                 u.setUsuarioId(usuarioId);
-                u.setNombre(req.getParameter("nombre"));
-                u.setCorreo(req.getParameter("correo"));
-                u.setTelefono(req.getParameter("telefono"));
-                u.setEstado("Activo".equals(req.getParameter("estado")));
-
-                // --- NUEVO: actualizar rol ---
-                String rol = req.getParameter("rol");
+                u.setNombre(nombre);
+                u.setCorreo(correo);
+                u.setTelefono(telefono);
                 u.setRol(rol);
-                // ------------------------------
+                u.setEstado("Activo".equals(req.getParameter("estado")));
 
                 boolean exito = usuarioDAO.editarUsuario(u);
 
-                // 2. Actualizar/crear desempeño con observaciones
                 if (exito) {
-                    Desempeno_Vendedor desempeno = desempenoDAO.obtenerUltimoDesempenoPorUsuario(usuarioId);
-                    
+                    Desempeno_Vendedor desempeno =
+                            desempenoDAO.obtenerUltimoDesempenoPorUsuario(usuarioId);
+
                     if (desempeno != null) {
                         desempeno.setObservaciones(observaciones);
                         desempenoDAO.actualizarDesempeno(desempeno);
@@ -107,18 +173,22 @@ public class UsuarioServlet extends HttpServlet {
                         desempeno.setVentasTotales(BigDecimal.ZERO);
                         desempeno.setComisionPorcentaje(BigDecimal.ZERO);
                         desempeno.setComisionGanada(BigDecimal.ZERO);
-                        desempeno.setPeriodo(new java.sql.Date(System.currentTimeMillis()));
+                        desempeno.setPeriodo(
+                                new java.sql.Date(System.currentTimeMillis()));
                         desempeno.setObservaciones(observaciones);
+
                         desempenoDAO.insertarDesempeno(desempeno);
                     }
                 }
 
                 resp.sendRedirect(req.getContextPath() + "/UsuarioServlet");
+
             } catch (Exception e) {
                 e.printStackTrace();
-                resp.sendRedirect(req.getContextPath() + "/UsuarioServlet?error=editar");
+                resp.sendRedirect(req.getContextPath()
+                        + "/UsuarioServlet?error=editar");
             }
         }
-
     }
 }
+

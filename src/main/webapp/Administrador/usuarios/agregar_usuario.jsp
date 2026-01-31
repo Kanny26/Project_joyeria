@@ -1,4 +1,10 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<% if (request.getAttribute("error") != null) { %>
+    <div style="color:red;">
+        <%= request.getAttribute("error") %>
+    </div>
+<% } %>
+
 <!DOCTYPE html>
 <html lang="es">
 
