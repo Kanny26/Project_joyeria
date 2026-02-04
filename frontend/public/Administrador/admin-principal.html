@@ -1,78 +1,89 @@
-<!DOCTYPE html> 
-<html lang="es"> 
-<head> 
-    <meta charset="UTF-8"> 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
-    <title>Home admin</title> 
-    <link rel="stylesheet" href="../../assets/css/main.css" />
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home admin</title>
+
+    <!-- Estilos -->
+    <link rel="stylesheet" href="../../assets/css/main.css">
     <link rel="stylesheet" href="../../assets/css/pages/Administrador/admin-principal.css">
+
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-</head> 
+</head>
 <body>
 
-<nav class="navbar-admin"> 
-        <div class="navbar-admin__catalogo"> 
-            <img src="../../assets/Imagenes/iconos/admin.png" alt="Admin"> 
-            <h2>Volver al inicio</h2> 
-        </div> 
-        <h1 class="navbar-admin__title">AA27</h1> 
-        <a href="../../index.html"> 
-            <i class="fa-solid fa-house-chimney navbar-admin__home-icon"></i> 
-        </a>
-    </nav>
+<nav class="navbar-admin">
+    <div class="navbar-admin__catalogo">
+        <img src="../../assets/Imagenes/iconos/admin.png" alt="Admin">
+        <h2>Volver al inicio</h2>
+    </div>
 
-<main class="panel-admin__tarjetas">   
-    <h2 class="panel-admin__tarjetas-titulo">Haz clic en lo que deseas gestionar hoy.</h2>   
-    <section class="panel-admin__tarjetas-contenedor">   
-        <div class="panel-admin__tarjeta"> 
-            <div class="panel-admin__tarjeta-circulo"> 
-                <a href="../Administrador/org-categorias.html"> 
-                    <img src="../../assets/Imagenes/iconos/catalogar.png" alt="Administrar catalogo"> 
-                </a> 
-            </div> 
-            <div class="panel-admin__tarjeta-h3"> 
-                <div class="panel-admin__tarjeta-h3-izquierda"></div>
-                <div class="panel-admin__tarjeta-h3-derecha"></div>
-                <h3>Categorias</h3>
-            </div>
-        </div>
-        <div class="panel-admin__tarjeta">
-            <div class="panel-admin__tarjeta-circulo">
-                <a href="../Administrador/proveedores.html">
-                    <img src="../../assets/Imagenes/iconos/gestionar_proveedores.png" alt="Gestionar proveedores">
-                </a>
-            </div>
-            <div class="panel-admin__tarjeta-h3">
-                <div class="panel-admin__tarjeta-h3-izquierda"></div>
-                <div class="panel-admin__tarjeta-h3-derecha"></div>
-                <h3>Proveedores</h3>
-            </div>
-        </div>   
-        <div class="panel-admin__tarjeta"> 
-            <div class="panel-admin__tarjeta-circulo">
-                <a href="../Administrador/ventas.html">
-                    <img src="../../assets/Imagenes/iconos/ventas.png" alt="Seguimiento ventas"> 
-                </a> 
-            </div> 
-            <div class="panel-admin__tarjeta-h3">
-                <div class="panel-admin__tarjeta-h3-izquierda"></div>
-                <div class="panel-admin__tarjeta-h3-derecha"></div>
-                <h3>Ventas</h3>
-            </div>
-        </div>    
-        <div class="panel-admin__tarjeta">   
-            <div class="panel-admin__tarjeta-circulo">  
-                <a href="../Administrador/usuarios.html">  
-                    <img src="../../assets/Imagenes/iconos/Usuarios.png" alt="Gestionar usuarios">  
-                </a>  
-            </div>  
-            <div class="panel-admin__tarjeta-h3"> 
-                <div class="panel-admin__tarjeta-h3-izquierda"></div>
-                <div class="panel-admin__tarjeta-h3-derecha"></div>
-                <h3>Usuarios</h3>
-            </div>
-        </div>       
-    </section>   
+    <h1 class="navbar-admin__title">AAC27</h1>
+
+    <div class="navbar-admin__usuario">
+        <i class="fas fa-user"></i>
+        <span>Administrador</span>
+    </div>
+
+    <a href="/index.html">
+        <i class="fa-solid fa-house-chimney navbar-admin__home-icon"></i>
+    </a>
+</nav>
+
+<main class="panel-admin__tarjetas">
+    <h2 class="panel-admin__tarjetas-titulo">
+        ¡Bienvenido, Administrador! Haz clic en lo que deseas gestionar hoy.
+    </h2>
+
+    <section class="iconos-contenedor">
+
+        <article class="iconos-item">
+            <a href="../Administrador/org-categorias.html" class="icono-boton">
+                <div class="icono-boton__circulo">
+                    <img class="icono-boton__img"
+                         src="../../assets/Imagenes/iconos/catalogar.png"
+                         alt="Administrar catálogo">
+                </div>
+                <h3 class="icono-boton__titulo">Categorías</h3>
+            </a>
+        </article>
+
+        <article class="iconos-item">
+            <a href="../Administrador/proveedores.html" class="icono-boton">
+                <div class="icono-boton__circulo">
+                    <img class="icono-boton__img"
+                         src="../../assets/Imagenes/iconos/gestionar_proveedores.png"
+                         alt="Proveedores">
+                </div>
+                <h3 class="icono-boton__titulo">Proveedores</h3>
+            </a>
+        </article>
+
+        <article class="iconos-item">
+            <a href="../Administrador/ventas.html" class="icono-boton">
+                <div class="icono-boton__circulo">
+                    <img class="icono-boton__img"
+                         src="../../assets/Imagenes/iconos/ventas.png"
+                         alt="Ventas">
+                </div>
+                <h3 class="icono-boton__titulo">Ventas</h3>
+            </a>
+        </article>
+
+        <article class="iconos-item">
+            <a href="../Administrador/usuarios.html" class="icono-boton">
+                <div class="icono-boton__circulo">
+                    <img class="icono-boton__img"
+                         src="../../assets/Imagenes/iconos/usuarios.png"
+                         alt="Usuarios">
+                </div>
+                <h3 class="icono-boton__titulo">Usuarios</h3>
+            </a>
+        </article>
+
+    </section>
 </main>
 
 </body>

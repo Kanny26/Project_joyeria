@@ -1,0 +1,89 @@
+
+/* ============================= */
+/* CONTENEDOR GENERAL */
+/* ============================= */
+.iconos-contenedor {
+    display: flex;
+    gap: var(--gap-cards-catalogo);
+    justify-content: center;
+    flex-wrap: wrap;
+    padding: 0 40px;
+}
+
+/* ITEM */
+.iconos-item {
+    width: var(--ancho-card);
+}
+
+/* BOTÓN */
+.icono-boton {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+}
+
+/* ============================= */
+/* CÍRCULO DE ICONO */
+/* ============================= */
+.icono-boton__circulo {
+    width: var(--ancho-iconos-admin);
+    height: var(--alto-iconos-admin);
+    border-radius: 50%;
+    background: linear-gradient(
+        44deg,
+        #e3b7c2b8,
+        #c5c2df
+    );
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 15px;
+    box-shadow:
+        inset 0 2px 6px rgba(255, 255, 255, 0.7),
+        0 10px 22px rgba(120, 80, 95, 0.35);
+    transition: transform var(--transicion-general),
+                box-shadow var(--transicion-general);
+}
+
+.icono-boton__circulo:hover {
+    transform: scale(1.08) translateY(-4px);
+    box-shadow:
+        inset 0 3px 8px rgba(255, 255, 255, 0.85),
+        0 18px 36px rgba(120, 80, 95, 0.45);
+}
+
+/* IMAGEN */
+.icono-boton__img {
+    width: var(--tamano-imagen-icono);
+    height: var(--tamano-imagen-icono);
+}
+
+/* ============================= */
+/* BOTÓN INFERIOR */
+/* ============================= */
+.icono-boton__titulo {
+    width: var(--ancho-dashboard-act);
+    height: var(--alto-dashboard-act);
+    background: linear-gradient(
+        145deg,
+        #E9CDD2,
+        #CFA8B3
+    );
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow:
+        0 4px 10px rgba(80, 45, 60, 0.35),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    transition: transform var(--transicion-general),
+                box-shadow var(--transicion-general);
+}
+
+.icono-boton:hover .icono-boton__titulo {
+    transform: translateY(-2px);
+    box-shadow:
+        0 8px 20px rgba(80, 45, 60, 0.45);
+}
