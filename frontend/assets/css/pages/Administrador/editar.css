@@ -8,7 +8,7 @@
 
 body {
     font-family: var(--fuente-titulos);
-    background-color: var(--color-fondo-admin);
+    background: var(--color-fondo-admin);
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -115,6 +115,11 @@ label {
     font-size: 16px;
 }
 
+.editar-producto__label:hover{
+    background-color: var(--color-boton-principal-hover);
+    cursor: pointer;
+}
+
 .editar-producto__input-texto,
 .editar-producto__input-select,
 .editar-producto__input-area {
@@ -124,7 +129,7 @@ label {
     border-radius: var(--radio-bordes-input);
     border:2px solid #ccc;
     font-size: var(--tamano-fuente-placeholder);
-    background: var(--color-fondo-icono);
+    /* background: var(--color-fondo-icono); */
     transition: var(--duracion-transicion);
     resize: none;
     border-style: none;

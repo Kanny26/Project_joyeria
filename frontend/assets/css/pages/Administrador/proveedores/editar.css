@@ -9,7 +9,7 @@
 
 body {
     font-family: var(--fuente-titulos);
-    background-color: var(--color-fondo-admin);
+    background: var(--color-fondo-admin);
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -88,6 +88,7 @@ label {
     border: 1px solid #ccc;
     font-size: 0.95rem;
     transition: all 0.3s ease;
+    /* background: var(--color-fondo-icono) */
 }
 
 .editar-proveedores__input-texto:focus,

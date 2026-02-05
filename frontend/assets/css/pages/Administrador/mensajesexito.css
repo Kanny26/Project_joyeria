@@ -49,7 +49,7 @@ body {
 .mensaje-exito__caja-logo {
     width: var(--ancho-panel-derecho-interno);
     height: var(--alto-panel-derecho-interno);
-    background-color: var(--color-fondo-caja);
+    /* background-color: var(--color-fondo-caja-lateral); */
     border-radius: var(--bordes-caja-panel-izquierda-derecha);
     display: flex;
     flex-direction: column;

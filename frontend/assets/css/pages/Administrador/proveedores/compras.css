@@ -4,7 +4,7 @@
 
 body {
     font-family: var(--fuente-titulos);
-    background-color: var(--color-fondo-admin);
+    background: var(--color-fondo-admin);
     min-height:100vh;
     display:flex;
     justify-content:center;
@@ -29,17 +29,17 @@ body {
 .Compras-listar__tabla th, .Compras-listar__tabla td {
     padding: 15px 10px;
     text-align: center;
-    border-left: 1px solid rgb(0, 0, 0);
-    border-bottom: 1px solid rgb(0, 0, 0);
+    /* border-left: 1px solid rgb(0, 0, 0); */
+    /* border-bottom: 1px solid rgb(0, 0, 0); */
 }
 
 .Compras-listar__tabla th {
-    background-color: var(--color-fondo-tarjeta-hover);
+    background-color: #baccffa1;
     font-weight:700;
 }
 
 .Compras-listar__tabla tbody {
-    background-color: var(--color-fondo-tarjeta-hover);
+    background-color: var(--color-tablas);
     font-weight:500;
 }
 
