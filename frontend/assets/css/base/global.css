@@ -84,7 +84,7 @@
 
   --color-fondo-caja:#ccb7de8f;
   --color-fondo-caja-lateral: #e3b7c2b8;
-  --color-fondo-card-productos:  #c8c7ec;
+  --color-fondo-card-productos:  #b8b9d3;
   --color-fondo-general: #8a828267;
   --color-fondo-icono: #eae9f7;
   --color-fondo-input: #ffffff;
@@ -121,11 +121,10 @@
   --color-titulo-cards: #000000;
   --gradiente-fondo-principal: rgb(229 218 229) 5%;
   --gradiente-panel-izquierdo: linear-gradient(
-    135deg,
-    #b2a392,
-    #6e665d,
-    #4a4a4a
-  );
+        44deg,
+        #e3b7c2b8,
+        #c5c2df
+    );
   --gradiente-panel-lateral:linear-gradient(
         44deg,
         #e3b7c2b8,
@@ -235,7 +234,7 @@
   /* ===================================================== */
   /* BORDES Y RADIOS */
   /* ===================================================== */
-  --radio-borde-card: 50px;
+  --radio-borde-card: 20px;
   --borde-general: 20px;
   --radio-bordes-boton: 10px;
   --radio-bordes-boton-grande: 12px;
