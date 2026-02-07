@@ -1,9 +1,24 @@
 {
     "liveServer.settings.port": 5501,
     "java.project.sourcePaths": [
-        "backend\\src"
+        "backend\\src",
+        "backend\\webapp\\WEB-INF\\lib"
     ],
     "java.project.referencedLibraries": [
-        "c:\\Users\\hervi\\Downloads\\mysql-connector-j-9.6.0\\mysql-connector-j-9.6.0\\mysql-connector-j-9.6.0.jar"
+        "backend\\webapp\\WEB-INF\\lib\\javax.servlet-api-4.0.1.jar",
+        "d:\\Project_joyeria\\backend\\webapp\\WEB-INF\\lib\\mysql-connector-j-9.6.0.jar",
+        "d:\\Project_joyeria\\backend\\webapp\\WEB-INF\\lib\\jbcrypt-0.4.jar"
+    ],
+    "java.completion.favoriteStaticMembers": [
+        "org.mindrot.jbcrypt.BCrypt.*",
+        "org.junit.Assert.*",
+        "org.junit.Assume.*",
+        "org.junit.jupiter.api.Assertions.*",
+        "org.junit.jupiter.api.Assumptions.*",
+        "org.junit.jupiter.api.DynamicContainer.*",
+        "org.junit.jupiter.api.DynamicTest.*",
+        "org.mockito.Mockito.*",
+        "org.mockito.ArgumentMatchers.*",
+        "org.mockito.Answers.*"
     ]
 }

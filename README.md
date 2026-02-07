@@ -52,4 +52,5 @@ Se emplean **paletas cálidas y tonos neutros** para reflejar lujo y sofisticaci
 
 
 
+
 **Karol Moreno**  

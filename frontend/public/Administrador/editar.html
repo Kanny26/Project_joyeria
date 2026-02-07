@@ -5,85 +5,68 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar producto</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="../../assets/css/main.css" />
-    <link rel="stylesheet" href="../../assets/css/pages/Administrador/editar.css" />
+    <link rel="stylesheet" href="../../assets/css/main.css">
+    <link rel="stylesheet" href="../../assets/css/pages/Administrador/producto.css">
 </head>
 <body>
 
-    <nav class="navbar-admin"> 
-        <div class="navbar-admin__catalogo"> 
-            <img src="../../assets/Imagenes/iconos/admin.png" alt="Admin"> 
-        </div> 
-        <h1 class="navbar-admin__title">AA27</h1> 
-        <a href="org-categorias.html">
-            <i class="fa-solid fa-house-chimney navbar-admin__home-icon"></i> 
-        </a>
-        
-    </nav>
+<nav class="navbar-admin">
+    <div class="navbar-admin__catalogo">
+        <img src="../../assets/Imagenes/iconos/admin.png" alt="Admin">
+    </div>
+    <h1 class="navbar-admin__title">AA27</h1>
+    <a href="org-categorias.html">
+        <i class="fa-solid fa-house-chimney navbar-admin__home-icon"></i>
+    </a>
+</nav>
 
-<main class="editar-producto">
-    <h1 class="editar-producto__titulo">Editar producto</h1>
-    <form class="editar-producto__detalles">
+<main class="product-page">
+    <h1 class="product-title">Editar producto</h1>
 
-        <div class="editar-producto__contenido">
-        <!-- Imagen izquierda -->
-            <div class="editar-producto__imagen">
-                <img src="../../assets/Imagenes/fondos/joya1.jpg" alt="Anillo alianza de sueños">
+    <section class="product-card">
+        <div class="product-image">
+            <div class="product-image__circle">
+                <img src="../../assets/Imagenes/fondos/joya1.jpg" alt="">
+            </div>
+        </div>
 
-                <!-- Label actúa como botón -->
-                <label for="nuevaImagen" class="editar-producto__label">
-                    <i class="fa-solid fa-pen"></i> Cambiar imagen
-                </label>
-
-                <!-- Input file oculto -->
-                <input type="file" id="nuevaImagen" name="imagen" accept="image/*" hidden>
+        <form class="product-details">
+            <div class="product-row">
+                <label class="product-label">Nombre</label>
+                <input class="product-value" type="text" value="Anillo Alianza de Sueños">
             </div>
 
-        <!-- Formulario derecha -->
-        <div class="editar-producto__campos">
-            <label>Nombre del producto</label>
-            <input type="text" name="nombre" value="Anillo Alianza de sueños" class="editar-producto__input-texto">
-
-            <label>Categoría</label>
-            <select name="categoria" class="editar-producto__input-select">
-            <option>Anillo de compromiso</option>
-            <option>Anillo de bodas</option>
-            <option>Anillo de 15 años</option>
-            <option>Anillo de promesa</option>
-            </select>
-
-            <label>Precio</label>
-            <input placeholder="$" type="text" name="precio" value="35.000" class="editar-producto__input-texto">
-
-            <label>Descripción</label>
-            <textarea name="descripcion" class="editar-producto__input-area" rows="4">Un símbolo eterno de compromiso y esperanza...</textarea>
-
-            <div class="editar-producto__reseñas">
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star-half-alt"></i>
-            <span>4.8 Reseñas</span>
+            <div class="product-row">
+                <label class="product-label">Categoría</label>
+                <select class="product-value">
+                    <option>Anillo de compromiso</option>
+                    <option>Anillo de bodas</option>
+                    <option>Anillo de promesa</option>
+                </select>
             </div>
 
-            <div class="editar-producto__acciones">
-                <button class="boton guardar">
-                    <a  href="ver-producto.html">
-                        <i class="fa-solid fa-floppy-disk"></i> Guardar
-                    </a>
+            <div class="product-row">
+                <label class="product-label">Precio</label>
+                <input class="product-value price" type="text" value="$455.328">
+            </div>
+
+            <div class="product-row">
+                <label class="product-label">Descripción</label>
+                <textarea class="product-value" rows="4">Un símbolo eterno de compromiso y esperanza.</textarea>
+            </div>
+
+            <div class="product-actions">
+                <button type="submit" class="btn-primary">
+                    <i class="fa-solid fa-floppy-disk"></i> Guardar
                 </button>
-                
-                <button type="reset" class="boton cancelar">  
-                    <a  href="ver-producto.html">
-                        <i class="fa-solid fa-xmark"></i> Cancelar  
-                    </a>
+
+                <button type="reset" class="btn-danger">
+                    <i class="fa-solid fa-xmark"></i> Cancelar
                 </button>
             </div>
-
-        </div>
-        </div>
-    </form>
+        </form>
+    </section>
 </main>
+
 </body>
 </html>
