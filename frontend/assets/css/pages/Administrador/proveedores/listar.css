@@ -39,7 +39,7 @@ body {
 }
 
 .Proveedores-listar__tabla th {
-    background-color: var(--color-tablas);
+    background-color: var(--color-columnas-tabla);
     font-weight: 700;
 }
 

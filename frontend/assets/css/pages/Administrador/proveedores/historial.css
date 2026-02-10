@@ -9,7 +9,7 @@
 
 body {
     font-family: var(--fuente-titulos);
-    background-color: var(--color-fondo-admin);
+    background: var(--color-fondo-admin);
     min-height: var(--alto-minimo-body);
     display: flex;
     justify-content: center;
@@ -39,17 +39,17 @@ body {
 .Proveedores-listar__tabla td {
     padding: 12px 10px;
     text-align: center;
-    border: 1px solid rgb(0, 0, 0);
+    /* border: 1px solid rgb(0, 0, 0); */
 }
 
 .Proveedores-listar__tabla th {
-    background-color: var(--color-fondo-tarjeta-hover);
+    background-color: var(--color-columnas-tabla);
     font-weight: 700;
     font-size: var(--tamano-label);
 }
 
 .Proveedores-listar__tabla tbody {
-    background-color: var(--color-fondo-tarjeta-hover);
+    background-color: var(--color-tablas);
     font-weight: 500;
     font-size: 16px;
 }

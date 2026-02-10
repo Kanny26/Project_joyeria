@@ -63,13 +63,14 @@
   --secundario-card-splash-screen: #b4b4b4;
   --color-titulo-splash-screen: #3d3d3d;
   --color-borde-imagen: #fff;
-  --color-boton-principal:#e3b7c2b8;
+  --color-boton-principal:#efefef;
   --color-boton-principal-hover: #9177a8;
   --color-boton-secundario: #e3b7c2b8;
   --color-boton-secundario-hover:  #d0c4db;
   --color-tablas: #dbe6ff85;
   --color-estrellas: #fdff7b;
   --color-fondo-advertencia: #ffffff;
+  --color-columnas-tabla: #baccffa1;
   
   --color-link-hover: rgb(51, 51, 51)d0;
   --color-fondo-admin: rgb(229 218 229) 5%;
@@ -84,7 +85,8 @@
 
   --color-fondo-caja:#ccb7de8f;
   --color-fondo-caja-lateral: #e3b7c2b8;
-  --color-fondo-card-productos:  #899da773;
+  --color-fondo-card-productos: #a6c4d0a8;
+  --color-cards-generales: #c5c2df;
   --color-fondo-general: #8a828267;
   --color-fondo-icono: #eae9f7;
   --color-fondo-input: #ffffff;
@@ -96,7 +98,7 @@
   --color-encabezado-venta: #c0b7b4;
   --color-nav-admin: linear-gradient(
         44deg,
-        #e3b7c2b8,
+        rgba(227, 183, 194, 0.722),
         #c5c2df
     );
   --color-nav-vendedor: #99AD96;
@@ -138,7 +140,7 @@
   --sombra-card-productos: 0 10px 25px rgba(112, 93, 93, 0.15);
 
 
-  --sombra-formulario: 0 4px 15px rgba(0, 0, 0, 0.2);
+  --sombra-formulario: 0 10px 35px rgba(190, 180, 247, 0.2);
   --sombra-icono: 0 6px 18px rgba(0, 0, 0, 0.15);
   --sombra-icono-hover: 0 8px 25px rgba(0, 0, 0, 0.2);
 

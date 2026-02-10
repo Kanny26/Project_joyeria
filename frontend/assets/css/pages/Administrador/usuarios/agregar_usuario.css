@@ -9,7 +9,7 @@
 
 body {
     font-family: var(--fuente-titulos);
-    background-color: var(--color-fondo-admin);
+    background: var(--color-fondo-admin);
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -22,31 +22,36 @@ body {
 
 /* PANEL PRINCIPAL */
 .registro-Usuario__panel {
-    width: 850px;
+    width: 900px;
     display: flex;
     justify-content: center;
 }
 
 .registro-Usuario__formulario {
     width: 100%;
-    background: var(--color-fondo-card-productos);
-    border-radius: 12px;
-    padding: 40px;
-    box-shadow: var(--sombra-formulario);
+    background: var(--color-cards-generales);
+    border-radius: 24px;
+    padding: 50px;
+    box-shadow: 0 20px 60px rgba(0,0,0,.25);
 }
 
 .registro-Usuario__formulario-contenido {
-    width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 25px;
+    gap: 35px;
 }
 
+.registro-Usuario__formulario-contenido header h1 {
+    font-size: 1.6rem;
+    text-align: center;
+    color: var(--color-titulo-cards);
+    text-shadow: 0 4px 12px rgba(0,0,0,.25);
+}
 /* ---------- GRID APLICADO ---------- */
 .registro-Usuario__form-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 25px 40px;
+    gap: 28px 45px;
 }
 
 /* Botón en ancho completo */
@@ -60,52 +65,61 @@ body {
 .registro-Usuario__grupo-campo {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 8px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid #eee;
 }
 
 .registro-Usuario__grupo-campo label {
-    font-size: 12px;
-    font-weight: 500;
-    color: var(--color-texto-general);
+    font-weight: 600;
+    font-size: 13px;
+    color: #475569;
 }
 
 /* INPUTS */
 .registro-Usuario__input-grupo,
 .editar-Usuario__input-grupo {
-    background: var(--color-fondo-input);
+    background: #f9fafb;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 12px;
     padding: 12px 14px;
-    border-radius: 10px;
     display: flex;
-    gap: 10px;
     align-items: center;
+    gap: 10px;
+    transition: all .25s ease;
+}
+.registro-Usuario__input-grupo:focus-within,
+.editar-Usuario__input-grupo:focus-within {
+    background: #fff;
+    border-color: #9333ea;
+    box-shadow: 0 0 0 3px rgba(147, 51, 234, 0.15);
 }
 
 .registro-Usuario__input-grupo input {
-    flex: 1;
+    width: 100%;
     border: none;
     background: transparent;
-    font-size: 14px;
+    font-size: .95rem;
+    font-family: inherit;
+    color: #2d3748;
+    outline: none;
 }
 
 /* ICONOS */
 .icon-left {
     font-size: 18px;
-    color: var(--color-iconos);
+    color: #64748b;
 }
 
 /* RADIO / CHECKBOX */
-.editar-Usuarioes__estado-opciones {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-}
-
-.radio-op {
+.radio-op,
+.editar-Usuario__estado-opciones label {
+    font-size: .9rem;
+    color: #2d3748;
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 6px;
 }
-
 /* FOOTER FORMULARIO */
 .registro-Usuario__link {
     text-align: center;

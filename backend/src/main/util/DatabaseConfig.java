@@ -26,9 +26,9 @@ public class DatabaseConfig {
         try {
             // Cargar el driver de MySQL
             Class.forName(DRIVER);
-            System.out.println("✓ Driver MySQL cargado correctamente");
+            System.out.println("Driver MySQL cargado correctamente");
         } catch (ClassNotFoundException e) {
-            System.err.println("✗ Error al cargar el driver de MySQL: " + e.getMessage());
+            System.err.println("Error al cargar el driver de MySQL: " + e.getMessage());
             throw new RuntimeException("No se pudo cargar el driver de MySQL", e);
         }
     }
@@ -55,7 +55,7 @@ public class DatabaseConfig {
     public Connection getConnection() throws SQLException {
         if (connection == null || connection.isClosed()) {
             connection = DriverManager.getConnection(URL, USER, PASSWORD);
-            System.out.println("✓ Conexión a base de datos establecida");
+            System.out.println("Conexión a base de datos establecida");
         }
         return connection;
     }
@@ -67,9 +67,9 @@ public class DatabaseConfig {
         if (connection != null) {
             try {
                 connection.close();
-                System.out.println("✓ Conexión cerrada correctamente");
+                System.out.println("Conexión cerrada correctamente");
             } catch (SQLException e) {
-                System.err.println("✗ Error al cerrar la conexión: " + e.getMessage());
+                System.err.println("Error al cerrar la conexión: " + e.getMessage());
             }
         }
     }
@@ -81,11 +81,11 @@ public class DatabaseConfig {
         try {
             Connection conn = getConnection();
             if (conn != null && !conn.isClosed()) {
-                System.out.println("✓ Prueba de conexión exitosa");
+                System.out.println("Prueba de conexión exitosa");
                 return true;
             }
         } catch (SQLException e) {
-            System.err.println("✗ Error en prueba de conexión: " + e.getMessage());
+            System.err.println("Error en prueba de conexión: " + e.getMessage());
         }
         return false;
     }

@@ -21,7 +21,7 @@ public class testconnection {
             Connection conn = dbConfig.getConnection();
             
             if (conn != null && !conn.isClosed()) {
-                System.out.println("✓ CONEXIÓN EXITOSA\n");
+                System.out.println("CONEXIÓN EXITOSA\n");
                 
                 // Hacer una consulta simple para verificar
                 Statement stmt = conn.createStatement();
@@ -29,20 +29,20 @@ public class testconnection {
                 
                 if (rs.next()) {
                     int totalUsuarios = rs.getInt("total");
-                    System.out.println("📊 Total de usuarios en BD: " + totalUsuarios);
+                    System.out.println("Total de usuarios en BD: " + totalUsuarios);
                 }
                 
                 rs.close();
                 stmt.close();
                 
-                System.out.println("\n✓ Base de datos 'gestor_abbyac27' funcionando correctamente");
+                System.out.println("\nBase de datos 'gestor_abbyac27' funcionando correctamente");
                 
             } else {
-                System.out.println("✗ ERROR: No se pudo establecer la conexión");
+                System.out.println("ERROR: No se pudo establecer la conexión");
             }
             
         } catch (Exception e) {
-            System.err.println("✗ ERROR AL CONECTAR:");
+            System.err.println("ERROR AL CONECTAR:");
             System.err.println("   " + e.getMessage());
             e.printStackTrace();
         } finally {
