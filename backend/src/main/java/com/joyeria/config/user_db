@@ -1,0 +1,3 @@
+CREATE USER 'Stephany'@'localhost' IDENTIFIED BY 'Karito';
+GRANT ALL PRIVILEGES ON gestor_abbyac27.* TO 'Stephany'@'localhost';
+FLUSH PRIVILEGES;
