@@ -27,7 +27,8 @@
 
     <!-- CSS -->
     <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/main.css">
-    <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/pages/Administrador/ver-producto.css">
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/pages/Administrador/producto.css">
+
 </head>
 <body>
 
@@ -38,102 +39,76 @@
 
     <h1 class="navbar-admin__title">AAC27</h1> 
 
-    <a href="<%= request.getContextPath() %>/Administrador/org-categorias.jsp"> 
-        <i class="fa-solid fa-house-chimney navbar-admin__home-icon"></i> 
-    </a>
+    <a href="<%= request.getContextPath() %>/CategoriaServlet?id=<%= producto.getCategoria().getCategoriaId() %>">
+    	<i class="fa-solid fa-house-chimney navbar-admin__home-icon"></i>
+	</a>
+
 </nav>
 
-<main class="ver-producto">
-    <h1 class="ver-producto__titulo">Ver producto</h1>
+<main class="product-page">
+    <h1 class="product-title">Ver producto</h1>
 
-    <div class="ver-producto__card">
-
-        <!-- IMAGEN -->
-        <div class="ver-producto__card-imagen">
-            <img src="<%= request.getContextPath() %>/imagenes/<%= 
-                (producto.getImagen() != null && !producto.getImagen().isEmpty())
-                    ? producto.getImagen()
-                    : "default.jpg"
-            %>" alt="<%= producto.getNombre() %>">
+    <section class="product-card">
+        <div class="product-image">
+            <div class="product-image__circle">
+                <img src="<%= request.getContextPath() %>/imagenes/<%= 
+                    (producto.getImagen() != null && !producto.getImagen().isEmpty())
+                        ? producto.getImagen()
+                        : "default.jpg"
+                %>" alt="<%= producto.getNombre() %>">
+            </div>
         </div>
 
-        <!-- DETALLES -->
-        <div class="ver-producto__card-detalles">
+        <div class="product-details">
 
-            <div class="ver-producto__card-detalles-fila">
-                <span class="ver-producto__card-detalles-titulo">Nombre:</span>
-                <span class="ver-producto__card-detalles-nombre">
+            <div class="product-row">
+                <span class="product-label">Nombre</span>
+                <span class="product-value">
                     <%= producto.getNombre() %>
                 </span>
             </div>
 
-            <div class="ver-producto__card-detalles-fila">
-                <span class="ver-producto__card-detalles-titulo">Categoría:</span>
-                <span class="ver-producto__card-detalles-categoria">
+            <div class="product-row">
+                <span class="product-label">Categoría</span>
+                <span class="product-value">
                     <%= producto.getCategoria().getNombre() %>
                 </span>
             </div>
 
-			<div class="ver-producto__card-detalles-fila">
-            
-                <span class="ver-producto__card-detalles-titulo">Precio de costo:</span>
-                <span class="ver-producto__card-detalles-precio">
-                    $<%= String.format("%,.0f", producto.getPrecioUnitario()) %>
-                </span>
-            </div>
-			
-            <div class="ver-producto__card-detalles-fila">
-            
-                <span class="ver-producto__card-detalles-titulo">Precio de venta:</span>
-                <span class="ver-producto__card-detalles-precio">
+            <div class="product-row">
+                <span class="product-label">Precio</span>
+                <span class="product-value price">
                     $<%= String.format("%,.0f", producto.getPrecioVenta()) %>
                 </span>
             </div>
 
-            <div class="ver-producto__card-detalles-fila">
-                <span class="ver-producto__card-detalles-titulo">Material:</span>
-                <span class="ver-producto__card-detalles-material">
-                    <%= producto.getMaterial().getNombre() %>
-                </span>
-            </div>
-
-            <div class="ver-producto__card-detalles-fila">
-                <span class="ver-producto__card-detalles-titulo">Descripción:</span>
-                <span class="ver-producto__card-detalles-descripcion">
+            <div class="product-row">
+                <span class="product-label">Descripción</span>
+                <span class="product-value">
                     <%= producto.getDescripcion() != null 
                         ? producto.getDescripcion() 
                         : "Sin descripción" %>
                 </span>
             </div>
 
-            <!-- CALIFICACIÓN (estática por ahora, como en el HTML) -->
-            <div class="ver-producto__card-calificaciones">
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star-half-alt"></i>
-                <span>4.8 Reseñas</span>
-            </div>
-
-            <!-- ACCIONES -->
-            <div class="ver-producto__card-acciones">
-                <button class="boton_view_edit edit-image-btn">  
+            <div class="product-actions">
+                <button type="button" class="btn-primary">
                     <a href="<%= request.getContextPath() %>/ProductoServlet?action=editar&id=<%= producto.getProductoId() %>">
-                        <i class="fa-solid fa-pen"></i> Editar producto  
+                        <i class="fa-solid fa-pen"></i> Editar
                     </a>
-                </button>  
+                </button>
 
-                <button class="boton-confirmar eliminar"> 
+                <button type="button" class="btn-danger">
                     <a href="<%= request.getContextPath() %>/ProductoServlet?action=eliminar&id=<%= producto.getProductoId() %>">
-                        <i class="fa-solid fa-trash-can"></i> Eliminar producto 
-                    </a> 
+                        <i class="fa-solid fa-trash-can"></i> Eliminar
+                    </a>
                 </button>
             </div>
 
         </div>
-    </div>
+    </section>
 </main>
+
 
 </body>
 </html>

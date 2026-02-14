@@ -35,7 +35,7 @@
 
     <h1 class="navbar-admin__title">AAC27</h1>
 
-    <a href="<%=request.getContextPath()%>/index.jsp">
+    <a href="<%=request.getContextPath()%>/CategoriaServlet">
         <i class="fa-solid fa-house-chimney navbar-admin__home-icon"></i>
     </a>
 </nav>

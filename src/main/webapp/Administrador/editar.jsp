@@ -36,7 +36,8 @@
     <title>Editar producto</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/main.css">
-    <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/pages/Administrador/editar.css">
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/pages/Administrador/producto.css">
+
 </head>
 <body>
 
@@ -45,61 +46,76 @@
         <img src="<%= request.getContextPath() %>/assets/Imagenes/iconos/admin.png" alt="Admin">
     </div>
     <h1 class="navbar-admin__title">AAC27</h1>
-    <a href="<%= request.getContextPath() %>/Administrador/org-categorias.jsp">
-        <i class="fa-solid fa-house-chimney navbar-admin__home-icon"></i>
-    </a>
+    <a href="<%= request.getContextPath() %>/CategoriaServlet?id=<%= producto.getCategoria().getCategoriaId() %>">
+    	<i class="fa-solid fa-house-chimney navbar-admin__home-icon"></i>
+	</a>
+
 </nav>
+<main class="product-page">
+    <h1 class="product-title">Editar producto</h1>
 
-<main class="editar-producto">
-    <h1 class="editar-producto__titulo">Editar producto</h1>
-
-    <form class="editar-producto__detalles"
-          action="<%= request.getContextPath() %>/ProductoServlet"
-          method="post"
-          enctype="multipart/form-data">
-
-        <input type="hidden" name="action" value="actualizar">
-        <input type="hidden" name="productoId" value="<%= producto.getProductoId() %>">
-        <input type="hidden" name="imagenActual" value="<%= producto.getImagen() != null ? producto.getImagen() : "" %>">
-        <input type="hidden" name="categoriaId" value="<%= producto.getCategoria().getCategoriaId() %>">
-        <input type="hidden" name="stock" value="<%= producto.getStock() %>">
-
-        <div class="editar-producto__contenido">
-
-            <div class="editar-producto__imagen">
+    <section class="product-card">
+        <div class="product-image">
+            <div class="product-image__circle">
                 <img src="<%= request.getContextPath() %>/imagenes/<%= 
                         (producto.getImagen() != null && !producto.getImagen().isEmpty())
                                 ? producto.getImagen()
                                 : "default.jpg"
                 %>" alt="<%= producto.getNombre() %>">
+            </div>
+        </div>
 
-                <label for="nuevaImagen" class="editar-producto__label">
-                    <i class="fa-solid fa-pen"></i> Cambiar imagen
-                </label>
-                <input type="file" id="nuevaImagen" name="imagen" accept="image/*" hidden>
+        <form class="product-details"
+              action="<%= request.getContextPath() %>/ProductoServlet"
+              method="post"
+              enctype="multipart/form-data">
+
+            <input type="hidden" name="action" value="actualizar">
+            <input type="hidden" name="productoId" value="<%= producto.getProductoId() %>">
+            <input type="hidden" name="imagenActual" value="<%= producto.getImagen() != null ? producto.getImagen() : "" %>">
+            <input type="hidden" name="categoriaId" value="<%= producto.getCategoria().getCategoriaId() %>">
+            <input type="hidden" name="stock" value="<%= producto.getStock() %>">
+
+            <div class="product-row">
+                <label class="product-label">Nombre</label>
+                <input class="product-value" 
+                       type="text" 
+                       name="nombre"
+                       value="<%= producto.getNombre() %>" 
+                       required>
             </div>
 
-            <div class="editar-producto__campos">
-                <label for="nombre">Nombre del producto</label>
-                <input id="nombre" type="text" name="nombre" value="<%= producto.getNombre() %>" class="editar-producto__input-texto" required>
+            <div class="product-row">
+                <label class="product-label">Categoría</label>
+                <input class="product-value" 
+                       type="text" 
+                       value="<%= producto.getCategoria().getNombre() %>" 
+                       disabled>
+            </div>
 
-                <label>Categoría</label>
-                <input type="text" class="editar-producto__input-texto" value="<%= producto.getCategoria().getNombre() %>" disabled>
-
-                <!-- ✅ CORREGIDO: name="precioUnitario" para precio de costo -->
-                <label for="precioCosto">Precio de costo</label>
-                <input id="precioCosto" type="number" step="0.05" name="precioUnitario" 
+            <div class="product-row">
+                <label class="product-label">Precio de costo</label>
+                <input class="product-value price" 
+                       type="number" 
+                       step="0.05"
+                       name="precioUnitario"
                        value="<%= producto.getPrecioUnitario() != null ? producto.getPrecioUnitario().toString() : "0.00" %>" 
-                       class="editar-producto__input-texto" required>
+                       required>
+            </div>
 
-                <!-- ✅ CORREGIDO: name="precioVenta" solo para precio de venta -->
-                <label for="precioVenta">Precio de venta</label>
-                <input id="precioVenta" type="number" step="0.05" name="precioVenta" 
+            <div class="product-row">
+                <label class="product-label">Precio de venta</label>
+                <input class="product-value price" 
+                       type="number" 
+                       step="0.05"
+                       name="precioVenta"
                        value="<%= producto.getPrecioVenta() != null ? producto.getPrecioVenta().toString() : "0.00" %>" 
-                       class="editar-producto__input-texto" required>
+                       required>
+            </div>
 
-                <label for="material">Material</label>
-                <select id="material" name="materialId" class="editar-producto__input-select" required>
+            <div class="product-row">
+                <label class="product-label">Material</label>
+                <select class="product-value" name="materialId" required>
                     <% for (Material m : materiales) { %>
                         <option value="<%= m.getMaterialId() %>"
                             <%= producto.getMaterial().getMaterialId() == m.getMaterialId() ? "selected" : "" %>>
@@ -107,23 +123,29 @@
                         </option>
                     <% } %>
                 </select>
-
-                <label for="descripcion">Descripción</label>
-                <textarea id="descripcion" name="descripcion" class="editar-producto__input-area" rows="4"><%= producto.getDescripcion() != null ? producto.getDescripcion() : "" %></textarea>
-
-                <div class="editar-producto__acciones">
-                    <button type="submit" class="boton boton--principal">
-                        <i class="fa-solid fa-floppy-disk"></i> Guardar
-                    </button>
-
-                    <a href="<%= request.getContextPath() %>/CategoriaServlet?id=<%= producto.getCategoria().getCategoriaId() %>"
-                       class="boton boton--secundario">
-                        <i class="fa-solid fa-xmark"></i> Cancelar
-                    </a>
-                </div>
             </div>
-        </div>
-    </form>
+
+            <div class="product-row">
+                <label class="product-label">Descripción</label>
+                <textarea class="product-value" 
+                          name="descripcion" 
+                          rows="4"><%= producto.getDescripcion() != null ? producto.getDescripcion() : "" %></textarea>
+            </div>
+
+            <div class="product-actions">
+			    <button type="submit" class="btn-primary">
+			        <i class="fa-solid fa-floppy-disk"></i> Guardar
+			    </button>
+			
+			    <button type="button" class="btn-danger"
+			        onclick="window.location.href='<%= request.getContextPath() %>/CategoriaServlet?id=<%= producto.getCategoria().getCategoriaId() %>'">
+			        <i class="fa-solid fa-xmark"></i> Cancelar
+			    </button>
+			</div>
+
+        </form>
+    </section>
 </main>
+
 </body>
 </html>

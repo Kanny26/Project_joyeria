@@ -63,28 +63,32 @@
   --secundario-card-splash-screen: #b4b4b4;
   --color-titulo-splash-screen: #3d3d3d;
   --color-borde-imagen: #fff;
-  --color-boton-principal: #8f8f8fd0;
-  --color-boton-principal-hover: #494949ee;
-  --color-boton-secundario: #D9D9D9;
-  --color-boton-secundario-hover: #777777;
-  --color-estrellas: #000000;
-  --color-fondo-advertencia: #b9b9b9;
+  --color-boton-principal:#efefef;
+  --color-boton-principal-hover: #9177a8;
+  --color-boton-secundario: #e3b7c2b8;
+  --color-boton-secundario-hover:  #d0c4db;
+  --color-tablas: #dbe6ff85;
+  --color-estrellas: #fdff7b;
+  --color-fondo-advertencia: #ffffff;
+  --color-columnas-tabla: #baccffa1;
   
   --color-link-hover: rgb(51, 51, 51)d0;
-  --color-fondo-admin: linear-gradient(129deg,rgba(166, 136, 153, 1) 5%, rgba(214, 178, 180, 1) 73%);
+  --color-fondo-admin: rgb(229 218 229) 5%;
   --color-fondo-vendedor: #dfd2c8;
-  --color-fondo-boton: #B6C0C5;
-  --color-fondo-boton-hover: #9c9c9c;
-  --color-cards:#ACB3B8;
-  --color-fondo-circulo-hover: #b9b7b7;
-  --color-fondo-contadores: #D9D9D9;
-  --color-fondo-num-contadores:linear-gradient(145deg, #b3b3b3, #808080);
-  --borde-contadores:  rgb(107, 107, 107);
+  --color-fondo-boton: #cfcfcf;
+  --color-fondo-boton-hover: #8d8c8c;
+  --color-cards: #cfcfcf;
+  --color-fondo-circulo-hover: #908e8e;
+  --color-fondo-contadores:#f0e4f7b0;
+  --color-fondo-num-contadores:#9177a880;
+  --borde-contadores: #9177a8;
 
-  --color-fondo-caja:#cfcfcf;
-  --color-fondo-card-productos:  #D9D9D9;
+  --color-fondo-caja:#ccb7de8f;
+  --color-fondo-caja-lateral: #e3b7c2b8;
+  --color-fondo-card-productos: #a6c4d0a8;
+  --color-cards-generales: #c5c2df;
   --color-fondo-general: #8a828267;
-  --color-fondo-icono: #fff;
+  --color-fondo-icono: #eae9f7;
   --color-fondo-input: #ffffff;
   --color-fondo-inputs: #b8b8b8;
   --color-fondo-panel: #a6a6a6;
@@ -92,8 +96,11 @@
   --color-contenedores-venta: #5e5e5e;
   --color-boton-venta: #5e5e5e;
   --color-encabezado-venta: #c0b7b4;
-
-  --color-nav-admin: #E9CDD2;
+  --color-nav-admin: linear-gradient(
+        44deg,
+        rgba(227, 183, 194, 0.722),
+        #c5c2df
+    );
   --color-nav-vendedor: #99AD96;
   --color-fondo-tarjeta-hover: rgb(199, 199, 199);
   --color-fondo-tooltip: #333;
@@ -114,27 +121,26 @@
   --color-texto-principal: #000000;
   --color-texto-tooltip: #ffffff;
   --color-titulo-cards: #000000;
-  --gradiente-fondo-principal: linear-gradient(135deg,
-    #8c6c5a,
-    #a99481,
-    #c9c2ba
-  );
+  --gradiente-fondo-principal: rgb(229 218 229) 5%;
   --gradiente-panel-izquierdo: linear-gradient(
-    135deg,
-    #b2a392,
-    #6e665d,
-    #4a4a4a
-  );
-  --gradiente-panel-lateral: linear-gradient(135deg, #b2a392, #6e665d, #4a4a4a);
+        44deg,
+        #e3b7c2b8,
+        #c5c2df
+    );
+  --gradiente-panel-lateral:linear-gradient(
+        44deg,
+        #e3b7c2b8,
+        #c5c2df
+    );
   --sombra-boton-active: 0 2px 6px rgba(0, 0, 0, 0.12);
   --sombra-boton-hover: 0 8px 20px rgba(0, 0, 0, 0.3);
   --sombra-boton-normal: 0 5px 15px rgba(0, 0, 0, 0.2);
   --sombra-caja: 0 0 20px rgba(0, 0, 0, 0.3);
-  --sombra-caja-panel: 0 4px 15px rgba(0, 0, 0, 0.2);
+  --sombra-caja-panel: 0 0px 30px rgb(180 153 240 / 57%);
   --sombra-card-productos: 0 10px 25px rgba(112, 93, 93, 0.15);
 
 
-  --sombra-formulario: 0 4px 15px rgba(0, 0, 0, 0.2);
+  --sombra-formulario: 0 10px 35px rgba(190, 180, 247, 0.2);
   --sombra-icono: 0 6px 18px rgba(0, 0, 0, 0.15);
   --sombra-icono-hover: 0 8px 25px rgba(0, 0, 0, 0.2);
 
@@ -204,10 +210,10 @@
   --alto-panel-derecho-interno: 700px;
   --alto-panel-izquierdo-interno: 700px;
   --alto-card: 250px;
-  --alto-card-producto: 530px;
+  --alto-card-producto: 490px;
   --alto-img-card-producto: 160px;
 
-  --alto-iconos-admin: 250px;
+  --alto-iconos-admin: 200px;
   --alto-iconos-vendedor: 200px;
   --alto-contenedor-formulario: 500px;
   --alto-contenedor-formulario-proveedor: 600px;
@@ -230,7 +236,7 @@
   /* ===================================================== */
   /* BORDES Y RADIOS */
   /* ===================================================== */
-  --radio-borde-card: 50px;
+  --radio-borde-card: 20px;
   --borde-general: 20px;
   --radio-bordes-boton: 10px;
   --radio-bordes-boton-grande: 12px;
@@ -271,7 +277,7 @@
   --ancho-panel-derecho-interno: 420px;
   --ancho-img-card-producto:160px;
   --ancho-card-producto: 350px;
-  --ancho-iconos-admin: 250px;
+  --ancho-iconos-admin: 200px;
   --ancho-iconos-vendedor: 200px;
   --ancho-contenedor-botones: 100%;
   --ancho-contenedor-cards: 350px;

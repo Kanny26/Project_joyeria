@@ -31,10 +31,11 @@
     height: var(--alto-iconos-admin);
     border-radius: 50%;
     background: linear-gradient(
-        145deg,
-        #E9CDD2,
-        #CFA8B3
+        44deg,
+        #e3b7c2b8,
+        #c5c2df
     );
+
     display: flex;
     align-items: center;
     justify-content: center;

@@ -1,5 +1,4 @@
 @import url('../../base/global.css');
-@import url('../../Tipografias/styles.css');
 
 * {
     margin: var(--margin_padding_reset);
