@@ -11,7 +11,7 @@ public class ConexionDB {
 
     /** URL de conexión a la base de datos */
     private static final String URL =
-            "jdbc:mysql://localhost:3306/gestor_abbyac27?useSSL=false&serverTimezone=UTC";
+    "jdbc:mysql://localhost:3306/gestor_abbyac27?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true";
 
     /** Usuario de la base de datos */
     private static final String USER = "stephany_user";
