@@ -12,7 +12,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Proveedores</title>
+    <title>Gestión de Proveedores - AAC27</title>
 
     <!-- Estilos -->
     <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/main.css">
@@ -37,28 +37,30 @@
 
         <section class="iconos-contenedor">
 
-		    <article class="iconos-item">
-		        <a href="<%= request.getContextPath() %>/Administrador/proveedores/listar" class="icono-boton">
-		            <div class="icono-boton__circulo">
-		                <img class="icono-boton__img"
-		                     src="<%= request.getContextPath() %>/assets/Imagenes/iconos/listar_proveedores.png">
-		            </div>
-		            <h3 class="icono-boton__titulo">Listar proveedores</h3>
-		        </a>
-		    </article>
-		
-		    <article class="iconos-item">
-		        <a href="<%= request.getContextPath() %>/Administrador/proveedores/agregar" class="icono-boton">
-		            <div class="icono-boton__circulo">
-		                <img class="icono-boton__img"
-		                     src="<%= request.getContextPath() %>/assets/Imagenes/iconos/agregar_proveedores.png">
-		            </div>
-		            <h3 class="icono-boton__titulo">Agregar proveedores</h3>
-		        </a>
-		    </article>
-		
-		</section>
-
+            <article class="iconos-item">
+                <!-- CAMBIO AQUÍ: Apuntamos al Servlet con el parámetro accion -->
+                <a href="<%= request.getContextPath() %>/ProveedorServlet?accion=listar" class="icono-boton">
+                    <div class="icono-boton__circulo">
+                        <img class="icono-boton__img"
+                             src="<%= request.getContextPath() %>/assets/Imagenes/iconos/listar_proveedores.png">
+                    </div>
+                    <h3 class="icono-boton__titulo">Listar proveedores</h3>
+                </a>
+            </article>
+        
+            <article class="iconos-item">
+                <!-- CAMBIO AQUÍ: Apuntamos al Servlet con el parámetro accion -->
+                <a href="<%= request.getContextPath() %>/ProveedorServlet?accion=agregar" class="icono-boton">
+                    <div class="icono-boton__circulo">
+                        <img class="icono-boton__img"
+                             src="<%= request.getContextPath() %>/assets/Imagenes/iconos/agregar_proveedores.png">
+                    </div>
+                    <h3 class="icono-boton__titulo">Agregar proveedores</h3>
+                </a>
+            </article>
+        
+        </section>
     </main>
+
 </body>
 </html>

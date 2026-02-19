@@ -1,15 +1,17 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="model.Proveedor, java.util.List" %>
+<%-- Importamos las clases necesarias, incluyendo Producto --%>
+<%@ page import="model.Proveedor, model.Producto, java.util.List" %>
 
 <%
+    // Verificación de sesión
     Object admin = session.getAttribute("admin");
     if (admin == null) {
         response.sendRedirect(request.getContextPath() + "/Administrador/inicio-sesion.jsp");
         return;
     }
 
-    List<Proveedor> proveedores =
-        (List<Proveedor>) request.getAttribute("proveedores");
+    // Obtener la lista enviada por el Servlet
+    List<Proveedor> proveedores = (List<Proveedor>) request.getAttribute("proveedores");
 
     if (proveedores == null) {
         proveedores = java.util.Collections.emptyList();
@@ -59,25 +61,47 @@
             <% for (Proveedor p : proveedores) { %>
                 <tr>
                     <td data-label="Nombre"><%= p.getNombre() %></td>
-                    <td data-label="Telefono"><%= p.getTelefono() %></td>
-                    <td data-label="Correo"><%= p.getCorreo() %></td>
-
-                    <td data-label="Material">
-                        <% for (String m : p.getMateriales()) { %>
-                            <%= m %><br>
-                        <% } %>
+                    
+                    <%-- Corregido: Recorrer lista de teléfonos --%>
+                    <td data-label="Telefono">
+                        <% if(p.getTelefonos() != null) { 
+                             for(String tel : p.getTelefonos()) { %>
+                                <%= tel %><br>
+                        <%   } 
+                           } %>
                     </td>
 
+                    <%-- Corregido: Recorrer lista de correos --%>
+                    <td data-label="Correo">
+                        <% if(p.getCorreos() != null) { 
+                             for(String mail : p.getCorreos()) { %>
+                                <%= mail %><br>
+                        <%   } 
+                           } %>
+                    </td>
+
+                    <td data-label="Material">
+                        <% if(p.getMateriales() != null) {
+                             for (String m : p.getMateriales()) { %>
+                                <%= m %><br>
+                        <%   }
+                           } %>
+                    </td>
+
+                    <%-- CORRECCIÓN CRÍTICA: Cambiado String por Producto --%>
                     <td data-label="Productos">
-                        <% for (String pr : p.getProductos()) { %>
-                            <%= pr %><br>
-                        <% } %>
+                        <% if(p.getProductos() != null) {
+                             for (Producto pr : p.getProductos()) { %>
+                                <%= pr.getNombre() %><br>
+                        <%   }
+                           } %>
                     </td>
 
                     <td data-label="Fecha inicio"><%= p.getFechaInicio() %></td>
 
                     <td data-label="Estado">
-                        <form method="post" action="<%=request.getContextPath()%>/Administrador/proveedores">
+                        <%-- Corregido: El action debe ir al Servlet --%>
+                        <form method="post" action="<%=request.getContextPath()%>/ProveedorServlet">
                             <input type="hidden" name="action" value="actualizarEstado">
                             <input type="hidden" name="id" value="<%= p.getUsuarioId() %>">
                             <select name="estado" onchange="this.form.submit()">
@@ -88,7 +112,8 @@
                     </td>
 
                     <td data-label="Acciones" class="Proveedores-listar__acciones">
-                        <a href="<%=request.getContextPath()%>/Administrador/proveedores/editar?id=<%= p.getUsuarioId() %>">
+                        <%-- Corregido: El enlace de edición también debe pasar por el Servlet preferiblemente --%>
+                        <a href="<%=request.getContextPath()%>/ProveedorServlet?accion=editar&id=<%= p.getUsuarioId() %>">
                             <i class="fa-solid fa-pen-to-square"></i>
                         </a>
                     </td>
@@ -108,7 +133,10 @@
         <div class="contador-card">
             <h2>Proveedores activos</h2>
             <h3 class="contador-card__numero">
-                <%-- proveedores.stream().filter(Proveedor::isEstado).count() --%>
+                <% 
+                   long activos = proveedores.stream().filter(Proveedor::isEstado).count();
+                %>
+                <%= activos %>
             </h3>
         </div>
     </div>
