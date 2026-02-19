@@ -77,7 +77,7 @@
         <div class="cards__contenedor-content">
 
             <a href="<%=request.getContextPath()%>/ProductoServlet?action=ver&id=<%= p.getProductoId() %>">
-                <img src="<%=request.getContextPath()%>/imagenes/<%= img %>" alt="Producto">
+                <img src="<%=request.getContextPath()%>/imagen-producto/<%= p.getProductoId() %>">
             </a>
 
             <h3 class="product__code">

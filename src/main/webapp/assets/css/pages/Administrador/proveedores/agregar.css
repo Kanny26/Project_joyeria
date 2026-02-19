@@ -1,259 +1,226 @@
 @import url('../../../base/global.css');
 
-/* RESET GENERAL */
+/* =========================
+   RESET
+========================= */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+/* =========================
+   BODY
+========================= */
 body {
     font-family: var(--fuente-titulos);
     background: var(--color-fondo-admin);
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
     min-height: var(--alto-minimo-body);
     display: flex;
     justify-content: center;
     align-items: flex-start;
     padding-top: 140px;
 }
-/* PANEL PRINCIPAL */
+
+/* =========================
+   PANEL PRINCIPAL (CARD)
+========================= */
 .registro-proveedor__panel {
-    width: 850px;
+    width: 900px;
     display: flex;
     justify-content: center;
 }
 
 .registro-proveedor__formulario {
     width: 100%;
-    background: var( --color-fondo-card-productos);
-    border-radius: 12px;
-    padding: 40px;
-    box-shadow: var(--sombra-formulario);
+    background: var(--color-cards-generales);
+    border-radius: 24px;
+    padding: 50px;
+    box-shadow: 0 20px 60px rgba(0,0,0,.25);
 }
 
 .registro-proveedor__formulario-contenido {
-    width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 25px;
+    gap: 35px;
 }
 
-/* ---------- GRID APLICADO ---------- */
+/* =========================
+   TÍTULO INTERNO
+========================= */
+.registro-proveedor__formulario-contenido header h1 {
+    font-size: 1.6rem;
+    text-align: center;
+    color: var(--color-titulo-cards);
+    text-shadow: 0 4px 12px rgba(0,0,0,.25);
+}
+
+/* =========================
+   GRID FORM
+========================= */
 .registro-proveedor__form-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 25px 40px;
+    gap: 28px 45px;
 }
 
-/* Botón en ancho completo */
+/* =========================
+   GRUPO CAMPO (tipo product-row)
+========================= */
+.registro-proveedor__grupo-campo {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid #eee;
+}
+
+.registro-proveedor__grupo-campo label {
+    font-weight: 600;
+    font-size: 13px;
+    color: #475569;
+}
+
+/* =========================
+   INPUT GROUP (product-value)
+========================= */
+.registro-proveedor__input-grupo,
+.editar-proveedor__input-grupo {
+    background: #f9fafb;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 12px 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all .25s ease;
+}
+
+/* Hover */
+.registro-proveedor__input-grupo:hover,
+.editar-proveedor__input-grupo:hover {
+    border-color: #c4b5fd;
+}
+
+/* Focus */
+.registro-proveedor__input-grupo:focus-within,
+.editar-proveedor__input-grupo:focus-within {
+    background: #fff;
+    border-color: #9333ea;
+    box-shadow: 0 0 0 3px rgba(147, 51, 234, 0.15);
+}
+
+/* Inputs */
+.registro-proveedor__input-grupo input {
+    width: 100%;
+    border: none;
+    background: transparent;
+    font-size: .95rem;
+    font-family: inherit;
+    color: #2d3748;
+    outline: none;
+}
+
+/* =========================
+   ICONOS
+========================= */
+.icon-left {
+    font-size: 18px;
+    color: #64748b;
+}
+
+/* =========================
+   RADIO / CHECKBOX
+========================= */
+.radio-op,
+.editar-proveedores__estado-opciones label {
+    font-size: .9rem;
+    color: #2d3748;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.editar-proveedores__estado-opciones {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.radio-op input,
+.editar-proveedores__estado-opciones input {
+    accent-color: #9333ea;
+}
+
+/* =========================
+   BOTÓN
+========================= */
 .registro-proveedor__boton-contenedor {
     grid-column: span 2;
     display: flex;
     justify-content: center;
-}
-
-/* CAMPOS */
-.registro-proveedor__grupo-campo {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-}
-
-.registro-proveedor__grupo-campo label {
-    font-size: 12px;
-    font-weight: 500;
-    color: var(--color-texto-general);
-}
-
-/* INPUTS */
-.registro-proveedor__input-grupo,
-.editar-proveedor__input-grupo {
-    background: var(--color-fondo-input);
-    padding: 12px 14px;
-    border-radius: 10px;
-    display: flex;
-    gap: 10px;
-    align-items: center;
-}
-
-.registro-proveedor__input-grupo input {
-    flex: 1;
-    border: none;
-    background: transparent;
-    font-size: 14px;
-}
-
-/* ICONOS */
-.icon-left {
-    font-size: 18px;
-    color: var(--color-iconos);
-}
-
-/* RADIO / CHECKBOX */
-.editar-proveedores__estado-opciones {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-}
-
-.radio-op {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-
-/* FOOTER FORMULARIO */
-.registro-proveedor__link {
-    text-align: center;
     margin-top: 20px;
 }
 
-.registro-proveedor__link p {
-    font-size: 14px;
-}
-
-.registro-proveedor__link a {
+.registro-proveedor__boton-contenedor button {
+    background-color: var(--color-boton-principal);
     color: var(--color-texto-principal);
-    text-decoration: none;
-    font-weight: bold;
+    padding: 14px 48px;
+    border-radius: 14px;
+    border: none;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .3s ease;
 }
 
-
-.registro-proveedor__link a:hover {
-    color: var(--color-link-hover);
+.registro-proveedor__boton-contenedor button:hover {
+    background-color: var(--color-boton-principal-hover);
+    transform: translateY(-2px);
 }
 
-/* ============================================================
-   MEDIA QUERIES - DESKTOP FIRST
-   ============================================================ */
-
-/* Pantallas extra grandes (>= 1440px) */
-@media (min-width: 1440px) {
-    .registro-proveedor__panel {
-        width: 950px;
-    }
-    
-    .registro-proveedor__formulario {
-        padding: 45px;
-    }
-}
-
-/* Escritorio – estilos base (>= 1025px) - Sin cambios, estilos base */
-
-/* Tablet (769px a 1024px) */
-@media (min-width: 769px) and (max-width: 1024px) {
-    body {
-        padding-top: 120px;
-    }
-    
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 1024px) {
     .registro-proveedor__panel {
         width: 90%;
-        max-width: 750px;
     }
-    
-    .registro-proveedor__formulario {
-        padding: 35px;
-    }
-    
+
     .registro-proveedor__form-grid {
         grid-template-columns: 1fr;
-        gap: 20px;
     }
-    
+
     .registro-proveedor__boton-contenedor {
         grid-column: span 1;
     }
 }
 
-/* Phablet (481px a 768px) */
-@media (min-width: 481px) and (max-width: 768px) {
+@media (max-width: 768px) {
     body {
-        padding-top: 100px;
+        padding-top: 110px;
     }
-    
-    .registro-proveedor__panel {
-        width: 95%;
-        max-width: 650px;
-    }
-    
+
     .registro-proveedor__formulario {
-        padding: 30px 25px;
-    }
-    
-    .registro-proveedor__form-grid {
-        grid-template-columns: 1fr;
-        gap: 18px;
-    }
-    
-    .registro-proveedor__boton-contenedor {
-        grid-column: span 1;
-    }
-    
-    .registro-proveedor__input-grupo {
-        padding: 10px 12px;
-    }
-    
-    .registro-proveedor__input-grupo input {
-        font-size: 13px;
+        padding: 35px 28px;
     }
 }
 
-/* Móvil pequeño (máx. 480px) */
 @media (max-width: 480px) {
     body {
-        padding-top: 80px;
+        padding-top: 90px;
     }
-    
-    .registro-proveedor__panel {
-        width: 100%;
-        padding: 0 10px;
-    }
-    
+
     .registro-proveedor__formulario {
-        padding: 20px 15px;
-        border-radius: 10px;
+        padding: 25px 18px;
+        border-radius: 16px;
     }
-    
-    .registro-proveedor__form-grid {
-        grid-template-columns: 1fr;
-        gap: 15px;
-    }
-    
-    .registro-proveedor__boton-contenedor {
-        grid-column: span 1;
-    }
-    
+
     .registro-proveedor__grupo-campo label {
-        font-size: 11px;
+        font-size: 12px;
     }
-    
-    .registro-proveedor__input-grupo {
-        padding: 10px 12px;
-        border-radius: 8px;
-    }
-    
+
     .registro-proveedor__input-grupo input {
-        font-size: 12px;
-    }
-    
-    .icon-left {
-        font-size: 16px;
-    }
-    
-    .radio-op {
-        font-size: 12px;
-    }
-    
-    .registro-proveedor__link {
-        margin-top: 15px;
-    }
-    
-    .registro-proveedor__link p {
-        font-size: 12px;
+        font-size: .85rem;
     }
 }
-
-

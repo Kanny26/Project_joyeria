@@ -29,7 +29,7 @@ body {
 
 /* Card individual */
 .postventa-cards__card {
-    background-color: var(--color-fondo-tarjeta-hover);
+    background-color: var(--color-fondo-card-productos);
     padding: 20px;
     border-radius: 15px;
     border: 1px solid #ccc; 

@@ -40,13 +40,13 @@ body {
 }
 
 .reclamo__tabla th {
-    background-color: var(--color-fondo-tarjeta-hover);
+    background-color: var(--color-columnas-tabla);
     font-weight: 700;
     font-size: var(--tamano-label);
 }
 
 .reclamo__tabla tbody {
-    background-color: var(--color-fondo-tarjeta-hover);
+    background-color: var(--color-tablas);
     font-weight: 500;
     font-size: 16px;
 }
