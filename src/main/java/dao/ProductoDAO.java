@@ -1,19 +1,14 @@
 package dao;
-
 import config.ConexionDB;
 import model.Categoria;
 import model.Material;
 import model.Producto;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ProductoDAO {
 
-    /* ═══════════════════════════════════════════════
-       LISTAR POR CATEGORÍA
-    ═══════════════════════════════════════════════ */
     public List<Producto> listarPorCategoria(int categoriaId) {
         List<Producto> lista = new ArrayList<>();
         String sql = """
@@ -33,15 +28,12 @@ public class ProductoDAO {
             ps.setInt(1, categoriaId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) lista.add(mapearProducto(rs));
-        } catch (SQLException e) {
+        } catch (Exception e) { // ✅
             e.printStackTrace();
         }
         return lista;
     }
 
-    /* ═══════════════════════════════════════════════
-       BÚSQUEDA GLOBAL
-    ═══════════════════════════════════════════════ */
     public List<Producto> buscarGlobal(String termino) {
         List<Producto> lista = new ArrayList<>();
         String sql = """
@@ -66,15 +58,12 @@ public class ProductoDAO {
             for (int i = 1; i <= 5; i++) ps.setString(i, like);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) lista.add(mapearProducto(rs));
-        } catch (SQLException e) {
+        } catch (Exception e) { // ✅
             e.printStackTrace();
         }
         return lista;
     }
 
-    /* ═══════════════════════════════════════════════
-       BÚSQUEDA EN CATEGORÍA
-    ═══════════════════════════════════════════════ */
     public List<Producto> buscarEnCategoria(int categoriaId, String termino) {
         List<Producto> lista = new ArrayList<>();
         String sql = """
@@ -99,15 +88,12 @@ public class ProductoDAO {
             ps.setString(4, like);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) lista.add(mapearProducto(rs));
-        } catch (SQLException e) {
+        } catch (Exception e) { // ✅
             e.printStackTrace();
         }
         return lista;
     }
 
-    /* ═══════════════════════════════════════════════
-       OBTENER POR ID
-    ═══════════════════════════════════════════════ */
     public Producto obtenerPorId(int id) {
         String sql = """
             SELECT p.producto_id, p.codigo, p.nombre, p.descripcion, p.stock,
@@ -125,15 +111,12 @@ public class ProductoDAO {
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) return mapearProducto(rs);
-        } catch (SQLException e) {
+        } catch (Exception e) { // ✅
             e.printStackTrace();
         }
         return null;
     }
 
-    /* ═══════════════════════════════════════════════
-       GUARDAR
-    ═══════════════════════════════════════════════ */
     public void guardar(Producto p, int proveedorId) {
         String sql = """
             INSERT INTO Producto
@@ -164,16 +147,12 @@ public class ProductoDAO {
                 }
                 ps.executeUpdate();
             }
-        } catch (SQLException e) {
+        } catch (Exception e) { // ✅
             e.printStackTrace();
         }
     }
 
-    /* ═══════════════════════════════════════════════
-       ACTUALIZAR
-    ═══════════════════════════════════════════════ */
     public void actualizar(Producto p) {
-        // Si hay imagen nueva actualiza los bytes, si no los conserva
         String sql = p.getImagenData() != null
             ? """
                 UPDATE producto
@@ -188,10 +167,8 @@ public class ProductoDAO {
                     precio_venta=?, material_id=?, imagen=?
                 WHERE producto_id=?
               """;
-
         try (Connection con = ConexionDB.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
-
             ps.setString(1, p.getNombre());
             ps.setString(2, p.getDescripcion());
             ps.setInt(3, p.getStock());
@@ -199,7 +176,6 @@ public class ProductoDAO {
             ps.setBigDecimal(5, p.getPrecioVenta());
             ps.setInt(6, p.getMaterial().getMaterialId());
             ps.setString(7, p.getImagen());
-
             if (p.getImagenData() != null) {
                 ps.setBytes(8, p.getImagenData());
                 ps.setString(9, p.getImagenTipo());
@@ -207,31 +183,23 @@ public class ProductoDAO {
             } else {
                 ps.setInt(8, p.getProductoId());
             }
-
             ps.executeUpdate();
-
-        } catch (SQLException e) {
+        } catch (Exception e) { // ✅
             e.printStackTrace();
         }
     }
 
-    /* ═══════════════════════════════════════════════
-       ELIMINAR
-    ═══════════════════════════════════════════════ */
     public void eliminar(int id) {
         String sql = "DELETE FROM producto WHERE producto_id = ?";
         try (Connection con = ConexionDB.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, id);
             ps.executeUpdate();
-        } catch (SQLException e) {
+        } catch (Exception e) { // ✅
             e.printStackTrace();
         }
     }
 
-    /* ═══════════════════════════════════════════════
-       GENERAR CÓDIGO
-    ═══════════════════════════════════════════════ */
     private String generarCodigoProducto(Connection con, int categoriaId) throws SQLException {
         String prefijo = "";
         String sqlPrefijo = "SELECT UPPER(LEFT(nombre, 3)) FROM categoria WHERE categoria_id = ?";
@@ -240,7 +208,6 @@ public class ProductoDAO {
             ResultSet rs = ps.executeQuery();
             if (rs.next()) prefijo = rs.getString(1);
         }
-
         String sqlUltimo = """
             SELECT codigo FROM producto
             WHERE categoria_id = ?
@@ -258,9 +225,6 @@ public class ProductoDAO {
         return prefijo + String.format("%02d", siguiente);
     }
 
-    /* ═══════════════════════════════════════════════
-       MAPEO
-    ═══════════════════════════════════════════════ */
     private Producto mapearProducto(ResultSet rs) throws SQLException {
         Producto p = new Producto();
         p.setProductoId(rs.getInt("producto_id"));
@@ -274,17 +238,14 @@ public class ProductoDAO {
         p.setImagenData(rs.getBytes("imagen_data"));
         p.setImagenTipo(rs.getString("imagen_tipo"));
         p.setFechaRegistro(rs.getDate("fecha_registro").toLocalDate());
-
         Categoria c = new Categoria();
         c.setCategoriaId(rs.getInt("categoria_id"));
         c.setNombre(rs.getString("categoria_nombre"));
         p.setCategoria(c);
-
         Material m = new Material();
         m.setMaterialId(rs.getInt("material_id"));
         m.setNombre(rs.getString("material_nombre"));
         p.setMaterial(m);
-
         return p;
     }
 }
