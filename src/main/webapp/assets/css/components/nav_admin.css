@@ -56,14 +56,67 @@
     font-weight: var(--peso-fuente-titulo-principal);
     color: var(--color-texto-principal);
 }
-
-/* Icono de casa */
-.navbar-admin__home-icon {
-    font-size: var(--tamano-icono-home);
-    color: var(--color-iconos-principal);
-    cursor: pointer;
+.navbar-admin__home-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    padding: 7px 16px 7px 8px;
+    border-radius: 50px;
+    border: 1.5px solid rgba(255, 255, 255, 0.25);
+    background: rgba(255, 255, 255, 0.10);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    transition: background 0.25s ease,
+                border-color 0.25s ease,
+                box-shadow 0.25s ease,
+                transform 0.2s ease;
 }
 
+.navbar-admin__home-link:hover {
+    background: rgba(255, 255, 255, 0.22);
+    border-color: rgba(255, 255, 255, 0.50);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    transform: translateY(-1px);
+}
+
+/* Círculo que envuelve el ícono */
+.navbar-admin__home-icon-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.20);
+    flex-shrink: 0;
+    transition: background 0.25s ease, transform 0.25s ease;
+}
+
+.navbar-admin__home-link:hover .navbar-admin__home-icon-wrap {
+    background: rgba(255, 255, 255, 0.35);
+    transform: translateX(-2px);
+}
+
+/* Ícono flecha */
+.navbar-admin__home-icon-wrap i {
+    font-size: 30px; 
+    color: var(--color-iconos-principal, #fff);
+}
+
+/* Texto */
+.navbar-admin__home-text {
+    font-size: 24px; /* o 24px si lo quieres más grande */
+    font-weight: 600;
+    color: var(--color-texto-principal, #fff);
+    white-space: nowrap;
+    letter-spacing: 0.2px;
+    transition: color 0.25s ease;
+}
+
+.navbar-admin__home-link:hover .navbar-admin__home-text {
+    color: #ffffff;
+}
 /* ============================================================
    MEDIA QUERIES - DESKTOP FIRST
    ============================================================ */

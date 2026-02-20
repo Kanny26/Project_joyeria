@@ -19,25 +19,28 @@
 
     <link rel="stylesheet" href="<%=request.getContextPath()%>/assets/css/main.css">
     <link rel="stylesheet" href="<%=request.getContextPath()%>/assets/css/pages/Administrador/org-categorias.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 
 <body>
 
-
 <nav class="navbar-admin">
     <div class="navbar-admin__catalogo">
-        <img src="<%=request.getContextPath()%>/assets/Imagenes/iconos/admin.png" alt="Admin">
-        <h2>Volver al inicio</h2>
+        <img src="<%= request.getContextPath() %>/assets/Imagenes/iconos/admin.png" alt="Admin">
     </div>
     <h1 class="navbar-admin__title">AAC27</h1>
-
-    <div class="navbar-admin__usuario">
-        <i class="fas fa-user"></i>
-        <span><%= admin.getNombre() %></span>
-    </div>
-
-    <a href="<%=request.getContextPath()%>/index.jsp">
-        <i class="fa-solid fa-house-chimney navbar-admin__home-icon"></i>
+    
+    <a href="<%=request.getContextPath()%>/Administrador/admin-principal.jsp"
+   class="navbar-admin__home-link">
+	   
+	    <span class="navbar-admin__home-icon-wrap">
+	    
+	        <i class="fa-solid fa-arrow-left"></i>
+	        
+		    <span class="navbar-admin__home-text">Volver atras</span>
+		    
+		    <i class="fa-solid fa-house-chimney"></i>
+	    </span>
     </a>
 </nav>
 

@@ -1,33 +1,154 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mensaje de Éxito</title>
-    <link rel="stylesheet" href="../../assets/css/main.css" />
-    <link rel="stylesheet" href="../../assets/css/pages/Administrador/mensajesexito.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Oswald:wght@700&family=Roboto:wght@900&display=swap" rel="stylesheet">
+    <style>
+        body { margin: 0; padding: 20px; display: flex; justify-content: center; background-color: #f0f0f0; }
+        
+        /* Contenedor Principal */
+        .banner {
+            width: 700px;
+            height: 300px;
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
+                        url('https://images.unsplash.com/photo-1540932239986-30128078f3c5?q=80&w=1000&auto=format&fit=crop'); /* Textura madera/fondo */
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid #333;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            font-family: 'Arial', sans-serif;
+            color: white;
+        }
 
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+        /* Imágenes Laterales */
+        .img-box {
+            position: absolute;
+            top: 55px;
+            border: 3px solid #4CAF50;
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+        }
+        .img-left { left: 15px; width: 160px; height: 160px; }
+        .img-right { right: 15px; width: 140px; height: 160px; }
+        .img-box img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* Textos Superiores */
+        .header-text {
+            position: absolute;
+            top: 15px;
+            width: 100%;
+            text-align: center;
+        }
+        .lucero {
+            font-size: 14px;
+            color: #FFD700;
+            font-weight: bold;
+            margin-bottom: -5px;
+            text-transform: uppercase;
+        }
+        .artesanias {
+            font-family: 'Oswald', sans-serif;
+            font-size: 28px;
+            background: linear-gradient(to bottom, #ff00cc, #3333ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* Título Principal */
+        .gutierrez {
+            font-family: 'Dancing Script', cursive;
+            font-size: 72px;
+            color: #e60000;
+            text-align: center;
+            margin-top: 55px;
+            text-shadow: 3px 3px 0px #fff, -2px -2px 0px #fff, 2px -2px 0px #fff, -2px 2px 0px #fff, 5px 5px 10px rgba(0,0,0,0.8);
+            z-index: 10;
+        }
+
+        /* Información Central */
+        .info-container {
+            text-align: center;
+            margin-top: -10px;
+        }
+        .restauracion {
+            font-family: 'Roboto', sans-serif;
+            font-size: 19px;
+            color: #a0faff;
+            text-transform: uppercase;
+            -webkit-text-stroke: 0.5px white;
+            margin-bottom: 5px;
+        }
+        .cojines {
+            font-size: 16px;
+            font-weight: bold;
+            color: #ffffff;
+        }
+
+        /* Franja Inferior */
+        .footer {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 45px;
+            background: rgba(0,0,0,0.9);
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            font-size: 15px;
+            font-weight: bold;
+            border-top: 2px solid #FFD700;
+        }
+        .contact-item { display: flex; align-items: center; color: #FFD700; }
+        .whatsapp-icon {
+            width: 20px;
+            height: 20px;
+            background: #25D366;
+            border-radius: 50%;
+            margin-right: 8px;
+            display: inline-block;
+        }
+        .direccion { color: white; }
+
+    </style>
 </head>
 <body>
-  <div class="mensaje-exito">
-    <!-- Panel izquierdo -->
-    <aside class="mensaje-exito__panel-izquierdo">
-      <div class="mensaje-exito__caja-logo">
-        <img class="mensaje-exito__imagen-logo" src="../../assets/Imagenes/Logo.png" alt="Logo de la joyería">
-      </div>
-    </aside>
 
-    <!-- Panel derecho: mensaje de éxito -->
-    <main class="mensaje-exito__panel-derecho">
-      <section class="mensaje-exito__caja-mensaje">
-        <h1>¡Registrado con exito!</h1>
-        <img src="../../assets/Imagenes/iconos/pulgar-arriba.png" alt="Pulgar arriba" class="icon__pulgar-arriba">
-        <button type="submit" class="btn"> 
-          <a href="../Administrador/admin-principal.html">Iniciar Sesión </a>
-        </button> 
-      </section>
-    </main>
-  </div>
+    <div class="banner">
+        <div class="img-box img-left">
+            <img src="https://images.unsplash.com/photo-1594041300220-418579d9e4a3?q=80&w=400&auto=format&fit=crop" alt="Muebles Ratán">
+        </div>
+        <div class="img-box img-right">
+            <img src="https://images.unsplash.com/photo-1513506494266-102673033f7c?q=80&w=400&auto=format&fit=crop" alt="Lámparas Ratán">
+        </div>
+
+        <div class="header-text">
+            <div class="lucero">LUCERO</div>
+            <div class="artesanias">ARTESANÍAS</div>
+        </div>
+
+        <div class="gutierrez">Gutiérrez</div>
+
+        <div class="info-container">
+            <div class="restauracion">Fabricación y restauración de muebles a medida</div>
+            <div class="cojines">Cojines y lámparas en ratán</div>
+        </div>
+
+        <div class="footer">
+            <div class="contact-item">
+                <span class="whatsapp-icon"></span>
+                312-6984570 - 323-7112814
+            </div>
+            <div class="direccion">
+                Cra 11 #18N-90 – B. La Esperanza
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>
