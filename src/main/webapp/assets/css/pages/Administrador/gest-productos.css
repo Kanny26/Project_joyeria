@@ -52,25 +52,126 @@ body {
     background: var(--color-boton-secundario-hover);
 }
 
+/* ==============================
+   BARRA DE BÚSQUEDA + FILTRO
+   (se reemplaza solo .cards__busqueda
+    y sus hijos; el resto no cambia)
+============================== */
 .cards__busqueda {
     position: relative;
+    display: flex;
+    align-items: center;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: border-color 0.2s, box-shadow 0.2s;
 }
 
+.cards__busqueda:focus-within {
+    border-color: var(--color-acento, #9333ea);
+    box-shadow: 0 0 0 3px rgba(147, 51, 234, 0.10);
+}
+
+/* ── Selector de filtro ── */
+.cards__busqueda-filtro {
+    appearance: none;
+    -webkit-appearance: none;
+    border: none;
+    border-right: 1px solid #e2e8f0;
+    outline: none;
+    background: #f8fafc;
+    padding: 0 26px 0 12px;
+    height: 42px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--color-acento, #9333ea);
+    cursor: pointer;
+    flex-shrink: 0;
+    /* flecha SVG lila */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%239333ea'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 7px center;
+    background-color: #f8fafc;
+}
+.cards__busqueda-filtro:focus { outline: none; }
+
+/* ── Separador (reservado, oculto por defecto) ── */
+.cards__busqueda-sep { display: none; }
+
+/* ── Input de texto ── */
 .cards__busqueda-input {
     width: 320px;
     height: 42px;
-    padding: 10px 35px 10px 12px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
+    padding: 10px 58px 10px 12px; /* espacio para X + lupa */
+    border: none;
+    outline: none;
+    background: transparent;
+    font-family: inherit;
     font-size: 14px;
+    color: #1e293b;
+    min-width: 0;
 }
+.cards__busqueda-input::placeholder { color: #94a3b8; }
 
+/* ── Ícono lupa ── */
 .cards__busqueda-icono {
     position: absolute;
     right: 10px;
     top: 50%;
     transform: translateY(-50%);
-    opacity: 0.6;
+    opacity: 0.5;
+    pointer-events: none;
+    font-size: 14px;
+}
+
+/* ── Botón X para limpiar búsqueda ── */
+.cards__busqueda-clear {
+    position: absolute;
+    right: 30px;           /* antes de la lupa */
+    top: 50%;
+    transform: translateY(-50%);
+    color: #94a3b8;
+    font-size: 13px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    padding: 3px 5px;
+    border-radius: 50%;
+    transition: color 0.2s, background 0.2s;
+    z-index: 1;
+    background: #fff;
+}
+.cards__busqueda-clear:hover {
+    color: #dc2626;
+    background: #fee2e2;
+}
+
+/* ==============================
+   INFO DE BÚSQUEDA ACTIVA
+============================== */
+.cards__busqueda-info {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 13px;
+    color: #64748b;
+    margin-bottom: 18px;    /* sustituye parte del margin-bottom de barra-superior */
+    margin-top: -32px;      /* sube un poco para acercarse a la barra */
+}
+.cards__busqueda-info i {
+    color: var(--color-acento, #9333ea);
+}
+.cards__busqueda-badge {
+    display: inline-block;
+    background: #f3e8ff;
+    color: var(--color-acento, #9333ea);
+    padding: 1px 10px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: capitalize;
 }
 
 /* ==============================
@@ -193,6 +294,21 @@ body {
 }
 
 /* ==============================
+   STOCK BAJO  (≤ 3 unidades)
+============================== */
+.stock-bajo {
+    color: #dc2626 !important;
+    font-weight: 600 !important;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+/* quita la opacidad reducida que hereda de .product__stock */
+.product__stock .stock-bajo {
+    opacity: 1 !important;
+}
+
+/* ==============================
    ICONOS
 ============================== */
 .iconos {
@@ -214,12 +330,47 @@ body {
 }
 
 /* ==============================
+   ESTADO VACÍO
+============================== */
+.cards__vacio {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 20px;
+    gap: 16px;
+    color: #64748b;
+    text-align: center;
+}
+.cards__vacio i {
+    font-size: 3.5rem;
+    color: #cbd5e1;
+}
+.cards__vacio p {
+    font-size: 1rem;
+    margin: 0;
+}
+
+/* ==============================
    RESPONSIVE
 ============================== */
 @media (max-width: 768px) {
 
     body {
         padding-top: 100px;
+    }
+
+    .cards__barra-superior {
+        flex-wrap: wrap;
+    }
+
+    .cards__busqueda {
+        width: 100%;
+    }
+
+    .cards__busqueda-input {
+        width: 100%;
     }
 
     .cards__contenedor {
@@ -246,5 +397,15 @@ body {
     .cards__contenedor-content {
         width: 100%;
         max-width: 320px;
+    }
+
+    .cards__busqueda-filtro {
+        font-size: 12px;
+        padding-left: 8px;
+        padding-right: 20px;
+    }
+
+    .cards__busqueda-input {
+        font-size: 13px;
     }
 }

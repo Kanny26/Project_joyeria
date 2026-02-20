@@ -1,34 +1,48 @@
+/* ══════════════════════════════════════════════════════
+   estilos_productos.css
+   Usado por: agregar_producto.jsp, ver-producto.jsp,
+              editar.jsp, eliminar.jsp
+══════════════════════════════════════════════════════ */
+
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
 
 :root {
-    --color-primario: #9333ea;
-    --color-peligro: #dc2626;
-    --bg-light: #f8fafc;
-    --text-main: #1e293b;
-    --text-muted: #64748b;
+    --color-primario:      #9333ea;
+    --color-primario-dark: #7e22ce;
+    --color-peligro:       #dc2626;
+    --color-peligro-dark:  #b91c1c;
+    --bg-light:       #f8fafc;
+    --text-main:      #1e293b;
+    --text-muted:     #64748b;
+    --border-default: #e2e8f0;
+    --border-invalid: #dc2626;
+    --radius: 10px;
 }
+
+*, *::before, *::after { box-sizing: border-box; }
 
 body {
     font-family: 'Poppins', sans-serif;
     background-color: #fff;
     margin: 0;
     padding: 0;
+    color: var(--text-main);
 }
 
-/* ── Navbar ────────────────────────────────────────────── */
-.navbar-admin {
-    position: relative;
-    z-index: 100;
-}
+/* ════════════════════════════════════════════════════
+   NAVBAR
+════════════════════════════════════════════════════ */
+.navbar-admin { position: relative; z-index: 100; }
 
-/* ── Page Header ────────────────────────────────────────── */
+/* ════════════════════════════════════════════════════
+   PAGE HEADER
+════════════════════════════════════════════════════ */
 .page-header {
     width: 100%;
     text-align: center;
     padding: 36px 0 10px;
     margin: 0;
 }
-
 .product-title {
     font-size: 2rem;
     color: var(--text-main);
@@ -36,7 +50,200 @@ body {
     margin: 0;
 }
 
-/* ── Layout Principal ───────────────────────────────────── */
+/* ════════════════════════════════════════════════════
+   ALERTAS DE SERVIDOR
+════════════════════════════════════════════════════ */
+.alert-server,
+.alert-server-edit {
+    color: #991b1b;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: var(--radius);
+    padding: 12px 16px;
+    margin-bottom: 18px;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.alert-server-edit {
+    max-width: 1000px;
+    margin: 0 auto 16px;
+}
+
+/* ════════════════════════════════════════════════════
+   FORMULARIO AGREGAR PRODUCTO
+════════════════════════════════════════════════════ */
+.form-product-container {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 32px 24px 60px;
+}
+.form-product-container__title {
+    font-size: 1.55rem;
+    font-weight: 700;
+    color: var(--text-main);
+    margin: 0 0 20px;
+}
+
+/* Grid */
+.form-product__row {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 18px;
+    margin-bottom: 18px;
+}
+.form-product__group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+.form-product__label {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+}
+
+/* Contenedor relativo para la burbuja */
+.input-wrap {
+    position: relative;
+}
+
+/* Inputs / Selects / Textarea */
+.form-product__input {
+    width: 100%;
+    padding: 10px 14px;
+    border: 2px solid var(--border-default);
+    border-radius: var(--radius);
+    font-family: inherit;
+    font-size: 0.93rem;
+    background: var(--bg-light);
+    color: var(--text-main);
+    transition: border-color 0.2s;
+    appearance: none;
+    -webkit-appearance: none;
+}
+.form-product__input:focus {
+    outline: none;
+    border-color: var(--color-primario);
+}
+input[type=file].form-product__input {
+    padding: 8px 12px;
+    cursor: pointer;
+}
+.form-product__input.invalid {
+    border-color: var(--border-invalid) !important;
+}
+
+/* ════════════════════════════════════════════════════
+   BURBUJA DE ERROR ESTILO BROWSER NATIVO
+   Aparece debajo del campo, con triángulo superior
+   y fondo blanco con borde azul como el browser.
+════════════════════════════════════════════════════ */
+.bubble-error {
+    display: none;               /* oculta por defecto */
+    position: absolute;
+    top: calc(100% + 8px);       /* justo debajo del campo */
+    left: 0;
+    z-index: 500;
+
+    align-items: flex-start;
+    gap: 8px;
+
+    background: #fff;
+    border: 1.5px solid #9bbff4;
+    border-radius: 6px;
+    padding: 9px 13px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+    max-width: 280px;
+    min-width: 180px;
+
+    font-size: 0.82rem;
+    color: #1e293b;
+    line-height: 1.4;
+    white-space: normal;
+    pointer-events: none;
+}
+
+.bubble-error.visible {
+    display: flex;
+}
+
+/* Triángulo superior apuntando hacia el campo */
+.bubble-error::before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: 14px;
+    border-left:  7px solid transparent;
+    border-right: 7px solid transparent;
+    border-bottom: 8px solid #9bbff4;
+}
+.bubble-error::after {
+    content: '';
+    position: absolute;
+    top: -6px;
+    left: 15px;
+    border-left:  6px solid transparent;
+    border-right: 6px solid transparent;
+    border-bottom: 6px solid #fff;
+}
+
+/* Ícono amarillo de advertencia */
+.bubble-icon {
+    color: #f59e0b;
+    font-size: 1rem;
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+/* ════════════════════════════════════════════════════
+   PREVIEW IMAGEN PEQUEÑO (agregar producto)
+   Contenedor con tamaño fijo — la imagen NO se desborda.
+════════════════════════════════════════════════════ */
+.img-preview-wrap {
+    display: none;
+    align-items: center;
+    gap: 10px;
+    margin-top: 8px;
+    overflow: hidden;          /* ← clave para no desbordarse */
+}
+.img-preview-wrap.visible {
+    display: flex;
+}
+.img-preview-wrap img {
+    width:  48px;
+    height: 48px;
+    min-width: 48px;           /* evita que se encoja */
+    max-width: 48px;           /* evita que crezca */
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid var(--border-default);
+    flex-shrink: 0;
+    display: block;
+}
+.img-preview-wrap span {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 160px;
+}
+
+/* Acciones del formulario */
+.form-product__actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 24px;
+    flex-wrap: wrap;
+}
+
+/* ════════════════════════════════════════════════════
+   LAYOUT CARD (ver, editar, eliminar)
+════════════════════════════════════════════════════ */
 .product-page {
     display: flex;
     justify-content: center;
@@ -44,25 +251,22 @@ body {
     padding: 24px 20px 40px;
     min-height: 70vh;
 }
-
 .full-width {
     width: 100%;
     display: flex;
     justify-content: center;
 }
-
-/* ── Card ───────────────────────────────────────────────── */
 .product-card {
     display: flex;
     width: min(1000px, 100%);
     background: #fff;
     border-radius: 24px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.08);
     overflow: hidden;
     border: 1px solid #f1f5f9;
 }
 
-/* ── Sección Imagen ─────────────────────────────────────── */
+/* Izquierda: imagen */
 .product-image {
     flex: 1;
     background: var(--bg-light);
@@ -72,19 +276,17 @@ body {
     justify-content: center;
     padding: 50px 40px;
 }
-
 .product-image__circle {
     width: 300px;
     height: 300px;
     border-radius: 50%;
     background: #fff;
     padding: 8px;
-    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.10);
+    box-shadow: 0 8px 28px rgba(0,0,0,0.10);
     overflow: hidden;
     margin-bottom: 24px;
     flex-shrink: 0;
 }
-
 .product-image__circle img {
     width: 100%;
     height: 100%;
@@ -92,7 +294,7 @@ body {
     border-radius: 50%;
 }
 
-/* ── Sección Detalles ───────────────────────────────────── */
+/* Derecha: detalles */
 .product-details {
     flex: 1.2;
     padding: 48px 52px;
@@ -100,11 +302,7 @@ body {
     flex-direction: column;
     gap: 4px;
 }
-
-.product-row {
-    margin-bottom: 18px;
-}
-
+.product-row { margin-bottom: 18px; }
 .product-label {
     display: block;
     font-size: 0.70rem;
@@ -114,20 +312,16 @@ body {
     letter-spacing: 1px;
     margin-bottom: 5px;
 }
-
-/* Texto informativo (solo lectura) */
 .product-info-text {
     font-size: 1rem;
     color: var(--text-main);
     margin: 0;
     padding: 9px 14px;
     background: var(--bg-light);
-    border-radius: 10px;
+    border-radius: var(--radius);
     display: inline-block;
     min-width: 180px;
 }
-
-/* Precio — texto destacado, NO botón */
 .price {
     display: inline-block;
     font-size: 1.4rem;
@@ -135,28 +329,28 @@ body {
     color: var(--color-primario);
     padding: 6px 14px;
     background: #f3e8ff;
-    border-radius: 10px;
+    border-radius: var(--radius);
 }
 
-/* Inputs / Selects (formularios editar / agregar) */
+/* Inputs de editar */
 .product-value {
     width: 100%;
     padding: 10px 16px;
-    border-radius: 10px;
-    border: 2px solid #e2e8f0;
+    border-radius: var(--radius);
+    border: 2px solid var(--border-default);
     font-size: 0.95rem;
     font-family: inherit;
     background: var(--bg-light);
-    box-sizing: border-box;
+    color: var(--text-main);
     transition: border-color 0.2s;
+    appearance: none;
 }
-
 .product-value:focus {
     outline: none;
     border-color: var(--color-primario);
 }
 
-/* ── Botones de acción ──────────────────────────────────── */
+/* Acciones de la card */
 .product-actions {
     display: flex;
     gap: 12px;
@@ -165,13 +359,18 @@ body {
     flex-wrap: wrap;
 }
 
+/* ════════════════════════════════════════════════════
+   BOTONES (lila = guardar/principal, rojo = cancelar/peligro)
+════════════════════════════════════════════════════ */
 .btn-primary,
-.btn-danger {
+.btn-danger,
+.btn-guardar,
+.btn-cancelar {
     padding: 11px 22px;
-    border-radius: 10px;
-    border: none;
-    font-weight: 600;
+    border-radius: var(--radius);
+    font-family: inherit;
     font-size: 0.9rem;
+    font-weight: 600;
     cursor: pointer;
     text-align: center;
     text-decoration: none;
@@ -179,27 +378,43 @@ body {
     align-items: center;
     justify-content: center;
     gap: 7px;
-    transition: background 0.25s, transform 0.2s, color 0.2s;
+    transition: background 0.25s, color 0.2s, border-color 0.2s, transform 0.2s;
     white-space: nowrap;
 }
 
-.no-underline { text-decoration: none; }
+.btn-primary,
+.btn-guardar {
+    background: var(--color-primario);
+    color: #fff;
+    border: none;
+}
+.btn-primary:hover,
+.btn-guardar:hover {
+    background: var(--color-primario-dark);
+    transform: translateY(-2px);
+}
 
-.btn-primary { background: var(--color-primario); color: #fff; }
-.btn-primary:hover { background: #7e22ce; transform: translateY(-2px); }
-
-.btn-danger {
+.btn-danger,
+.btn-cancelar {
     background: #fff;
     color: var(--color-peligro);
     border: 1.5px solid #fee2e2;
 }
-.btn-danger:hover { background: var(--color-peligro); color: #fff; }
+.btn-danger:hover,
+.btn-cancelar:hover {
+    background: var(--color-peligro);
+    color: #fff;
+    border-color: var(--color-peligro);
+    transform: translateY(-2px);
+}
 
-/* ── Upload personalizado (editar) ──────────────────────── */
+.no-underline { text-decoration: none; }
+
+/* ════════════════════════════════════════════════════
+   UPLOAD PERSONALIZADO (editar)
+════════════════════════════════════════════════════ */
 .custom-file-upload { text-align: center; }
-
 #imagenInput { display: none; }
-
 .btn-upload {
     background: var(--color-primario);
     color: #fff;
@@ -212,8 +427,7 @@ body {
     gap: 7px;
     transition: background 0.2s;
 }
-.btn-upload:hover { background: #7e22ce; }
-
+.btn-upload:hover { background: var(--color-primario-dark); }
 .file-name {
     display: block;
     margin-top: 8px;
@@ -221,7 +435,9 @@ body {
     color: var(--text-muted);
 }
 
-/* ── Alert / Confirmar eliminar ─────────────────────────── */
+/* ════════════════════════════════════════════════════
+   ALERT BOX (confirmar eliminar)
+════════════════════════════════════════════════════ */
 .alert-box {
     background: #fef2f2;
     border: 1px solid #fee2e2;
@@ -235,76 +451,24 @@ body {
 .alert-box i { color: var(--color-peligro); font-size: 1.8rem; margin-top: 2px; }
 .alert-box p { margin: 0; color: #991b1b; line-height: 1.5; }
 
-
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+/* ════════════════════════════════════════════════════
+   QUITAR FLECHAS EN NUMBER
+════════════════════════════════════════════════════ */
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 input[type=number] { -moz-appearance: textfield; }
 
-/* Error creado dinámicamente por JS */
-.field-error-msg {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    color: #dc2626;
-    font-size: 0.78rem;
-    margin-top: 5px;
-}
-
-/* Borde rojo al campo inválido */
-.form-product__input.invalid {
-    border: 2px solid #dc2626 !important;
-}
-
-/* Banner error servidor */
-.alert-server {
-    color: #991b1b;
-    background: #fef2f2;
-    border: 1px solid #fecaca;
-    border-radius: 10px;
-    padding: 12px 16px;
-    margin-bottom: 18px;
-    font-size: 0.9rem;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-/* Preview imagen pequeño */
-.img-preview-wrap {
-    margin-top: 10px;
-    display: none;
-    align-items: center;
-    gap: 10px;
-}
-.img-preview-wrap.visible { display: flex; }
-.img-preview-wrap img {
-    width: 48px;
-    height: 48px;
-    object-fit: cover;
-    border-radius: 50%;
-    border: 2px solid #e2e8f0;
-    flex-shrink: 0;
-}
-.img-preview-wrap span {
-    font-size: 0.78rem;
-    color: #64748b;
-    word-break: break-all;
-}
-
-
-/* ── RESPONSIVE ─────────────────────────────────────────── */
+/* ════════════════════════════════════════════════════
+   RESPONSIVE
+════════════════════════════════════════════════════ */
 @media (max-width: 820px) {
-    .product-card {
-        flex-direction: column;
-    }
-    .product-image {
-        padding: 36px 24px 28px;
-    }
-    .product-image__circle {
-        width: 220px;
-        height: 220px;
-    }
-    .product-details {
-        padding: 32px 28px;
-    }
+    .product-card { flex-direction: column; }
+    .product-image { padding: 36px 24px 28px; }
+    .product-image__circle { width: 220px; height: 220px; }
+    .product-details { padding: 32px 28px; }
+}
+@media (max-width: 640px) {
+    .form-product__row { grid-template-columns: 1fr; }
+    .form-product__actions { flex-direction: column; }
+    .btn-guardar, .btn-cancelar { width: 100%; justify-content: center; }
 }

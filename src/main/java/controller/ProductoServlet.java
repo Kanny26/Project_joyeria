@@ -40,11 +40,7 @@ public class ProductoServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        Administrador admin = (Administrador) request.getSession().getAttribute("admin");
-        if (admin == null) {
-            response.sendRedirect(request.getContextPath() + "/Administrador/inicio-sesion.jsp");
-            return;
-        }
+        if (!estaAutenticado(request, response)) return;
 
         String action = request.getParameter("action");
         if (action == null || action.trim().isEmpty()) {
@@ -53,20 +49,11 @@ public class ProductoServlet extends HttpServlet {
         }
 
         switch (action) {
-            case "nuevo":
-                mostrarFormularioNuevo(request, response);
-                break;
-            case "ver":
-                verProducto(request, response);
-                break;
-            case "editar":
-                mostrarFormularioEditar(request, response);
-                break;
-            case "confirmarEliminar":
-                confirmarEliminar(request, response);
-                break;
-            default:
-                response.sendRedirect(request.getContextPath() + "/CategoriaServlet");
+            case "nuevo"           -> mostrarFormularioNuevo(request, response);
+            case "ver"             -> verProducto(request, response);
+            case "editar"          -> mostrarFormularioEditar(request, response);
+            case "confirmarEliminar" -> confirmarEliminar(request, response);
+            default                -> response.sendRedirect(request.getContextPath() + "/CategoriaServlet");
         }
     }
 
@@ -77,11 +64,7 @@ public class ProductoServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        Administrador admin = (Administrador) request.getSession().getAttribute("admin");
-        if (admin == null) {
-            response.sendRedirect(request.getContextPath() + "/Administrador/inicio-sesion.jsp");
-            return;
-        }
+        if (!estaAutenticado(request, response)) return;
 
         String action = request.getParameter("action");
         if (action == null || action.trim().isEmpty()) {
@@ -90,18 +73,24 @@ public class ProductoServlet extends HttpServlet {
         }
 
         switch (action) {
-            case "guardar":
-                guardarProducto(request, response);
-                break;
-            case "actualizar":
-                actualizarProducto(request, response);
-                break;
-            case "eliminar":
-                eliminarProductoPost(request, response);
-                break;
-            default:
-                response.sendRedirect(request.getContextPath() + "/CategoriaServlet");
+            case "guardar"    -> guardarProducto(request, response);
+            case "actualizar" -> actualizarProducto(request, response);
+            case "eliminar"   -> eliminarProductoPost(request, response);
+            default           -> response.sendRedirect(request.getContextPath() + "/CategoriaServlet");
         }
+    }
+
+    /* ═══════════════════════════════════════════════
+       AUTENTICACIÓN (helper)
+    ═══════════════════════════════════════════════ */
+    private boolean estaAutenticado(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        Administrador admin = (Administrador) request.getSession().getAttribute("admin");
+        if (admin == null) {
+            response.sendRedirect(request.getContextPath() + "/Administrador/inicio-sesion.jsp");
+            return false;
+        }
+        return true;
     }
 
     /* ═══════════════════════════════════════════════
@@ -132,17 +121,8 @@ public class ProductoServlet extends HttpServlet {
     private void verProducto(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        String idStr = request.getParameter("id");
-        if (idStr == null || !idStr.matches("\\d+")) {
-            response.sendRedirect(request.getContextPath() + "/CategoriaServlet");
-            return;
-        }
-
-        Producto producto = productoDAO.obtenerPorId(Integer.parseInt(idStr));
-        if (producto == null) {
-            response.sendRedirect(request.getContextPath() + "/CategoriaServlet");
-            return;
-        }
+        Producto producto = obtenerProductoPorParam(request, response);
+        if (producto == null) return;
 
         request.setAttribute("producto", producto);
         request.getRequestDispatcher("/Administrador/ver-producto.jsp")
@@ -152,19 +132,10 @@ public class ProductoServlet extends HttpServlet {
     private void mostrarFormularioEditar(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        String idStr = request.getParameter("id");
-        if (idStr == null || !idStr.matches("\\d+")) {
-            response.sendRedirect(request.getContextPath() + "/CategoriaServlet");
-            return;
-        }
+        Producto producto = obtenerProductoPorParam(request, response);
+        if (producto == null) return;
 
-        Producto producto = productoDAO.obtenerPorId(Integer.parseInt(idStr));
-        if (producto == null) {
-            response.sendRedirect(request.getContextPath() + "/CategoriaServlet");
-            return;
-        }
-
-        request.setAttribute("producto", producto);
+        request.setAttribute("producto",   producto);
         request.setAttribute("materiales", materialDAO.listarMateriales());
         request.getRequestDispatcher("/Administrador/editar.jsp")
                .forward(request, response);
@@ -173,21 +144,27 @@ public class ProductoServlet extends HttpServlet {
     private void confirmarEliminar(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        String idStr = request.getParameter("id");
-        if (idStr == null || !idStr.matches("\\d+")) {
-            response.sendRedirect(request.getContextPath() + "/CategoriaServlet");
-            return;
-        }
-
-        Producto producto = productoDAO.obtenerPorId(Integer.parseInt(idStr));
-        if (producto == null) {
-            response.sendRedirect(request.getContextPath() + "/CategoriaServlet");
-            return;
-        }
+        Producto producto = obtenerProductoPorParam(request, response);
+        if (producto == null) return;
 
         request.setAttribute("producto", producto);
         request.getRequestDispatcher("/Administrador/eliminar.jsp")
                .forward(request, response);
+    }
+
+    /** Extrae el producto a partir del parámetro "id"; redirige si no existe. */
+    private Producto obtenerProductoPorParam(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        String idStr = request.getParameter("id");
+        if (idStr == null || !idStr.matches("\\d+")) {
+            response.sendRedirect(request.getContextPath() + "/CategoriaServlet");
+            return null;
+        }
+        Producto p = productoDAO.obtenerPorId(Integer.parseInt(idStr));
+        if (p == null) {
+            response.sendRedirect(request.getContextPath() + "/CategoriaServlet");
+        }
+        return p;
     }
 
     /* ═══════════════════════════════════════════════
@@ -200,15 +177,15 @@ public class ProductoServlet extends HttpServlet {
         Administrador admin = (Administrador) request.getSession().getAttribute("admin");
         Producto p = construirProductoDesdeRequest(request);
 
+        /* Validar que la imagen fue enviada al crear */
+        if (p.getImagenData() == null || p.getImagenData().length == 0) {
+            reenviarFormularioNuevo(request, response, p, "Selecciona una imagen para el producto.");
+            return;
+        }
+
         String error = validarProducto(p);
         if (error != null) {
-            Categoria categoria = categoriaDAO.obtenerPorId(p.getCategoria().getCategoriaId());
-            request.setAttribute("error", error);
-            request.setAttribute("producto", p);
-            request.setAttribute("materiales", materialDAO.listarMateriales());
-            request.setAttribute("categoria", categoria);
-            request.getRequestDispatcher("/Administrador/agregar_producto.jsp")
-                   .forward(request, response);
+            reenviarFormularioNuevo(request, response, p, error);
             return;
         }
 
@@ -217,25 +194,43 @@ public class ProductoServlet extends HttpServlet {
                 + "/CategoriaServlet?id=" + p.getCategoria().getCategoriaId());
     }
 
- // Dentro de actualizarProducto
+    private void reenviarFormularioNuevo(HttpServletRequest request, HttpServletResponse response,
+                                          Producto p, String error)
+            throws ServletException, IOException {
+        Categoria categoria = categoriaDAO.obtenerPorId(p.getCategoria().getCategoriaId());
+        request.setAttribute("error",     error);
+        request.setAttribute("producto",  p);
+        request.setAttribute("materiales", materialDAO.listarMateriales());
+        request.setAttribute("categoria", categoria);
+        request.getRequestDispatcher("/Administrador/agregar_producto.jsp")
+               .forward(request, response);
+    }
+
     private void actualizarProducto(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
 
         String idStr = request.getParameter("productoId");
+        if (idStr == null || !idStr.matches("\\d+")) {
+            response.sendRedirect(request.getContextPath() + "/CategoriaServlet");
+            return;
+        }
+
         Producto p = construirProductoDesdeRequest(request);
         p.setProductoId(Integer.parseInt(idStr));
 
         String error = validarProducto(p);
         if (error != null) {
-            request.setAttribute("error", error);
-            request.setAttribute("producto", p); // Devolvemos el producto para persistir datos
+            request.setAttribute("error",     error);
+            request.setAttribute("producto",  p);
             request.setAttribute("materiales", materialDAO.listarMateriales());
-            request.getRequestDispatcher("/Administrador/editar.jsp").forward(request, response);
+            request.getRequestDispatcher("/Administrador/editar.jsp")
+                   .forward(request, response);
             return;
         }
 
         productoDAO.actualizar(p);
-        response.sendRedirect(request.getContextPath() + "/CategoriaServlet?id=" + p.getCategoria().getCategoriaId());
+        response.sendRedirect(request.getContextPath()
+                + "/CategoriaServlet?id=" + p.getCategoria().getCategoriaId());
     }
 
     private void eliminarProductoPost(HttpServletRequest request, HttpServletResponse response)
@@ -259,9 +254,8 @@ public class ProductoServlet extends HttpServlet {
     }
 
     /* ═══════════════════════════════════════════════
-       CONSTRUCCIÓN DEL PRODUCTO
+       CONSTRUCCIÓN DEL PRODUCTO DESDE REQUEST
     ═══════════════════════════════════════════════ */
-
     private Producto construirProductoDesdeRequest(HttpServletRequest request)
             throws IOException, ServletException {
 
@@ -292,29 +286,21 @@ public class ProductoServlet extends HttpServlet {
                 ? Integer.parseInt(matIdStr) : 0);
         p.setMaterial(m);
 
-        /* ── Imagen: se guarda como BLOB en la BD ──────────────────────
-           - Los bytes van a imagen_data  → cualquier PC la ve
-           - El nombre va  a imagen       → para mostrar en formularios
-           - El tipo MIME va a imagen_tipo → para servirla correctamente
-        ────────────────────────────────────────────────────────────── */
+        /* Imagen como BLOB en BD */
         Part filePart = request.getPart("imagen");
 
         if (filePart != null && filePart.getSize() > 0) {
-
             String fileName = Paths.get(filePart.getSubmittedFileName())
                                    .getFileName()
                                    .toString();
-
             byte[] bytes = filePart.getInputStream().readAllBytes();
-
             p.setImagen(fileName);
             p.setImagenData(bytes);
             p.setImagenTipo(filePart.getContentType());
-
         } else {
             // Sin imagen nueva → conservar nombre actual (bytes ya están en BD)
             p.setImagen(request.getParameter("imagenActual"));
-            p.setImagenData(null);  // null = no actualizar bytes en BD
+            p.setImagenData(null);   // null = no actualizar bytes en BD
             p.setImagenTipo(null);
         }
 
@@ -324,7 +310,6 @@ public class ProductoServlet extends HttpServlet {
     /* ═══════════════════════════════════════════════
        VALIDACIÓN
     ═══════════════════════════════════════════════ */
-
     private String validarProducto(Producto p) {
 
         if (p.getNombre() == null || p.getNombre().trim().isEmpty())
@@ -336,11 +321,14 @@ public class ProductoServlet extends HttpServlet {
         if (p.getStock() < 0)
             return "El stock no puede ser negativo.";
 
-        if (p.getPrecioUnitario().compareTo(BigDecimal.ZERO) <= 0)
-            return "El precio unitario debe ser mayor a 0.";
+        if (p.getPrecioUnitario() == null || p.getPrecioUnitario().compareTo(BigDecimal.ZERO) <= 0)
+            return "El precio de costo debe ser mayor a 0.";
+
+        if (p.getPrecioVenta() == null || p.getPrecioVenta().compareTo(BigDecimal.ZERO) <= 0)
+            return "El precio de venta debe ser mayor a 0.";
 
         if (p.getPrecioVenta().compareTo(p.getPrecioUnitario()) < 0)
-            return "El precio de venta no puede ser menor al precio unitario.";
+            return "El precio de venta no puede ser menor al precio de costo.";
 
         if (p.getCategoria() == null || p.getCategoria().getCategoriaId() <= 0)
             return "Debe seleccionar una categoría válida.";

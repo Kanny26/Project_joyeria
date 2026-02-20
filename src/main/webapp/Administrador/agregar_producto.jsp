@@ -22,9 +22,8 @@
     <meta charset="UTF-8">
     <title>Agregar producto - AAC27</title>
     <link rel="stylesheet" href="<%=request.getContextPath()%>/assets/css/main.css">
-    <link rel="stylesheet" href="<%=request.getContextPath()%>/assets/css/pages/Administrador/agregar_producto.css">
+    <link rel="stylesheet" href="<%=request.getContextPath()%>/assets/css/pages/Administrador/producto.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    
 </head>
 <body>
 
@@ -40,7 +39,7 @@
 
 <main class="form-product-container">
     <h2 class="form-product-container__title">
-        Nuevo producto — <%= categoria.getNombre() %>
+        Nuevo producto &mdash; <%= categoria.getNombre() %>
     </h2>
 
     <% if (error != null) { %>
@@ -59,55 +58,99 @@
 
         <div class="form-product__row">
 
+            <!-- NOMBRE -->
             <div class="form-product__group">
                 <label class="form-product__label" for="nombre">Nombre *</label>
-                <input id="nombre" type="text" name="nombre"
-                       class="form-product__input"
-                       value="<%= pRecuperado != null ? pRecuperado.getNombre() : "" %>">
+                <div class="input-wrap">
+                    <input id="nombre" type="text" name="nombre"
+                           class="form-product__input"
+                           value="<%= pRecuperado != null ? pRecuperado.getNombre() : "" %>"
+                           autocomplete="off">
+                    <div class="bubble-error" id="err-nombre">
+                        <span class="bubble-icon"><i class="fa-solid fa-circle-exclamation"></i></span>
+                        <span>El nombre es obligatorio.</span>
+                    </div>
+                </div>
             </div>
 
+            <!-- PRECIO COSTO -->
             <div class="form-product__group">
                 <label class="form-product__label" for="precioUnitario">Precio de costo *</label>
-                <input id="precioUnitario" type="number" name="precioUnitario"
-                       class="form-product__input" step="0.01" min="0.01"
-                       value="<%= pRecuperado != null ? pRecuperado.getPrecioUnitario() : "" %>">
+                <div class="input-wrap">
+                    <input id="precioUnitario" type="number" name="precioUnitario"
+                           class="form-product__input" step="0.01" min="0.01"
+                           value="<%= pRecuperado != null ? pRecuperado.getPrecioUnitario() : "" %>">
+                    <div class="bubble-error" id="err-precioUnitario">
+                        <span class="bubble-icon"><i class="fa-solid fa-circle-exclamation"></i></span>
+                        <span>Ingresa un precio de costo mayor a 0.</span>
+                    </div>
+                </div>
             </div>
 
+            <!-- PRECIO VENTA -->
             <div class="form-product__group">
                 <label class="form-product__label" for="precioVenta">Precio de venta *</label>
-                <input id="precioVenta" type="number" name="precioVenta"
-                       class="form-product__input" step="0.01" min="0.01"
-                       value="<%= pRecuperado != null ? pRecuperado.getPrecioVenta() : "" %>">
+                <div class="input-wrap">
+                    <input id="precioVenta" type="number" name="precioVenta"
+                           class="form-product__input" step="0.01" min="0.01"
+                           value="<%= pRecuperado != null ? pRecuperado.getPrecioVenta() : "" %>">
+                    <div class="bubble-error" id="err-precioVenta">
+                        <span class="bubble-icon"><i class="fa-solid fa-circle-exclamation"></i></span>
+                        <span>El precio de venta debe ser mayor a 0 y no menor al precio de costo.</span>
+                    </div>
+                </div>
             </div>
 
+            <!-- STOCK -->
             <div class="form-product__group">
                 <label class="form-product__label" for="stock">Stock *</label>
-                <input id="stock" type="number" name="stock"
-                       class="form-product__input" min="0"
-                       value="<%= pRecuperado != null ? pRecuperado.getStock() : "" %>">
+                <div class="input-wrap">
+                    <input id="stock" type="number" name="stock"
+                           class="form-product__input" min="0"
+                           value="<%= pRecuperado != null ? pRecuperado.getStock() : "" %>">
+                    <div class="bubble-error" id="err-stock">
+                        <span class="bubble-icon"><i class="fa-solid fa-circle-exclamation"></i></span>
+                        <span>El stock es obligatorio y no puede ser negativo.</span>
+                    </div>
+                </div>
             </div>
 
+            <!-- MATERIAL -->
             <div class="form-product__group">
                 <label class="form-product__label" for="materialId">Material *</label>
-                <select id="materialId" name="materialId" class="form-product__input">
-                    <option value="">Seleccione material</option>
-                    <% for (Material m : materiales) {
-                        boolean isSelected = (pRecuperado != null
-                                && pRecuperado.getMaterial() != null
-                                && pRecuperado.getMaterial().getMaterialId() == m.getMaterialId());
-                    %>
-                        <option value="<%= m.getMaterialId() %>" <%= isSelected ? "selected" : "" %>>
-                            <%= m.getNombre() %>
-                        </option>
-                    <% } %>
-                </select>
+                <div class="input-wrap">
+                    <select id="materialId" name="materialId" class="form-product__input">
+                        <option value="">Seleccione material</option>
+                        <% for (Material m : materiales) {
+                            boolean isSelected = (pRecuperado != null
+                                    && pRecuperado.getMaterial() != null
+                                    && pRecuperado.getMaterial().getMaterialId() == m.getMaterialId());
+                        %>
+                            <option value="<%= m.getMaterialId() %>" <%= isSelected ? "selected" : "" %>>
+                                <%= m.getNombre() %>
+                            </option>
+                        <% } %>
+                    </select>
+                    <div class="bubble-error" id="err-materialId">
+                        <span class="bubble-icon"><i class="fa-solid fa-circle-exclamation"></i></span>
+                        <span>Selecciona un material.</span>
+                    </div>
+                </div>
             </div>
 
+            <!-- IMAGEN -->
             <div class="form-product__group">
                 <label class="form-product__label" for="imagen">Imagen del producto *</label>
-                <input id="imagen" type="file" name="imagen"
-                       class="form-product__input" accept="image/*"
-                       onchange="previsualizarImagen(this)">
+                <div class="input-wrap">
+                    <input id="imagen" type="file" name="imagen"
+                           class="form-product__input" accept="image/*"
+                           onchange="previsualizarImagen(this)">
+                    <div class="bubble-error" id="err-imagen">
+                        <span class="bubble-icon"><i class="fa-solid fa-circle-exclamation"></i></span>
+                        <span>Selecciona una imagen para el producto.</span>
+                    </div>
+                </div>
+                <!-- Preview PEQUEÑO -->
                 <div class="img-preview-wrap" id="previewWrap">
                     <img id="imgPreview" src="#" alt="Vista previa">
                     <span id="imgNombre"></span>
@@ -116,17 +159,24 @@
 
         </div>
 
+        <!-- DESCRIPCIÓN -->
         <div class="form-product__group">
             <label class="form-product__label" for="descripcion">Descripción *</label>
-            <textarea id="descripcion" name="descripcion"
-                      class="form-product__input" rows="4"><%= pRecuperado != null ? pRecuperado.getDescripcion() : "" %></textarea>
+            <div class="input-wrap">
+                <textarea id="descripcion" name="descripcion"
+                          class="form-product__input" rows="4"><%= pRecuperado != null ? pRecuperado.getDescripcion() : "" %></textarea>
+                <div class="bubble-error" id="err-descripcion">
+                    <span class="bubble-icon"><i class="fa-solid fa-circle-exclamation"></i></span>
+                    <span>La descripción es obligatoria.</span>
+                </div>
+            </div>
         </div>
 
         <div class="form-product__actions">
-            <button type="submit" class="form-product__btn">
+            <button type="submit" class="btn-guardar">
                 <i class="fa-solid fa-floppy-disk"></i> Guardar producto
             </button>
-            <button type="button" class="btn-danger"
+            <button type="button" class="btn-cancelar"
                     onclick="window.location.href='<%=request.getContextPath()%>/CategoriaServlet?id=<%= categoria.getCategoriaId() %>'">
                 <i class="fa-solid fa-xmark"></i> Cancelar
             </button>
@@ -135,27 +185,11 @@
 </main>
 
 <script>
-/* ══════════════════════════════════════════════════════════
-   Los mensajes de error NO existen en el HTML.
-   JS los CREA al detectar el error y los ELIMINA al corregir.
-══════════════════════════════════════════════════════════ */
+const campos = ['nombre','precioUnitario','precioVenta','stock','materialId','imagen','descripcion'];
 
-/* Mensajes por campo */
-const mensajes = {
-    nombre:         'El nombre es obligatorio.',
-    precioUnitario: 'Ingresa un precio de costo mayor a 0.',
-    precioVenta:    'El precio de venta debe ser mayor a 0 y no menor al precio de costo.',
-    stock:          'El stock es obligatorio y no puede ser negativo.',
-    materialId:     'Selecciona un material.',
-    imagen:         'Selecciona una imagen para el producto.',
-    descripcion:    'La descripción es obligatoria.'
-};
-
-/* Reglas de validación */
 function esValido(id) {
     switch (id) {
-        case 'nombre':
-            return document.getElementById('nombre').value.trim() !== '';
+        case 'nombre':         return document.getElementById('nombre').value.trim() !== '';
         case 'precioUnitario': {
             const v = parseFloat(document.getElementById('precioUnitario').value);
             return !isNaN(v) && v > 0;
@@ -169,97 +203,56 @@ function esValido(id) {
             const s = document.getElementById('stock').value;
             return s !== '' && parseInt(s) >= 0;
         }
-        case 'materialId':
-            return document.getElementById('materialId').value !== '';
-        case 'imagen': {
-            const img = document.getElementById('imagen');
-            return img.files && img.files.length > 0;
-        }
-        case 'descripcion':
-            return document.getElementById('descripcion').value.trim() !== '';
-        default:
-            return true;
+        case 'materialId':   return document.getElementById('materialId').value !== '';
+        case 'imagen':       return document.getElementById('imagen').files?.length > 0;
+        case 'descripcion':  return document.getElementById('descripcion').value.trim() !== '';
+        default: return true;
     }
 }
 
-/* Crear alerta de error debajo del campo (solo si no existe ya) */
-function mostrarError(id) {
-    const campo = document.getElementById(id);
-    campo.classList.add('invalid');
-
-    // Si ya existe el mensaje, no lo duplicamos
-    const existente = campo.parentElement.querySelector('.field-error-msg');
-    if (existente) return;
-
-    const msg = document.createElement('span');
-    msg.className = 'field-error-msg';
-    msg.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> ' + mensajes[id];
-
-    // Insertar después del campo (o después del previewWrap si es imagen)
-    const referencia = id === 'imagen'
-        ? document.getElementById('previewWrap')
-        : campo;
-    referencia.insertAdjacentElement('afterend', msg);
+function mostrarBurbuja(id) {
+    document.getElementById(id).classList.add('invalid');
+    document.getElementById('err-' + id).classList.add('visible');
 }
 
-/* Eliminar alerta y quitar borde rojo */
-function quitarError(id) {
-    const campo = document.getElementById(id);
-    campo.classList.remove('invalid');
-
-    const msg = campo.parentElement.querySelector('.field-error-msg');
-    if (msg) msg.remove();
+function ocultarBurbuja(id) {
+    document.getElementById(id).classList.remove('invalid');
+    document.getElementById('err-' + id).classList.remove('visible');
 }
 
-/* Al corregir un campo que ya tenía error → quitarlo */
-Object.keys(mensajes).forEach(id => {
+campos.forEach(id => {
     const el = document.getElementById(id);
     if (!el) return;
-
-    const limpiarSiOk = () => {
-        if (esValido(id)) quitarError(id);
-    };
-
-    el.addEventListener('input',  limpiarSiOk);
-    el.addEventListener('change', limpiarSiOk);
+    const check = () => { if (esValido(id)) ocultarBurbuja(id); };
+    el.addEventListener('input',  check);
+    el.addEventListener('change', check);
 });
 
-/* Preview de imagen */
 function previsualizarImagen(input) {
     const wrap    = document.getElementById('previewWrap');
     const preview = document.getElementById('imgPreview');
     const nombre  = document.getElementById('imgNombre');
-
     if (input.files && input.files[0]) {
         const reader = new FileReader();
         reader.onload = e => {
-            preview.src = e.target.result;
+            preview.src        = e.target.result;
             nombre.textContent = input.files[0].name;
             wrap.classList.add('visible');
         };
         reader.readAsDataURL(input.files[0]);
-        quitarError('imagen');
+        ocultarBurbuja('imagen');
     }
 }
 
-/* Al enviar: validar todo y mostrar errores solo de los campos incompletos */
 document.getElementById('formProducto').addEventListener('submit', function(e) {
-    let hayError = false;
-
-    Object.keys(mensajes).forEach(id => {
-        if (esValido(id)) {
-            quitarError(id);
-        } else {
-            mostrarError(id);
-            hayError = true;
-        }
-    });
-
-    if (hayError) {
-        e.preventDefault();
-        const primerInvalido = this.querySelector('.invalid');
-        if (primerInvalido) {
-            primerInvalido.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    campos.forEach(id => ocultarBurbuja(id));
+    for (const id of campos) {
+        if (!esValido(id)) {
+            e.preventDefault();
+            mostrarBurbuja(id);
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'center' });
+            document.getElementById(id).focus();
+            break;
         }
     }
 });
