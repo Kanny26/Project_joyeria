@@ -1,6 +1,5 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
 <%@ page import="model.Producto" %>
-
 <%
     Producto producto = (Producto) request.getAttribute("producto");
     if (producto == null) {
@@ -8,76 +7,50 @@
         return;
     }
 %>
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Eliminar producto</title>
-
+    <title>Eliminar Producto - AAC27</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="<%=request.getContextPath()%>/assets/css/main.css" />
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/main.css">
     <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/pages/Administrador/producto.css">
 </head>
 <body>
-
 <nav class="navbar-admin"> 
-    <div class="navbar-admin__catalogo"> 
-        <img src="<%=request.getContextPath()%>/assets/Imagenes/iconos/admin.png" alt="Admin"> 
-    </div> 
+    <div class="navbar-admin__catalogo"> <img src="<%=request.getContextPath()%>/assets/Imagenes/iconos/admin.png" alt="Admin"> </div> 
     <h1 class="navbar-admin__title">AAC27</h1> 
     <a href="<%= request.getContextPath() %>/CategoriaServlet?id=<%= producto.getCategoria().getCategoriaId() %>">
-    	<i class="fa-solid fa-house-chimney navbar-admin__home-icon"></i>
-	</a>
-
+        <i class="fa-solid fa-house-chimney navbar-admin__home-icon"></i>
+    </a>
 </nav>
-<main class="product-page product-page--delete">
-    <h1 class="product-title">Eliminar producto</h1>
 
+<div class="page-header">
+    <h1 class="product-title" style="color: #dc2626;">Eliminar Producto</h1>
+</div>
+
+<main class="product-page">
     <section class="product-card">
         <div class="product-image">
             <div class="product-image__circle">
-                <img src="<%=request.getContextPath()%>/imagenes/<%= 
-                    (producto.getImagen() != null && !producto.getImagen().isEmpty())
-                        ? producto.getImagen()
-                        : "default.jpg"
-                %>" alt="<%= producto.getNombre() %>">
+                <img src="<%= request.getContextPath() %>/imagen-producto/<%= producto.getProductoId() %>" alt="Producto">
             </div>
         </div>
-
-        <div class="product-details">
-
-            <p class="product-value">
-                ⚠ <strong>Advertencia:</strong> esta acción eliminará el producto
-                de forma permanente y no se puede deshacer.
-            </p>
-
-            <div class="product-actions">
-
-                <!-- ELIMINAR -->
-                <form action="<%=request.getContextPath()%>/ProductoServlet" method="post">
+        <div class="product-details" style="justify-content: center;">
+            <div class="alert-box">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                <p><strong>Advertencia:</strong> Esta acción eliminará a <b><%= producto.getNombre() %></b> permanentemente. Esta acción no se puede deshacer.</p>
+            </div>
+            <div class="product-actions" style="margin-top: 30px;">
+                <form action="<%=request.getContextPath()%>/ProductoServlet" method="post" style="flex: 1;">
                     <input type="hidden" name="action" value="eliminar">
                     <input type="hidden" name="id" value="<%= producto.getProductoId() %>">
-
-                    <button type="submit" class="btn-danger">
-                        <i class="fa-solid fa-trash-can"></i> Eliminar definitivamente
-                    </button>
+                    <button type="submit" class="btn-danger" style="width: 100%;">Eliminar Definitivamente</button>
                 </form>
-
-                <!-- CANCELAR -->
-                <button type="button" class="btn-primary"
-                    onclick="window.location.href='<%=request.getContextPath()%>/ProductoServlet?action=ver&id=<%= producto.getProductoId() %>'">
-                    <i class="fa-solid fa-xmark"></i> Cancelar
-                </button>
-
+                <button type="button" class="btn-primary" style="flex: 1;" onclick="window.history.back()">Cancelar</button>
             </div>
-
         </div>
     </section>
 </main>
-
-
 </body>
 </html>
-

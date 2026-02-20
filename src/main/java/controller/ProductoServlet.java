@@ -217,31 +217,25 @@ public class ProductoServlet extends HttpServlet {
                 + "/CategoriaServlet?id=" + p.getCategoria().getCategoriaId());
     }
 
+ // Dentro de actualizarProducto
     private void actualizarProducto(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
 
         String idStr = request.getParameter("productoId");
-        if (idStr == null || !idStr.matches("\\d+")) {
-            response.sendRedirect(request.getContextPath() + "/CategoriaServlet");
-            return;
-        }
-
         Producto p = construirProductoDesdeRequest(request);
         p.setProductoId(Integer.parseInt(idStr));
 
         String error = validarProducto(p);
         if (error != null) {
             request.setAttribute("error", error);
-            request.setAttribute("producto", p);
+            request.setAttribute("producto", p); // Devolvemos el producto para persistir datos
             request.setAttribute("materiales", materialDAO.listarMateriales());
-            request.getRequestDispatcher("/Administrador/editar.jsp")
-                   .forward(request, response);
+            request.getRequestDispatcher("/Administrador/editar.jsp").forward(request, response);
             return;
         }
 
         productoDAO.actualizar(p);
-        response.sendRedirect(request.getContextPath()
-                + "/CategoriaServlet?id=" + p.getCategoria().getCategoriaId());
+        response.sendRedirect(request.getContextPath() + "/CategoriaServlet?id=" + p.getCategoria().getCategoriaId());
     }
 
     private void eliminarProductoPost(HttpServletRequest request, HttpServletResponse response)
