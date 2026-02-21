@@ -1,152 +1,96 @@
 package controller;
 
-import dao.VentaDAO;
-import dao.CasoPostventaDAO;
-import model.Venta;
-import model.CasoPostventa;
-
-import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-
+import dao.CompraDAO;
+import model.Compra;
+import model.Proveedor;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.*;
+import javax.servlet.*;
 import java.io.IOException;
-import java.sql.SQLException;
-import java.util.List;
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 
-/**
- * Controlador principal del módulo de Ventas.
- *
- * Rutas manejadas:
- *  GET  /Administrador/ventas/listar       → listar_ventas.jsp
- *  GET  /Administrador/ventas/ver          → ver_venta.jsp      (?id=X)
- *  GET  /Administrador/ventas/editar       → editar_venta.jsp   (?id=X)
- *  POST /Administrador/ventas/editar       → actualiza estado y redirige
- *  GET  /Administrador/ventas/postventa    → postventa.jsp
- *  GET  /Administrador/ventas/caso         → casos_postventa.jsp (?id=X)
- *  POST /Administrador/ventas/caso         → actualiza estado caso y redirige
- */
-@WebServlet(urlPatterns = {
-    "/Administrador/ventas/listar",
-    "/Administrador/ventas/ver",
-    "/Administrador/ventas/editar",
-    "/Administrador/ventas/postventa",
-    "/Administrador/ventas/caso"
-})
-public class VentaServlet extends HttpServlet {
+@WebServlet("/CompraServlet")
+public class CompraServlet extends HttpServlet {
 
-    private final VentaDAO ventaDAO           = new VentaDAO();
-    private final CasoPostventaDAO casoDAO    = new CasoPostventaDAO();
+    private CompraDAO compraDAO;
 
-    // ─────────────────────────────────────────────
-    //  GET
-    // ─────────────────────────────────────────────
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+    public void init() {
+        compraDAO = new CompraDAO();
+    }
+    
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        String ruta = req.getServletPath();
+        String action = request.getParameter("action");
+
+        if ("nueva".equals(action)) {
+
+            String usuarioId = request.getParameter("usuarioId");
+            request.setAttribute("usuarioId", usuarioId);
+
+            request.getRequestDispatcher("/Administrador/proveedores/agregar_compra.jsp")
+                   .forward(request, response);
+        }
+    }
+    
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        String action = request.getParameter("action");
 
         try {
-            switch (ruta) {
-
-                case "/Administrador/ventas/listar" -> {
-                    List<Venta> ventas = ventaDAO.listarVentas();
-                    req.setAttribute("ventas",            ventas);
-                    req.setAttribute("totalVentas",       ventaDAO.contarVentas());
-                    req.setAttribute("pendientes",        ventaDAO.contarPendientes());
-                    req.setAttribute("pagoEfectivo",      ventaDAO.contarPorMetodo("efectivo"));
-                    req.setAttribute("pagoTransferencia", ventaDAO.contarPorMetodo("tarjeta"));
-                    despachar(req, resp, "/WEB-INF/views/Administrador/ventas/listar_ventas.jsp");
-                }
-
-                case "/Administrador/ventas/ver" -> {
-                    int id = Integer.parseInt(req.getParameter("id"));
-                    Venta venta = ventaDAO.obtenerPorId(id);
-                    req.setAttribute("venta", venta);
-                    despachar(req, resp, "/WEB-INF/views/Administrador/ventas/ver_venta.jsp");
-                }
-
-                case "/Administrador/ventas/editar" -> {
-                    List<Venta> ventas = ventaDAO.listarVentas();
-                    req.setAttribute("ventas",            ventas);
-                    req.setAttribute("totalVentas",       ventaDAO.contarVentas());
-                    req.setAttribute("pendientes",        ventaDAO.contarPendientes());
-                    req.setAttribute("pagoEfectivo",      ventaDAO.contarPorMetodo("efectivo"));
-                    req.setAttribute("pagoTransferencia", ventaDAO.contarPorMetodo("tarjeta"));
-                    despachar(req, resp, "/WEB-INF/views/Administrador/ventas/editar_venta.jsp");
-                }
-
-                case "/Administrador/ventas/postventa" -> {
-                    List<CasoPostventa> casos = casoDAO.listarCasos();
-                    req.setAttribute("casos",          casos);
-                    req.setAttribute("totalCasos",     casoDAO.contarCasos());
-                    req.setAttribute("casosPendientes",casoDAO.contarPendientes());
-                    despachar(req, resp, "/WEB-INF/views/Administrador/ventas/postventa.jsp");
-                }
-
-                case "/Administrador/ventas/caso" -> {
-                    int id = Integer.parseInt(req.getParameter("id"));
-                    CasoPostventa caso = casoDAO.obtenerPorId(id);
-                    req.setAttribute("caso", caso);
-                    // Para la tabla resumen
-                    List<CasoPostventa> casos = casoDAO.listarCasos();
-                    req.setAttribute("casos", casos);
-                    despachar(req, resp, "/WEB-INF/views/Administrador/ventas/casos_postventa.jsp");
-                }
-
-                default -> resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+            if ("guardar".equals(action)) {
+                guardarCompra(request, response);
             }
-
-        } catch (SQLException e) {
-            throw new ServletException("Error de base de datos", e);
+        } catch (Exception e) {
+            throw new ServletException(e);
         }
     }
 
-    // ─────────────────────────────────────────────
-    //  POST
-    // ─────────────────────────────────────────────
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
+    private void guardarCompra(HttpServletRequest request, HttpServletResponse response)
+            throws Exception {
 
-        req.setCharacterEncoding("UTF-8");
-        String ruta = req.getServletPath();
+        int proveedorId = Integer.parseInt(request.getParameter("usuarioId"));
 
-        try {
-            switch (ruta) {
+        Compra compra = new Compra();
+        compra.setProveedorId(proveedorId);
+        compra.setFechaCompra(request.getParameter("fechaCompra"));
 
-                // Actualizar estado de una venta
-                case "/Administrador/ventas/editar" -> {
-                    int    ventaId    = Integer.parseInt(req.getParameter("ventaId"));
-                    String nuevoEstado = req.getParameter("estado");
-                    ventaDAO.actualizarEstado(ventaId, nuevoEstado);
-                    resp.sendRedirect(req.getContextPath() + "/Administrador/ventas/listar");
-                }
+        String[] productos = request.getParameterValues("productoId");
+        String[] precios = request.getParameterValues("precioUnitario");
+        String[] cantidades = request.getParameterValues("cantidad");
 
-                // Actualizar estado de un caso postventa
-                case "/Administrador/ventas/caso" -> {
-                    int    casoId      = Integer.parseInt(req.getParameter("casoId"));
-                    String nuevoEstado = req.getParameter("estado");
-                    String observacion = req.getParameter("observacion");
-                    casoDAO.actualizarEstado(casoId, nuevoEstado, observacion);
-                    resp.sendRedirect(req.getContextPath() + "/Administrador/ventas/postventa");
-                }
+        List<DetalleCompra> detalles = new ArrayList<>();
+        BigDecimal total = BigDecimal.ZERO;
 
-                default -> resp.sendError(HttpServletResponse.SC_NOT_FOUND);
-            }
+        for (int i = 0; i < productos.length; i++) {
 
-        } catch (SQLException e) {
-            throw new ServletException("Error de base de datos", e);
+            DetalleCompra d = new DetalleCompra();
+            d.setProductoId(Integer.parseInt(productos[i]));
+            d.setPrecioUnitario(new BigDecimal(precios[i]));
+            d.setCantidad(Integer.parseInt(cantidades[i]));
+
+            BigDecimal subtotal =
+                    d.getPrecioUnitario()
+                            .multiply(new BigDecimal(d.getCantidad()));
+
+            d.setSubtotal(subtotal);
+
+            total = total.add(subtotal);
+
+            detalles.add(d);
         }
-    }
 
-    // ─────────────────────────────────────────────
-    //  AUXILIAR
-    // ─────────────────────────────────────────────
-    private void despachar(HttpServletRequest req, HttpServletResponse resp, String vista)
-            throws ServletException, IOException {
-        req.getRequestDispatcher(vista).forward(req, resp);
+        compra.setTotal(total);
+        compra.setDetalles(detalles);
+
+        compraDAO.insertar(compra);
+
+        response.sendRedirect(
+                request.getContextPath()
+                + "/ProveedorServlet?action=verCompras&id=" + proveedorId
+        );
     }
-}

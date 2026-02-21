@@ -2,7 +2,7 @@ package dao;
 
 import model.Venta;
 import model.DetalleVenta;
-import util.Conexion;
+import config.ConexionDB;
 
 import java.math.BigDecimal;
 import java.sql.*;
@@ -14,7 +14,7 @@ public class VentaDAO {
     // ─────────────────────────────────────────────
     //  LISTAR TODAS LAS VENTAS (con vendedor, cliente y método de pago)
     // ─────────────────────────────────────────────
-    public List<Venta> listarVentas() throws SQLException {
+    public List<Venta> listarVentas() throws Exception {
         List<Venta> lista = new ArrayList<>();
         String sql = """
             SELECT vf.venta_id,
@@ -33,7 +33,7 @@ public class VentaDAO {
             ORDER BY vf.fecha_emision DESC
         """;
 
-        try (Connection con = Conexion.getConexion();
+        try (Connection con = ConexionDB.getConnection();
              PreparedStatement ps = con.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
 
@@ -48,7 +48,7 @@ public class VentaDAO {
     // ─────────────────────────────────────────────
     //  OBTENER UNA VENTA POR ID (con sus detalles)
     // ─────────────────────────────────────────────
-    public Venta obtenerPorId(int ventaId) throws SQLException {
+    public Venta obtenerPorId(int ventaId) throws Exception {
         String sql = """
             SELECT vf.venta_id,
                    vf.usuario_id,
@@ -67,7 +67,7 @@ public class VentaDAO {
         """;
 
         Venta venta = null;
-        try (Connection con = Conexion.getConexion();
+        try (Connection con = ConexionDB.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
 
             ps.setInt(1, ventaId);
@@ -84,12 +84,12 @@ public class VentaDAO {
     // ─────────────────────────────────────────────
     //  INSERTAR VENTA + DETALLES (transacción)
     // ─────────────────────────────────────────────
-    public boolean insertar(Venta venta) throws SQLException {
+    public boolean insertar(Venta venta) throws Exception {
         String sqlVenta  = "INSERT INTO venta_factura (usuario_id, usuario_cliente_id, fecha_emision, total) VALUES (?,?,?,?)";
         String sqlDetalle= "INSERT INTO Detalle_Venta (venta_id, producto_id, cantidad, precio_unitario, subtotal) VALUES (?,?,?,?,?)";
         String sqlPago   = "INSERT INTO Metodo_pago (venta_id, monto, metodo, fecha, estado) VALUES (?,?,?,?,?)";
 
-        try (Connection con = Conexion.getConexion()) {
+        try (Connection con = ConexionDB.getConnection()) {
             con.setAutoCommit(false);
             try {
                 // 1. Insertar cabecera
@@ -144,9 +144,9 @@ public class VentaDAO {
     // ─────────────────────────────────────────────
     //  ACTUALIZAR ESTADO DE PAGO
     // ─────────────────────────────────────────────
-    public boolean actualizarEstado(int ventaId, String nuevoEstado) throws SQLException {
+    public boolean actualizarEstado(int ventaId, String nuevoEstado) throws Exception {
         String sql = "UPDATE Metodo_pago SET estado = ? WHERE venta_id = ?";
-        try (Connection con = Conexion.getConexion();
+        try (Connection con = ConexionDB.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, nuevoEstado);
             ps.setInt(2, ventaId);
@@ -157,8 +157,8 @@ public class VentaDAO {
     // ─────────────────────────────────────────────
     //  ELIMINAR VENTA (y en cascada sus detalles/pagos)
     // ─────────────────────────────────────────────
-    public boolean eliminar(int ventaId) throws SQLException {
-        try (Connection con = Conexion.getConexion()) {
+    public boolean eliminar(int ventaId) throws Exception {
+        try (Connection con = ConexionDB.getConnection()) {
             con.setAutoCommit(false);
             try {
                 ejecutar(con, "DELETE FROM Metodo_pago    WHERE venta_id = ?", ventaId);
@@ -176,17 +176,17 @@ public class VentaDAO {
     // ─────────────────────────────────────────────
     //  CONTADORES PARA EL DASHBOARD
     // ─────────────────────────────────────────────
-    public int contarVentas() throws SQLException {
+    public int contarVentas() throws Exception {
         return contar("SELECT COUNT(*) FROM venta_factura");
     }
 
-    public int contarPendientes() throws SQLException {
+    public int contarPendientes() throws Exception {
         return contar("SELECT COUNT(*) FROM Metodo_pago WHERE estado = 'pendiente'");
     }
 
-    public int contarPorMetodo(String metodo) throws SQLException {
+    public int contarPorMetodo(String metodo) throws Exception {
         String sql = "SELECT COUNT(*) FROM Metodo_pago WHERE metodo = ?";
-        try (Connection con = Conexion.getConexion();
+        try (Connection con = ConexionDB.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, metodo);
             try (ResultSet rs = ps.executeQuery()) {
@@ -242,8 +242,8 @@ public class VentaDAO {
         return lista;
     }
 
-    private int contar(String sql) throws SQLException {
-        try (Connection con = Conexion.getConexion();
+    private int contar(String sql) throws Exception {
+        try (Connection con = ConexionDB.getConnection();
              PreparedStatement ps = con.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
             rs.next();
@@ -251,7 +251,7 @@ public class VentaDAO {
         }
     }
 
-    private void ejecutar(Connection con, String sql, int id) throws SQLException {
+    private void ejecutar(Connection con, String sql, int id) throws Exception {
         try (PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, id);
             ps.executeUpdate();

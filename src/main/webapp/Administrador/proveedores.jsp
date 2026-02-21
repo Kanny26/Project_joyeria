@@ -249,12 +249,12 @@
                 <!-- Pie -->
                 <div class="prov-card__footer">
                     
-                    <a href="<%=request.getContextPath()%>%>"
-                       title="Ver producto">
-                        <i class="fas fa-eye icon-right">Compras realizadas</i>
+                    <a href="<%=request.getContextPath()%>/ProveedorServlet?action=verCompras&id=<%= p.getUsuarioId() %>"
+                       title="Ver producto" class="prov-card__accion prov-card__accion--editar">
+                        <i class="fa-solid fa-cart-shopping"></i>Compras
                     </a>
                     <a href="<%=request.getContextPath()%>/ProveedorServlet?action=editar&id=<%= p.getUsuarioId() %>"
-                       class="prov-card__accion prov-card__accion--editar">
+                       class="prov-card__accion prov-card__accion--compras">
                         <i class="fa-solid fa-pen-to-square"></i> Editar
                     </a>
                 </div>

@@ -1,9 +1,11 @@
 package controller;
 
 import dao.ProveedorDAO;
+import dao.CompraDAO;
 import dao.MaterialDAO;
 import model.Proveedor;
 import model.Administrador;
+import model.Compra;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -45,6 +47,8 @@ public class ProveedorServlet extends HttpServlet {
                 case "editar":           mostrarFormularioEditar(request, response);    break;
                 case "actualizarEstado": actualizarEstado(request, response);           break;
                 case "confirmarEliminar":confirmarEliminarProveedor(request, response); break;
+                case "verCompras": verCompras(request, response); break;
+                case "nuevaCompra": mostrarFormularioCompra(request, response); break;
                 default:
                     response.sendRedirect(request.getContextPath() + "/Administrador/admin-principal.jsp");
             }
@@ -332,5 +336,35 @@ public class ProveedorServlet extends HttpServlet {
             return false;
         }
         return true;
+    }
+    
+    private void verCompras(HttpServletRequest request, HttpServletResponse response)
+            throws Exception {
+
+        int proveedorId = Integer.parseInt(request.getParameter("id"));
+
+        CompraDAO compraDAO = new CompraDAO();
+        Proveedor proveedor = proveedorDAO.obtenerPorId(proveedorId);
+
+        List<Compra> compras = compraDAO.listarPorProveedor(proveedorId);
+
+        request.setAttribute("proveedor", proveedor);
+        request.setAttribute("listaCompras", compras);
+        request.setAttribute("totalCompras", compraDAO.contarComprasPorProveedor(proveedorId));
+        request.setAttribute("totalProductos", compraDAO.contarProductosPorProveedor(proveedorId));
+        request.setAttribute("totalGasto", compraDAO.totalGastadoPorProveedor(proveedorId));
+
+        request.getRequestDispatcher("/Administrador/proveedores/compras.jsp")
+                .forward(request, response);
+    }
+
+    private void mostrarFormularioCompra(HttpServletRequest request, HttpServletResponse response)
+            throws Exception {
+
+        int proveedorId = Integer.parseInt(request.getParameter("id"));
+
+        request.setAttribute("proveedorId", proveedorId);
+        request.getRequestDispatcher("/Administrador/proveedores/agregar_compra.jsp")
+                .forward(request, response);
     }
 }

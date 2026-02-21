@@ -29,7 +29,7 @@
         <section class="iconos-contenedor">
 
             <article class="iconos-item">
-                <a href="${pageContext.request.contextPath}/Administrador/ventas/listar" class="icono-boton">
+                <a href="${pageContext.request.contextPath}/Administrador/ventas/listar_ventas.jsp" class="icono-boton">
                     <div class="icono-boton__circulo">
                         <img class="icono-boton__img"
                              src="${pageContext.request.contextPath}/assets/Imagenes/iconos/listar_ventas.png"
@@ -40,7 +40,7 @@
             </article>
 
             <article class="iconos-item">
-                <a href="${pageContext.request.contextPath}/Administrador/ventas/postventa" class="icono-boton">
+                <a href="${pageContext.request.contextPath}/Administrador/ventas/postventa.jsp" class="icono-boton">
                     <div class="icono-boton__circulo">
                         <img class="icono-boton__img"
                              src="${pageContext.request.contextPath}/assets/Imagenes/iconos/postventa.png"

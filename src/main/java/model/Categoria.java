@@ -66,4 +66,3 @@ public class Categoria {
         this.icono = icono;
     }
 }
-

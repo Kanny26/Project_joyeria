@@ -1,19 +1,19 @@
 package dao;
 
-import model.CasoPostventa;
-import util.Conexion;
+import model.CasoPostVenta;
+import config.ConexionDB;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CasoPostventaDAO {
+public class CasoPostVentaDAO {
 
     // ─────────────────────────────────────────────
     //  LISTAR TODOS LOS CASOS
     // ─────────────────────────────────────────────
-    public List<CasoPostventa> listarCasos() throws SQLException {
-        List<CasoPostventa> lista = new ArrayList<>();
+    public List<CasoPostVenta> listarCasos() throws Exception {
+        List<CasoPostVenta> lista = new ArrayList<>();
         String sql = """
             SELECT cp.caso_id, cp.venta_id, cp.tipo, cp.cantidad,
                    cp.motivo, cp.fecha, cp.estado,
@@ -26,7 +26,7 @@ public class CasoPostventaDAO {
             ORDER BY cp.fecha DESC
         """;
 
-        try (Connection con = Conexion.getConexion();
+        try (Connection con = ConexionDB.getConnection();
              PreparedStatement ps = con.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
 
@@ -40,7 +40,7 @@ public class CasoPostventaDAO {
     // ─────────────────────────────────────────────
     //  OBTENER UN CASO POR ID
     // ─────────────────────────────────────────────
-    public CasoPostventa obtenerPorId(int casoId) throws SQLException {
+    public CasoPostVenta obtenerPorId(int casoId) throws Exception {
         String sql = """
             SELECT cp.caso_id, cp.venta_id, cp.tipo, cp.cantidad,
                    cp.motivo, cp.fecha, cp.estado,
@@ -57,12 +57,12 @@ public class CasoPostventaDAO {
             LIMIT 1
         """;
 
-        try (Connection con = Conexion.getConexion();
+        try (Connection con = ConexionDB.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, casoId);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    CasoPostventa caso = mapearCaso(rs);
+                    CasoPostVenta caso = mapearCaso(rs);
                     caso.setObservacion(rs.getString("observacion"));
                     return caso;
                 }
@@ -74,11 +74,11 @@ public class CasoPostventaDAO {
     // ─────────────────────────────────────────────
     //  ACTUALIZAR ESTADO DEL CASO
     // ─────────────────────────────────────────────
-    public boolean actualizarEstado(int casoId, String nuevoEstado, String observacion) throws SQLException {
+    public boolean actualizarEstado(int casoId, String nuevoEstado, String observacion) throws Exception {
         String sqlCaso   = "UPDATE Caso_Postventa_Cliente SET estado = ? WHERE caso_id = ?";
         String sqlEstado = "INSERT INTO Estado_Caso_Cliente (caso_id, estado, fecha, observacion) VALUES (?,?,NOW(),?)";
 
-        try (Connection con = Conexion.getConexion()) {
+        try (Connection con = ConexionDB.getConnection()) {
             con.setAutoCommit(false);
             try {
                 try (PreparedStatement ps = con.prepareStatement(sqlCaso)) {
@@ -104,19 +104,19 @@ public class CasoPostventaDAO {
     // ─────────────────────────────────────────────
     //  CONTADORES
     // ─────────────────────────────────────────────
-    public int contarCasos() throws SQLException {
+    public int contarCasos() throws Exception {
         return contar("SELECT COUNT(*) FROM Caso_Postventa_Cliente");
     }
 
-    public int contarPendientes() throws SQLException {
+    public int contarPendientes() throws Exception {
         return contar("SELECT COUNT(*) FROM Caso_Postventa_Cliente WHERE estado = 'en_proceso'");
     }
 
     // ─────────────────────────────────────────────
     //  AUXILIARES
     // ─────────────────────────────────────────────
-    private CasoPostventa mapearCaso(ResultSet rs) throws SQLException {
-        CasoPostventa c = new CasoPostventa();
+    private CasoPostVenta mapearCaso(ResultSet rs) throws SQLException {
+        CasoPostVenta c = new CasoPostVenta();
         c.setCasoId(rs.getInt("caso_id"));
         c.setVentaId(rs.getInt("venta_id"));
         c.setTipo(rs.getString("tipo"));
@@ -129,8 +129,8 @@ public class CasoPostventaDAO {
         return c;
     }
 
-    private int contar(String sql) throws SQLException {
-        try (Connection con = Conexion.getConexion();
+    private int contar(String sql) throws Exception {
+        try (Connection con = ConexionDB.getConnection();
              PreparedStatement ps = con.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
             rs.next();
