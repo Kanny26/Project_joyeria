@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 8.0.33, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.38, for Win64 (x86_64)
 --
 -- Host: 127.0.0.1    Database: gestor_abbyac27
 -- ------------------------------------------------------
--- Server version	8.0.30
+-- Server version	8.0.39
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -176,7 +176,7 @@ CREATE TABLE `correo_usuario` (
   PRIMARY KEY (`correo_id`),
   KEY `usuario_id` (`usuario_id`),
   CONSTRAINT `correo_usuario_ibfk_1` FOREIGN KEY (`usuario_id`) REFERENCES `usuario` (`usuario_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -185,6 +185,7 @@ CREATE TABLE `correo_usuario` (
 
 LOCK TABLES `correo_usuario` WRITE;
 /*!40000 ALTER TABLE `correo_usuario` DISABLE KEYS */;
+INSERT INTO `correo_usuario` VALUES (2,'darcy@gmail.com',2),(3,'empresa2@gmail.com',3),(4,'empresa3@gmail.com',4),(5,'empresa4@gmail.com',5),(6,'joyeria_elsol@gmail.com',6),(7,'joyas_rosita@gmail.com',7),(8,'joyas_rosita@gmail.com',9),(14,'rosita_fresita@gmail.com',13),(15,'stephanymoreno1826@gmail.com',14);
 /*!40000 ALTER TABLE `correo_usuario` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -625,7 +626,7 @@ CREATE TABLE `rol` (
   UNIQUE KEY `nombre` (`nombre`),
   KEY `usuario_id` (`usuario_id`),
   CONSTRAINT `rol_ibfk_1` FOREIGN KEY (`usuario_id`) REFERENCES `usuario` (`usuario_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -634,7 +635,7 @@ CREATE TABLE `rol` (
 
 LOCK TABLES `rol` WRITE;
 /*!40000 ALTER TABLE `rol` DISABLE KEYS */;
-INSERT INTO `rol` VALUES (1,'administrador','AdminKS',1);
+INSERT INTO `rol` VALUES (1,'administrador','AdminKS',1),(2,'proveedor','Darcy ',2),(3,'proveedor','empresa 2',3),(4,'proveedor','empresa 3',4),(5,'proveedor','empresa 4 ',5),(6,'proveedor','joyeria el sol',6),(7,'proveedor','joyas rosita',7),(8,'proveedor','Joyeria rosita',9),(9,'proveedor','joyeria rosita fresita',13),(10,'vendedor','vendedor_14',14);
 /*!40000 ALTER TABLE `rol` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -701,7 +702,7 @@ CREATE TABLE `telefono_usuario` (
   PRIMARY KEY (`telefono_id`),
   KEY `usuario_id` (`usuario_id`),
   CONSTRAINT `telefono_usuario_ibfk_1` FOREIGN KEY (`usuario_id`) REFERENCES `usuario` (`usuario_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -710,6 +711,7 @@ CREATE TABLE `telefono_usuario` (
 
 LOCK TABLES `telefono_usuario` WRITE;
 /*!40000 ALTER TABLE `telefono_usuario` DISABLE KEYS */;
+INSERT INTO `telefono_usuario` VALUES (2,'3024778450',2),(3,'3012345678',3),(4,'3024778445',4),(5,'3024778450',5),(6,'3456789456',6),(7,'30271312542',7),(8,'3027131281',9),(14,'3045123222',13),(15,'3027131281',14);
 /*!40000 ALTER TABLE `telefono_usuario` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -732,7 +734,7 @@ CREATE TABLE `usuario` (
   `minimo_compra` decimal(10,2) DEFAULT NULL,
   PRIMARY KEY (`usuario_id`),
   UNIQUE KEY `documento` (`documento`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -741,7 +743,7 @@ CREATE TABLE `usuario` (
 
 LOCK TABLES `usuario` WRITE;
 /*!40000 ALTER TABLE `usuario` DISABLE KEYS */;
-INSERT INTO `usuario` VALUES (1,'AdminKS','$2a$12$X5/dP8Dv4BZ8GH8UH0iO9uvyaEjLEqHB/Bs42s6bgSFap9HJXwtq.',1,'2026-02-20 15:12:47',NULL,NULL,NULL,NULL);
+INSERT INTO `usuario` VALUES (1,'AdminKS','$2a$12$X5/dP8Dv4BZ8GH8UH0iO9uvyaEjLEqHB/Bs42s6bgSFap9HJXwtq.',1,'2026-02-20 15:12:47',NULL,NULL,NULL,NULL),(2,'Darcy ','NO_LOGIN',1,'2026-02-21 08:31:15','12155454','2026-02-21','2024-02-12',250000.00),(3,'empresa 2','NO_LOGIN',1,'2026-02-21 09:12:47','254444554545','2026-02-21','2024-05-12',250000.00),(4,'empresa 3','NO_LOGIN',1,'2026-02-21 09:41:04','254131542','2026-02-21','2024-07-12',280000.00),(5,'empresa 4 ','NO_LOGIN',1,'2026-02-21 09:41:58','28885522','2026-02-21','2026-02-10',250000.00),(6,'joyeria el sol','NO_LOGIN',0,'2026-02-21 09:46:47','85456122','2026-02-21','2024-06-12',290000.00),(7,'joyas rosita','NO_LOGIN',1,'2026-02-21 09:51:36','6542131241','2026-02-21','2024-08-25',150000.00),(9,'Joyeria rosita','NO_LOGIN',0,'2026-02-21 09:53:17','257854621','2026-02-21','2024-05-12',280000.00),(13,'joyeria rosita fresita','NO_LOGIN',0,'2026-02-21 10:58:44','1234574354','2026-02-21','2025-02-12',250000.00),(14,'Stephany','$2a$10$kfiz9jvARW4ts4HxFzkZMe3N8oWK1r1BfwunJozoixrM0l3TNzN1y',1,'2026-02-21 11:41:38','1099739953',NULL,NULL,NULL);
 /*!40000 ALTER TABLE `usuario` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -768,6 +770,7 @@ CREATE TABLE `usuario_material` (
 
 LOCK TABLES `usuario_material` WRITE;
 /*!40000 ALTER TABLE `usuario_material` DISABLE KEYS */;
+INSERT INTO `usuario_material` VALUES (2,1),(3,1),(4,1),(5,1),(6,1),(9,1),(13,1),(3,2),(4,2),(5,2),(6,2),(7,2),(9,2),(13,2),(3,3),(4,3),(5,3),(6,3),(7,3),(13,3),(5,4),(6,4),(13,4),(13,5),(13,6),(13,7),(4,8),(13,8),(4,9),(13,9);
 /*!40000 ALTER TABLE `usuario_material` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -810,4 +813,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-02-20 18:14:12
+-- Dump completed on 2026-02-21 12:05:26
