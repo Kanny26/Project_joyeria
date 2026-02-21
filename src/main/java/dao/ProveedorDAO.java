@@ -1,216 +1,413 @@
 package dao;
+
 import config.ConexionDB;
 import model.Proveedor;
-import model.Producto;
+import model.Material;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ProveedorDAO {
 
-    public boolean guardar(Proveedor p) {
-        if (p.getNombre() == null || p.getNombre().trim().isEmpty()) return false;
-        if (p.getTelefonos() == null || p.getTelefonos().isEmpty()) return false;
-        if (p.getCorreos() == null || p.getCorreos().isEmpty()) return false;
-
-        Connection con = null;
-        try {
-            con = ConexionDB.getConnection();
-            con.setAutoCommit(false);
-
-            String sqlUsuario = """
-                INSERT INTO Usuario (nombre, pass, estado, fecha_creacion, fecha_inicio)
-                VALUES (?, ?, ?, NOW(), ?)
-            """;
-            PreparedStatement psUsuario = con.prepareStatement(sqlUsuario, Statement.RETURN_GENERATED_KEYS);
-            psUsuario.setString(1, p.getNombre());
-            psUsuario.setString(2, "");
-            psUsuario.setBoolean(3, p.isEstado());
-            psUsuario.setDate(4, Date.valueOf(p.getFechaInicio()));
-            psUsuario.executeUpdate();
-
-            ResultSet rs = psUsuario.getGeneratedKeys();
-            if (!rs.next()) { con.rollback(); return false; }
-            int userId = rs.getInt(1);
-
-            insertarRol(con, userId, "proveedor");
-
-            for (String tel : p.getTelefonos())
-                if (tel != null && !tel.trim().isEmpty())
-                    insertarTelefono(con, userId, tel.trim());
-
-            for (String email : p.getCorreos())
-                if (email != null && !email.trim().isEmpty())
-                    insertarCorreo(con, userId, email.trim());
-
-            if (p.getMateriales() != null)
-                for (String matNombre : p.getMateriales())
-                    if (matNombre != null && !matNombre.trim().isEmpty()) {
-                        Integer matId = obtenerMaterialId(con, matNombre.trim());
-                        if (matId != null) vincularMaterial(con, userId, matId);
-                    }
-
-            con.commit();
-            return true;
-
-        } catch (Exception e) { // ✅
-            e.printStackTrace();
-            try { if (con != null) con.rollback(); } catch (Exception ex) { ex.printStackTrace(); }
-            return false;
-        } finally {
-            try {
-                if (con != null) { con.setAutoCommit(true); con.close(); }
-            } catch (Exception e) { e.printStackTrace(); }
-        }
-    }
-
-    private void insertarRol(Connection con, int userId, String cargo) throws SQLException {
-        String sql = "INSERT INTO Rol (cargo, usuario_id, nombre) VALUES (?, ?, ?)";
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setString(1, cargo); ps.setInt(2, userId); ps.setString(3, cargo + "_" + userId);
-            ps.executeUpdate();
-        }
-    }
-
-    private void insertarTelefono(Connection con, int userId, String telefono) throws SQLException {
-        String sql = "INSERT INTO Telefono_Usuario (telefono, usuario_id) VALUES (?, ?)";
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setString(1, telefono); ps.setInt(2, userId); ps.executeUpdate();
-        }
-    }
-
-    private void insertarCorreo(Connection con, int userId, String email) throws SQLException {
-        String sql = "INSERT INTO Correo_Usuario (email, usuario_id) VALUES (?, ?)";
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setString(1, email); ps.setInt(2, userId); ps.executeUpdate();
-        }
-    }
-
-    private Integer obtenerMaterialId(Connection con, String nombre) throws SQLException {
-        String sql = "SELECT material_id FROM Material WHERE nombre = ?";
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setString(1, nombre);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) return rs.getInt("material_id");
-        }
-        return null;
-    }
-
-    private void vincularMaterial(Connection con, int userId, int matId) throws SQLException {
-        String sql = "INSERT INTO Usuario_Material (usuario_id, material_id) VALUES (?, ?)";
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setInt(1, userId); ps.setInt(2, matId); ps.executeUpdate();
-        }
-    }
-
-    public List<Proveedor> listar() {
+    // ==================== CONSULTAS ====================
+    
+    public List<Proveedor> listarProveedores() {
         List<Proveedor> lista = new ArrayList<>();
-        String sql = """
-            SELECT u.usuario_id, u.nombre, u.estado, u.fecha_inicio
-            FROM Usuario u
-            JOIN Rol r ON u.usuario_id = r.usuario_id
-            WHERE r.cargo = 'proveedor'
-            ORDER BY u.nombre
-        """;
-        try (Connection con = ConexionDB.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+        String sql = "SELECT u.*, r.cargo " +
+                     "FROM Usuario u " +
+                     "INNER JOIN Rol r ON u.usuario_id = r.usuario_id " +
+                     "WHERE r.cargo = 'proveedor' " +
+                     "ORDER BY u.fecha_registro DESC";
+        
+        try (Connection conn = ConexionDB.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            
             while (rs.next()) {
-                Proveedor p = new Proveedor();
-                p.setUsuarioId(rs.getInt("usuario_id"));
-                p.setNombre(rs.getString("nombre"));
-                p.setEstado(rs.getBoolean("estado"));
-                Date fechaInicioSql = rs.getDate("fecha_inicio");
-                p.setFechaInicio(fechaInicioSql != null ? fechaInicioSql.toLocalDate() : null);
-                p.setTelefonos(obtenerTelefonos(con, p.getUsuarioId()));
-                p.setCorreos(obtenerCorreos(con, p.getUsuarioId()));
-                p.setMateriales(obtenerMateriales(con, p.getUsuarioId()));
-                p.setProductos(obtenerProductos(con, p.getUsuarioId()));
+                Proveedor p = mapearProveedor(rs);
+                p.setTelefonos(obtenerTelefonos(p.getUsuarioId()));
+                p.setCorreos(obtenerCorreos(p.getUsuarioId()));
+                p.setMateriales(obtenerMateriales(p.getUsuarioId()));
                 lista.add(p);
             }
-        } catch (Exception e) { // ✅
+        } catch (Exception e) {
+            System.err.println("Error al listar proveedores: " + e.getMessage());
             e.printStackTrace();
         }
         return lista;
     }
 
-    private List<String> obtenerTelefonos(Connection con, int userId) throws SQLException {
-        List<String> tels = new ArrayList<>();
-        try (PreparedStatement ps = con.prepareStatement(
-                "SELECT telefono FROM Telefono_Usuario WHERE usuario_id = ?")) {
-            ps.setInt(1, userId);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) tels.add(rs.getString("telefono"));
+    public Proveedor obtenerPorId(Integer id) {
+        String sql = "SELECT u.*, r.cargo " +
+                     "FROM Usuario u " +
+                     "INNER JOIN Rol r ON u.usuario_id = r.usuario_id " +
+                     "WHERE u.usuario_id = ? AND r.cargo = 'proveedor'";
+        
+        try (Connection conn = ConexionDB.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            
+            stmt.setInt(1, id);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    Proveedor p = mapearProveedor(rs);
+                    p.setTelefonos(obtenerTelefonos(p.getUsuarioId()));
+                    p.setCorreos(obtenerCorreos(p.getUsuarioId()));
+                    p.setMateriales(obtenerMateriales(p.getUsuarioId()));
+                    return p;
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("Error al obtener proveedor: " + e.getMessage());
+            e.printStackTrace();
         }
-        return tels;
+        return null;
     }
 
-    private List<String> obtenerCorreos(Connection con, int userId) throws SQLException {
-        List<String> emails = new ArrayList<>();
-        try (PreparedStatement ps = con.prepareStatement(
-                "SELECT email FROM Correo_Usuario WHERE usuario_id = ?")) {
-            ps.setInt(1, userId);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) emails.add(rs.getString("email"));
+        /**
+     * Búsqueda filtrada por campo específico (nombre o documento).
+     */
+    public List<Proveedor> buscar(String criterio, String filtro) {
+        List<Proveedor> lista = new ArrayList<>();
+
+        String campo;
+        switch (filtro != null ? filtro : "nombre") {
+            case "documento": campo = "u.documento"; break;
+            default:          campo = "u.nombre";    break;
         }
-        return emails;
+
+        String sql = "SELECT u.*, r.cargo " +
+                     "FROM Usuario u " +
+                     "INNER JOIN Rol r ON u.usuario_id = r.usuario_id " +
+                     "WHERE r.cargo = 'proveedor' " +
+                     "AND " + campo + " LIKE ? " +
+                     "ORDER BY u.fecha_registro DESC";
+
+        try (Connection conn = ConexionDB.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, "%" + criterio + "%");
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Proveedor p = mapearProveedor(rs);
+                    p.setTelefonos(obtenerTelefonos(p.getUsuarioId()));
+                    p.setCorreos(obtenerCorreos(p.getUsuarioId()));
+                    p.setMateriales(obtenerMateriales(p.getUsuarioId()));
+                    lista.add(p);
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("Error al buscar proveedores: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return lista;
     }
 
-    private List<String> obtenerMateriales(Connection con, int userId) throws SQLException {
-        List<String> mats = new ArrayList<>();
-        String sql = """
-            SELECT m.nombre
-            FROM Usuario_Material um
-            JOIN Material m ON um.material_id = m.material_id
-            WHERE um.usuario_id = ?
-        """;
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setInt(1, userId);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) mats.add(rs.getString("nombre"));
-        }
-        return mats;
-    }
+    // ==================== GUARDAR (INSERT) ====================
+    
+    public boolean guardar(Proveedor p, List<String> telefonos, List<String> correos, List<Integer> materialesIds) {
+        Connection conn = null;
+        try {
+            conn = ConexionDB.getConnection();
+            conn.setAutoCommit(false); // Iniciar transacción
 
-    private List<Producto> obtenerProductos(Connection con, int proveedorId) throws SQLException {
-        List<Producto> prods = new ArrayList<>();
-        String sql = """
-            SELECT p.producto_id, p.nombre, p.descripcion, p.stock, p.precio_unitario,
-                   p.fecha_registro, m.nombre AS material
-            FROM Producto p
-            JOIN Material m ON p.material_id = m.material_id
-            WHERE p.usuario_proveedor_id = ?
-        """;
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setInt(1, proveedorId);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                Producto pr = new Producto();
-                pr.setProductoId(rs.getInt("producto_id"));
-                pr.setNombre(rs.getString("nombre"));
-                pr.setDescripcion(rs.getString("descripcion"));
-                pr.setStock(rs.getInt("stock"));
-                pr.setPrecioUnitario(rs.getBigDecimal("precio_unitario"));
-                Date fechaRegistroSql = rs.getDate("fecha_registro");
-                pr.setFechaRegistro(fechaRegistroSql != null ? fechaRegistroSql.toLocalDate() : null);
-                pr.setMaterialNombre(rs.getString("material"));
-                pr.setProveedorId(proveedorId);
-                prods.add(pr);
+            // 1. Insertar en Usuario
+            String sqlUsuario = "INSERT INTO Usuario (nombre, pass, estado, fecha_creacion, documento, fecha_registro, fecha_inicio, minimo_compra) " +
+                               "VALUES (?, ?, ?, NOW(), ?, CURDATE(), ?, ?)";
+            try (PreparedStatement stmt = conn.prepareStatement(sqlUsuario, Statement.RETURN_GENERATED_KEYS)) {
+                stmt.setString(1, p.getNombre());
+                stmt.setString(2, p.getPass() != null ? p.getPass() : "NO_LOGIN");
+                stmt.setBoolean(3, p.isEstado());
+                stmt.setString(4, p.getDocumento());
+                stmt.setString(5, p.getFechaInicio());
+                stmt.setDouble(6, p.getMinimoCompra() != null ? p.getMinimoCompra() : 0.0);
+                stmt.executeUpdate();
+                
+                // Obtener ID generado
+                try (ResultSet keys = stmt.getGeneratedKeys()) {
+                    if (keys.next()) {
+                        p.setUsuarioId(keys.getInt(1));
+                    }
+                }
+            }
+
+            // 2. Insertar rol proveedor
+            String sqlRol = "INSERT INTO Rol (cargo, usuario_id, nombre) VALUES ('proveedor', ?, ?)";
+            try (PreparedStatement stmt = conn.prepareStatement(sqlRol)) {
+                stmt.setInt(1, p.getUsuarioId());
+                stmt.setString(2, p.getNombre());
+                stmt.executeUpdate();
+            }
+
+            // 3. Insertar teléfonos
+            if (telefonos != null && !telefonos.isEmpty()) {
+                String sqlTel = "INSERT INTO Telefono_Usuario (telefono, usuario_id) VALUES (?, ?)";
+                try (PreparedStatement stmt = conn.prepareStatement(sqlTel)) {
+                    for (String tel : telefonos) {
+                        if (tel != null && !tel.trim().isEmpty()) {
+                            stmt.setString(1, tel.trim());
+                            stmt.setInt(2, p.getUsuarioId());
+                            stmt.addBatch();
+                        }
+                    }
+                    stmt.executeBatch();
+                }
+            }
+
+            // 4. Insertar correos
+            if (correos != null && !correos.isEmpty()) {
+                String sqlCorreo = "INSERT INTO Correo_Usuario (email, usuario_id) VALUES (?, ?)";
+                try (PreparedStatement stmt = conn.prepareStatement(sqlCorreo)) {
+                    for (String correo : correos) {
+                        if (correo != null && !correo.trim().isEmpty()) {
+                            stmt.setString(1, correo.trim().toLowerCase());
+                            stmt.setInt(2, p.getUsuarioId());
+                            stmt.addBatch();
+                        }
+                    }
+                    stmt.executeBatch();
+                }
+            }
+
+            // 5. Vincular materiales (RF34)
+            if (materialesIds != null && !materialesIds.isEmpty()) {
+                String sqlMat = "INSERT INTO Usuario_Material (usuario_id, material_id) VALUES (?, ?)";
+                try (PreparedStatement stmt = conn.prepareStatement(sqlMat)) {
+                    for (Integer matId : materialesIds) {
+                        stmt.setInt(1, p.getUsuarioId());
+                        stmt.setInt(2, matId);
+                        stmt.addBatch();
+                    }
+                    stmt.executeBatch();
+                }
+            }
+
+            conn.commit(); // Confirmar transacción
+            return true;
+            
+        } catch (Exception e) {
+            System.err.println("Error al guardar proveedor: " + e.getMessage());
+            e.printStackTrace();
+            if (conn != null) {
+                try { conn.rollback(); } catch (SQLException ex) { ex.printStackTrace(); }
+            }
+            return false;
+        } finally {
+            if (conn != null) {
+                try { 
+                    conn.setAutoCommit(true); 
+                    conn.close(); 
+                } catch (SQLException e) { e.printStackTrace(); }
             }
         }
-        return prods;
     }
 
-    public boolean actualizarEstado(int usuarioId, boolean estado) {
-        String sql = "UPDATE Usuario SET estado = ? WHERE usuario_id = ?";
-        try (Connection con = ConexionDB.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setBoolean(1, estado);
-            ps.setInt(2, usuarioId);
-            return ps.executeUpdate() > 0;
-        } catch (Exception e) { // ✅
+    // ==================== ACTUALIZAR (UPDATE) ====================
+    
+    public boolean actualizar(Proveedor p, List<String> telefonos, List<String> correos, List<Integer> materialesIds) {
+        Connection conn = null;
+        try {
+            conn = ConexionDB.getConnection();
+            conn.setAutoCommit(false);
+
+            // 1. Actualizar Usuario (EXCLUYENDO fecha_inicio - RF08)
+            String sqlUsuario = "UPDATE Usuario SET nombre=?, pass=?, estado=?, documento=?, minimo_compra=? WHERE usuario_id=?";
+            try (PreparedStatement stmt = conn.prepareStatement(sqlUsuario)) {
+                stmt.setString(1, p.getNombre());
+                stmt.setString(2, p.getPass() != null && !p.getPass().isEmpty() ? p.getPass() : obtenerPassActual(p.getUsuarioId()));
+                stmt.setBoolean(3, p.isEstado());
+                stmt.setString(4, p.getDocumento());
+                stmt.setDouble(5, p.getMinimoCompra() != null ? p.getMinimoCompra() : 0.0);
+                stmt.setInt(6, p.getUsuarioId());
+                stmt.executeUpdate();
+            }
+
+            // 2. Actualizar nombre en Rol
+            String sqlRol = "UPDATE Rol SET nombre=? WHERE usuario_id=? AND cargo='proveedor'";
+            try (PreparedStatement stmt = conn.prepareStatement(sqlRol)) {
+                stmt.setString(1, p.getNombre());
+                stmt.setInt(2, p.getUsuarioId());
+                stmt.executeUpdate();
+            }
+
+            // 3. Reemplazar teléfonos
+            eliminarTelefonos(p.getUsuarioId(), conn);
+            if (telefonos != null && !telefonos.isEmpty()) {
+                String sqlTel = "INSERT INTO Telefono_Usuario (telefono, usuario_id) VALUES (?, ?)";
+                try (PreparedStatement stmt = conn.prepareStatement(sqlTel)) {
+                    for (String tel : telefonos) {
+                        if (tel != null && !tel.trim().isEmpty()) {
+                            stmt.setString(1, tel.trim());
+                            stmt.setInt(2, p.getUsuarioId());
+                            stmt.addBatch();
+                        }
+                    }
+                    stmt.executeBatch();
+                }
+            }
+
+            // 4. Reemplazar correos
+            eliminarCorreos(p.getUsuarioId(), conn);
+            if (correos != null && !correos.isEmpty()) {
+                String sqlCorreo = "INSERT INTO Correo_Usuario (email, usuario_id) VALUES (?, ?)";
+                try (PreparedStatement stmt = conn.prepareStatement(sqlCorreo)) {
+                    for (String correo : correos) {
+                        if (correo != null && !correo.trim().isEmpty()) {
+                            stmt.setString(1, correo.trim().toLowerCase());
+                            stmt.setInt(2, p.getUsuarioId());
+                            stmt.addBatch();
+                        }
+                    }
+                    stmt.executeBatch();
+                }
+            }
+
+            // 5. Reemplazar materiales
+            eliminarMateriales(p.getUsuarioId(), conn);
+            if (materialesIds != null && !materialesIds.isEmpty()) {
+                String sqlMat = "INSERT INTO Usuario_Material (usuario_id, material_id) VALUES (?, ?)";
+                try (PreparedStatement stmt = conn.prepareStatement(sqlMat)) {
+                    for (Integer matId : materialesIds) {
+                        stmt.setInt(1, p.getUsuarioId());
+                        stmt.setInt(2, matId);
+                        stmt.addBatch();
+                    }
+                    stmt.executeBatch();
+                }
+            }
+
+            conn.commit();
+            return true;
+            
+        } catch (Exception e) {
+            System.err.println("Error al actualizar proveedor: " + e.getMessage());
+            e.printStackTrace();
+            if (conn != null) {
+                try { conn.rollback(); } catch (SQLException ex) { ex.printStackTrace(); }
+            }
+            return false;
+        } finally {
+            if (conn != null) {
+                try { 
+                    conn.setAutoCommit(true); 
+                    conn.close(); 
+                } catch (SQLException e) { e.printStackTrace(); }
+            }
+        }
+    }
+
+    // ==================== ESTADO Y ELIMINACIÓN ====================
+    
+    public boolean actualizarEstado(Integer id, Boolean estado) {
+        String sql = "UPDATE Usuario SET estado=? WHERE usuario_id=?";
+        try (Connection conn = ConexionDB.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setBoolean(1, estado);
+            stmt.setInt(2, id);
+            return stmt.executeUpdate() > 0;
+        } catch (Exception e) {
+            System.err.println("Error al actualizar estado: " + e.getMessage());
             e.printStackTrace();
             return false;
         }
+    }
+
+    public boolean eliminar(Integer id) {
+        // Soft delete: cambiar estado a inactivo
+        return actualizarEstado(id, false);
+    }
+
+    // ==================== MÉTODOS AUXILIARES PRIVADOS ====================
+    
+    private Proveedor mapearProveedor(ResultSet rs) throws SQLException {
+        Proveedor p = new Proveedor();
+        p.setUsuarioId(rs.getInt("usuario_id"));
+        p.setNombre(rs.getString("nombre"));
+        p.setPass(rs.getString("pass"));
+        p.setEstado(rs.getBoolean("estado"));
+        p.setDocumento(rs.getString("documento"));
+        p.setFechaRegistro(rs.getString("fecha_registro"));
+        p.setFechaInicio(rs.getString("fecha_inicio"));
+        p.setMinimoCompra(rs.getDouble("minimo_compra"));
+        return p;
+    }
+
+    private List<String> obtenerTelefonos(Integer usuarioId) {
+        List<String> lista = new ArrayList<>();
+        String sql = "SELECT telefono FROM Telefono_Usuario WHERE usuario_id=?";
+        try (Connection conn = ConexionDB.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, usuarioId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) lista.add(rs.getString("telefono"));
+            }
+        } catch (Exception e) { e.printStackTrace(); }
+        return lista;
+    }
+
+    private List<String> obtenerCorreos(Integer usuarioId) {
+        List<String> lista = new ArrayList<>();
+        String sql = "SELECT email FROM Correo_Usuario WHERE usuario_id=?";
+        try (Connection conn = ConexionDB.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, usuarioId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) lista.add(rs.getString("email"));
+            }
+        } catch (Exception e) { e.printStackTrace(); }
+        return lista;
+    }
+
+    private List<Material> obtenerMateriales(Integer usuarioId) {
+        List<Material> lista = new ArrayList<>();
+        String sql = "SELECT m.material_id, m.nombre FROM Material m " +
+                     "INNER JOIN Usuario_Material um ON m.material_id = um.material_id " +
+                     "WHERE um.usuario_id=?";
+        try (Connection conn = ConexionDB.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, usuarioId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Material m = new Material();
+                    m.setMaterialId(rs.getInt("material_id"));
+                    m.setNombre(rs.getString("nombre"));
+                    lista.add(m);
+                }
+            }
+        } catch (Exception e) { e.printStackTrace(); }
+        return lista;
+    }
+
+    private void eliminarTelefonos(Integer usuarioId, Connection conn) throws SQLException {
+        try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM Telefono_Usuario WHERE usuario_id=?")) {
+            stmt.setInt(1, usuarioId);
+            stmt.executeUpdate();
+        }
+    }
+
+    private void eliminarCorreos(Integer usuarioId, Connection conn) throws SQLException {
+        try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM Correo_Usuario WHERE usuario_id=?")) {
+            stmt.setInt(1, usuarioId);
+            stmt.executeUpdate();
+        }
+    }
+
+    private void eliminarMateriales(Integer usuarioId, Connection conn) throws SQLException {
+        try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM Usuario_Material WHERE usuario_id=?")) {
+            stmt.setInt(1, usuarioId);
+            stmt.executeUpdate();
+        }
+    }
+
+    private String obtenerPassActual(Integer usuarioId) {
+        String sql = "SELECT pass FROM Usuario WHERE usuario_id=?";
+        try (Connection conn = ConexionDB.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, usuarioId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) return rs.getString("pass");
+            }
+        } catch (Exception e) { e.printStackTrace(); }
+        return "NO_LOGIN";
     }
 }

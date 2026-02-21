@@ -1,127 +1,324 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java"%>
+<%@ page import="model.Proveedor, model.Material, java.util.List"%>
+<%
+    Object admin = session.getAttribute("admin");
+    if (admin == null) {
+        response.sendRedirect(request.getContextPath() + "/Administrador/inicio-sesion.jsp");
+        return;
+    }
+    
+    Proveedor p = (Proveedor) request.getAttribute("proveedor");
+    if (p == null) {
+        response.sendRedirect(request.getContextPath() + "/ProveedorServlet?action=listar");
+        return;
+    }
+    
+    List<Material> materiales = (List<Material>) request.getAttribute("materiales");
+    if (materiales == null) materiales = java.util.Collections.emptyList();
+    
+    String error = (String) request.getAttribute("error");
+%>
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editar proveedor</title>
-
+    <title>Editar Proveedor - AAC27</title>
+    <link rel="stylesheet" href="<%=request.getContextPath()%>/assets/css/main.css">
+    <link rel="stylesheet" href="<%=request.getContextPath()%>/assets/css/pages/Administrador/producto.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="../../../assets/css/main.css" />
-    <link rel="stylesheet" href="../../../assets/css/pages/Administrador/proveedores/editar.css" />
 </head>
-
 <body>
+<nav class="navbar-admin">
+    <div class="navbar-admin__catalogo">
+        <img src="<%=request.getContextPath()%>/assets/Imagenes/iconos/admin.png" alt="Admin">
+    </div>
+    <h1 class="navbar-admin__title">AAC27</h1>
+    <a href="<%=request.getContextPath()%>/ProveedorServlet?action=listar" class="navbar-admin__home-link">
+	   
+	    <span class="navbar-admin__home-icon-wrap">
+	        <i class="fa-solid fa-arrow-left"></i>
+		    <span class="navbar-admin__home-text">Volver atras</span>
+		    <i class="fa-solid fa-house-chimney"></i>
+	    </span>
+    </a>
+</nav>
 
-    <!-- Navbar -->
-    <nav class="navbar-admin">
-        <div class="navbar-admin__catalogo"> 
-            <img src="../../../assets/Imagenes/iconos/admin.png" alt="Admin"> </a>
-        </div> 
-
-        <h1 class="navbar-admin__title">AAC27</h1>
-        <a href="listar.html">
-            <i class="fa-solid fa-house-chimney navbar-admin__home-icon"></i>
-        </a>
-    </nav>
-
-    <main class="titulo">
-        <h1 class="titulo__encabezado">Editar proveedor</h1>
-
-        <form class="editar-proveedores__detalles">
-
-            <div class="editar-proveedores__contenido">
-
-                <!-- Imagen -->
-                <div class="editar-proveedores__imagen">
-                    <img src="../../../assets/Imagenes/iconos/proveedores.png" alt="Proveedor">
-                </div>
-
-                <!-- Campos -->
-                <div class="editar-proveedores__campos">
-                    <div class="editar-proveedor__input-grupo">
-                        <label>Nombre del proveedor</label>
-                        <input type="text" value="Nombre del proveedor" readonly class="editar-proveedores__input-texto" />
+<main class="form-product-container">
+    <h2 class="form-product-container__title">Editar Proveedor</h2>
+    
+    <% if (error != null) { %>
+        <div class="alert-error">
+            <i class="fa-solid fa-circle-exclamation"></i> <%= error %>
+        </div>
+    <% } %>
+    
+    <form id="formEditarProveedor" class="form-product" method="post" 
+          action="<%=request.getContextPath()%>/ProveedorServlet" novalidate>
+        <input type="hidden" name="action" value="actualizar">
+        <input type="hidden" name="usuarioId" value="<%= p.getUsuarioId() %>">
+        
+        <div class="form-product__row">
+            <!-- Nombre -->
+            <div class="form-product__group">
+                <label class="form-product__label" for="nombre">Nombre del Proveedor *</label>
+                <div class="input-wrap">
+                    <input id="nombre" type="text" name="nombre" class="form-product__input" 
+                           required value="<%= p.getNombre() != null ? p.getNombre() : "" %>">
+                    <div class="bubble-error" id="err-nombre">
+                        <span class="bubble-icon"><i class="fa-solid fa-circle-exclamation"></i></span>
+                        <span>El nombre es obligatorio.</span>
                     </div>
-
-                    <div class="editar-proveedor__input-grupo">
-                        <label>Teléfono</label>
-                        <input type="tel" placeholder="Ej: 3004567890" required class="editar-proveedores__input-texto" />
-                    </div>
-
-                    <div class="editar-proveedor__input-grupo">
-                        <label>Correo electrónico</label>
-                        <input type="email" placeholder="correo@ejemplo.com" required class="editar-proveedores__input-texto" />
-                    </div>
-
-                    <div class="editar-proveedor__input-grupo editar-proveedores__estado">
-                        <label>Estado</label>
-                        <div class="editar-proveedores__estado-opciones">
-                            <label><input type="radio" name="estado" value="Activo"> Activo</label>
-                            <label><input type="radio" name="estado" value="Inactivo"> Inactivo</label>
-                        </div>
-                    </div>
-
-                    <div class="editar-proveedor__input-grupo">
-                        <label>Material</label>
-                        <div class="editar-proveedores__estado-opciones">
-                            <label><input type="checkbox"> Acero inoxidable</label>
-                            <label><input type="checkbox"> Plata</label>
-                            <label><input type="checkbox"> Oro laminado</label>
-                        </div>
-                    </div>
-
-                    <div class="editar-proveedor__input-grupo">
-                        <label>Producto</label>
-                        <select class="editar-proveedores__input-select">
-                            <option>Anillos</option>
-                            <option>Aretes largos</option>
-                            <option>Collares</option>
-                            <option>Conjuntos</option>
-                            <option>Denarios</option>
-                            <option>Dijes</option>
-                            <option>Earcuff</option>
-                            <option>Manillas</option>
-                            <option>Pulseras</option>
-                            <option>Rosarios</option>
-                            <option>Tobilleras</option>
-                            <option>Topitos</option>
-                        </select>
-                    </div>
-
-                    <div class="editar-proveedor__input-grupo">
-                        <label>Fecha de inicio</label>
-                        <input type="text" value="12/05/2023" readonly class="editar-proveedores__input-lectura" />
-                    </div>
-
-                    <!-- NUEVO BLOQUE: REGISTRAR OBSERVACIÓN -->
-                    <div class="editar-proveedor__input-grupo" style="grid-column: span 2;">
-                        <label>Nueva observación</label>
-                        <textarea 
-                            class="editar-proveedores__input-area" 
-                            name="observacion" 
-                            rows="4"
-                            placeholder="Escribe aquí lo ocurrido con el proveedor..."></textarea>
-                    </div>
-
                 </div>
             </div>
-
-            <!-- Botones -->
-            <div class="editar-proveedor__acciones" style="margin-top: 25px;">
-                <button class="boton guardar">
-                    <a href="mensaje_exito.html">
-                        <i class="fa-solid fa-floppy-disk"></i> Guardar cambios
-                    </a>
-                </button>
-
-                <button type="reset" class="boton cancelar">
-                    <a href="listar.html">
-                        <i class="fa-solid fa-xmark"></i> Cancelar
-                    </a>
+            
+            <!-- Documento -->
+            <div class="form-product__group">
+                <label class="form-product__label" for="documento">Documento de Identidad *</label>
+                <div class="input-wrap">
+                    <input id="documento" type="text" name="documento" class="form-product__input" 
+                           required value="<%= p.getDocumento() != null ? p.getDocumento() : "" %>">
+                    <div class="bubble-error" id="err-documento">
+                        <span class="bubble-icon"><i class="fa-solid fa-circle-exclamation"></i></span>
+                        <span>El documento es obligatorio.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-product__row">
+            <!-- Fecha Inicio - READ ONLY (RF08) -->
+           <!-- En la sección de Fecha Inicio, cambiar a: -->
+            <div class="form-product__group">
+                <label class="form-product__label">Fecha de Inicio</label>
+                <div class="input-wrap">
+                    <input type="text" class="form-product__input readonly" 
+                           value="<%= p.getFechaInicio() %>" readonly>
+                    <input type="hidden" name="fechaInicio" value="<%= p.getFechaInicio() %>">
+                    <small class="form-help">Campo de solo lectura (RF08)</small>
+                </div>
+            </div>
+            
+            <!-- Mínimo Compra (RF38) -->
+            <div class="form-product__group">
+                <label class="form-product__label" for="minimoCompra">Monto Mínimo de Compra</label>
+                <div class="input-wrap">
+                    <input id="minimoCompra" type="number" name="minimoCompra" class="form-product__input" 
+                           min="0" step="0.01" placeholder="0.00"
+                           value="<%= p.getMinimoCompra() != null ? p.getMinimoCompra() : "" %>">
+                    <small class="form-help">Monto mínimo para compras a este proveedor.</small>
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-product__row">
+            <!-- Teléfonos -->
+            <div class="form-product__group">
+                <label class="form-product__label">Teléfonos *</label>
+                <div id="telefonos-container">
+                    <% 
+                    List<String> telefonos = p.getTelefonos();
+                    if (telefonos != null && !telefonos.isEmpty()) {
+                        for (int i = 0; i < telefonos.size(); i++) { 
+                    %>
+                    <div class="telefono-row">
+                        <input type="tel" name="telefono" class="form-product__input" 
+                               placeholder="Ej: 3001234567" 
+                               value="<%= telefonos.get(i) %>" required>
+                        <button type="button" class="btn-remove" onclick="this.parentElement.remove()">
+                            <i class="fa-solid fa-minus"></i>
+                        </button>
+                    </div>
+                    <% } } else { %>
+                    <div class="telefono-row">
+                        <input type="tel" name="telefono" class="form-product__input" 
+                               placeholder="Ej: 3001234567" required>
+                    </div>
+                    <% } %>
+                </div>
+                <button type="button" class="btn-add" onclick="agregarTelefono()">
+                    <i class="fa-solid fa-plus"></i> Agregar teléfono
                 </button>
             </div>
-        </form>
-    </main>
+            
+            <!-- Correos -->
+            <div class="form-product__group">
+                <label class="form-product__label">Correos Electrónicos *</label>
+                <div id="correos-container">
+                    <% 
+                    List<String> correos = p.getCorreos();
+                    if (correos != null && !correos.isEmpty()) {
+                        for (int i = 0; i < correos.size(); i++) { 
+                    %>
+                    <div class="correo-row">
+                        <input type="email" name="correo" class="form-product__input" 
+                               placeholder="correo@ejemplo.com" 
+                               value="<%= correos.get(i) %>" required>
+                        <button type="button" class="btn-remove" onclick="this.parentElement.remove()">
+                            <i class="fa-solid fa-minus"></i>
+                        </button>
+                    </div>
+                    <% } } else { %>
+                    <div class="correo-row">
+                        <input type="email" name="correo" class="form-product__input" 
+                               placeholder="correo@ejemplo.com" required>
+                    </div>
+                    <% } %>
+                </div>
+                <button type="button" class="btn-add" onclick="agregarCorreo()">
+                    <i class="fa-solid fa-plus"></i> Agregar correo
+                </button>
+            </div>
+        </div>
+        
+        <div class="form-product__row">
+            <!-- Materiales -->
+            <div class="form-product__group" style="grid-column: span 2;">
+                <label class="form-product__label">Materiales que Suministra</label>
+                <div class="checkbox-grid">
+                    <% for (Material m : materiales) { 
+                        boolean seleccionado = false;
+                        if (p.getMateriales() != null) {
+                            for (Material pm : p.getMateriales()) {
+                                if (pm.getMaterialId().equals(m.getMaterialId())) {
+                                    seleccionado = true;
+                                    break;
+                                }
+                            }
+                        }
+                    %>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="materiales" value="<%= m.getMaterialId() %>" 
+                               <%= seleccionado ? "checked" : "" %>>
+                        <span><%= m.getNombre() %></span>
+                    </label>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-product__row">
+            <!-- Contraseña (opcional al editar) -->
+            <div class="form-product__group">
+                <label class="form-product__label" for="password">Nueva Contraseña (opcional)</label>
+                <div class="input-wrap">
+                    <input id="password" type="password" name="password" class="form-product__input" 
+                           minlength="6" placeholder="Dejar vacío para mantener la actual">
+                    <small class="form-help">Mínimo 6 caracteres si desea cambiarla.</small>
+                </div>
+            </div>
+            
+            <!-- Estado -->
+            <div class="form-product__group">
+                <label class="form-product__label">Estado *</label>
+                <div class="radio-group">
+                    <label><input type="radio" name="estado" value="activo" <%= p.isEstado() ? "checked" : "" %>> Activo</label>
+                    <label><input type="radio" name="estado" value="inactivo" <%= !p.isEstado() ? "checked" : "" %>> Inactivo</label>
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-product__actions">
+            <button type="submit" class="btn-guardar">
+                <i class="fa-solid fa-floppy-disk"></i> Guardar Cambios
+            </button>
+            <button type="button" class="btn-cancelar" 
+                    onclick="window.location.href='<%=request.getContextPath()%>/ProveedorServlet?action=listar'">
+                <i class="fa-solid fa-xmark"></i> Cancelar
+            </button>
+        </div>
+    </form>
+</main>
 
+<script>
+// Funciones para campos dinámicos (mismo código que agregar.jsp)
+function agregarTelefono() {
+    const container = document.getElementById('telefonos-container');
+    const div = document.createElement('div');
+    div.className = 'telefono-row';
+    div.innerHTML = `
+        <input type="tel" name="telefono" class="form-product__input" placeholder="Ej: 3001234567" required>
+        <button type="button" class="btn-remove" onclick="this.parentElement.remove()">
+            <i class="fa-solid fa-minus"></i>
+        </button>
+    `;
+    container.appendChild(div);
+}
+
+function agregarCorreo() {
+    const container = document.getElementById('correos-container');
+    const div = document.createElement('div');
+    div.className = 'correo-row';
+    div.innerHTML = `
+        <input type="email" name="correo" class="form-product__input" placeholder="correo@ejemplo.com" required>
+        <button type="button" class="btn-remove" onclick="this.parentElement.remove()">
+            <i class="fa-solid fa-minus"></i>
+        </button>
+    `;
+    container.appendChild(div);
+}
+
+// Validación simplificada para edición
+const camposRequeridos = ['nombre', 'documento'];
+
+function esValido(id) {
+    const el = document.getElementById(id);
+    if (!el) return true;
+    return el.value.trim() !== '';
+}
+
+function mostrarError(id) {
+    const wrap = document.getElementById(id)?.closest('.input-wrap');
+    if (wrap) {
+        wrap.classList.add('invalid');
+        const bubble = wrap.querySelector('.bubble-error');
+        if (bubble) bubble.classList.add('visible');
+    }
+}
+
+function ocultarError(id) {
+    const wrap = document.getElementById(id)?.closest('.input-wrap');
+    if (wrap) {
+        wrap.classList.remove('invalid');
+        const bubble = wrap.querySelector('.bubble-error');
+        if (bubble) bubble.classList.remove('visible');
+    }
+}
+
+camposRequeridos.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+        el.addEventListener('input', () => { if (esValido(id)) ocultarError(id); });
+        el.addEventListener('blur', () => { if (!esValido(id)) mostrarError(id); });
+    }
+});
+
+document.getElementById('formEditarProveedor').addEventListener('submit', function(e) {
+    let formValido = true;
+    for (const id of camposRequeridos) {
+        const el = document.getElementById(id);
+        if (el && !esValido(id)) {
+            e.preventDefault();
+            mostrarError(id);
+            if (formValido) { el.focus(); formValido = false; }
+        }
+    }
+    
+    // Validar al menos un teléfono y correo
+    const telefonos = document.querySelectorAll('input[name="telefono"]');
+    const correos = document.querySelectorAll('input[name="correo"]');
+    
+    let tieneTelefonoValido = false, tieneCorreoValido = false;
+    telefonos.forEach(input => { if (input.value.trim() !== '') tieneTelefonoValido = true; });
+    correos.forEach(input => { if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.value)) tieneCorreoValido = true; });
+    
+    if (!tieneTelefonoValido || !tieneCorreoValido) {
+        e.preventDefault();
+        alert('Debe ingresar al menos un teléfono y un correo válidos.');
+        formValido = false;
+    }
+    
+    return formValido;
+});
+</script>
 </body>
 </html>

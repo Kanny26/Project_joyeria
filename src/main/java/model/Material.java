@@ -1,50 +1,20 @@
+// model/Material.java
 package model;
 
-/**
- * Clase modelo Material
- * Representa el material asociado a un producto dentro del sistema AAC27
- */
 public class Material {
-
-    // Identificador único del material
-    private int materialId;
-
-    // Nombre del material
+    private Integer materialId;
     private String nombre;
-
-    /**
-     * Constructor vacío
-     * Necesario para instanciación desde DAOs y JSP
-     */
-    public Material() {
-    }
-
-    /* ===============================
-       GETTERS
-       =============================== */
-
-    // Retorna el id del material
-    public int getMaterialId() {
-        return materialId;
-    }
-
-    // Retorna el nombre del material
-    public String getNombre() {
-        return nombre;
-    }
-
-    /* ===============================
-       SETTERS
-       =============================== */
-
-    // Asigna el id del material
-    public void setMaterialId(int materialId) {
+    
+    public Material() {}
+    
+    public Material(Integer materialId, String nombre) {
         this.materialId = materialId;
-    }
-
-    // Asigna el nombre del material
-    public void setNombre(String nombre) {
         this.nombre = nombre;
     }
+    
+    public Integer getMaterialId() { return materialId; }
+    public void setMaterialId(Integer materialId) { this.materialId = materialId; }
+    
+    public String getNombre() { return nombre; }
+    public void setNombre(String nombre) { this.nombre = nombre; }
 }
-

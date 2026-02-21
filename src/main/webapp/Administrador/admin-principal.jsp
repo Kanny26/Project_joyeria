@@ -65,7 +65,7 @@
 	    </article>
 	
 	    <article class="iconos-item">
-	        <a href="<%=request.getContextPath()%>/Administrador/proveedores.jsp" class="icono-boton">
+	        <a href="<%=request.getContextPath()%>/ProveedorServlet?accion=listar" class="icono-boton">
 	            <div class="icono-boton__circulo">
 	                <img class="icono-boton__img"
 	                     src="<%=request.getContextPath()%>/assets/Imagenes/iconos/gestionar_proveedores.png"

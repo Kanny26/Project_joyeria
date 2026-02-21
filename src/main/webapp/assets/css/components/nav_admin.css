@@ -63,21 +63,12 @@
     text-decoration: none;
     padding: 7px 16px 7px 8px;
     border-radius: 50px;
-    border: 1.5px solid rgba(255, 255, 255, 0.25);
-    background: rgba(255, 255, 255, 0.10);
     backdrop-filter: blur(6px);
     -webkit-backdrop-filter: blur(6px);
     transition: background 0.25s ease,
                 border-color 0.25s ease,
                 box-shadow 0.25s ease,
                 transform 0.2s ease;
-}
-
-.navbar-admin__home-link:hover {
-    background: rgba(255, 255, 255, 0.22);
-    border-color: rgba(255, 255, 255, 0.50);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
-    transform: translateY(-1px);
 }
 
 /* Círculo que envuelve el ícono */
@@ -88,14 +79,14 @@
     width: 30px;
     height: 30px;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.20);
     flex-shrink: 0;
     transition: background 0.25s ease, transform 0.25s ease;
+    margin-right: 76px;
+    gap:10px;
 }
 
 .navbar-admin__home-link:hover .navbar-admin__home-icon-wrap {
-    background: rgba(255, 255, 255, 0.35);
-    transform: translateX(-2px);
+    transform: translateX(5px);
 }
 
 /* Ícono flecha */
@@ -106,7 +97,7 @@
 
 /* Texto */
 .navbar-admin__home-text {
-    font-size: 24px; /* o 24px si lo quieres más grande */
+    font-size: 24px;
     font-weight: 600;
     color: var(--color-texto-principal, #fff);
     white-space: nowrap;
@@ -114,9 +105,6 @@
     transition: color 0.25s ease;
 }
 
-.navbar-admin__home-link:hover .navbar-admin__home-text {
-    color: #ffffff;
-}
 /* ============================================================
    MEDIA QUERIES - DESKTOP FIRST
    ============================================================ */

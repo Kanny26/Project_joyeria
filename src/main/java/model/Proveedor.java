@@ -1,130 +1,69 @@
 package model;
 
-import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Clase modelo Proveedor
- * Representa un proveedor del sistema con sus datos de contacto y productos asociados
- */
 public class Proveedor {
-
-    // Identificador del proveedor (usuario)
-    private int usuarioId;
-
-    // Nombre del proveedor
+    private Integer usuarioId;
     private String nombre;
-
-    // Lista de teléfonos de contacto
+    private String pass;
+    private Boolean estado;
+    private String documento;
+    private String fechaRegistro;
+    private String fechaInicio;
+    private Double minimoCompra;
+    
+    // Relaciones
     private List<String> telefonos;
-
-    // Lista de correos electrónicos
     private List<String> correos;
-
-    // Lista de materiales que maneja el proveedor
-    private List<String> materiales;
-
-    // Lista de productos suministrados
+    private List<Material> materiales;
     private List<Producto> productos;
 
-    // Fecha de inicio de relación comercial
-    private LocalDate fechaInicio;
-
-    // Estado del proveedor (activo/inactivo)
-    private boolean estado;
-
-    /**
-     * Constructor vacío
-     * Necesario para DAOs y JSP
-     */
     public Proveedor() {
+        this.telefonos = new ArrayList<>();
+        this.correos = new ArrayList<>();
+        this.materiales = new ArrayList<>();
+        this.productos = new ArrayList<>();
     }
 
-    /* ===============================
-       GETTERS
-       =============================== */
+    // Getters y Setters
+    public Integer getUsuarioId() { return usuarioId; }
+    public void setUsuarioId(Integer usuarioId) { this.usuarioId = usuarioId; }
 
-    // Retorna el id del proveedor
-    public int getUsuarioId() {
-        return usuarioId;
-    }
+    public String getNombre() { return nombre; }
+    public void setNombre(String nombre) { this.nombre = nombre; }
 
-    // Retorna el nombre del proveedor
-    public String getNombre() {
-        return nombre;
-    }
+    public String getPass() { return pass; }
+    public void setPass(String pass) { this.pass = pass; }
 
-    // Retorna los teléfonos
-    public List<String> getTelefonos() {
-        return telefonos;
-    }
+    public Boolean isEstado() { return estado != null ? estado : true; }
+    public void setEstado(Boolean estado) { this.estado = estado; }
 
-    // Retorna los correos
-    public List<String> getCorreos() {
-        return correos;
-    }
+    public String getDocumento() { return documento; }
+    public void setDocumento(String documento) { this.documento = documento; }
 
-    // Retorna los materiales
-    public List<String> getMateriales() {
-        return materiales;
-    }
+    public String getFechaRegistro() { return fechaRegistro; }
+    public void setFechaRegistro(String fechaRegistro) { this.fechaRegistro = fechaRegistro; }
 
-    // Retorna los productos
-    public List<Producto> getProductos() {
-        return productos;
-    }
+    public String getFechaInicio() { return fechaInicio; }
+    public void setFechaInicio(String fechaInicio) { this.fechaInicio = fechaInicio; }
 
-    // Retorna la fecha de inicio
-    public LocalDate getFechaInicio() {
-        return fechaInicio;
-    }
+    public Double getMinimoCompra() { return minimoCompra; }
+    public void setMinimoCompra(Double minimoCompra) { this.minimoCompra = minimoCompra; }
 
-    // Retorna el estado del proveedor
-    public boolean isEstado() {
-        return estado;
-    }
+    public List<String> getTelefonos() { return telefonos; }
+    public void setTelefonos(List<String> telefonos) { this.telefonos = telefonos; }
+    public void addTelefono(String telefono) { this.telefonos.add(telefono); }
 
-    /* ===============================
-       SETTERS
-       =============================== */
+    public List<String> getCorreos() { return correos; }
+    public void setCorreos(List<String> correos) { this.correos = correos; }
+    public void addCorreo(String correo) { this.correos.add(correo); }
 
-    // Asigna el id del proveedor
-    public void setUsuarioId(int usuarioId) {
-        this.usuarioId = usuarioId;
-    }
+    public List<Material> getMateriales() { return materiales; }
+    public void setMateriales(List<Material> materiales) { this.materiales = materiales; }
+    public void addMaterial(Material material) { this.materiales.add(material); }
 
-    // Asigna el nombre del proveedor
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    // Asigna los teléfonos
-    public void setTelefonos(List<String> telefonos) {
-        this.telefonos = telefonos;
-    }
-
-    // Asigna los correos
-    public void setCorreos(List<String> correos) {
-        this.correos = correos;
-    }
-
-    // Asigna los materiales
-    public void setMateriales(List<String> materiales) {
-        this.materiales = materiales;
-    }
-
-    // Asigna los productos
-    public void setProductos(List<Producto> productos) {
-        this.productos = productos;
-    }
-
-    // Asigna la fecha de inicio
-    public void setFechaInicio(LocalDate fechaInicio) {
-        this.fechaInicio = fechaInicio;
-    }
-
-    // Asigna el estado del proveedor
-    public void setEstado(boolean estado) {
-        this.estado = estado;
-    }
+    public List<Producto> getProductos() { return productos; }
+    public void setProductos(List<Producto> productos) { this.productos = productos; }
+    public void addProducto(Producto producto) { this.productos.add(producto); }
 }
