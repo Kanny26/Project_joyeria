@@ -16,9 +16,9 @@ import java.util.List;
 
 @WebServlet("/ProductoServlet")
 @MultipartConfig(
-    fileSizeThreshold = 1024 * 1024,
-    maxFileSize       = 1024 * 1024 * 5,
-    maxRequestSize    = 1024 * 1024 * 10
+    fileSizeThreshold = 1024 * 1024,      // 1 MB
+    maxFileSize       = 1024 * 1024 * 5,  // 5 MB
+    maxRequestSize    = 1024 * 1024 * 10  // 10 MB
 )
 public class ProductoServlet extends HttpServlet {
 
@@ -48,12 +48,17 @@ public class ProductoServlet extends HttpServlet {
             return;
         }
 
-        switch (action) {
-            case "nuevo"           -> mostrarFormularioNuevo(request, response);
-            case "ver"             -> verProducto(request, response);
-            case "editar"          -> mostrarFormularioEditar(request, response);
-            case "confirmarEliminar" -> confirmarEliminar(request, response);
-            default                -> response.sendRedirect(request.getContextPath() + "/CategoriaServlet");
+        try {
+            switch (action) {
+                case "nuevo"           -> mostrarFormularioNuevo(request, response);
+                case "ver"             -> verProducto(request, response);
+                case "editar"          -> mostrarFormularioEditar(request, response);
+                case "confirmarEliminar" -> confirmarEliminar(request, response);
+                default                -> response.sendRedirect(request.getContextPath() + "/CategoriaServlet");
+            }
+        } catch (Exception e) {
+            request.setAttribute("error", "Error: " + e.getMessage());
+            request.getRequestDispatcher("/WEB-INF/views/error.jsp").forward(request, response);
         }
     }
 
@@ -65,6 +70,7 @@ public class ProductoServlet extends HttpServlet {
             throws ServletException, IOException {
 
         if (!estaAutenticado(request, response)) return;
+        request.setCharacterEncoding("UTF-8");
 
         String action = request.getParameter("action");
         if (action == null || action.trim().isEmpty()) {
@@ -72,21 +78,26 @@ public class ProductoServlet extends HttpServlet {
             return;
         }
 
-        switch (action) {
-            case "guardar"    -> guardarProducto(request, response);
-            case "actualizar" -> actualizarProducto(request, response);
-            case "eliminar"   -> eliminarProductoPost(request, response);
-            default           -> response.sendRedirect(request.getContextPath() + "/CategoriaServlet");
+        try {
+            switch (action) {
+                case "guardar"    -> guardarProducto(request, response);
+                case "actualizar" -> actualizarProducto(request, response);
+                case "eliminar"   -> eliminarProductoPost(request, response);
+                default           -> response.sendRedirect(request.getContextPath() + "/CategoriaServlet");
+            }
+        } catch (Exception e) {
+            request.setAttribute("error", "Error: " + e.getMessage());
+            request.getRequestDispatcher("/WEB-INF/views/error.jsp").forward(request, response);
         }
     }
 
     /* ═══════════════════════════════════════════════
-       AUTENTICACIÓN (helper)
+       AUTENTICACIÓN
     ═══════════════════════════════════════════════ */
     private boolean estaAutenticado(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
-        Administrador admin = (Administrador) request.getSession().getAttribute("admin");
-        if (admin == null) {
+        HttpSession session = request.getSession(false);
+        if (session == null || session.getAttribute("admin") == null) {
             response.sendRedirect(request.getContextPath() + "/Administrador/inicio-sesion.jsp");
             return false;
         }
@@ -96,63 +107,73 @@ public class ProductoServlet extends HttpServlet {
     /* ═══════════════════════════════════════════════
        ACCIONES GET
     ═══════════════════════════════════════════════ */
-
     private void mostrarFormularioNuevo(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
-        String catIdStr = request.getParameter("categoria");
-        if (catIdStr == null || !catIdStr.matches("\\d+")) {
-            response.sendRedirect(request.getContextPath() + "/CategoriaServlet");
-            return;
+        try {
+            String catIdStr = request.getParameter("categoria");
+            if (catIdStr == null || !catIdStr.matches("\\d+")) {
+                response.sendRedirect(request.getContextPath() + "/CategoriaServlet");
+                return;
+            }
+            int catId = Integer.parseInt(catIdStr);
+            Categoria categoria = categoriaDAO.obtenerPorId(catId);
+            if (categoria == null) {
+                response.sendRedirect(request.getContextPath() + "/CategoriaServlet");
+                return;
+            }
+            request.setAttribute("categoria", categoria);
+            request.setAttribute("materiales", materialDAO.listarMateriales());
+            request.getRequestDispatcher("/Administrador/agregar_producto.jsp")
+                   .forward(request, response);
+        } catch (Exception e) {
+            request.setAttribute("error", "Error al cargar formulario: " + e.getMessage());
+            request.getRequestDispatcher("/WEB-INF/views/error.jsp").forward(request, response);
         }
-
-        Categoria categoria = categoriaDAO.obtenerPorId(Integer.parseInt(catIdStr));
-        if (categoria == null) {
-            response.sendRedirect(request.getContextPath() + "/CategoriaServlet");
-            return;
-        }
-
-        request.setAttribute("categoria", categoria);
-        request.setAttribute("materiales", materialDAO.listarMateriales());
-        request.getRequestDispatcher("/Administrador/agregar_producto.jsp")
-               .forward(request, response);
     }
 
     private void verProducto(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
-        Producto producto = obtenerProductoPorParam(request, response);
-        if (producto == null) return;
-
-        request.setAttribute("producto", producto);
-        request.getRequestDispatcher("/Administrador/ver-producto.jsp")
-               .forward(request, response);
+        try {
+            Producto producto = obtenerProductoPorParam(request, response);
+            if (producto == null) return;
+            request.setAttribute("producto", producto);
+            request.getRequestDispatcher("/Administrador/ver-producto.jsp")
+                   .forward(request, response);
+        } catch (Exception e) {
+            request.setAttribute("error", "Error: " + e.getMessage());
+            request.getRequestDispatcher("/WEB-INF/views/error.jsp").forward(request, response);
+        }
     }
 
     private void mostrarFormularioEditar(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
-        Producto producto = obtenerProductoPorParam(request, response);
-        if (producto == null) return;
-
-        request.setAttribute("producto",   producto);
-        request.setAttribute("materiales", materialDAO.listarMateriales());
-        request.getRequestDispatcher("/Administrador/editar.jsp")
-               .forward(request, response);
+        try {
+            Producto producto = obtenerProductoPorParam(request, response);
+            if (producto == null) return;
+            request.setAttribute("producto", producto);
+            request.setAttribute("materiales", materialDAO.listarMateriales());
+            request.getRequestDispatcher("/Administrador/editar.jsp")
+                   .forward(request, response);
+        } catch (Exception e) {
+            request.setAttribute("error", "Error: " + e.getMessage());
+            request.getRequestDispatcher("/WEB-INF/views/error.jsp").forward(request, response);
+        }
     }
 
     private void confirmarEliminar(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
-        Producto producto = obtenerProductoPorParam(request, response);
-        if (producto == null) return;
-
-        request.setAttribute("producto", producto);
-        request.getRequestDispatcher("/Administrador/eliminar.jsp")
-               .forward(request, response);
+        try {
+            Producto producto = obtenerProductoPorParam(request, response);
+            if (producto == null) return;
+            request.setAttribute("producto", producto);
+            request.getRequestDispatcher("/Administrador/eliminar.jsp")
+                   .forward(request, response);
+        } catch (Exception e) {
+            request.setAttribute("error", "Error: " + e.getMessage());
+            request.getRequestDispatcher("/WEB-INF/views/error.jsp").forward(request, response);
+        }
     }
 
-    /** Extrae el producto a partir del parámetro "id"; redirige si no existe. */
     private Producto obtenerProductoPorParam(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         String idStr = request.getParameter("id");
@@ -160,24 +181,30 @@ public class ProductoServlet extends HttpServlet {
             response.sendRedirect(request.getContextPath() + "/CategoriaServlet");
             return null;
         }
-        Producto p = productoDAO.obtenerPorId(Integer.parseInt(idStr));
-        if (p == null) {
+        try {
+            int id = Integer.parseInt(idStr);
+            Producto p = productoDAO.obtenerPorId(id);
+            if (p == null) {
+                response.sendRedirect(request.getContextPath() + "/CategoriaServlet");
+            }
+            return p;
+        } catch (Exception e) {
             response.sendRedirect(request.getContextPath() + "/CategoriaServlet");
+            return null;
         }
-        return p;
     }
 
     /* ═══════════════════════════════════════════════
        ACCIONES POST
     ═══════════════════════════════════════════════ */
-
     private void guardarProducto(HttpServletRequest request, HttpServletResponse response)
-            throws IOException, ServletException {
-
-        Administrador admin = (Administrador) request.getSession().getAttribute("admin");
+            throws Exception {
+        HttpSession session = request.getSession();
+        Administrador admin = (Administrador) session.getAttribute("admin");
+        
         Producto p = construirProductoDesdeRequest(request);
 
-        /* Validar que la imagen fue enviada al crear */
+        // Validar imagen obligatoria al crear
         if (p.getImagenData() == null || p.getImagenData().length == 0) {
             reenviarFormularioNuevo(request, response, p, "Selecciona una imagen para el producto.");
             return;
@@ -189,67 +216,82 @@ public class ProductoServlet extends HttpServlet {
             return;
         }
 
+        // Usar getUsuarioId() del modelo Usuario
         productoDAO.guardar(p, admin.getId());
         response.sendRedirect(request.getContextPath()
-                + "/CategoriaServlet?id=" + p.getCategoria().getCategoriaId());
+                + "/CategoriaServlet?id=" + p.getCategoriaId());
     }
 
     private void reenviarFormularioNuevo(HttpServletRequest request, HttpServletResponse response,
                                           Producto p, String error)
             throws ServletException, IOException {
-        Categoria categoria = categoriaDAO.obtenerPorId(p.getCategoria().getCategoriaId());
-        request.setAttribute("error",     error);
-        request.setAttribute("producto",  p);
-        request.setAttribute("materiales", materialDAO.listarMateriales());
-        request.setAttribute("categoria", categoria);
-        request.getRequestDispatcher("/Administrador/agregar_producto.jsp")
-               .forward(request, response);
+        try {
+            Categoria categoria = categoriaDAO.obtenerPorId(p.getCategoriaId());
+            request.setAttribute("error", error);
+            request.setAttribute("producto", p);
+            request.setAttribute("materiales", materialDAO.listarMateriales());
+            request.setAttribute("categoria", categoria);
+            request.getRequestDispatcher("/Administrador/agregar_producto.jsp")
+                   .forward(request, response);
+        } catch (Exception e) {
+            request.setAttribute("error", "Error: " + e.getMessage());
+            request.getRequestDispatcher("/WEB-INF/views/error.jsp").forward(request, response);
+        }
     }
 
     private void actualizarProducto(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
-
         String idStr = request.getParameter("productoId");
         if (idStr == null || !idStr.matches("\\d+")) {
             response.sendRedirect(request.getContextPath() + "/CategoriaServlet");
             return;
         }
 
-        Producto p = construirProductoDesdeRequest(request);
-        p.setProductoId(Integer.parseInt(idStr));
+        try {
+            Producto p = construirProductoDesdeRequest(request);
+            p.setProductoId(Integer.parseInt(idStr));
 
-        String error = validarProducto(p);
-        if (error != null) {
-            request.setAttribute("error",     error);
-            request.setAttribute("producto",  p);
-            request.setAttribute("materiales", materialDAO.listarMateriales());
-            request.getRequestDispatcher("/Administrador/editar.jsp")
-                   .forward(request, response);
-            return;
+            String error = validarProducto(p);
+            if (error != null) {
+                request.setAttribute("error", error);
+                request.setAttribute("producto", p);
+                request.setAttribute("materiales", materialDAO.listarMateriales());
+                request.getRequestDispatcher("/Administrador/editar.jsp")
+                       .forward(request, response);
+                return;
+            }
+
+            productoDAO.actualizar(p);
+            response.sendRedirect(request.getContextPath()
+                    + "/CategoriaServlet?id=" + p.getCategoriaId());
+        } catch (Exception e) {
+            request.setAttribute("error", "Error al actualizar: " + e.getMessage());
+            request.getRequestDispatcher("/WEB-INF/views/error.jsp").forward(request, response);
         }
-
-        productoDAO.actualizar(p);
-        response.sendRedirect(request.getContextPath()
-                + "/CategoriaServlet?id=" + p.getCategoria().getCategoriaId());
     }
 
     private void eliminarProductoPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
         String idStr = request.getParameter("id");
         if (idStr == null || !idStr.matches("\\d+")) {
             response.sendRedirect(request.getContextPath() + "/CategoriaServlet");
             return;
         }
 
-        Producto producto = productoDAO.obtenerPorId(Integer.parseInt(idStr));
-        if (producto != null) {
-            productoDAO.eliminar(producto.getProductoId());
-            request.setAttribute("producto", producto);
-            request.getRequestDispatcher("/Administrador/eliminado.jsp")
-                   .forward(request, response);
-        } else {
-            response.sendRedirect(request.getContextPath() + "/CategoriaServlet");
+        try {
+            int id = Integer.parseInt(idStr);
+            Producto producto = productoDAO.obtenerPorId(id);
+            if (producto != null) {
+                productoDAO.eliminar(id);
+                request.setAttribute("producto", producto);
+                request.getRequestDispatcher("/Administrador/eliminado.jsp")
+                       .forward(request, response);
+            } else {
+                response.sendRedirect(request.getContextPath() + "/CategoriaServlet");
+            }
+        } catch (Exception e) {
+            request.setAttribute("error", "Error al eliminar: " + e.getMessage());
+            request.getRequestDispatcher("/WEB-INF/views/error.jsp").forward(request, response);
         }
     }
 
@@ -263,44 +305,27 @@ public class ProductoServlet extends HttpServlet {
         p.setNombre(request.getParameter("nombre"));
         p.setDescripcion(request.getParameter("descripcion"));
 
-        String stockStr       = request.getParameter("stock");
-        String precioUnitStr  = request.getParameter("precioUnitario");
-        String precioVentaStr = request.getParameter("precioVenta");
+        // Parseo seguro de números
+        p.setStock(parsearInt(request.getParameter("stock"), 0));
+        p.setPrecioUnitario(parsearBigDecimal(request.getParameter("precioUnitario"), BigDecimal.ZERO));
+        p.setPrecioVenta(parsearBigDecimal(request.getParameter("precioVenta"), BigDecimal.ZERO));
 
-        p.setStock(stockStr != null && !stockStr.isEmpty()
-                ? Integer.parseInt(stockStr) : 0);
-        p.setPrecioUnitario(precioUnitStr != null && !precioUnitStr.isEmpty()
-                ? new BigDecimal(precioUnitStr) : BigDecimal.ZERO);
-        p.setPrecioVenta(precioVentaStr != null && !precioVentaStr.isEmpty()
-                ? new BigDecimal(precioVentaStr) : BigDecimal.ZERO);
+        // Categoría y Material (usando IDs directamente)
+        p.setCategoriaId(parsearInt(request.getParameter("categoriaId"), 0));
+        p.setMaterialId(parsearInt(request.getParameter("materialId"), 0));
 
-        Categoria c = new Categoria();
-        String catIdStr = request.getParameter("categoriaId");
-        c.setCategoriaId(catIdStr != null && !catIdStr.isEmpty()
-                ? Integer.parseInt(catIdStr) : 0);
-        p.setCategoria(c);
-
-        Material m = new Material();
-        String matIdStr = request.getParameter("materialId");
-        m.setMaterialId(matIdStr != null && !matIdStr.isEmpty()
-                ? Integer.parseInt(matIdStr) : 0);
-        p.setMaterial(m);
-
-        /* Imagen como BLOB en BD */
+        // Imagen
         Part filePart = request.getPart("imagen");
-
         if (filePart != null && filePart.getSize() > 0) {
-            String fileName = Paths.get(filePart.getSubmittedFileName())
-                                   .getFileName()
-                                   .toString();
+            String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
             byte[] bytes = filePart.getInputStream().readAllBytes();
             p.setImagen(fileName);
             p.setImagenData(bytes);
             p.setImagenTipo(filePart.getContentType());
         } else {
-            // Sin imagen nueva → conservar nombre actual (bytes ya están en BD)
+            // Al actualizar: conservar imagen anterior si no se sube nueva
             p.setImagen(request.getParameter("imagenActual"));
-            p.setImagenData(null);   // null = no actualizar bytes en BD
+            p.setImagenData(null);   // null = no actualizar bytes
             p.setImagenTipo(null);
         }
 
@@ -308,34 +333,46 @@ public class ProductoServlet extends HttpServlet {
     }
 
     /* ═══════════════════════════════════════════════
-       VALIDACIÓN
+       HELPERS DE PARSEO SEGURO
+    ═══════════════════════════════════════════════ */
+    private int parsearInt(String valor, int defaultValue) {
+        if (valor == null || valor.trim().isEmpty()) return defaultValue;
+        try {
+            return Integer.parseInt(valor.trim());
+        } catch (NumberFormatException e) {
+            return defaultValue;
+        }
+    }
+
+    private BigDecimal parsearBigDecimal(String valor, BigDecimal defaultValue) {
+        if (valor == null || valor.trim().isEmpty()) return defaultValue;
+        try {
+            return new BigDecimal(valor.trim());
+        } catch (NumberFormatException e) {
+            return defaultValue;
+        }
+    }
+
+    /* ═══════════════════════════════════════════════
+       VALIDACIÓN DE PRODUCTO
     ═══════════════════════════════════════════════ */
     private String validarProducto(Producto p) {
-
         if (p.getNombre() == null || p.getNombre().trim().isEmpty())
             return "El nombre del producto es obligatorio.";
-
         if (p.getDescripcion() == null || p.getDescripcion().trim().isEmpty())
             return "La descripción es obligatoria.";
-
         if (p.getStock() < 0)
             return "El stock no puede ser negativo.";
-
         if (p.getPrecioUnitario() == null || p.getPrecioUnitario().compareTo(BigDecimal.ZERO) <= 0)
             return "El precio de costo debe ser mayor a 0.";
-
         if (p.getPrecioVenta() == null || p.getPrecioVenta().compareTo(BigDecimal.ZERO) <= 0)
             return "El precio de venta debe ser mayor a 0.";
-
         if (p.getPrecioVenta().compareTo(p.getPrecioUnitario()) < 0)
             return "El precio de venta no puede ser menor al precio de costo.";
-
-        if (p.getCategoria() == null || p.getCategoria().getCategoriaId() <= 0)
+        if (p.getCategoriaId() <= 0)
             return "Debe seleccionar una categoría válida.";
-
-        if (p.getMaterial() == null || p.getMaterial().getMaterialId() <= 0)
+        if (p.getMaterialId() <= 0)
             return "Debe seleccionar un material válido.";
-
         return null;
     }
 }

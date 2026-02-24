@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ page import="java.util.List, model.Producto, model.Categoria, model.Administrador" %>
-<%@ page import="java.time.format.DateTimeFormatter" %>
+<%@ page import="java.text.SimpleDateFormat" %>
 
 <%
     Administrador admin = (Administrador) session.getAttribute("admin");
@@ -17,7 +17,7 @@
     if (termino      == null) termino      = "";
     if (filtroActivo == null) filtroActivo = "todos";
 
-    DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
 %>
 
 <!DOCTYPE html>
@@ -40,13 +40,13 @@
     <h1 class="navbar-admin__title">AAC27</h1>
     
     <a href="<%=request.getContextPath()%>/CategoriaServlet"
-	   class="navbar-admin__home-link">
-	    <span class="navbar-admin__home-icon-wrap">
-	        <i class="fa-solid fa-arrow-left"></i>
-		    <span class="navbar-admin__home-text">Volver atras</span>
-		    <i class="fa-solid fa-house-chimney"></i>
-	    </span>
-	</a>
+       class="navbar-admin__home-link">
+        <span class="navbar-admin__home-icon-wrap">
+            <i class="fa-solid fa-arrow-left"></i>
+            <span class="navbar-admin__home-text">Volver atrás</span>
+            <i class="fa-solid fa-house-chimney"></i>
+        </span>
+    </a>
 </nav>
 
 <main class="titulo">
@@ -154,14 +154,21 @@
                 <span class="product__value"><%= p.getNombre() %></span>
             </h3>
 
+            <!-- CORREGIDO: usar getCategoriaNombre() en lugar de getCategoria().getNombre() -->
             <h4 class="product__category">
                 <span class="product__label">Categoría:</span>
-                <span class="product__value"><%= categoria != null ? categoria.getNombre() : p.getCategoria().getNombre() %></span>
+                <span class="product__value">
+                    <%= categoria != null ? categoria.getNombre() : 
+                        (p.getCategoriaNombre() != null ? p.getCategoriaNombre() : "Sin categoría") %>
+                </span>
             </h4>
 
+            <!-- CORREGIDO: usar getMaterialNombre() en lugar de getMaterial().getNombre() -->
             <h4 class="product__material">
                 <span class="product__label">Material:</span>
-                <span class="product__value"><%= p.getMaterial().getNombre() %></span>
+                <span class="product__value">
+                    <%= p.getMaterialNombre() != null ? p.getMaterialNombre() : "Sin material" %>
+                </span>
             </h4>
 
             <h4 class="product__cost">
@@ -184,9 +191,12 @@
                 </span>
             </h4>
 
+            <!-- CORREGIDO: usar SimpleDateFormat para formatear Date -->
             <h4 class="product__date">
                 <span class="product__label">En stock desde:</span>
-                <span class="product__value"><%= p.getFechaRegistro().format(formato) %></span>
+                <span class="product__value">
+                    <%= p.getFechaRegistro() != null ? formato.format(p.getFechaRegistro()) : "N/A" %>
+                </span>
             </h4>
 
             <div class="iconos">
@@ -214,6 +224,7 @@
                     <% } else { %>
                         No hay productos en esta categoría todavía.
                     <% } %>
+                </p>
             </div>
         <% } %>
 

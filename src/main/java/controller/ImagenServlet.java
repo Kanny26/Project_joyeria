@@ -9,7 +9,7 @@ import javax.servlet.http.*;
 import java.io.*;
 
 @WebServlet("/imagen-producto/*")
-public class ImagenServlet extends HttpServlet {  // ← nombre correcto
+public class ImagenServlet extends HttpServlet {
 
     private ProductoDAO productoDAO;
 
@@ -35,27 +35,26 @@ public class ImagenServlet extends HttpServlet {  // ← nombre correcto
             return;
         }
 
-        int id = Integer.parseInt(idStr);
-        System.out.println(">>> ImagenProductoServlet: solicitando imagen del producto ID=" + id);
+        try {
+            int id = Integer.parseInt(idStr);
+            Producto producto = productoDAO.obtenerPorId(id);
 
-        Producto producto = productoDAO.obtenerPorId(id);
+            if (producto != null
+                    && producto.getImagenData() != null
+                    && producto.getImagenData().length > 0) {
 
-        if (producto != null
-                && producto.getImagenData() != null
-                && producto.getImagenData().length > 0) {
+                String tipo = producto.getImagenTipo() != null
+                        ? producto.getImagenTipo() : "image/jpeg";
 
-            System.out.println(">>> Imagen encontrada, tipo=" + producto.getImagenTipo()
-                    + ", bytes=" + producto.getImagenData().length);
+                response.setContentType(tipo);
+                response.setContentLengthLong(producto.getImagenData().length);
+                response.setHeader("Cache-Control", "public, max-age=31536000");
+                response.getOutputStream().write(producto.getImagenData());
 
-            String tipo = producto.getImagenTipo() != null
-                    ? producto.getImagenTipo() : "image/jpeg";
-
-            response.setContentType(tipo);
-            response.setContentLengthLong(producto.getImagenData().length);
-            response.getOutputStream().write(producto.getImagenData());
-
-        } else {
-            System.out.println(">>> Sin imagen en BD para producto ID=" + id + ", sirviendo default");
+            } else {
+                servirImagenDefault(response);
+            }
+        } catch (Exception e) {
             servirImagenDefault(response);
         }
     }
@@ -64,11 +63,7 @@ public class ImagenServlet extends HttpServlet {  // ← nombre correcto
         String path = getServletContext().getRealPath("/imagenes/default.jpg");
         File f = new File(path);
 
-        System.out.println(">>> Ruta default.jpg: " + path);
-        System.out.println(">>> default.jpg existe: " + f.exists());
-
         if (!f.exists()) {
-            // Si no hay default.jpg, devuelve imagen transparente 1x1 para no romper la UI
             response.setContentType("image/gif");
             byte[] gif1x1 = {
                 0x47,0x49,0x46,0x38,0x39,0x61,0x01,0x00,
@@ -91,6 +86,7 @@ public class ImagenServlet extends HttpServlet {  // ← nombre correcto
             byte[] buf = new byte[4096];
             int n;
             while ((n = in.read(buf)) != -1) out.write(buf, 0, n);
+            out.flush();
         }
     }
 }

@@ -23,19 +23,19 @@
 </head>
 <body>
 
-
 <nav class="navbar-admin">
     <div class="navbar-admin__catalogo">
         <img src="<%= request.getContextPath() %>/assets/Imagenes/iconos/admin.png" alt="Admin">
     </div>
     <h1 class="navbar-admin__title">AAC27</h1>
-    <a href="<%= request.getContextPath() %>/CategoriaServlet?id=<%= producto.getCategoria().getCategoriaId() %>" class="navbar-admin__home-link">
-	   
-	    <span class="navbar-admin__home-icon-wrap">
-	        <i class="fa-solid fa-arrow-left"></i>
-		    <span class="navbar-admin__home-text">Volver atras</span>
-		    <i class="fa-solid fa-house-chimney"></i>
-	    </span>
+    <!-- CORREGIDO: usar getCategoriaId() -->
+    <a href="<%= request.getContextPath() %>/CategoriaServlet?id=<%= producto.getCategoriaId() %>" 
+       class="navbar-admin__home-link">
+        <span class="navbar-admin__home-icon-wrap">
+            <i class="fa-solid fa-arrow-left"></i>
+            <span class="navbar-admin__home-text">Volver atrás</span>
+            <i class="fa-solid fa-house-chimney"></i>
+        </span>
     </a>
 </nav>
 
@@ -45,8 +45,7 @@
 
 <main class="product-page">
     <section class="product-card">
-
-        <!-- ── IZQUIERDA: imagen ── -->
+        <!-- IZQUIERDA: imagen -->
         <div class="product-image">
             <div class="product-image__circle">
                 <img src="<%= request.getContextPath() %>/imagen-producto/<%= producto.getProductoId() %>"
@@ -54,9 +53,8 @@
             </div>
         </div>
 
-        <!-- ── DERECHA: advertencia + acciones ── -->
+        <!-- DERECHA: advertencia + acciones -->
         <div class="product-details" style="justify-content: center;">
-
             <div class="alert-box">
                 <i class="fa-solid fa-triangle-exclamation"></i>
                 <p>
@@ -70,7 +68,7 @@
                 <form action="<%=request.getContextPath()%>/ProductoServlet"
                       method="post" style="flex: 1;">
                     <input type="hidden" name="action" value="eliminar">
-                    <input type="hidden" name="id"     value="<%= producto.getProductoId() %>">
+                    <input type="hidden" name="id" value="<%= producto.getProductoId() %>">
                     <button type="submit" class="btn-danger" style="width: 100%;">
                         <i class="fa-solid fa-trash-can"></i> Eliminar Definitivamente
                     </button>
@@ -80,8 +78,7 @@
                     <i class="fa-solid fa-xmark"></i> Cancelar
                 </button>
             </div>
-
-        </div><!-- /product-details -->
+        </div>
     </section>
 </main>
 

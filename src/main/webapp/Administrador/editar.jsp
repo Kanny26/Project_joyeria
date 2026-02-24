@@ -30,13 +30,13 @@
         <img src="<%= request.getContextPath() %>/assets/Imagenes/iconos/admin.png" alt="Admin">
     </div>
     <h1 class="navbar-admin__title">AAC27</h1>
-    <a href="<%= request.getContextPath() %>/CategoriaServlet?id=<%= producto.getCategoria().getCategoriaId() %>" class="navbar-admin__home-link">
-	   
-	    <span class="navbar-admin__home-icon-wrap">
-	        <i class="fa-solid fa-arrow-left"></i>
-		    <span class="navbar-admin__home-text">Volver atras</span>
-		    <i class="fa-solid fa-house-chimney"></i>
-	    </span>
+    <a href="<%= request.getContextPath() %>/CategoriaServlet?id=<%= producto.getCategoriaId() %>" 
+       class="navbar-admin__home-link">
+        <span class="navbar-admin__home-icon-wrap">
+            <i class="fa-solid fa-arrow-left"></i>
+            <span class="navbar-admin__home-text">Volver atrás</span>
+            <i class="fa-solid fa-house-chimney"></i>
+        </span>
     </a>
 </nav>
 
@@ -54,15 +54,14 @@
     <form action="<%= request.getContextPath() %>/ProductoServlet" method="post"
           enctype="multipart/form-data" class="full-width">
 
-        <input type="hidden" name="action"      value="actualizar">
-        <input type="hidden" name="productoId"  value="<%= producto.getProductoId() %>">
+        <input type="hidden" name="action" value="actualizar">
+        <input type="hidden" name="productoId" value="<%= producto.getProductoId() %>">
         <input type="hidden" name="imagenActual" value="<%= producto.getImagen() != null ? producto.getImagen() : "" %>">
-        <input type="hidden" name="categoriaId" value="<%= producto.getCategoria().getCategoriaId() %>">
-        <input type="hidden" name="stock"       value="<%= producto.getStock() %>">
+        <input type="hidden" name="categoriaId" value="<%= producto.getCategoriaId() %>">
+        <input type="hidden" name="stock" value="<%= producto.getStock() %>">
 
         <section class="product-card">
-
-            <!-- ── IZQUIERDA: imagen ── -->
+            <!-- IZQUIERDA: imagen -->
             <div class="product-image">
                 <div class="product-image__circle">
                     <img id="preview"
@@ -79,9 +78,8 @@
                 </div>
             </div>
 
-            <!-- ── DERECHA: detalles ── -->
+            <!-- DERECHA: detalles -->
             <div class="product-details">
-
                 <div class="product-row">
                     <label class="product-label">Nombre *</label>
                     <input class="product-value" type="text" name="nombre"
@@ -100,12 +98,14 @@
                            name="precioVenta" value="<%= producto.getPrecioVenta() %>" required>
                 </div>
 
+                <!-- MATERIAL (CORREGIDO: usar getMaterialId()) -->
                 <div class="product-row">
                     <label class="product-label">Material *</label>
                     <select class="product-value" name="materialId" required>
-                        <% for (Material m : materiales) { %>
-                            <option value="<%= m.getMaterialId() %>"
-                                <%= producto.getMaterial().getMaterialId() == m.getMaterialId() ? "selected" : "" %>>
+                        <% for (Material m : materiales) { 
+                            boolean selected = (producto.getMaterialId() == m.getMaterialId());
+                        %>
+                            <option value="<%= m.getMaterialId() %>" <%= selected ? "selected" : "" %>>
                                 <%= m.getNombre() %>
                             </option>
                         <% } %>
@@ -126,15 +126,14 @@
                         <i class="fa-solid fa-xmark"></i> Cancelar
                     </button>
                 </div>
-
-            </div><!-- /product-details -->
+            </div>
         </section>
     </form>
 </main>
 
 <script>
 function handleImageChange(input) {
-    const preview         = document.getElementById('preview');
+    const preview = document.getElementById('preview');
     const fileNameDisplay = document.getElementById('file-name');
     if (input.files && input.files[0]) {
         fileNameDisplay.textContent = input.files[0].name;

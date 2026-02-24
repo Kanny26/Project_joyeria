@@ -7,8 +7,8 @@
         return;
     }
     List<Material> materiales = (List<Material>) request.getAttribute("materiales");
-    Categoria categoria       = (Categoria)      request.getAttribute("categoria");
-    Producto pRecuperado      = (Producto)        request.getAttribute("producto");
+    Categoria categoria = (Categoria) request.getAttribute("categoria");
+    Producto pRecuperado = (Producto) request.getAttribute("producto");
 
     if (materiales == null || categoria == null) {
         response.sendRedirect(request.getContextPath() + "/CategoriaServlet");
@@ -32,7 +32,6 @@
         <img src="<%=request.getContextPath()%>/assets/Imagenes/iconos/admin.png" alt="Admin">
     </div>
     <h1 class="navbar-admin__title">AAC27</h1>
-    
     <a href="<%=request.getContextPath()%>/CategoriaServlet?id=<%= categoria.getCategoriaId() %>"
        class="navbar-admin__home-link">
         <span class="navbar-admin__home-icon-wrap">
@@ -56,10 +55,9 @@
 
     <form id="formProducto" class="form-product" method="post"
           action="<%=request.getContextPath()%>/ProductoServlet"
-          enctype="multipart/form-data"
-          novalidate>
+          enctype="multipart/form-data" novalidate>
 
-        <input type="hidden" name="action"      value="guardar">
+        <input type="hidden" name="action" value="guardar">
         <input type="hidden" name="categoriaId" value="<%= categoria.getCategoriaId() %>">
 
         <div class="form-product__row">
@@ -121,16 +119,15 @@
                 </div>
             </div>
 
-            <!-- MATERIAL -->
+            <!-- MATERIAL (CORREGIDO: comparar IDs como int) -->
             <div class="form-product__group">
                 <label class="form-product__label" for="materialId">Material *</label>
                 <div class="input-wrap">
                     <select id="materialId" name="materialId" class="form-product__input">
                         <option value="">Seleccione material</option>
                         <% for (Material m : materiales) {
-                            boolean isSelected = (pRecuperado != null
-                                    && pRecuperado.getMaterial() != null
-                                    && pRecuperado.getMaterial().getMaterialId() == m.getMaterialId());
+                            boolean isSelected = (pRecuperado != null 
+                                && pRecuperado.getMaterialId() == m.getMaterialId());
                         %>
                             <option value="<%= m.getMaterialId() %>" <%= isSelected ? "selected" : "" %>>
                                 <%= m.getNombre() %>
@@ -156,7 +153,6 @@
                         <span>Selecciona una imagen para el producto.</span>
                     </div>
                 </div>
-                <!-- Preview PEQUEÑO -->
                 <div class="img-preview-wrap" id="previewWrap">
                     <img id="imgPreview" src="#" alt="Vista previa">
                     <span id="imgNombre"></span>
@@ -195,7 +191,7 @@ const campos = ['nombre','precioUnitario','precioVenta','stock','materialId','im
 
 function esValido(id) {
     switch (id) {
-        case 'nombre':         return document.getElementById('nombre').value.trim() !== '';
+        case 'nombre': return document.getElementById('nombre').value.trim() !== '';
         case 'precioUnitario': {
             const v = parseFloat(document.getElementById('precioUnitario').value);
             return !isNaN(v) && v > 0;
@@ -209,9 +205,9 @@ function esValido(id) {
             const s = document.getElementById('stock').value;
             return s !== '' && parseInt(s) >= 0;
         }
-        case 'materialId':   return document.getElementById('materialId').value !== '';
-        case 'imagen':       return document.getElementById('imagen').files?.length > 0;
-        case 'descripcion':  return document.getElementById('descripcion').value.trim() !== '';
+        case 'materialId': return document.getElementById('materialId').value !== '';
+        case 'imagen': return document.getElementById('imagen').files?.length > 0;
+        case 'descripcion': return document.getElementById('descripcion').value.trim() !== '';
         default: return true;
     }
 }
@@ -220,7 +216,6 @@ function mostrarBurbuja(id) {
     document.getElementById(id).classList.add('invalid');
     document.getElementById('err-' + id).classList.add('visible');
 }
-
 function ocultarBurbuja(id) {
     document.getElementById(id).classList.remove('invalid');
     document.getElementById('err-' + id).classList.remove('visible');
@@ -230,18 +225,18 @@ campos.forEach(id => {
     const el = document.getElementById(id);
     if (!el) return;
     const check = () => { if (esValido(id)) ocultarBurbuja(id); };
-    el.addEventListener('input',  check);
+    el.addEventListener('input', check);
     el.addEventListener('change', check);
 });
 
 function previsualizarImagen(input) {
-    const wrap    = document.getElementById('previewWrap');
+    const wrap = document.getElementById('previewWrap');
     const preview = document.getElementById('imgPreview');
-    const nombre  = document.getElementById('imgNombre');
+    const nombre = document.getElementById('imgNombre');
     if (input.files && input.files[0]) {
         const reader = new FileReader();
         reader.onload = e => {
-            preview.src        = e.target.result;
+            preview.src = e.target.result;
             nombre.textContent = input.files[0].name;
             wrap.classList.add('visible');
         };

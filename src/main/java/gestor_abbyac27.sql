@@ -1,7 +1,3 @@
-CREATE USER 'stephany_user'@'localhost' IDENTIFIED BY 'stephanymb';
-GRANT ALL PRIVILEGES ON gestor_abbyac27.* TO 'stephany_user'@'localhost';
-FLUSH PRIVILEGES;                    
-
 -- ======================================================
 -- 1. ESTRUCTURA DE LA BASE DE DATOS (DDL) - CORREGIDA
 -- ======================================================
@@ -317,6 +313,7 @@ INSERT INTO Material (nombre) VALUES
 ('Perlas varias');
 
 
-select * from Producto;
+select * from gestor_abbyac27.Compra;
+select *from gestor_abbyac27.Detalle_Compra;
 
-select * from Usuario;
+select * from gestor_abbyac27.Producto;

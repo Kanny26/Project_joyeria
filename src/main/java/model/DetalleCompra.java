@@ -4,24 +4,35 @@ import java.math.BigDecimal;
 
 public class DetalleCompra {
 
-    private Integer compraId;
-    private Integer productoId;
+    private int        detalleCompraId;
+    private int        compraId;
+    private int        productoId;
+    private String     productoNombre;
     private BigDecimal precioUnitario;
-    private Integer cantidad;
+    private int        cantidad;
     private BigDecimal subtotal;
 
-    public Integer getCompraId() { return compraId; }
-    public void setCompraId(Integer compraId) { this.compraId = compraId; }
+    public DetalleCompra() {}
 
-    public Integer getProductoId() { return productoId; }
-    public void setProductoId(Integer productoId) { this.productoId = productoId; }
+    // ── Getters & Setters ──────────────────────────
+    public int getDetalleCompraId()                       { return detalleCompraId; }
+    public void setDetalleCompraId(int detalleCompraId)   { this.detalleCompraId = detalleCompraId; }
 
-    public BigDecimal getPrecioUnitario() { return precioUnitario; }
-    public void setPrecioUnitario(BigDecimal precioUnitario) { this.precioUnitario = precioUnitario; }
+    public int getCompraId()                  { return compraId; }
+    public void setCompraId(int compraId)     { this.compraId = compraId; }
 
-    public Integer getCantidad() { return cantidad; }
-    public void setCantidad(Integer cantidad) { this.cantidad = cantidad; }
+    public int getProductoId()                { return productoId; }
+    public void setProductoId(int productoId) { this.productoId = productoId; }
 
-    public BigDecimal getSubtotal() { return subtotal; }
-    public void setSubtotal(BigDecimal subtotal) { this.subtotal = subtotal; }
+    public String getProductoNombre()                   { return productoNombre; }
+    public void setProductoNombre(String productoNombre){ this.productoNombre = productoNombre; }
+
+    public BigDecimal getPrecioUnitario()                     { return precioUnitario; }
+    public void setPrecioUnitario(BigDecimal precioUnitario)  { this.precioUnitario = precioUnitario; }
+
+    public int getCantidad()              { return cantidad; }
+    public void setCantidad(int cantidad) { this.cantidad = cantidad; }
+
+    public BigDecimal getSubtotal()                 { return subtotal; }
+    public void setSubtotal(BigDecimal subtotal)    { this.subtotal = subtotal; }
 }

@@ -1,6 +1,4 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="jakarta.tags.core" %>
-<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -12,7 +10,6 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/pages/Administrador/ventas/ver_ventas.css">
 </head>
 <body>
-
     <nav class="navbar-admin">
         <div class="navbar-admin__catalogo">
             <img src="${pageContext.request.contextPath}/assets/Imagenes/iconos/admin.png" alt="Admin">
@@ -22,10 +19,9 @@
             <i class="fa-solid fa-house-chimney navbar-admin__home-icon"></i>
         </a>
     </nav>
-
+    
     <c:if test="${not empty venta}">
     <div class="factura">
-
         <!-- ENCABEZADO -->
         <header class="factura__header">
             <div class="factura__logo">
@@ -40,9 +36,9 @@
                 <p><strong>Método de pago:</strong> ${venta.metodoPago}</p>
             </div>
         </header>
-
+        
         <div class="linea-div"></div>
-
+        
         <!-- CLIENTE -->
         <section class="factura__cliente">
             <p class="label">Factura para:</p>
@@ -60,7 +56,7 @@
                 </c:choose>
             </span>
         </section>
-
+        
         <!-- TABLA DE PRODUCTOS -->
         <table class="tabla">
             <thead>
@@ -74,17 +70,17 @@
             </thead>
             <tbody>
                 <c:forEach var="d" items="${venta.detalles}" varStatus="s">
-                    <tr>
-                        <td>${s.count}</td>
-                        <td>${d.productoNombre}</td>
-                        <td><fmt:formatNumber value="${d.precioUnitario}" type="currency" currencySymbol="$"/></td>
-                        <td>${d.cantidad}</td>
-                        <td><fmt:formatNumber value="${d.subtotal}" type="currency" currencySymbol="$"/></td>
-                    </tr>
+                <tr>
+                    <td>${s.count}</td>
+                    <td>${d.productoNombre}</td>
+                    <td><fmt:formatNumber value="${d.precioUnitario}" type="currency" currencySymbol="$"/></td>
+                    <td>${d.cantidad}</td>
+                    <td><fmt:formatNumber value="${d.subtotal}" type="currency" currencySymbol="$"/></td>
+                </tr>
                 </c:forEach>
             </tbody>
         </table>
-
+        
         <!-- TOTALES -->
         <div class="totales">
             <p class="total-final">
@@ -92,23 +88,21 @@
                 <fmt:formatNumber value="${venta.total}" type="currency" currencySymbol="$"/>
             </p>
         </div>
-
+        
         <!-- CONDICIONES -->
         <section class="condiciones">
             <h3>Términos y condiciones</h3>
             <p>Gracias por su compra. Esta factura corresponde a los servicios prestados
-               y debe conservarse como comprobante.</p>
+            y debe conservarse como comprobante.</p>
         </section>
-
     </div>
     </c:if>
-
+    
     <c:if test="${empty venta}">
-        <div class="titulo">
-            <p style="text-align:center; margin-top:2rem;">No se encontró la venta solicitada.</p>
-            <a href="${pageContext.request.contextPath}/Administrador/ventas/listar">Volver al listado</a>
-        </div>
+    <div class="titulo">
+        <p style="text-align:center; margin-top:2rem;">No se encontró la venta solicitada.</p>
+        <a href="${pageContext.request.contextPath}/Administrador/ventas/listar">Volver al listado</a>
+    </div>
     </c:if>
-
 </body>
 </html>

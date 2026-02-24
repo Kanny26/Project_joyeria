@@ -1,126 +1,171 @@
 package controller;
 
 import dao.VentaDAO;
-import dao.CasoPostVentaDAO;      // ← mismo nombre que el DAO real
+import dao.ProductoDAO;
+import dao.ClienteDAO;
 import model.Venta;
-import model.CasoPostVenta;       // ← mismo nombre que el modelo real
+import model.DetalleVenta;
+import model.Producto;
+import model.Usuario;
+import utils.PDFGenerator;
+import utils.ValidadorVentas;
+import utils.SessionUtil;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import javax.servlet.http.*;
 import java.io.IOException;
-import java.util.List;
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @WebServlet(urlPatterns = {
     "/Administrador/ventas/listar",
     "/Administrador/ventas/ver",
     "/Administrador/ventas/editar",
-    "/Administrador/ventas/postventa",
-    "/Administrador/ventas/caso"
+    "/Administrador/ventas/descargar-factura",
+    "/Administrador/ventas/buscar"
 })
+@MultipartConfig
 public class VentaServlet extends HttpServlet {
 
-    private final VentaDAO         ventaDAO = new VentaDAO();
-    private final CasoPostVentaDAO casoDAO  = new CasoPostVentaDAO(); // ← instancia correcta
+    private VentaDAO ventaDAO;
+    private SessionUtil sessionUtil;
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+    public void init() {
+        ventaDAO = new VentaDAO();
+        sessionUtil = new SessionUtil();
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) 
             throws ServletException, IOException {
 
         String ruta = req.getServletPath();
+        HttpSession session = req.getSession(false);
 
         try {
+            // Validar sesión de administrador
+            if (session == null || session.getAttribute("admin") == null) {
+                resp.sendRedirect(req.getContextPath() + "/Administrador/inicio-sesion.jsp");
+                return;
+            }
+
             switch (ruta) {
-
-                case "/Administrador/ventas/listar" -> {
+                case "/Administrador/ventas/listar":
                     List<Venta> ventas = ventaDAO.listarVentas();
-                    req.setAttribute("ventas",            ventas);
-                    req.setAttribute("totalVentas",       ventaDAO.contarVentas());
-                    req.setAttribute("pendientes",        ventaDAO.contarPendientes());
-                    req.setAttribute("pagoEfectivo",      ventaDAO.contarPorMetodo("efectivo"));
+                    req.setAttribute("ventas", ventas);
+                    req.setAttribute("totalVentas", ventaDAO.contarVentas());
+                    req.setAttribute("pendientes", ventaDAO.contarPendientes());
+                    req.setAttribute("pagoEfectivo", ventaDAO.contarPorMetodo("efectivo"));
                     req.setAttribute("pagoTransferencia", ventaDAO.contarPorMetodo("tarjeta"));
-                    despachar(req, resp, "/WEB-INF/views/Administrador/ventas/listar_ventas.jsp");
-                }
+                    req.getRequestDispatcher("/WEB-INF/views/Administrador/ventas/listar_ventas.jsp")
+                       .forward(req, resp);
+                    break;
 
-                case "/Administrador/ventas/ver" -> {
-                    int id = Integer.parseInt(req.getParameter("id"));
-                    Venta venta = ventaDAO.obtenerPorId(id);
+                case "/Administrador/ventas/ver":
+                    String idParam = req.getParameter("id");
+                    if (idParam == null || !idParam.matches("\\d+")) {
+                        req.setAttribute("error", "ID de venta inválido");
+                        req.getRequestDispatcher("/WEB-INF/views/error.jsp").forward(req, resp);
+                        return;
+                    }
+                    
+                    int ventaId = Integer.parseInt(idParam);
+                    Venta venta = ventaDAO.obtenerPorId(ventaId);
+                    
+                    if (venta == null) {
+                        req.setAttribute("error", "Venta no encontrada");
+                        req.getRequestDispatcher("/WEB-INF/views/error.jsp").forward(req, resp);
+                        return;
+                    }
+                    
                     req.setAttribute("venta", venta);
-                    despachar(req, resp, "/WEB-INF/views/Administrador/ventas/ver_venta.jsp");
-                }
+                    req.getRequestDispatcher("/WEB-INF/views/Administrador/ventas/ver_venta.jsp")
+                       .forward(req, resp);
+                    break;
 
-                case "/Administrador/ventas/editar" -> {
-                    List<Venta> ventas = ventaDAO.listarVentas();
-                    req.setAttribute("ventas",            ventas);
-                    req.setAttribute("totalVentas",       ventaDAO.contarVentas());
-                    req.setAttribute("pendientes",        ventaDAO.contarPendientes());
-                    req.setAttribute("pagoEfectivo",      ventaDAO.contarPorMetodo("efectivo"));
+                case "/Administrador/ventas/editar":
+                    List<Venta> ventasEdit = ventaDAO.listarVentas();
+                    req.setAttribute("ventas", ventasEdit);
+                    req.setAttribute("totalVentas", ventaDAO.contarVentas());
+                    req.setAttribute("pendientes", ventaDAO.contarPendientes());
+                    req.setAttribute("pagoEfectivo", ventaDAO.contarPorMetodo("efectivo"));
                     req.setAttribute("pagoTransferencia", ventaDAO.contarPorMetodo("tarjeta"));
-                    despachar(req, resp, "/WEB-INF/views/Administrador/ventas/editar_venta.jsp");
-                }
+                    req.getRequestDispatcher("/WEB-INF/views/Administrador/ventas/editar_venta.jsp")
+                       .forward(req, resp);
+                    break;
 
-                case "/Administrador/ventas/postventa" -> {
-                    List<CasoPostVenta> casos = casoDAO.listarCasos(); // ← instancia, no estático
-                    req.setAttribute("casos",           casos);
-                    req.setAttribute("totalCasos",      casoDAO.contarCasos());
-                    req.setAttribute("casosPendientes", casoDAO.contarPendientes());
-                    despachar(req, resp, "/WEB-INF/views/Administrador/ventas/postventa.jsp");
-                }
+                case "/Administrador/ventas/descargar-factura":
+                    int idFactura = Integer.parseInt(req.getParameter("id"));
+                    Venta factura = ventaDAO.obtenerPorId(idFactura);
+                    
+                    if (factura == null) {
+                        resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Factura no encontrada");
+                        return;
+                    }
 
-                case "/Administrador/ventas/caso" -> {
-                    int id = Integer.parseInt(req.getParameter("id"));
-                    CasoPostVenta caso = casoDAO.obtenerPorId(id); // ← tipo correcto
-                    req.setAttribute("caso",  caso);
-                    req.setAttribute("casos", casoDAO.listarCasos());
-                    despachar(req, resp, "/WEB-INF/views/Administrador/ventas/casos_postventa.jsp");
-                }
+                    byte[] pdf = PDFGenerator.generarFacturaPDF(factura);
+                    resp.setContentType("application/pdf");
+                    resp.setHeader("Content-Disposition", 
+                        "attachment; filename=factura_" + idFactura + ".pdf");
+                    resp.setContentLength(pdf.length);
+                    resp.getOutputStream().write(pdf);
+                    resp.flushBuffer();
+                    return;
 
-                default -> resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+                case "/Administrador/ventas/buscar":
+                    String criterio = req.getParameter("q");
+                    String tipo = req.getParameter("tipo");
+                    List<Venta> resultados = ventaDAO.buscarVentas(
+                        criterio, tipo, null, null, 0 // 0 = sin filtro de vendedor
+                    );
+                    req.setAttribute("ventas", resultados);
+                    req.setAttribute("criterio", criterio);
+                    req.getRequestDispatcher("/WEB-INF/views/Administrador/ventas/listar_ventas.jsp")
+                       .forward(req, resp);
+                    break;
+
+                default:
+                    resp.sendError(HttpServletResponse.SC_NOT_FOUND);
             }
 
         } catch (Exception e) {
-            throw new ServletException("Error de base de datos: " + e.getMessage(), e);
+            req.setAttribute("error", "Error: " + e.getMessage());
+            req.getRequestDispatcher("/WEB-INF/views/error.jsp").forward(req, resp);
         }
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) 
             throws ServletException, IOException {
 
         req.setCharacterEncoding("UTF-8");
         String ruta = req.getServletPath();
 
         try {
+            if (req.getSession().getAttribute("admin") == null) {
+                resp.sendRedirect(req.getContextPath() + "/Administrador/inicio-sesion.jsp");
+                return;
+            }
+
             switch (ruta) {
-
-                case "/Administrador/ventas/editar" -> {
-                    int    ventaId     = Integer.parseInt(req.getParameter("ventaId"));
+                case "/Administrador/ventas/editar":
+                    int ventaId = Integer.parseInt(req.getParameter("ventaId"));
                     String nuevoEstado = req.getParameter("estado");
-                    ventaDAO.actualizarEstado(ventaId, nuevoEstado);
+                    ventaDAO.actualizarPagoVenta(ventaId, null); // Solo actualiza estado
                     resp.sendRedirect(req.getContextPath() + "/Administrador/ventas/listar");
-                }
+                    break;
 
-                case "/Administrador/ventas/caso" -> {
-                    int    casoId      = Integer.parseInt(req.getParameter("casoId"));
-                    String nuevoEstado = req.getParameter("estado");
-                    String observacion = req.getParameter("observacion");
-                    casoDAO.actualizarEstado(casoId, nuevoEstado, observacion);
-                    resp.sendRedirect(req.getContextPath() + "/Administrador/ventas/postventa");
-                }
-
-                default -> resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+                default:
+                    resp.sendError(HttpServletResponse.SC_NOT_FOUND);
             }
 
         } catch (Exception e) {
-            throw new ServletException("Error de base de datos: " + e.getMessage(), e);
+            req.setAttribute("error", "Error al procesar: " + e.getMessage());
+            req.getRequestDispatcher("/WEB-INF/views/error.jsp").forward(req, resp);
         }
-    }
-
-    private void despachar(HttpServletRequest req, HttpServletResponse resp, String vista)
-            throws ServletException, IOException {
-        req.getRequestDispatcher(vista).forward(req, resp);
     }
 }
