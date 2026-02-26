@@ -132,10 +132,9 @@ public class ProveedorDAO {
             }
 
             // 2. Insertar rol proveedor
-            String sqlRol = "INSERT INTO Rol (cargo, usuario_id, nombre) VALUES ('proveedor', ?, ?)";
+            String sqlRol = "INSERT INTO Rol (cargo, usuario_id) VALUES ('proveedor', ?)";
             try (PreparedStatement stmt = conn.prepareStatement(sqlRol)) {
                 stmt.setInt(1, p.getUsuarioId());
-                stmt.setString(2, p.getNombre());
                 stmt.executeUpdate();
             }
 

@@ -36,7 +36,6 @@ CREATE TABLE Correo_Usuario (
 CREATE TABLE Rol (
     rol_id     INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     cargo      ENUM('vendedor','administrador','proveedor','cliente') NOT NULL,
-    nombre     VARCHAR(255) UNIQUE NOT NULL,
     usuario_id INT UNSIGNED NOT NULL,
     FOREIGN KEY (usuario_id) REFERENCES Usuario(usuario_id)
 );
@@ -283,8 +282,8 @@ CREATE TABLE Pago_credito (
 INSERT INTO Usuario (nombre, pass, estado, fecha_creacion)
 VALUES ('AdminKS','$2a$12$X5/dP8Dv4BZ8GH8UH0iO9uvyaEjLEqHB/Bs42s6bgSFap9HJXwtq.',1,NOW());
 
-INSERT INTO Rol (cargo, usuario_id, nombre)
-VALUES ('administrador', 1, 'AdminKS');
+INSERT INTO Rol (cargo, usuario_id)
+VALUES ('administrador', 1);
 
 INSERT INTO Categoria (nombre, icono) VALUES
 ('Anillos',       'anillos.png'),
@@ -315,5 +314,7 @@ INSERT INTO Material (nombre) VALUES
 
 select * from gestor_abbyac27.Compra;
 select *from gestor_abbyac27.Detalle_Compra;
-
+select * from gestor_abbyac27.Usuario;
 select * from gestor_abbyac27.Producto;
+SELECT stock FROM Producto WHERE producto_id = 1;
+select * from gestor_abbyac27.rol;

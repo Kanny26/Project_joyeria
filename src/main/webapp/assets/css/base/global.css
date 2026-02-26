@@ -101,7 +101,11 @@
         rgba(227, 183, 194, 0.722),
         #c5c2df
     );
-  --color-nav-vendedor: #99AD96;
+  --color-nav-vendedor: linear-gradient(
+        44deg,
+        rgba(227, 183, 194, 0.722),
+        #c5c2df
+    );
   --color-fondo-tarjeta-hover: rgb(199, 199, 199);
   --color-fondo-tooltip: #333;
   --color-iconos: #000807;

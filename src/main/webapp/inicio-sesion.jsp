@@ -1,17 +1,19 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%
-    String error = request.getParameter("error");
-    if ("true".equals(error)) {
+    String error = (String) request.getAttribute("error");
+    if (error == null) error = request.getParameter("error");
 %>
-    <div style="color:red;">Usuario o contraseña incorrectos</div>
-<%
-    } else if ("campos".equals(error)) {
-%>
-    <div style="color:red;">Todos los campos son obligatorios</div>
-<%
-    }
-%>
+
+<% if (error != null && !error.isEmpty()) { %>
+    <p class="login__error">
+        <% if ("campos".equals(error)) { %>
+            Por favor completa todos los campos.
+        <% } else { %>
+            <%= error %>
+        <% } %>
+    </p>
+<% } %>
     
 <!DOCTYPE html>
 <html lang="es">
@@ -50,7 +52,7 @@
                 </header> 
 
                 <!-- Formulario apunta al servlet /login -->
-                <form action="<%=request.getContextPath()%>/login" method="post"> 
+                <form action="<%=request.getContextPath()%>/loginUnificado" method="post"> 
                     <div class="inicio-sesion__input-grupo"> 
                         <i class="fas fa-user icon-left"></i> 
                         <input 

@@ -12,7 +12,7 @@ public class UsuarioDAO {
             INSERT INTO Usuario (nombre, pass, estado, fecha_creacion, documento, fecha_registro)
             VALUES (?, ?, ?, NOW(), ?, ?)
             """;
-        String sqlRol      = "INSERT INTO Rol (cargo, usuario_id, nombre) VALUES (?, ?, ?)";
+        String sqlRol      = "INSERT INTO Rol (cargo, usuario_id) VALUES (?, ?)";
         String sqlTelefono = "INSERT INTO Telefono_Usuario (telefono, usuario_id) VALUES (?, ?)";
         String sqlCorreo   = "INSERT INTO Correo_Usuario (email, usuario_id) VALUES (?, ?)";
 
@@ -36,11 +36,10 @@ public class UsuarioDAO {
             }
 
             try (PreparedStatement psRol = conn.prepareStatement(sqlRol)) {
-                psRol.setString(1, "vendedor");
-                psRol.setInt(2, usuarioId);
-                psRol.setString(3, "vendedor_" + usuarioId);
-                psRol.executeUpdate();
-            }
+                    psRol.setString(1, "vendedor");
+                    psRol.setInt(2, usuarioId);
+                    psRol.executeUpdate();
+                }
 
             if (usuario.getTelefono() != null) {
                 try (PreparedStatement psTel = conn.prepareStatement(sqlTelefono)) {
@@ -216,7 +215,6 @@ public class UsuarioDAO {
                     try (PreparedStatement psUpdate = conn.prepareStatement(
                             "UPDATE Rol SET cargo=?, nombre=? WHERE usuario_id=?")) {
                         psUpdate.setString(1, usuario.getRol());
-                        psUpdate.setString(2, usuario.getRol().toLowerCase() + "_" + numero);
                         psUpdate.setInt(3, usuario.getUsuarioId());
                         psUpdate.executeUpdate();
                     }
@@ -229,7 +227,7 @@ public class UsuarioDAO {
                         if (rsCount.next()) nextNumber = rsCount.getInt(1) + 1;
                     }
                     try (PreparedStatement psInsert = conn.prepareStatement(
-                            "INSERT INTO Rol (cargo, usuario_id, nombre) VALUES (?, ?, ?)")) {
+                            "INSERT INTO Rol (cargo, usuario_id) VALUES (?, ?)")) {
                         psInsert.setString(1, usuario.getRol());
                         psInsert.setInt(2, usuario.getUsuarioId());
                         psInsert.setString(3, usuario.getRol().toLowerCase() + "_" + nextNumber);
@@ -266,10 +264,12 @@ public class UsuarioDAO {
 
             conn.commit();
             return true;
-        } catch (Exception e) { // ✅
-            e.printStackTrace();
-            try { if (conn != null) conn.rollback(); } catch (Exception ignored) {}
-            return false;
+        } catch (Exception e) {
+                e.printStackTrace();
+                try {
+                    if (conn != null) conn.rollback();
+                } catch (Exception ignored) {}
+                return false;
         } finally {
             try {
                 if (conn != null) { conn.setAutoCommit(true); conn.close(); }

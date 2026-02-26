@@ -58,7 +58,7 @@
         <input type="hidden" name="productoId" value="<%= producto.getProductoId() %>">
         <input type="hidden" name="imagenActual" value="<%= producto.getImagen() != null ? producto.getImagen() : "" %>">
         <input type="hidden" name="categoriaId" value="<%= producto.getCategoriaId() %>">
-        <input type="hidden" name="stock" value="<%= producto.getStock() %>">
+        <!-- <input type="hidden" name="stock" value="<%= producto.getStock() %>"> -->
 
         <section class="product-card">
             <!-- IZQUIERDA: imagen -->
@@ -98,6 +98,17 @@
                            name="precioVenta" value="<%= producto.getPrecioVenta() %>" required>
                 </div>
 
+                <div class="product-row">
+                    <label class="product-label">Stock Disponible *</label>
+                    <input class="product-value"
+                           type="number"
+                           name="stock"
+                           min="0"
+                           step="1"
+                           value="<%= producto.getStock() %>"
+                           required>
+                </div>
+                           
                 <!-- MATERIAL (CORREGIDO: usar getMaterialId()) -->
                 <div class="product-row">
                     <label class="product-label">Material *</label>
