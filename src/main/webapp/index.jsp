@@ -18,17 +18,12 @@
             Optimiza tu negocio de joyería con herramientas modernas y fáciles de usar.
         </p>
 
-        <p class="splash__texto">Selecciona tu rol para continuar:</p>
-
         <div class="splash__grupo-botones">
-            <a href="<%=request.getContextPath()%>/Administrador/inicio-sesion.jsp" class="splash__boton splash__boton--hover">
-                <img src="<%=request.getContextPath()%>/assets/Imagenes/iconos/admin.png" alt="Administrador" class="splash__boton-icono">
-                Administrador
-            </a>
-
-            <a href="<%=request.getContextPath()%>/vendedor/inicio-sesion.jsp" class="splash__boton splash__boton--hover">
-                <img src="<%=request.getContextPath()%>/assets/Imagenes/iconos/Seller.png" alt="Vendedor" class="splash__boton-icono">
-                Vendedor
+            <a href="<%=request.getContextPath()%>/inicio-sesion.jsp"
+               class="splash__boton splash__boton--hover">
+                <img src="<%=request.getContextPath()%>/assets/Imagenes/iconos/admin.png"
+                     alt="Ingresar" class="splash__boton-icono">
+                Ingresar al sistema
             </a>
         </div>
     </div>
