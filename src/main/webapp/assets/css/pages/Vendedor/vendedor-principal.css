@@ -11,7 +11,7 @@
 /* Estilos generales del body */
 body {
     font-family: var(--fuente-titulos);
-    background-color: var(--color-fondo-vendedor);
+    background: var(--color-fondo-vendedor);
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -21,9 +21,10 @@ body {
     min-height: var(--alto-minimo-body);
 }
 
-.panel-admin {
-    width: var(--ancho-nav-admin);
-    height: var(--alto-nav-admin);
+
+.panel-vendedor {
+    width: var(--ancho-nav-vendedor);
+    height: var(--alto-nav-vendedor);
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -31,12 +32,60 @@ body {
     top: 20px;
     left: 50%;
     transform: translateX(-50%); 
-    background-color: var(--color-nav-admin);
+    background-color: var(--color-nav-vendedor);
     border-radius: var(--borde-general);
     z-index: var(--z-index-panel);
     padding:0 20px;
 }
 
+/* Círculo vendedor a la izquierda */
+.panel-vendedor__circulo {
+    width: var(--circulo-vendedor);
+    height: var(--circulo-vendedor);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 10px;
+}
+
+.panel-vendedor__circulo h2 {
+    position: absolute;
+    bottom: 20px;
+    right: 980px;
+    transform: translateX(-50%) translateY(var(--ancho-scrollbar));
+    opacity: 0;
+    font-size: var(--tamano-texto-home-vendedor);
+    font-weight: var(--peso-fuente-semititulos);
+    color: var(--color-texto-principal);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.panel-vendedor__circulo:hover h2 {
+    opacity: var(--indice-z-formulario);
+    transform: translateX(-50%) translateY(0);
+}
+
+.panel-vendedor__circulo img {
+    width: var(--tamano-imagen-vendedor);
+    height: var(--tamano-imagen-vendedor);
+}
+
+/* Título centrado */
+.panel-vendedor__titulo {
+    flex: 1;
+    text-align: center;
+    font-size: var(--tamano-titulo-home);
+    font-weight: var(--peso-fuente-titulo-principal);
+    color: var(--color-texto-principal);
+}
+
+/* Icono de casa */
+.panel-vendedor__icono {
+    font-size: var(--tamano-icono-home);
+    color: var(--color-iconos-principal);
+    cursor: pointer;
+}
 
 /* Icono de inicio */
 .panel-vendedor__icono {
@@ -94,7 +143,11 @@ body {
     width: var(--ancho-iconos-vendedor);
     height: var(--alto-iconos-vendedor);
     border-radius: 50%;
-    background-color: var(--color-cards);
+    background: linear-gradient(
+        44deg,
+        #e3b7c2b8,
+        #c5c2df
+    );
     margin-bottom: 15px;
 }
 

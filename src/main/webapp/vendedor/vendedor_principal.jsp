@@ -23,16 +23,21 @@
 </head>
 <body>
 
-<nav class="navbar-admin">
-    <div class="navbar-admin__catalogo">
-        <img src="<%=request.getContextPath()%>/assets/Imagenes/iconos/Seller.png" alt="Vendedor">
-        <h2>Panel del vendedor</h2>
+
+<nav class="navbar-vendedor">
+    <div class="navbar-vendedor__catalogo">
+        <img src="<%=request.getContextPath()%>/assets/Imagenes/iconos/Seller.png" alt="Admin">
+        <h2>Volver al inicio</h2>
+    </div>
+    <h1 class="navbar-vendedor__title">AAC27</h1>
+
+    <div class="navbar-vendedor__usuario">
+        <i class="fas fa-user"></i>
+        <span><%= vendedor.getNombre() %></span>
     </div>
 
-    <h1 class="navbar-admin__title">AAC27</h1>
-
-    <a href="<%=request.getContextPath()%>/index.html">
-        <i class="fa-solid fa-house-chimney navbar-admin__home-icon"></i>
+    <a href="<%=request.getContextPath()%>/index.jsp">
+        <i class="fa-solid fa-house-chimney navbar-vendedor__home-icon"></i>
     </a>
 </nav>
 
@@ -52,9 +57,7 @@
                 </a>
             </div>
             <div class="panel-vendedor__tarjeta-h3">
-                <div class="panel-vendedor__tarjeta-h3-izquierda"></div>
-                <div class="panel-vendedor__tarjeta-h3-derecha"></div>
-                <h3>Registrar venta</h3>
+                <h3 class="icono-boton__titulo">Registrar venta</h3>
             </div>
         </div>
 
@@ -66,9 +69,7 @@
                 </a>
             </div>
             <div class="panel-vendedor__tarjeta-h3">
-                <div class="panel-vendedor__tarjeta-h3-izquierda"></div>
-                <div class="panel-vendedor__tarjeta-h3-derecha"></div>
-                <h3>Informe ventas</h3>
+                <h3 class="icono-boton__titulo">Informe ventas</h3>
             </div>
         </div>
 
