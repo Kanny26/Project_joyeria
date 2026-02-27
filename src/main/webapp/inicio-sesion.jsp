@@ -4,17 +4,6 @@
     String error = (String) request.getAttribute("error");
     if (error == null) error = request.getParameter("error");
 %>
-
-<% if (error != null && !error.isEmpty()) { %>
-    <p class="login__error">
-        <% if ("campos".equals(error)) { %>
-            Por favor completa todos los campos.
-        <% } else { %>
-            <%= error %>
-        <% } %>
-    </p>
-<% } %>
-    
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -53,6 +42,15 @@
 
                 <!-- Formulario apunta al servlet /login -->
                 <form action="<%=request.getContextPath()%>/loginUnificado" method="post"> 
+                    <% if (error != null && !error.isEmpty()) { %>
+                        <p class="login__error">
+                            <% if ("campos".equals(error)) { %>
+                                Por favor completa todos los campos.
+                            <% } else { %>
+                                <%= error %>
+                            <% } %>
+                        </p>
+                    <% } %>
                     <div class="inicio-sesion__input-grupo"> 
                         <i class="fas fa-user icon-left"></i> 
                         <input 

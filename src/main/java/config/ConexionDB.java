@@ -7,8 +7,8 @@ public class ConexionDB {
 
     // ← Cambia solo estos tres valores en cada PC
     private static final String URL  = "jdbc:mysql://localhost:3306/gestor_abbyac27";
-    private static final String USER = "stephany_user";
-    private static final String PASS = "stephanymb";
+    private static final String USER = "root";
+    private static final String PASS = "MYSQLKey2025";
 
     static {
         try {
