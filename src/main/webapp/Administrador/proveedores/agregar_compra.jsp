@@ -2,7 +2,7 @@
 <%
 Object admin = session.getAttribute("admin");
 if (admin == null) {
-    response.sendRedirect(request.getContextPath() + "/Administrador/inicio-sesion.jsp");
+    response.sendRedirect(request.getContextPath() + "/inicio-sesion.jsp");
     return;
 }
 %>

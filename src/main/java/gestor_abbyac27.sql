@@ -311,10 +311,11 @@ INSERT INTO Material (nombre) VALUES
 ('Dijes'),
 ('Perlas varias');
 
-
 select * from gestor_abbyac27.Compra;
 select *from gestor_abbyac27.Detalle_Compra;
 select * from gestor_abbyac27.Usuario;
 select * from gestor_abbyac27.Producto;
 SELECT stock FROM Producto WHERE producto_id = 1;
 select * from gestor_abbyac27.rol;
+select * from gestor_abbyac27.Venta_factura;
+select * from gestor_abbyac27.Telefono_Usuario;
