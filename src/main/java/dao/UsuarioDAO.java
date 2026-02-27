@@ -36,7 +36,7 @@ public class UsuarioDAO {
             }
 
             try (PreparedStatement psRol = conn.prepareStatement(sqlRol)) {
-                    psRol.setString(1, "vendedor");
+                    String cargo = (usuario.getRol() != null && !usuario.getRol().trim().isEmpty()) ? usuario.getRol().trim() : "vendedor"; psRol.setString(1, cargo);
                     psRol.setInt(2, usuarioId);
                     psRol.executeUpdate();
                 }
@@ -210,27 +210,17 @@ public class UsuarioDAO {
                 psCheck.setInt(1, usuario.getUsuarioId());
                 ResultSet rs = psCheck.executeQuery();
                 if (rs.next()) {
-                    String[] partes = rs.getString("nombre").split("_");
-                    String numero = (partes.length > 1) ? partes[1] : "1";
                     try (PreparedStatement psUpdate = conn.prepareStatement(
-                            "UPDATE Rol SET cargo=?, nombre=? WHERE usuario_id=?")) {
+                            "UPDATE Rol SET cargo=? WHERE usuario_id=?")) {
                         psUpdate.setString(1, usuario.getRol());
-                        psUpdate.setInt(3, usuario.getUsuarioId());
+                        psUpdate.setInt(2, usuario.getUsuarioId());
                         psUpdate.executeUpdate();
                     }
                 } else {
-                    int nextNumber = 1;
-                    try (PreparedStatement psCount = conn.prepareStatement(
-                            "SELECT COUNT(*) FROM Rol WHERE cargo=?")) {
-                        psCount.setString(1, usuario.getRol());
-                        ResultSet rsCount = psCount.executeQuery();
-                        if (rsCount.next()) nextNumber = rsCount.getInt(1) + 1;
-                    }
                     try (PreparedStatement psInsert = conn.prepareStatement(
                             "INSERT INTO Rol (cargo, usuario_id) VALUES (?, ?)")) {
                         psInsert.setString(1, usuario.getRol());
                         psInsert.setInt(2, usuario.getUsuarioId());
-                        psInsert.setString(3, usuario.getRol().toLowerCase() + "_" + nextNumber);
                         psInsert.executeUpdate();
                     }
                 }

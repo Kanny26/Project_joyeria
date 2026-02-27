@@ -13,10 +13,6 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Servlet encargado de la gestión de usuarios del sistema.
- * Incluye validaciones básicas de datos de entrada.
- */
 @WebServlet("/UsuarioServlet")
 public class UsuarioServlet extends HttpServlet {
 
@@ -77,11 +73,12 @@ public class UsuarioServlet extends HttpServlet {
            ========================= */
         if ("agregar".equals(accion)) {
 
-            String nombre = req.getParameter("nombre");
-            String correo = req.getParameter("correo");
-            String telefono = req.getParameter("telefono");
-            String documento = req.getParameter("documento");
+            String nombre     = req.getParameter("nombre");
+            String correo     = req.getParameter("correo");
+            String telefono   = req.getParameter("telefono");
+            String documento  = req.getParameter("documento");
             String contrasena = req.getParameter("contrasena");
+            String rol        = req.getParameter("rol");
 
             // ---- VALIDACIONES ----
             if (nombre == null || nombre.trim().isEmpty()
@@ -100,14 +97,22 @@ public class UsuarioServlet extends HttpServlet {
                         .forward(req, resp);
                 return;
             }
+
+            if (contrasena == null || contrasena.trim().isEmpty()) {
+                req.setAttribute("error", "La contraseña es obligatoria");
+                req.getRequestDispatcher("/Administrador/usuarios/agregar_usuario.jsp")
+                        .forward(req, resp);
+                return;
+            }
             // ----------------------
 
             Usuario u = new Usuario();
-            u.setNombre(nombre);
-            u.setCorreo(correo);
-            u.setTelefono(telefono);
+            u.setNombre(nombre.trim());
+            u.setCorreo(correo.trim());
+            u.setTelefono(telefono.trim());
             u.setDocumento(documento);
             u.setContrasena(contrasena);
+            u.setRol(rol != null && !rol.trim().isEmpty() ? rol.trim() : "vendedor");
             u.setEstado("Activo".equals(req.getParameter("estado")));
 
             usuarioDAO.agregarUsuario(u);
@@ -121,10 +126,10 @@ public class UsuarioServlet extends HttpServlet {
 
             try {
                 int usuarioId = Integer.parseInt(req.getParameter("id"));
-                String nombre = req.getParameter("nombre");
-                String correo = req.getParameter("correo");
+                String nombre  = req.getParameter("nombre");
+                String correo  = req.getParameter("correo");
                 String telefono = req.getParameter("telefono");
-                String rol = req.getParameter("rol");
+                String rol     = req.getParameter("rol");
                 String observaciones = req.getParameter("observaciones");
 
                 // ---- VALIDACIONES ----
@@ -191,4 +196,3 @@ public class UsuarioServlet extends HttpServlet {
         }
     }
 }
-
