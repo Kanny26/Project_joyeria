@@ -1,63 +1,86 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="java.util.List" %>
+<%@ page import="java.text.SimpleDateFormat" %>
+<%@ page import="java.text.NumberFormat" %>
+<%@ page import="java.util.Locale" %>
+<%@ page import="model.Venta" %>
+<%@ page import="model.DetalleVenta" %>
+<%
+    Object adminSesion = session.getAttribute("admin");
+    if (adminSesion == null) {
+        response.sendRedirect(request.getContextPath() + "/inicio-sesion.jsp");
+        return;
+    }
+    Venta venta = (Venta) request.getAttribute("venta");
+    NumberFormat moneda = NumberFormat.getCurrencyInstance(new Locale("es", "CO"));
+    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+%>
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ver Venta</title>
+    <title>Venta #<%= (venta != null) ? venta.getVentaId() : "" %> | Admin</title>
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/main.css">
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/pages/Administrador/ventas/ver_ventas.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/main.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/pages/Administrador/ventas/ver_ventas.css">
 </head>
 <body>
-    <nav class="navbar-admin">
-        <div class="navbar-admin__catalogo">
-            <img src="${pageContext.request.contextPath}/assets/Imagenes/iconos/admin.png" alt="Admin">
-        </div>
-        <h1 class="navbar-admin__title">AAC27</h1>
-        <a href="${pageContext.request.contextPath}/Administrador/ventas/listar">
-            <i class="fa-solid fa-house-chimney navbar-admin__home-icon"></i>
-        </a>
-    </nav>
-    
-    <c:if test="${not empty venta}">
+<nav class="navbar-admin">
+    <div class="navbar-admin__catalogo">
+        <img src="<%= request.getContextPath() %>/assets/Imagenes/iconos/admin.png" alt="Admin">
+    </div>
+    <h1 class="navbar-admin__title">AAC27</h1>
+    <a href="<%= request.getContextPath() %>/AdminVentaServlet?action=listar">
+        <i class="fa-solid fa-arrow-left navbar-admin__home-icon"></i>
+    </a>
+</nav>
+
+<main class="prov-page">
+    <% if (venta != null) { %>
     <div class="factura">
-        <!-- ENCABEZADO -->
         <header class="factura__header">
             <div class="factura__logo">
                 <h1>Abby.accesorios</h1>
                 <p class="slogan">Tu lugar favorito</p>
             </div>
             <div class="factura__info">
-                <p><strong>No. Factura:</strong> ${venta.ventaId}</p>
-                <p><strong>Fecha:</strong>
-                    <fmt:formatDate value="${venta.fechaEmision}" pattern="dd/MM/yyyy"/>
-                </p>
-                <p><strong>Método de pago:</strong> ${venta.metodoPago}</p>
+                <p><strong>No. Factura:</strong> <%= venta.getVentaId() %></p>
+                <p><strong>Fecha:</strong> <%= (venta.getFechaEmision() != null) ? sdf.format(venta.getFechaEmision()) : "" %></p>
+                <p><strong>Método de pago:</strong> <%= venta.getMetodoPago() %></p>
             </div>
         </header>
-        
+
         <div class="linea-div"></div>
-        
-        <!-- CLIENTE -->
+
         <section class="factura__cliente">
             <p class="label">Factura para:</p>
-            <h2 class="cliente-nombre">${venta.clienteNombre}</h2>
-            <p>Vendedor: ${venta.vendedorNombre}</p>
-            <span class="estado <c:choose>
-                <c:when test="${venta.estado == 'confirmado'}">estado--pagado</c:when>
-                <c:when test="${venta.estado == 'rechazado'}">estado--rechazado</c:when>
-                <c:otherwise>estado--pendiente</c:otherwise>
-            </c:choose>">
-                <c:choose>
-                    <c:when test="${venta.estado == 'confirmado'}">Pagado</c:when>
-                    <c:when test="${venta.estado == 'rechazado'}">Rechazado</c:when>
-                    <c:otherwise>Pendiente</c:otherwise>
-                </c:choose>
-            </span>
+            <h2 class="cliente-nombre"><%= venta.getClienteNombre() %></h2>
+            <p>Vendedor: <%= venta.getVendedorNombre() %></p>
+            <%
+                String estadoClass = "estado--pendiente";
+                String estadoLabel = "Pendiente";
+                if ("confirmado".equals(venta.getEstado())) { estadoClass = "estado--pagado"; estadoLabel = "Pagado"; }
+                else if ("rechazado".equals(venta.getEstado())) { estadoClass = "estado--rechazado"; estadoLabel = "Rechazado"; }
+            %>
+            <span class="estado <%= estadoClass %>"><%= estadoLabel %></span>
         </section>
-        
-        <!-- TABLA DE PRODUCTOS -->
+
+        <% if ("anticipo".equals(venta.getModalidad()) && venta.getMontoAnticipo() != null) { %>
+        <div class="pago-resumen" style="display:flex;gap:1rem;margin:1rem 0;flex-wrap:wrap;">
+            <div style="background:#dcfce7;border-radius:10px;padding:.75rem 1rem;">
+                <div style="font-size:11px;font-weight:700;color:#16a34a;">Anticipo pagado</div>
+                <div style="font-weight:800;color:#059669;"><%= moneda.format(venta.getMontoAnticipo()) %></div>
+            </div>
+            <% if (venta.getSaldoPendiente() != null && venta.getSaldoPendiente().compareTo(java.math.BigDecimal.ZERO) > 0) { %>
+            <div style="background:#fee2e2;border-radius:10px;padding:.75rem 1rem;">
+                <div style="font-size:11px;font-weight:700;color:#dc2626;">Saldo pendiente</div>
+                <div style="font-weight:800;color:#991b1b;"><%= moneda.format(venta.getSaldoPendiente()) %></div>
+            </div>
+            <% } %>
+        </div>
+        <% } %>
+
         <table class="tabla">
             <thead>
                 <tr>
@@ -69,40 +92,40 @@
                 </tr>
             </thead>
             <tbody>
-                <c:forEach var="d" items="${venta.detalles}" varStatus="s">
+                <%
+                    List<DetalleVenta> detalles = venta.getDetalles();
+                    int num = 1;
+                    if (detalles != null) {
+                        for (DetalleVenta d : detalles) {
+                %>
                 <tr>
-                    <td>${s.count}</td>
-                    <td>${d.productoNombre}</td>
-                    <td><fmt:formatNumber value="${d.precioUnitario}" type="currency" currencySymbol="$"/></td>
-                    <td>${d.cantidad}</td>
-                    <td><fmt:formatNumber value="${d.subtotal}" type="currency" currencySymbol="$"/></td>
+                    <td><%= num++ %></td>
+                    <td><%= d.getProductoNombre() %></td>
+                    <td><%= moneda.format(d.getPrecioUnitario()) %></td>
+                    <td><%= d.getCantidad() %></td>
+                    <td><%= moneda.format(d.getSubtotal()) %></td>
                 </tr>
-                </c:forEach>
+                <% } } %>
             </tbody>
         </table>
-        
-        <!-- TOTALES -->
+
         <div class="totales">
             <p class="total-final">
-                <span>Total:</span>
-                <fmt:formatNumber value="${venta.total}" type="currency" currencySymbol="$"/>
+                <span>Total:</span> <%= moneda.format(venta.getTotal()) %>
             </p>
         </div>
-        
-        <!-- CONDICIONES -->
+
         <section class="condiciones">
             <h3>Términos y condiciones</h3>
-            <p>Gracias por su compra. Esta factura corresponde a los servicios prestados
-            y debe conservarse como comprobante.</p>
+            <p>Gracias por su compra. Esta factura corresponde a los servicios prestados y debe conservarse como comprobante.</p>
         </section>
     </div>
-    </c:if>
-    
-    <c:if test="${empty venta}">
+    <% } else { %>
     <div class="titulo">
-        <p style="text-align:center; margin-top:2rem;">No se encontró la venta solicitada.</p>
-        <a href="${pageContext.request.contextPath}/Administrador/ventas/listar">Volver al listado</a>
+        <p style="text-align:center;margin-top:2rem;">No se encontró la venta solicitada.</p>
+        <a href="<%= request.getContextPath() %>/AdminVentaServlet?action=listar">Volver al listado</a>
     </div>
-    </c:if>
+    <% } %>
+</main>
 </body>
 </html>

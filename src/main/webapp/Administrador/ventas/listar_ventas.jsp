@@ -126,7 +126,7 @@
                                     <%= "efectivo".equals(v.getMetodoPago()) ? "💵 Efectivo" : "💳 Tarjeta" %>
                                 </td>
                                 <td>
-                                    <% if ("anticipo".equals(v.getModalidad()) && v.getSaldoPendiente() != null && v.getSaldoPendiente() > 0) { %>
+                                    <% if ("anticipo".equals(v.getModalidad()) && v.getSaldoPendiente() != null && v.getSaldoPendiente().compareTo(java.math.BigDecimal.ZERO) > 0) { %>
                                         <span class="badge badge--danger">
                                             Saldo: <%= moneda.format(v.getSaldoPendiente()) %>
                                         </span>

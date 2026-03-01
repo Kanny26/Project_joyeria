@@ -509,6 +509,49 @@ body {
     gap: 1rem;
     margin-bottom: 1.2rem;
 }
+
+ .modal-overlay {
+     display: none; position: fixed; inset: 0;
+     background: rgba(0,0,0,.5); z-index: 1000;
+     align-items: center; justify-content: center;
+ }
+ .modal-overlay.active { display: flex; }
+ .modal-box {
+     background: #fff; border-radius: 16px; padding: 1.5rem;
+     width: min(96vw, 720px); max-height: 85vh; overflow-y: auto;
+     box-shadow: 0 20px 60px rgba(0,0,0,.25);
+ }
+ .cat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: .75rem; margin-bottom: 1rem; }
+ .cat-btn {
+     border: 2px solid #e5e7eb; border-radius: 12px; padding: .75rem .5rem;
+     text-align: center; cursor: pointer; font-size: .82rem; font-weight: 700;
+     color: #1e1b4b; background: #f9fafb; transition: all .15s;
+ }
+ .cat-btn:hover, .cat-btn.selected { border-color: #7c3aed; background: #f5f3ff; color: #7c3aed; }
+ .prod-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: .75rem; }
+ .prod-card {
+     border: 2px solid #e5e7eb; border-radius: 12px; padding: .9rem;
+     cursor: pointer; transition: all .15s; background: #fff;
+ }
+ .prod-card:hover { border-color: #7c3aed; background: #f5f3ff; }
+ .prod-card.sin-stock { opacity: .45; cursor: not-allowed; }
+ .prod-card__nombre { font-weight: 700; font-size: .88rem; color: #1e1b4b; margin-bottom: 4px; }
+ .prod-card__precio { font-weight: 800; color: #059669; font-size: 1rem; }
+ .prod-card__stock { font-size: .75rem; color: #64748b; }
+ .carrito-item {
+     display: flex; align-items: center; gap: .75rem;
+     padding: .6rem .8rem; background: #f5f3ff; border-radius: 10px; margin-bottom: .5rem;
+ }
+ .carrito-item__nombre { flex: 1; font-weight: 700; font-size: .88rem; color: #1e1b4b; }
+ .carrito-item__precio { font-size: .82rem; color: #7c3aed; font-weight: 700; }
+ .carrito-item__qty {
+     width: 56px; padding: .3rem .4rem;
+     border: 1.5px solid #c4b5fd; border-radius: 8px; font-size: .88rem; text-align: center; font-weight: 700;
+ }
+ .carrito-item__del { background: none; border: none; cursor: pointer; color: #ef4444; font-size: 1rem; }
+ #totalDisplay { font-size: 1.35rem; font-weight: 900; color: #059669; }
+ #anticipoRow { display: none; }
+        
 @media (max-width: 600px) { .form-row { grid-template-columns: 1fr; } }
 
 .form-group { display: flex; flex-direction: column; gap: .35rem; }

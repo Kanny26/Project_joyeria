@@ -65,8 +65,9 @@ public class VentaVendedorServlet extends HttpServlet {
                 default -> resp.sendRedirect(req.getContextPath() + "/VentaVendedorServlet?action=misVentas");
             }
         } catch (Exception e) {
+        	e.printStackTrace();
             req.setAttribute("error", "Error: " + e.getMessage());
-            req.getRequestDispatcher("/vendedor/mensajesexito.jsp").forward(req, resp);
+            req.getRequestDispatcher("/vendedor/ventas_realizadas.jsp").forward(req, resp);
         }
     }
 
@@ -82,8 +83,10 @@ public class VentaVendedorServlet extends HttpServlet {
 
         String action = req.getParameter("action");
         if (action == null) action = "";
-
+        System.out.println("ACTION RECIBIDA: " + action);
+        
         try {
+        	
             switch (action) {
                 case "guardarVenta"     -> guardarVenta(req, resp);
                 case "abonar"           -> procesarAbono(req, resp);
@@ -92,7 +95,7 @@ public class VentaVendedorServlet extends HttpServlet {
             }
         } catch (Exception e) {
             req.setAttribute("error", "Error: " + e.getMessage());
-            req.getRequestDispatcher("/vendedor/mensajeexito.jsp").forward(req, resp);
+            req.getRequestDispatcher("/vendedor/mensajesexito.jsp").forward(req, resp);
         }
     }
 
@@ -158,8 +161,7 @@ public class VentaVendedorServlet extends HttpServlet {
 
     private void mostrarFormularioNueva(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        req.getRequestDispatcher("/vendedor/registrar_venta.jsp")
-           .forward(req, resp);
+    	resp.sendRedirect(req.getContextPath() + "/vendedor/registrar_venta.jsp");
     }
 
     private void listarMisVentas(HttpServletRequest req, HttpServletResponse resp)
@@ -371,8 +373,20 @@ public class VentaVendedorServlet extends HttpServlet {
 
     private boolean estaAutenticado(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
+
         HttpSession session = req.getSession(false);
+
         if (session == null || session.getAttribute("vendedor") == null) {
+
+            String action = req.getParameter("action");
+
+            if ("obtenerCategorias".equals(action) ||
+                "obtenerProductosPorCategoria".equals(action)) {
+
+                resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                return false;
+            }
+
             resp.sendRedirect(req.getContextPath() + "/inicio-sesion.jsp");
             return false;
         }
@@ -394,6 +408,7 @@ public class VentaVendedorServlet extends HttpServlet {
         req.getRequestDispatcher(vista).forward(req, resp);
     }
 
+    
     private String escapeJson(String text) {
         if (text == null) return "";
         return text.replace("\\", "\\\\")

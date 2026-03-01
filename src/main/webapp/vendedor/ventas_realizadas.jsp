@@ -37,7 +37,7 @@
     <span style="font-size:14px;font-weight:600;color:#fff;opacity:.85;">
         <i class="fa-solid fa-user-circle"></i> <%= usuario.getNombre() %>
     </span>
-    <a href="<%= request.getContextPath() %>/VentaVendedorServlet?action=nueva" class="navbar-admin__home-link">
+    <a href="<%= request.getContextPath() %>VentaVendedorServlet?action=nueva" class="navbar-admin__home-link">
         <span class="navbar-admin__home-icon-wrap">
             <i class="fa-solid fa-plus"></i>
             <span class="navbar-admin__home-text">Nueva venta</span>

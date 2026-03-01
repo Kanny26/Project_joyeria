@@ -5,7 +5,7 @@
 <%
     Object vendedorSesion = session.getAttribute("vendedor");
     if (vendedorSesion == null) {
-        response.sendRedirect(request.getContextPath() + "/vendedor/inicio-sesion.jsp");
+        response.sendRedirect(request.getContextPath() + "/inicio-sesion.jsp");
         return;
     }
     List<CasoPostventa> casos = (List<CasoPostventa>) request.getAttribute("casos");
@@ -158,14 +158,7 @@
                         <div class="prov-card__valor" style="font-size:13px;color:#4b5563;"><%= c.getMotivo() %></div>
                     </div>
                     <% } %>
-                    <% if (c.getObservacion() != null && !c.getObservacion().isBlank()) { %>
-                    <div class="prov-card__fila">
-                        <div class="prov-card__etiqueta" style="color:#059669;"><i class="fa-solid fa-clipboard-check"></i> Respuesta admin</div>
-                        <div class="prov-card__valor" style="font-size:13px;color:#065f46;background:#f0fdf4;padding:8px 10px;border-radius:8px;border-left:3px solid #22c55e;">
-                            <%= c.getObservacion() %>
-                        </div>
-                    </div>
-                    <% } %>
+
                     <div class="prov-card__duo">
                         <div class="prov-card__duo-item">
                             <div class="prov-card__etiqueta"><i class="fa-regular fa-calendar"></i> Fecha</div>

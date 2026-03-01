@@ -1,8 +1,16 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="java.util.List" %>
-<%@ page import="model.CasoPostventa" %> 
 <%@ page import="java.text.SimpleDateFormat" %>
-
+<%@ page import="model.CasoPostventa" %>
+<%
+    Object adminSesion = session.getAttribute("admin");
+    if (adminSesion == null) {
+        response.sendRedirect(request.getContextPath() + "/inicio-sesion.jsp");
+        return;
+    }
+    List<CasoPostventa> casos = (List<CasoPostventa>) request.getAttribute("casos");
+    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+%>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -14,7 +22,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
-
 <nav class="navbar-admin">
     <div class="navbar-admin__catalogo">
         <img src="<%= request.getContextPath() %>/assets/Imagenes/iconos/admin.png" alt="Admin">
@@ -41,18 +48,12 @@
             </select>
         </div>
 
-        <%
-            List<Caso> casos = (List<Caso>) request.getAttribute("casos");
-            if (casos == null || casos.isEmpty()) {
-        %>
+        <% if (casos == null || casos.isEmpty()) { %>
             <div class="empty-state">
                 <i class="fa-solid fa-inbox"></i>
                 <p>No hay casos postventa registrados.</p>
             </div>
-        <%
-            } else {
-                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-        %>
+        <% } else { %>
             <div class="table-wrapper">
                 <table class="data-table" id="tablaCasos">
                     <thead>
@@ -69,7 +70,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <% for (Caso c : casos) { %>
+                        <% for (CasoPostventa c : casos) { %>
                             <tr class="fila-caso" data-estado="<%= c.getEstado() %>">
                                 <td><span class="badge badge--id">#<%= c.getCasoId() %></span></td>
                                 <td>#<%= c.getVentaId() %></td>
@@ -96,7 +97,7 @@
                                     <% } %>
                                 </td>
                                 <td class="acciones">
-                                    <a href="<%= request.getContextPath() %>/Administrador/postventa/ver?id=<%= c.getCasoId() %>"
+                                    <a href="<%= request.getContextPath() %>/AdminVentaServlet?action=verCaso&id=<%= c.getCasoId() %>"
                                        class="btn-icon" title="Ver y gestionar">
                                         <i class="fa-solid fa-eye"></i>
                                     </a>
