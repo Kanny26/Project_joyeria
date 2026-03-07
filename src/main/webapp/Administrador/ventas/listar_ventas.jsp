@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="java.util.List" %>
-<%-- Sustituye 'com.tu.modelo.Venta' por la ruta real de tu clase --%>
 <%@ page import="model.Venta" %> 
 <%@ page import="java.text.SimpleDateFormat" %>
 <%@ page import="java.text.NumberFormat" %>
@@ -13,26 +12,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ventas | AAC27 Admin</title>
     <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/main.css">
-    <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/pages/Administrador/ventas.css">
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/pages/Administrador/ventas/listar_ventas.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
 
 <%
-    // Configuración de formatos para moneda y fecha
+    // Configuración de formatos
     NumberFormat moneda = NumberFormat.getCurrencyInstance(new Locale("es", "CO"));
     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
     
-    // Recuperar datos del request
+    // 🔒 Recuperar atributos con fallback seguro (NUNCA null)
     List<Venta> ventas = (List<Venta>) request.getAttribute("ventas");
-    Object totalVentas = request.getAttribute("totalVentas");
-    Object totalPendientes = request.getAttribute("totalPendientes");
+    if (ventas == null) {
+        System.err.println("⚠️ WARNING: 'ventas' es null en JSP. ¿Acceso directo? Forzando lista vacía.");
+        ventas = new java.util.ArrayList<>();
+    }
     
-    // Capturar parámetros de búsqueda para mantener los filtros en el formulario
-    String tipoBusqueda = request.getParameter("tipo");
-    String queryBusqueda = request.getParameter("q");
-    String fInicio = request.getParameter("fechaInicio");
-    String fFin = request.getParameter("fechaFin");
+    Object totalVentasObj = request.getAttribute("totalVentas");
+    Object totalPendientesObj = request.getAttribute("totalPendientes");
+    
+    int totalVentas = (totalVentasObj instanceof Integer) ? (Integer) totalVentasObj : 0;
+    int totalPendientes = (totalPendientesObj instanceof Integer) ? (Integer) totalPendientesObj : 0;
+    
+    // Parámetros de búsqueda
+    String tipoBusqueda = (String) request.getAttribute("tipo");
+    String queryBusqueda = (String) request.getAttribute("criterio");
+    String fInicio = (String) request.getAttribute("fechaInicio");
+    String fFin = (String) request.getAttribute("fechaFin");
+    
+    // Debug final
+    System.out.println("✅ JSP cargado - ventas.size(): " + ventas.size());
 %>
 
 <nav class="navbar-admin">
@@ -40,8 +50,12 @@
         <img src="<%= request.getContextPath() %>/assets/Imagenes/iconos/admin.png" alt="Admin">
     </div>
     <h1 class="navbar-admin__title">AAC27</h1>
-    <a href="<%= request.getContextPath() %>/Administrador/admin-principal.jsp">
-        <i class="fa-solid fa-house-chimney navbar-admin__home-icon"></i>
+    <a href="<%=request.getContextPath()%>/Administrador/ventas.jsp" class="navbar-admin__home-link">
+	    <span class="navbar-admin__home-icon-wrap">
+	        <i class="fa-solid fa-arrow-left"></i>
+		    <span class="navbar-admin__home-text">Volver atrás</span>
+		    <i class="fa-solid fa-house-chimney"></i>
+	    </span>
     </a>
 </nav>
 
@@ -52,16 +66,16 @@
             <div class="stats-row">
                 <span class="stat-chip">
                     <i class="fa-solid fa-file-invoice-dollar"></i>
-                    Total ventas: <strong><%= (totalVentas != null) ? totalVentas : 0 %></strong>
+                    Total ventas: <strong><%= totalVentas %></strong>
                 </span>
                 <span class="stat-chip stat-chip--warning">
                     <i class="fa-solid fa-clock"></i>
-                    Con saldo pendiente: <strong><%= (totalPendientes != null) ? totalPendientes : 0 %></strong>
+                    Con saldo pendiente: <strong><%= totalPendientes %></strong>
                 </span>
             </div>
         </div>
 
-        <%-- ── FILTROS ── --%>
+        <%-- FILTROS --%>
         <form action="<%= request.getContextPath() %>/Administrador/ventas/buscar" method="GET" class="filtros-form">
             <div class="filtros-row">
                 <select name="tipo">
@@ -71,9 +85,9 @@
                     <option value="vendedor" <%= "vendedor".equals(tipoBusqueda) ? "selected" : "" %>>Vendedor</option>
                     <option value="estado" <%= "estado".equals(tipoBusqueda) ? "selected" : "" %>>Estado</option>
                 </select>
-                <input type="text" name="q" value="<%= (queryBusqueda != null) ? queryBusqueda : "" %>" placeholder="Término de búsqueda...">
-                <input type="date" name="fechaInicio" value="<%= (fInicio != null) ? fInicio : "" %>" title="Desde">
-                <input type="date" name="fechaFin" value="<%= (fFin != null) ? fFin : "" %>" title="Hasta">
+                <input type="text" name="q" value="<%= queryBusqueda != null ? queryBusqueda : "" %>" placeholder="Término de búsqueda...">
+                <input type="date" name="fechaInicio" value="<%= fInicio != null ? fInicio : "" %>" title="Desde">
+                <input type="date" name="fechaFin" value="<%= fFin != null ? fFin : "" %>" title="Hasta">
                 <button type="submit" class="btn-save btn-save--sm">
                     <i class="fa-solid fa-magnifying-glass"></i> Buscar
                 </button>
@@ -83,69 +97,63 @@
             </div>
         </form>
 
-        <%-- ── TABLA ── --%>
-        <% if (ventas == null || ventas.isEmpty()) { %>
+        <%-- LISTADO DE VENTAS --%>
+        <% if (ventas.isEmpty()) { %>
             <div class="empty-state">
                 <i class="fa-solid fa-inbox"></i>
-                <p>No se encontraron ventas con los filtros aplicados.</p>
+                <p><%= totalVentas == 0 ? "Aún no hay ventas registradas." : "No se encontraron ventas con los filtros aplicados." %></p>
             </div>
         <% } else { %>
-            <div class="table-wrapper">
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Vendedor</th>
-                            <th>Cliente</th>
-                            <th>Fecha</th>
-                            <th>Total</th>
-                            <th>Modalidad</th>
-                            <th>Método</th>
-                            <th>Estado pago</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <% for (Venta v : ventas) { %>
-                            <tr>
-                                <td><span class="badge badge--id">#<%= v.getVentaId() %></span></td>
-                                <td><%= v.getVendedorNombre() %></td>
-                                <td><%= v.getClienteNombre() %></td>
-                                <td><%= (v.getFechaEmision() != null) ? sdf.format(v.getFechaEmision()) : "---" %></td>
-                                <td class="monto">
-                                    <%= moneda.format(v.getTotal()) %>
-                                </td>
-                                <td>
-                                    <% if ("anticipo".equals(v.getModalidad())) { %>
-                                        <span class="badge badge--warning">Anticipo</span>
-                                    <% } else { %>
-                                        <span class="badge badge--info">Contado</span>
-                                    <% } %>
-                                </td>
-                                <td>
-                                    <%= "efectivo".equals(v.getMetodoPago()) ? "💵 Efectivo" : "💳 Tarjeta" %>
-                                </td>
-                                <td>
-                                    <% if ("anticipo".equals(v.getModalidad()) && v.getSaldoPendiente() != null && v.getSaldoPendiente().compareTo(java.math.BigDecimal.ZERO) > 0) { %>
-                                        <span class="badge badge--danger">
-                                            Saldo: <%= moneda.format(v.getSaldoPendiente()) %>
-                                        </span>
-                                    <% } else if ("confirmado".equals(v.getEstado())) { %>
-                                        <span class="badge badge--success">Pagado</span>
-                                    <% } else { %>
-                                        <span class="badge badge--warning">Pendiente</span>
-                                    <% } %>
-                                </td>
-                                <td class="acciones">
-                                    <a href="<%= request.getContextPath() %>/Administrador/ventas/ver?id=<%= v.getVentaId() %>"
-                                       class="btn-icon" title="Ver detalle">
-                                        <i class="fa-solid fa-eye"></i>
-                                    </a>
-                                </td>
-                            </tr>
-                        <% } %>
-                    </tbody>
-                </table>
+            <div class="cards-container">
+                <% for (Venta v : ventas) { 
+                    String estadoClass = "status--pending";
+                    String estadoTexto = "Pendiente";
+                    
+                    if ("anticipo".equals(v.getModalidad()) && v.getSaldoPendiente() != null && v.getSaldoPendiente().compareTo(java.math.BigDecimal.ZERO) > 0) {
+                        estadoClass = "status--danger";
+                        estadoTexto = "Saldo: " + moneda.format(v.getSaldoPendiente());
+                    } else if ("confirmado".equals(v.getEstado())) {
+                        estadoClass = "status--success";
+                        estadoTexto = "Pagado";
+                    }
+                %>
+                <div class="venta-card">
+                    <div class="venta-card__header">
+                        <span class="venta-card__id">#<%= v.getVentaId() %></span>
+                        <span class="venta-card__date"><%= v.getFechaEmision() != null ? sdf.format(v.getFechaEmision()) : "---" %></span>
+                    </div>
+                    
+                    <div class="venta-card__body">
+                        <div class="venta-card__info">
+                            <p class="info-label">Cliente</p>
+                            <p class="info-value"><%= v.getClienteNombre() != null ? v.getClienteNombre() : "N/A" %></p>
+                        </div>
+                        <div class="venta-card__info">
+                            <p class="info-label">Vendedor</p>
+                            <p class="info-value"><%= v.getVendedorNombre() != null ? v.getVendedorNombre() : "N/A" %></p>
+                        </div>
+                        <div class="venta-card__total">
+                            <p class="info-label">Total Venta</p>
+                            <p class="total-amount"><%= moneda.format(v.getTotal() != null ? v.getTotal() : 0) %></p>
+                        </div>
+                    </div>
+            
+                    <div class="venta-card__footer">
+                        <div class="venta-card__tags">
+                            <span class="tag-method">
+                                <%= "efectivo".equals(v.getMetodoPago()) ? "💵 Efectivo" : "💳 Tarjeta" %>
+                            </span>
+                            <span class="status-badge <%= estadoClass %>"><%= estadoTexto %></span>
+                        </div>
+                        <div class="venta-card__actions">
+                            <a href="<%= request.getContextPath() %>/Administrador/ventas/ver?id=<%= v.getVentaId() %>" 
+                               class="btn-view" title="Ver Detalle">
+                                <i class="fa-solid fa-eye"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <% } %>
             </div>
         <% } %>
     </div>

@@ -16,6 +16,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registrar Venta | AAC27</title>
     <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/main.css">
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/forms-global.css">
     <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/pages/Vendedor/registrar_venta.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     
@@ -27,9 +28,6 @@
         <img src="<%= request.getContextPath() %>/assets/Imagenes/iconos/Seller.png" alt="Vendedor">
     </div>
     <h1 class="navbar-admin__title">AAC27</h1>
-    <span style="font-size:14px;font-weight:600;color:#fff;opacity:.85;">
-        <i class="fa-solid fa-user-circle"></i> <%= usuario.getNombre() %>
-    </span>
     <a href="<%= request.getContextPath() %>/VentaVendedorServlet?action=misVentas" class="navbar-admin__home-link">
         <span class="navbar-admin__home-icon-wrap">
             <i class="fa-solid fa-list"></i>

@@ -1,4 +1,5 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ page import="config.ConexionDB, dao.DashboardDAO, java.math.BigDecimal, java.util.List, java.util.Map" %>
 <%
     Object vendedor = session.getAttribute("vendedor");
     if (vendedor == null) {
@@ -6,29 +7,56 @@
         return;
     }
     model.Usuario u = (model.Usuario) vendedor;
+
+    boolean esTemporal = false;
+    try (java.sql.Connection _c = ConexionDB.getConnection();
+         java.sql.PreparedStatement _ps = _c.prepareStatement(
+             "SELECT pass_temporal FROM Usuario WHERE usuario_id = ?")) {
+        _ps.setInt(1, u.getUsuarioId());
+        java.sql.ResultSet _rs = _ps.executeQuery();
+        if (_rs.next()) esTemporal = _rs.getInt("pass_temporal") == 1;
+    } catch (Exception _ex) { }
+
+    java.time.LocalDate hoy = java.time.LocalDate.now();
+    java.time.format.DateTimeFormatter fmt = java.time.format.DateTimeFormatter
+        .ofPattern("d 'de' MMMM',' yyyy", new java.util.Locale("es","ES"));
+    String fechaHoy = hoy.format(fmt);
+
+    // ── STATS REALES DEL VENDEDOR ──
+    DashboardDAO dashDAO = new DashboardDAO();
+    int    ventasMes      = dashDAO.getVentasMesVendedor(u.getUsuarioId());
+    BigDecimal ingresosMes = dashDAO.getIngresosMesVendedor(u.getUsuarioId());
+    int    casosAbiertos   = dashDAO.getCasosAbiertosVendedor(u.getUsuarioId());
+    BigDecimal promedioVenta = dashDAO.getPromedioVentaVendedor(u.getUsuarioId());
+
+    // ── NOTIFICACIONES REALES ──
+    List<Map<String, String>> notificaciones = dashDAO.getNotificacionesVendedor(u.getUsuarioId());
+
+    // Formatear moneda
+    java.text.NumberFormat nf = java.text.NumberFormat.getInstance(new java.util.Locale("es","CO"));
+    String ingresosFmt  = "$" + nf.format(ingresosMes.setScale(0, java.math.RoundingMode.HALF_UP));
+    String promedioFmt  = "$" + nf.format(promedioVenta.setScale(0, java.math.RoundingMode.HALF_UP));
 %>
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel Vendedor | AAC27</title>
-    <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/main.css" />
+    <title>Dashboard Vendedor | AAC27</title>
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/main.css">
     <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/pages/Vendedor/vendedor-principal.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 </head>
 <body>
 
+<!-- ══════════ NAVBAR ORIGINAL ══════════ -->
 <nav class="navbar-admin">
     <div class="navbar-admin__catalogo">
         <img src="<%= request.getContextPath() %>/assets/Imagenes/iconos/Seller.png" alt="Vendedor">
     </div>
     <h1 class="navbar-admin__title">AAC27</h1>
-    <%-- Saludo al vendedor --%>
-    <span style="font-size:14px;font-weight:600;color:#fff;opacity:0.85;">
-        <i class="fa-solid fa-user-circle"></i> <%= u.getNombre() %>
-    </span>
-    <a href="<%= request.getContextPath() %>/index.jsp" class="navbar-admin__home-link">
+    <a href="<%= request.getContextPath() %>/CerrarSesionServlet" class="navbar-admin__home-link">
         <span class="navbar-admin__home-icon-wrap">
             <i class="fa-solid fa-right-from-bracket"></i>
             <span class="navbar-admin__home-text">Cerrar sesión</span>
@@ -36,61 +64,247 @@
     </a>
 </nav>
 
-<main class="panel-vendedor__tarjetas">
-    <h2 class="panel-vendedor__tarjetas-titulo">Haz clic en lo que deseas gestionar hoy.</h2>
+<!-- ══════════ MAIN ══════════ -->
+<main class="dash-main">
 
-    <section class="panel-vendedor__tarjetas-contenedor">
+    <!-- FILA 1: hero + notificaciones -->
+    <div class="dash-row dash-row--top">
 
-        <%-- Registrar venta --%>
-        <div class="panel-vendedor__tarjeta">
-            <div class="icono-boton__circulo">
-                <a href="<%= request.getContextPath() %>/VentaVendedorServlet?action=nueva">
-                    <img class="icono-boton__img"
-                         src="<%= request.getContextPath() %>/assets/Imagenes/iconos/gestionar_proveedores.png"
-                         alt="Registrar venta">
-                </a>
+        <!-- HERO CARD -->
+        <div class="hero-card">
+            <div class="hero-card__body">
+                <h2 class="hero-card__title">¡Hola, <%= u.getNombre() %>!</h2>
+                <p class="hero-card__sub">¿Qué gestionamos hoy?</p>
+                <div class="hero-icons">
+                    <a href="<%= request.getContextPath() %>/VentaVendedorServlet?action=nueva" class="hero-icon-item">
+                        <div class="icono-boton__circulo">
+                            <img class="icono-boton__img" src="<%= request.getContextPath() %>/assets/Imagenes/iconos/gestionar_proveedores.png" alt="Registrar venta">
+                        </div>
+                        <span class="icono-boton__titulo">Registrar venta</span>
+                    </a>
+                    <a href="<%= request.getContextPath() %>/VentaVendedorServlet?action=misVentas" class="hero-icon-item">
+                        <div class="icono-boton__circulo">
+                            <img class="icono-boton__img" src="<%= request.getContextPath() %>/assets/Imagenes/iconos/ventas.png" alt="Mis ventas">
+                        </div>
+                        <span class="icono-boton__titulo">Mis ventas</span>
+                    </a>
+                    <a href="<%= request.getContextPath() %>/VentaVendedorServlet?action=misCasos" class="hero-icon-item">
+                        <div class="icono-boton__circulo">
+                            <img class="icono-boton__img" src="<%= request.getContextPath() %>/assets/Imagenes/iconos/admin.png" alt="Casos postventa">
+                        </div>
+                        <span class="icono-boton__titulo">Casos postventa</span>
+                    </a>
+                </div>
             </div>
-            <div class="panel-vendedor__tarjeta-h3">
-                <div class="panel-vendedor__tarjeta-h3-izquierda"></div>
-                <div class="panel-vendedor__tarjeta-h3-derecha"></div>
-                <h3 class="icono-boton__titulo">Registrar venta</h3>
-            </div>
+            
+            <span class="hero-card__date"><i class="far fa-calendar-alt"></i> <%= fechaHoy %></span>
         </div>
 
-        <%-- Mis ventas --%>
-        <div class="panel-vendedor__tarjeta">
-            <div class="icono-boton__circulo">
-                <a href="<%= request.getContextPath() %>/VentaVendedorServlet?action=misVentas">
-                    <img class="icono-boton__img"
-                         src="<%= request.getContextPath() %>/assets/Imagenes/iconos/ventas.png"
-                         alt="Mis ventas">
-                </a>
+        <!-- NOTIFICACIONES -->
+        <div class="notif-card">
+            <div class="notif-card__header">
+                <span class="notif-card__title"><i class="far fa-bell"></i> Notificaciones</span>
+                <a href="#" class="notif-card__all">Ver todo</a>
             </div>
-            <div class="panel-vendedor__tarjeta-h3">
-                <div class="panel-vendedor__tarjeta-h3-izquierda"></div>
-                <div class="panel-vendedor__tarjeta-h3-derecha"></div>
-                <h3 class="icono-boton__titulo">Mis ventas</h3>
+            <%
+            if (notificaciones.isEmpty()) {
+            %>
+            <div class="notif-item notif-item--lavender">
+                <div class="notif-item__ico"><i class="fas fa-check-circle"></i></div>
+                <p class="notif-item__txt">Todo al día, sin alertas pendientes.</p>
+                <button class="notif-item__btn"><i class="fas fa-chevron-right"></i></button>
             </div>
+            <%
+            } else {
+                for (Map<String, String> notif : notificaciones) {
+            %>
+            <div class="notif-item notif-item--<%= notif.get("tipo") %>">
+                <div class="notif-item__ico"><i class="<%= notif.get("icono") %>"></i></div>
+                <p class="notif-item__txt"><%= notif.get("texto") %></p>
+                <button class="notif-item__btn"><i class="fas fa-chevron-right"></i></button>
+            </div>
+            <%
+                }
+            }
+            %>
         </div>
+    </div>
 
-        <%-- Mis casos postventa --%>
-        <div class="panel-vendedor__tarjeta">
-            <div class="icono-boton__circulo">
-                <a href="<%= request.getContextPath() %>/VentaVendedorServlet?action=misCasos">
-                    <img class="icono-boton__img"
-                         src="<%= request.getContextPath() %>/assets/Imagenes/iconos/admin.png"
-                         alt="Casos postventa">
-                </a>
-            </div>
-            <div class="panel-vendedor__tarjeta-h3">
-                <div class="panel-vendedor__tarjeta-h3-izquierda"></div>
-                <div class="panel-vendedor__tarjeta-h3-derecha"></div>
-                <h3 class="icono-boton__titulo">Mis casos postventa</h3>
-            </div>
+    <!-- FILA 2: stats -->
+    <div class="dash-row dash-row--stats">
+        <div class="stat-card">
+            <div class="stat-card__ico stat-card__ico--rose"><i class="fas fa-receipt"></i></div>
+            <button class="stat-card__menu"><i class="fas fa-ellipsis-v"></i></button>
+            <p class="stat-card__lbl">Mis ventas este mes</p>
+            <p class="stat-card__val"><%= ventasMes %></p>
         </div>
+        <div class="stat-card">
+            <div class="stat-card__ico stat-card__ico--lavender"><i class="fas fa-dollar-sign"></i></div>
+            <button class="stat-card__menu"><i class="fas fa-ellipsis-v"></i></button>
+            <p class="stat-card__lbl">Ingresos generados</p>
+            <p class="stat-card__val"><%= ingresosFmt %></p>
+        </div>
+        <div class="stat-card">
+            <div class="stat-card__ico stat-card__ico--amber"><i class="fas fa-headset"></i></div>
+            <button class="stat-card__menu"><i class="fas fa-ellipsis-v"></i></button>
+            <p class="stat-card__lbl">Pagos pendientes</p>
+            <p class="stat-card__val"><%= casosAbiertos %></p>
+        </div>
+        <div class="stat-card">
+            <div class="stat-card__ico stat-card__ico--mint"><i class="fas fa-chart-line"></i></div>
+            <button class="stat-card__menu"><i class="fas fa-ellipsis-v"></i></button>
+            <p class="stat-card__lbl">Promedio por venta</p>
+            <p class="stat-card__val"><%= promedioFmt %></p>
+        </div>
+    </div>
 
-    </section>
+
 </main>
+
+<!-- ══════════ MODAL CAMBIAR CONTRASEÑA ══════════ -->
+<button onclick="abrirModalPass()" title="Cambiar contraseña" class="fab-key">
+    <i class="fas fa-key"></i>
+</button>
+
+<div id="overlayPass" class="modal-overlay">
+    <div class="modal-box">
+        <div class="modal-box__header">
+            <div class="modal-box__header-left">
+                <div class="modal-box__icon"><i class="fas fa-lock"></i></div>
+                <div>
+                    <p class="modal-box__title">Cambiar contraseña</p>
+                    <p class="modal-box__subtitle">Mantén tu cuenta segura</p>
+                </div>
+            </div>
+            <button id="btnXModal" onclick="cerrarModalPass()" class="modal-box__close">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div id="avisoTemp" class="modal-box__aviso">
+            <i class="fas fa-exclamation-triangle"></i>
+            <strong> Contraseña temporal.</strong> Debes cambiarla antes de continuar.
+        </div>
+        <div class="modal-box__body">
+            <div id="msgCambio" class="modal-box__msg"></div>
+            <div class="modal-field">
+                <label>Contraseña actual</label>
+                <div class="mfi">
+                    <i class="fas fa-lock mfi__ico"></i>
+                    <input id="cpActual" type="password" placeholder="Tu contraseña actual"
+                           onfocus="this.parentElement.classList.add('mfi--focus')"
+                           onblur="this.parentElement.classList.remove('mfi--focus')"/>
+                    <button type="button" onclick="toggleOjo('cpActual','ojoA')"><i id="ojoA" class="fas fa-eye"></i></button>
+                </div>
+            </div>
+            <div class="modal-field">
+                <label>Nueva contraseña</label>
+                <div class="mfi">
+                    <i class="fas fa-key mfi__ico"></i>
+                    <input id="cpNueva" type="password" placeholder="Mínimo 6 caracteres"
+                           oninput="verFuerza(this.value)"
+                           onfocus="this.parentElement.classList.add('mfi--focus')"
+                           onblur="this.parentElement.classList.remove('mfi--focus')"/>
+                    <button type="button" onclick="toggleOjo('cpNueva','ojoN')"><i id="ojoN" class="fas fa-eye"></i></button>
+                </div>
+                <div class="fuerza-bar"><div id="barraFuerza"></div></div>
+                <span id="textoFuerza" class="fuerza-txt"></span>
+            </div>
+            <div class="modal-field">
+                <label>Confirmar nueva contraseña</label>
+                <div class="mfi">
+                    <i class="fas fa-check-circle mfi__ico"></i>
+                    <input id="cpConfirm" type="password" placeholder="Repite la nueva contraseña"
+                           onfocus="this.parentElement.classList.add('mfi--focus')"
+                           onblur="this.parentElement.classList.remove('mfi--focus')"/>
+                    <button type="button" onclick="toggleOjo('cpConfirm','ojoC')"><i id="ojoC" class="fas fa-eye"></i></button>
+                </div>
+            </div>
+            <div class="modal-box__actions">
+                <button id="btnCancelarModal" onclick="cerrarModalPass()" class="btn-cancel">Cancelar</button>
+                <button id="btnGuardarPass" onclick="enviarCambio()" class="btn-save">
+                    <i class="fas fa-save"></i> Actualizar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+var _passTemporal = <%= esTemporal %>;
+window.addEventListener('load', function() {
+    if (_passTemporal) {
+        abrirModalPass();
+        document.getElementById('btnXModal').style.display = 'none';
+        document.getElementById('btnCancelarModal').style.display = 'none';
+        document.getElementById('avisoTemp').style.display = 'flex';
+    }
+});
+function abrirModalPass() {
+    document.getElementById('overlayPass').classList.add('active');
+    ['cpActual','cpNueva','cpConfirm'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('msgCambio').style.display = 'none';
+    document.getElementById('barraFuerza').style.width = '0%';
+    document.getElementById('textoFuerza').textContent = '';
+}
+function cerrarModalPass() {
+    if (_passTemporal) return;
+    document.getElementById('overlayPass').classList.remove('active');
+}
+function toggleOjo(inputId, iconId) {
+    var inp = document.getElementById(inputId);
+    var ico = document.getElementById(iconId);
+    inp.type = inp.type === 'password' ? 'text' : 'password';
+    ico.className = inp.type === 'password' ? 'fas fa-eye' : 'fas fa-eye-slash';
+}
+function verFuerza(v) {
+    var pts = 0;
+    if (v.length >= 6)  pts++;
+    if (v.length >= 10) pts++;
+    if (/[A-Z]/.test(v) && /[a-z]/.test(v)) pts++;
+    if (/[0-9]/.test(v))   pts++;
+    if (/[^A-Za-z0-9]/.test(v)) pts++;
+    var n = [{w:'0%',c:'#e5e7eb',t:''},{w:'25%',c:'#ef4444',t:'Muy débil'},
+             {w:'50%',c:'#f59e0b',t:'Débil'},{w:'65%',c:'#eab308',t:'Regular'},
+             {w:'85%',c:'#22c55e',t:'Fuerte'},{w:'100%',c:'#16a34a',t:'Muy fuerte'}][Math.min(pts,5)];
+    document.getElementById('barraFuerza').style.cssText = 'width:'+n.w+';background:'+n.c;
+    var t = document.getElementById('textoFuerza');
+    t.textContent = n.t; t.style.color = n.c;
+}
+function mostrarMsg(texto, esError) {
+    var d = document.getElementById('msgCambio');
+    d.style.display = 'block'; d.textContent = texto;
+    d.className = 'modal-box__msg ' + (esError ? 'msg--err' : 'msg--ok');
+}
+function enviarCambio() {
+    document.getElementById('msgCambio').style.display = 'none';
+    var actual = document.getElementById('cpActual').value.trim();
+    var nueva  = document.getElementById('cpNueva').value.trim();
+    var conf   = document.getElementById('cpConfirm').value.trim();
+    var btn    = document.getElementById('btnGuardarPass');
+    if (!actual||!nueva||!conf)   { mostrarMsg('Todos los campos son obligatorios.',true); return; }
+    if (nueva !== conf)           { mostrarMsg('Las contraseñas no coinciden.',true); return; }
+    if (nueva.length < 6)        { mostrarMsg('Mínimo 6 caracteres.',true); return; }
+    if (nueva === actual)         { mostrarMsg('Debe ser diferente a la actual.',true); return; }
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+    var p = new URLSearchParams();
+    p.append('passActual',actual); p.append('passNueva',nueva); p.append('passConfirm',conf);
+    fetch('<%= request.getContextPath() %>/CambiarPasswordServlet',{method:'POST',
+        headers:{'Content-Type':'application/x-www-form-urlencoded'},body:p})
+    .then(r=>r.json()).then(data=>{
+        mostrarMsg(data.msg,!data.ok);
+        if(data.ok){
+            _passTemporal=false;
+            document.getElementById('btnXModal').style.display='flex';
+            document.getElementById('btnCancelarModal').style.display='block';
+            document.getElementById('avisoTemp').style.display='none';
+            setTimeout(cerrarModalPass,2000);
+        }
+    }).catch(()=>mostrarMsg('Error de conexión.',true))
+    .finally(()=>{btn.disabled=false;btn.innerHTML='<i class="fas fa-save"></i> Actualizar';});
+}
+document.getElementById('overlayPass').addEventListener('click',function(e){if(e.target===this)cerrarModalPass();});
+</script>
 
 </body>
 </html>

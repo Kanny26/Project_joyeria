@@ -1,145 +1,179 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<% if (request.getAttribute("error") != null) { %>
-    <div style="color:red;">
-        <%= request.getAttribute("error") %>
-    </div>
-<% } %>
-
+<%
+    if (session.getAttribute("admin") == null) { response.sendRedirect(request.getContextPath() + "/inicio-sesion.jsp"); return; }
+    String errorServidor = (String) request.getAttribute("error");
+%>
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Agregar usuario</title>
-
-    <!-- Estilos -->
-    <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/main.css" />
-    <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/pages/Administrador/usuarios/agregar_usuario.css" />
-
-    <!-- ICONOS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agregar Usuario - AAC27</title>
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/main.css">
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/forms-global.css">
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/pages/Administrador/producto.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
-
 <body>
-    <!-- NAV -->
-    <nav class="navbar-admin">
-        <div class="navbar-admin__catalogo">
-            <img src="<%= request.getContextPath() %>/assets/Imagenes/iconos/admin.png" alt="Admin">
-        </div>
+<nav class="navbar-admin">
+    <div class="navbar-admin__catalogo"><img src="<%= request.getContextPath() %>/assets/Imagenes/iconos/admin.png" alt="Admin"></div>
+    <h1 class="navbar-admin__title">AAC27</h1>
+    <a href="<%= request.getContextPath() %>/UsuarioServlet" class="navbar-admin__home-link">
+        <span class="navbar-admin__home-icon-wrap">
+            <i class="fa-solid fa-arrow-left"></i>
+            <span class="navbar-admin__home-text">Volver atrás</span>
+            <i class="fa-solid fa-house-chimney"></i>
+        </span>
+    </a>
+</nav>
 
-        <h1 class="navbar-admin__title">AAC27</h1>
-        <a href="<%= request.getContextPath() %>/Administrador/usuarios.jsp">
-            <i class="fa-solid fa-house-chimney navbar-admin__home-icon"></i>
-        </a>
-    </nav>
+<main class="fs-container">
+    <h2 class="fs-page-title"><i class="fa-solid fa-user-plus"></i> Añadir Usuario</h2>
 
-    <!-- CONTENIDO PRINCIPAL -->
-    <main class="titulo">
-        <h1 class="titulo__encabezado">Añadir usuario</h1>
+    <form id="formUsuario" class="fs-form" method="post"
+          action="<%= request.getContextPath() %>/UsuarioServlet">
+        <input type="hidden" name="accion" value="agregar">
 
-        <section class="registro-Usuario__panel">
-            <div class="registro-Usuario__formulario">
-                <div class="registro-Usuario__formulario-contenido">
-
-                    <header>
-                        <h1>Datos del Usuario</h1>
-                    </header>
-
-                    <form class="registro-Usuario__form-grid" method="post" action="<%= request.getContextPath() %>/UsuarioServlet">
-                        <input type="hidden" name="accion" value="agregar" />
-
-                        <!-- Nombre -->
-                        <div class="registro-Usuario__grupo-campo">
-                            <label>Nombre</label>
-                            <div class="registro-Usuario__input-grupo">
-                                <i class="fas fa-user icon-left"></i>
-                                <input type="text" name="nombre" placeholder="Nombre completo" required />
-                            </div>
-                        </div>
-
-                        <!-- Documento (opcional) -->
-                        <div class="registro-Usuario__grupo-campo">
-                            <label>Documento</label>
-                            <div class="registro-Usuario__input-grupo">
-                                <i class="fas fa-id-card icon-left"></i>
-                                <input type="text" name="documento" placeholder="Documento de identidad" />
-                            </div>
-                        </div>
-
-                        <!-- Correo -->
-                        <div class="registro-Usuario__grupo-campo">
-                            <label>Correo</label>
-                            <div class="registro-Usuario__input-grupo">
-                                <i class="fas fa-envelope icon-left"></i>
-                                <input type="email" name="correo" placeholder="Correo electrónico" required />
-                            </div>
-                        </div>
-
-                        <!-- Teléfono -->
-                        <div class="registro-Usuario__grupo-campo">
-                            <label>Teléfono</label>
-                            <div class="registro-Usuario__input-grupo">
-                                <i class="fas fa-phone icon-left"></i>
-                                <input type="tel" name="telefono" placeholder="Teléfono del Usuario" />
-                            </div>
-                        </div>
-
-                        <!-- Fecha de registro (para vendedor puede ser hoy por defecto) -->
-                        <div class="registro-Usuario__grupo-campo">
-                            <label>Fecha de registro</label>
-                            <div class="registro-Usuario__input-grupo">
-                                <i class="fas fa-calendar icon-left"></i>
-                                <input type="date" name="fechaRegistro" />
-                            </div>
-                        </div>
-
-
-                        <!-- Estado -->
-                        <div class="registro-Usuario__grupo-campo">
-                            <label>Estado</label>
-                            <div class="registro-Usuario__input-grupo">
-                                <label class="radio-op">
-                                    <input type="radio" name="estado" value="Activo" checked required> Activo
-                                </label>
-                                <label class="radio-op">
-                                    <input type="radio" name="estado" value="Inactivo" required> Inactivo
-                                </label>
-                            </div>
-                        </div>
-
-                        <!-- Rol -->
-                        <div class="registro-Usuario__grupo-campo">
-                            <label>Rol</label>
-                            <div class="registro-Usuario__input-grupo">
-                                <select name="rol" required>
-                                    <option value="vendedor">Vendedor</option>
-                                    <option value="administrador">Administrador</option>
-                                    <option value="proveedor">Proveedor</option>
-                                    <option value="cliente">Cliente</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <!-- Contraseña (opcional, si se deja vacía se genera una temporal) -->
-                        <div class="registro-Usuario__grupo-campo">
-                            <label>Contraseña</label>
-                            <div class="registro-Usuario__input-grupo">
-                                <i class="fas fa-lock icon-left"></i>
-                                <input type="password" name="contrasena" placeholder="Contraseña (opcional)" />
-                            </div>
-                        </div>
-
-                        <!-- Botón -->
-                        <div class="registro-usuario__boton-contenedor">
-                            <button type="submit" class="btn">Añadir</button>
-                        </div>
-                    </form>
-
+        <!-- SECCIÓN: Datos personales -->
+        <div class="fs-section">
+            <div class="fs-section-title"><i class="fa-solid fa-user"></i> Datos Personales</div>
+            <div class="fs-grid">
+                <div class="fs-group">
+                    <label class="fs-label" for="nombre"><i class="fa-solid fa-user"></i> Nombre *</label>
+                    <input id="nombre" type="text" name="nombre" class="fs-input" placeholder="Nombre completo" required autocomplete="off">
+                </div>
+                <div class="fs-group">
+                    <label class="fs-label"><i class="fa-solid fa-id-card"></i> Documento <span style="font-size:0.65rem;text-transform:none;color:#9ca3af;">(opcional)</span></label>
+                    <input type="text" name="documento" class="fs-input" placeholder="Documento de identidad">
+                </div>
+                <div class="fs-group">
+                    <label class="fs-label" for="correo"><i class="fa-solid fa-envelope"></i> Correo *</label>
+                    <input id="correo" type="email" name="correo" class="fs-input" placeholder="correo@ejemplo.com" required autocomplete="off">
+                    <span class="fs-readonly-badge"><i class="fa-solid fa-envelope-circle-check"></i> Las credenciales se enviarán aquí</span>
+                </div>
+                <div class="fs-group">
+                    <label class="fs-label" for="telefono"><i class="fa-solid fa-phone"></i> Teléfono *</label>
+                    <input id="telefono" type="tel" name="telefono" class="fs-input" placeholder="Número de teléfono" required>
+                </div>
+                <div class="fs-group">
+                    <label class="fs-label"><i class="fa-regular fa-calendar"></i> Fecha de Registro</label>
+                    <input type="date" name="fechaRegistro" class="fs-input">
                 </div>
             </div>
-        </section>
-    </main>
+        </div>
+
+        <!-- SECCIÓN: Rol y estado -->
+        <div class="fs-section">
+            <div class="fs-section-title"><i class="fa-solid fa-shield-halved"></i> Rol y Estado</div>
+            <div class="fs-grid">
+                <div class="fs-group">
+                    <label class="fs-label" for="rol"><i class="fa-solid fa-user-gear"></i> Rol *</label>
+                    <select id="rol" name="rol" class="fs-input" required>
+                        <option value="vendedor">Vendedor</option>
+                        <option value="administrador">Administrador</option>
+                        <option value="proveedor">Proveedor</option>
+                        <option value="cliente">Cliente</option>
+                    </select>
+                    <div class="fs-hint">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                        <span>Contraseña a generar: <strong id="preview-rol">VEN001</strong></span>
+                    </div>
+                </div>
+                <div class="fs-group">
+                    <label class="fs-label"><i class="fa-solid fa-toggle-on"></i> Estado</label>
+                    <div class="fs-radio-group">
+                        <label class="fs-radio-chip">
+                            <input type="radio" name="estado" value="Activo" checked>
+                            <i class="fa-solid fa-circle-check" style="color:#16a34a;"></i> Activo
+                        </label>
+                        <label class="fs-radio-chip">
+                            <input type="radio" name="estado" value="Inactivo">
+                            <i class="fa-solid fa-circle-xmark" style="color:#dc2626;"></i> Inactivo
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="fs-hint" style="margin-top:14px;">
+                <i class="fa-solid fa-circle-info"></i>
+                <span>El sistema genera la contraseña automáticamente y la envía al correo del usuario.</span>
+            </div>
+        </div>
+
+        <div class="fs-actions">
+            <button type="submit" class="fs-btn-save" id="btnGuardar"><i class="fa-solid fa-user-plus"></i> Crear Usuario</button>
+            <button type="button" class="fs-btn-cancel" onclick="history.back()"><i class="fa-solid fa-xmark"></i> Cancelar</button>
+        </div>
+    </form>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+<% if (errorServidor != null && !errorServidor.isEmpty()) { %>
+document.addEventListener('DOMContentLoaded', () => Swal.fire({ icon:'error', title:'Error', text:'<%= errorServidor.replace("'","\\'") %>' }));
+<% } %>
+
+const PREFIJOS = { vendedor:'VEN', administrador:'ADM', proveedor:'PRO', cliente:'CLI' };
+const LABELS   = { vendedor:'Vendedor', administrador:'Administrador', proveedor:'Proveedor', cliente:'Cliente' };
+const rolSel   = document.getElementById('rol');
+const prevRol  = document.getElementById('preview-rol');
+
+rolSel.addEventListener('change', function() {
+    prevRol.textContent = (PREFIJOS[rolSel.value] || 'USR') + '001';
+});
+
+// ── Listener en el BOTÓN (no en el form) para evitar que el browser
+//    intercepte el submit antes de e.preventDefault() ──────────────
+document.getElementById('btnGuardar').addEventListener('click', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+
+    var nombre   = document.getElementById('nombre').value.trim();
+    var correo   = document.getElementById('correo').value.trim();
+    var telefono = document.getElementById('telefono').value.trim();
+    var rolVal   = rolSel.value;
+
+    if (!nombre) {
+        Swal.fire({ icon:'warning', title:'Campo requerido', text:'El nombre es obligatorio.' });
+        return;
+    }
+    if (!correo || !/^[^@]+@[^@]+\.[^@]+$/.test(correo)) {
+        Swal.fire({ icon:'warning', title:'Correo inválido', text:'Ingresa un correo válido.' });
+        return;
+    }
+    if (!telefono) {
+        Swal.fire({ icon:'warning', title:'Campo requerido', text:'El teléfono es obligatorio.' });
+        return;
+    }
+
+    var prefijo = PREFIJOS[rolVal] || 'USR';
+
+    Swal.fire({
+        icon: 'question',
+        title: '¿Confirmar nuevo usuario?',
+        html: '<div style="text-align:left;font-size:14px;padding:12px;background:#faf8ff;border-radius:10px;border:1px solid #ede9fe;">' +
+              '<p style="margin:6px 0"><strong>Nombre:</strong> ' + nombre + '</p>' +
+              '<p style="margin:6px 0"><strong>Correo:</strong> ' + correo + '</p>' +
+              '<p style="margin:6px 0"><strong>Teléfono:</strong> ' + telefono + '</p>' +
+              '<p style="margin:6px 0"><strong>Rol:</strong> ' + (LABELS[rolVal] || rolVal) + '</p>' +
+              '<p style="margin:6px 0"><strong>Contraseña generada:</strong> <code style="background:#7c3aed;color:#fff;padding:2px 8px;border-radius:4px;">' + prefijo + '001</code></p>' +
+              '</div>',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, crear',
+        cancelButtonText: 'Revisar',
+        confirmButtonColor: '#7c3aed',
+        cancelButtonColor: '#6b7280'
+    }).then(function(r) {
+        if (r.isConfirmed) {
+            document.getElementById('btnGuardar').disabled = true;
+            Swal.fire({
+                title: 'Procesando...',
+                text: 'Registrando y enviando correo.',
+                allowOutsideClick: false,
+                didOpen: function() { Swal.showLoading(); }
+            });
+            document.getElementById('formUsuario').submit();
+        }
+    });
+});
+</script>
 </body>
 </html>
-

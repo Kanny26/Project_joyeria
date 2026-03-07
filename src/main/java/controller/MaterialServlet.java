@@ -9,52 +9,45 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.List;
 
-/**
- * Servlet encargado de gestionar la visualización de los materiales
- * disponibles en el sistema.
- *
- * Ruta:
- *  - /MaterialServlet
- *
- * Función principal:
- *  - Obtener la lista de materiales desde la capa DAO
- *  - Enviarla a la vista JSP correspondiente para su administración
- */
 @WebServlet("/MaterialServlet")
 public class MaterialServlet extends HttpServlet {
-
-    /**
-     * DAO encargado del acceso a datos relacionados con Material.
-     */
     private MaterialDAO materialDAO;
 
-    /**
-     * Inicializa el servlet y crea la instancia del DAO.
-     * Se ejecuta una sola vez al cargar el servlet.
-     */
     @Override
     public void init() {
         materialDAO = new MaterialDAO();
     }
 
-    /**
-     * Maneja las peticiones GET.
-     * Obtiene todos los materiales registrados y los envía a la vista.
-     */
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // Listar materiales
+        request.setAttribute("materiales", materialDAO.listarMateriales());
+        request.getRequestDispatcher("/Administrador/org-materiales.jsp").forward(request, response);
+    }
 
-        // Obtener la lista de materiales desde la base de datos
-        List<Material> materiales = materialDAO.listarMateriales();
-
-        // Enviar la lista a la vista
-        request.setAttribute("materiales", materiales);
-
-        // Redirigir a la página de organización de materiales
-        request.getRequestDispatcher("/Administrador/org-materiales.jsp")
-               .forward(request, response);
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String action = request.getParameter("action");
+        try {
+            if ("guardar".equals(action)) {
+                String nombre = request.getParameter("nombre");
+                if (nombre == null || nombre.trim().isEmpty()) throw new Exception("Nombre obligatorio");
+                Material m = new Material();
+                m.setNombre(nombre.trim());
+                materialDAO.guardar(m);
+                response.sendRedirect(request.getContextPath() + "/MaterialServlet?msg=creado");
+            } else if ("eliminar".equals(action)) {
+                String idStr = request.getParameter("id");
+                if (idStr != null) {
+                    materialDAO.eliminar(Integer.parseInt(idStr));
+                    response.sendRedirect(request.getContextPath() + "/MaterialServlet?msg=eliminado");
+                }
+            }
+            // Actualizar se puede manejar similarmente
+        } catch (Exception e) {
+            request.setAttribute("error", e.getMessage());
+            request.getRequestDispatcher("/Administrador/org-materiales.jsp").forward(request, response);
+        }
     }
 }

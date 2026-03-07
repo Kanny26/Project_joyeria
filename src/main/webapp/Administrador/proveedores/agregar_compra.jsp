@@ -22,7 +22,7 @@ if (admin == null) {
         <img src="${pageContext.request.contextPath}/assets/Imagenes/iconos/admin.png" alt="Admin">
     </div>
     <h1 class="navbar-admin__title">AAC27</h1>
-    <a href="${pageContext.request.contextPath}/ProveedorServlet?action=verCompras&id=${usuarioId}"
+    <a href="${pageContext.request.contextPath}/ProveedorServlet?action=verCompras&id=${proveedorId}"
        class="navbar-admin__home-link">
         <span class="navbar-admin__home-icon-wrap">
             <i class="fa-solid fa-arrow-left"></i>
@@ -44,7 +44,7 @@ if (admin == null) {
         
         <form action="${pageContext.request.contextPath}/CompraServlet" method="post" id="formCompra">
             <input type="hidden" name="action" value="guardarCompra">
-            <input type="hidden" name="usuarioId" value="${usuarioId}">
+            <input type="hidden" name="usuarioId" value="${proveedorId}">
             
             <div class="form-row">
                 <div class="form-group">
@@ -57,6 +57,59 @@ if (admin == null) {
                 </div>
             </div>
             
+
+            <!-- PAGO -->
+            <div class="section-title">
+                <i class="fa-solid fa-credit-card"></i>
+                Información de Pago
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label><i class="fa-solid fa-wallet"></i> Método de pago</label>
+                    <select name="metodoPagoId" id="metodoPagoId" required>
+                        <option value="">-- Selecciona un método --</option>
+                        <%
+                            java.util.List<model.MetodoPago> metodosPagoList = (java.util.List<model.MetodoPago>) request.getAttribute("metodosPago");
+                            if (metodosPagoList != null) {
+                                for (model.MetodoPago mp : metodosPagoList) { %>
+                                    <option value="<%= mp.getMetodoPagoId() %>"><%= mp.getNombre() %></option>
+                        <%      }
+                            }
+                        %>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label><i class="fa-solid fa-hand-holding-dollar"></i> Tipo de pago</label>
+                    <select name="tipoPago" id="tipoPago" onchange="toggleCredito(this.value)">
+                        <option value="CONTADO">Contado</option>
+                        <option value="CREDITO">Crédito</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Campos de crédito (ocultos por defecto) -->
+            <div id="seccionCredito" style="display:none;">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label><i class="fa-regular fa-calendar-xmark"></i> Fecha límite de pago</label>
+                        <input type="date" name="fechaVencimiento" id="fechaVencimiento">
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fa-solid fa-money-bill-wave"></i> Anticipo (opcional)</label>
+                        <input type="number" name="anticipo" id="anticipo" min="0" step="0.01" placeholder="0.00">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label><i class="fa-solid fa-circle-check"></i> Estado del crédito</label>
+                        <select name="estadoCredito">
+                            <option value="activo">Activo (pendiente de pago)</option>
+                            <option value="pagado">Pagado (ya saldado)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
             <div class="section-title">
                 <i class="fa-solid fa-boxes-stacked"></i>
                 Productos
@@ -96,7 +149,7 @@ if (admin == null) {
             </div>
             
             <div class="form-actions">
-                <a href="${pageContext.request.contextPath}/ProveedorServlet?action=verCompras&id=${usuarioId}"
+                <a href="${pageContext.request.contextPath}/ProveedorServlet?action=verCompras&id=${proveedorId}"
                    class="btn-cancel">
                     <i class="fa-solid fa-xmark"></i> Cancelar
                 </a>
@@ -450,6 +503,30 @@ function configurarValidacionFormulario() {
             alert('Selecciona un producto válido del listado en cada fila.');
         }
     });
+}
+
+function toggleCredito(valor) {
+    const sec = document.getElementById('seccionCredito');
+    const fv = document.getElementById('fechaVencimiento');
+    if (valor === 'CREDITO') {
+        sec.style.display = '';
+        if (fv) fv.required = true;
+    } else {
+        sec.style.display = 'none';
+        if (fv) fv.required = false;
+    }
+}
+
+// Cargar métodos de pago via AJAX
+function cargarMetodosPago() {
+    fetch(ctx + '/CompraServlet?action=obtenerCategorias') // reuse AJAX approach
+    .catch(() => {});
+    
+    // Poblar desde los datos del servidor usando JSP scriptlet
+    const select = document.getElementById('metodoPagoId');
+    if (!select) return;
+    // Los métodos de pago vienen del atributo de request "metodosPago"
+    // Se generan como <option> desde JSP scriptlet abajo
 }
 
 

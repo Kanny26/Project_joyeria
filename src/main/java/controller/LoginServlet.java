@@ -3,7 +3,6 @@ package controller;
 import dao.AuthDAO;
 import model.Administrador;
 import model.Usuario;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -17,35 +16,41 @@ import java.util.Map;
 public class LoginServlet extends HttpServlet {
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String nombre = request.getParameter("usuario");
-        String pass   = request.getParameter("password");
+        String pass = request.getParameter("password");
 
-        // ── Validación básica ────────────────────────────────────────────
-        if (nombre == null || nombre.trim().isEmpty()
-                || pass == null || pass.trim().isEmpty()) {
-            response.sendRedirect(
-                    request.getContextPath() + "/inicio-sesion.jsp?error=campos");
+        // Validación básica
+        if (nombre == null || nombre.trim().isEmpty() || pass == null || pass.trim().isEmpty()) {
+            response.sendRedirect(request.getContextPath() + "/inicio-sesion.jsp?error=campos");
             return;
         }
 
-        // ── Validar credenciales ─────────────────────────────────────────
         AuthDAO authDAO = new AuthDAO();
         Map<String, Object> datos = authDAO.validar(nombre, pass);
 
         if (datos == null) {
-            // Credenciales incorrectas
+            // Mensaje genérico por seguridad (RF02)
             request.setAttribute("error", "Usuario o contraseña incorrectos");
-            request.getRequestDispatcher("/inicio-sesion.jsp")
-                   .forward(request, response);
+            request.getRequestDispatcher("/inicio-sesion.jsp").forward(request, response);
             return;
         }
 
-        // ── Redirigir según rol ──────────────────────────────────────────
-        String rol = (String) datos.get("rol");
+        // ■■ PREVENCIÓN DE FIJACIÓN DE SESIÓN ■■
+        // Invalidar sesión anterior antes de crear una nueva autenticada
+        HttpSession oldSession = request.getSession(false);
+        if (oldSession != null) {
+            oldSession.invalidate();
+        }
         HttpSession session = request.getSession(true);
+        session.setMaxInactiveInterval(900); // 15 minutos (RF04)
+
+        // Cabeceras de seguridad para evitar caché en páginas sensibles
+        response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+        response.setHeader("Pragma", "no-cache");
+        response.setDateHeader("Expires", 0);
+
+        String rol = (String) datos.get("rol");
 
         switch (rol) {
             case "administrador": {
@@ -54,8 +59,7 @@ public class LoginServlet extends HttpServlet {
                 admin.setNombre((String) datos.get("nombre"));
                 session.setAttribute("admin", admin);
                 session.setAttribute("rol", "administrador");
-                response.sendRedirect(
-                        request.getContextPath() + "/Administrador/admin-principal.jsp");
+                response.sendRedirect(request.getContextPath() + "/Administrador/admin-principal.jsp");
                 break;
             }
             case "vendedor": {
@@ -65,15 +69,12 @@ public class LoginServlet extends HttpServlet {
                 vendedor.setRol(rol);
                 session.setAttribute("vendedor", vendedor);
                 session.setAttribute("rol", "vendedor");
-                response.sendRedirect(
-                        request.getContextPath() + "/vendedor/vendedor_principal.jsp");
+                response.sendRedirect(request.getContextPath() + "/vendedor/vendedor_principal.jsp");
                 break;
             }
             default:
-                // Rol no reconocido
-                request.setAttribute("error", "Rol no autorizado: " + rol);
-                request.getRequestDispatcher("/inicio-sesion.jsp")
-                       .forward(request, response);
+                request.setAttribute("error", "Rol no autorizado");
+                request.getRequestDispatcher("/inicio-sesion.jsp").forward(request, response);
         }
     }
 }

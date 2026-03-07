@@ -65,22 +65,59 @@
             </div>
 
             <div class="product-actions" style="margin-top: 30px;">
-                <form action="<%=request.getContextPath()%>/ProductoServlet"
-                      method="post" style="flex: 1;">
-                    <input type="hidden" name="action" value="eliminar">
-                    <input type="hidden" name="id" value="<%= producto.getProductoId() %>">
-                    <button type="submit" class="btn-danger" style="width: 100%;">
-                        <i class="fa-solid fa-trash-can"></i> Eliminar Definitivamente
-                    </button>
-                </form>
-                <button type="button" class="btn-primary" style="flex: 1;"
-                        onclick="window.history.back()">
-                    <i class="fa-solid fa-xmark"></i> Cancelar
-                </button>
-            </div>
+			    <form id="formEliminar" action="<%=request.getContextPath()%>/ProductoServlet" method="post" style="flex: 1;">
+			        <input type="hidden" name="action" value="eliminar">
+			        <input type="hidden" name="id" value="<%= producto.getProductoId() %>">
+			        
+			        <button type="button" class="btn-danger" style="width: 100%;" onclick="confirmarEliminacion()">
+			            <i class="fa-solid fa-trash-can"></i> Eliminar Definitivamente
+			        </button>
+			    </form>
+			    
+			    <button type="button" class="btn-primary" style="flex: 1;" onclick="window.history.back()">
+			        <i class="fa-solid fa-xmark"></i> Cancelar
+			    </button>
+			</div>
         </div>
     </section>
 </main>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+function confirmarEliminacion() {
+    // Obtenemos el stock desde el objeto producto de JSP
+    const stockActual = <%= producto.getStock() %>;
+    const nombreProducto = "<%= producto.getNombre() %>";
 
+    // CASO 1: Si tiene stock, mostramos advertencia y bloqueamos
+    if (stockActual > 0) {
+        Swal.fire({
+            title: 'Acción No Permitida',
+            html: `No puedes eliminar <b>${nombreProducto}</b> porque aún tiene <b>${stockActual}</b> unidades en stock.<br><br>Debes agotar el stock o darlo de baja manualmente antes de desactivarlo.`,
+            icon: 'error',
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Entendido'
+        });
+        return; // Detiene la ejecución
+    }
+
+    // CASO 2: Si no tiene stock, preguntamos si desea "desactivar" (eliminación lógica)
+    Swal.fire({
+        title: '¿Estás seguro?',
+        text: `El producto "${nombreProducto}" se desactivará del catálogo. Si tiene transacciones previas, sus datos se conservarán para historial.`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#dc2626',
+        cancelButtonColor: '#6e7881',
+        confirmButtonText: 'Sí, eliminar/desactivar',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Si confirma, enviamos el formulario
+            document.getElementById('formEliminar').submit();
+        }
+    });
+}
+
+</script>
 </body>
 </html>

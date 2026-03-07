@@ -34,9 +34,6 @@
         <img src="<%= request.getContextPath() %>/assets/Imagenes/iconos/Seller.png" alt="Vendedor">
     </div>
     <h1 class="navbar-admin__title">AAC27</h1>
-    <span style="font-size:14px;font-weight:600;color:#fff;opacity:.85;">
-        <i class="fa-solid fa-user-circle"></i> <%= usuario.getNombre() %>
-    </span>
     <a href="<%= request.getContextPath() %>VentaVendedorServlet?action=nueva" class="navbar-admin__home-link">
         <span class="navbar-admin__home-icon-wrap">
             <i class="fa-solid fa-plus"></i>

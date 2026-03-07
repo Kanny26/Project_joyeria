@@ -171,15 +171,44 @@
                 <i class="fa-solid fa-arrow-left"></i> Volver a compras
             </a>
             <div class="acciones-group">
-                <button class="btn-print" onclick="window.print()">
-                    <i class="fa-solid fa-print"></i> Imprimir
-                </button>
-                
-            </div>
+			    <button class="btn-print" onclick="descargarPDF()">
+			        <i class="fa-solid fa-file-pdf"></i> Descargar PDF
+			    </button>
+			</div>
+
         </div>
 
     </div>
 </main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+<script>
+function descargarPDF() {
+    // 1. Seleccionamos el contenedor que queremos convertir (la clase detalle-wrapper envuelve todo el contenido)
+    const elemento = document.querySelector('.detalle-wrapper');
+    
+    // 2. Configuramos el nombre del archivo con el ID de la compra
+    const numCompra = "<%= compra.getCompraId() %>";
+    
+    const opciones = {
+        margin:       [10, 10, 10, 10], // márgenes en mm
+        filename:     `Compra_${numCompra}.pdf`,
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { scale: 2, useCORS: true }, // Mayor escala = mejor calidad
+        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
+
+    // 3. Ejecutar la descarga
+    // Ocultamos temporalmente los botones de acción para que no salgan en el PDF
+    const acciones = document.querySelector('.acciones-bar');
+    acciones.style.display = 'none';
+
+    html2pdf().set(opciones).from(elemento).save().then(() => {
+        // Volvemos a mostrar los botones tras la descarga
+        acciones.style.display = 'flex';
+    });
+}
+</script>
 
 </body>
 </html>

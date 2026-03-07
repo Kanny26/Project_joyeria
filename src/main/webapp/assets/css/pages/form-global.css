@@ -1,0 +1,934 @@
+/* ══════════════════════════════════════════════════════════════
+   forms-global.css  –  AAC27 Sistema de Joyería
+   CSS unificado para TODOS los formularios del sistema:
+   Agregar, Editar, Ver — Productos, Proveedores, Usuarios,
+   Ventas, Postventa y más.
+   ══════════════════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+/* ──────────────────────────────────────────────────────────────
+   VARIABLES DE FORMULARIO (amplían las globales del proyecto)
+   ────────────────────────────────────────────────────────────── */
+:root {
+    /* Paleta lila — coherente con producto.css */
+    --fg-lila-50:  #faf5ff;
+    --fg-lila-100: #f3e8ff;
+    --fg-lila-200: #e9d5ff;
+    --fg-lila-300: #d8b4fe;
+    --fg-lila-400: #c084fc;
+    --fg-lila-500: #a855f7;
+    --fg-lila-600: #9333ea;
+    --fg-lila-700: #7e22ce;
+    --fg-lila-800: #6b21a8;
+    --fg-lila-900: #581c87;
+
+    /* Texto y neutros */
+    --fg-blanco:   #ffffff;
+    --fg-gris-50:  #f9fafb;
+    --fg-gris-100: #f3f4f6;
+    --fg-gris-200: #e5e7eb;
+    --fg-gris-300: #d1d5db;
+    --fg-gris-400: #9ca3af;
+    --fg-gris-700: #374151;
+    --fg-gris-900: #111827;
+
+    /* Estados */
+    --fg-error:          #f87171;
+    --fg-error-light:    #fef2f2;
+    --fg-error-border:   #fecaca;
+    --fg-error-text:     #991b1b;
+    --fg-exito:          #4ade80;
+    --fg-exito-light:    #f0fdf4;
+    --fg-exito-border:   #bbf7d0;
+    --fg-exito-text:     #166534;
+    --fg-warn:           #fbbf24;
+    --fg-warn-light:     #fffbeb;
+    --fg-warn-border:    #fde68a;
+    --fg-warn-text:      #92400e;
+
+    /* Sombras */
+    --fg-shadow-sm:   0 2px 6px rgba(147,51,234,0.06);
+    --fg-shadow-md:   0 4px 16px rgba(147,51,234,0.10);
+    --fg-shadow-lg:   0 10px 32px rgba(147,51,234,0.13);
+    --fg-shadow-glow: 0 0 0 3px rgba(167,139,250,0.22);
+    --fg-shadow-card: 0 8px 30px rgba(147,51,234,0.07);
+
+    /* Radios */
+    --fg-r-sm:   8px;
+    --fg-r-md:   12px;
+    --fg-r-lg:   18px;
+    --fg-r-xl:   24px;
+    --fg-r-full: 9999px;
+
+    /* Transiciones */
+    --fg-tr-fast: 150ms ease;
+    --fg-tr:      220ms ease;
+    --fg-tr-slow: 300ms ease;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   BASE
+   ══════════════════════════════════════════════════════════════ */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Poppins', 'Montserrat', sans-serif;
+    background: var(--color-fondo-admin, #e5dae5);
+    color: var(--fg-gris-700);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   CONTENEDOR PRINCIPAL DEL FORMULARIO
+   ══════════════════════════════════════════════════════════════ */
+.fg-container {
+    width: 100%;
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 32px 24px 64px;
+}
+
+.fg-container--wide {
+    max-width: 1200px;
+}
+
+.fg-container--narrow {
+    max-width: 620px;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   TÍTULO DE PÁGINA
+   ══════════════════════════════════════════════════════════════ */
+.fg-page-title {
+    font-size: clamp(1.3rem, 2.5vw, 1.75rem);
+    font-weight: 700;
+    color: var(--fg-lila-900);
+    text-align: center;
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.fg-page-title::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(90deg, var(--fg-lila-500), var(--fg-lila-300));
+    border-radius: var(--fg-r-full);
+    margin: 6px auto 0;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   TARJETA-FORMULARIO (contenedor blanco)
+   ══════════════════════════════════════════════════════════════ */
+.fg-card {
+    background: var(--fg-blanco);
+    border-radius: var(--fg-r-lg);
+    box-shadow: var(--fg-shadow-card);
+    border: 1px solid var(--fg-lila-100);
+    overflow: hidden;
+    margin-bottom: 24px;
+}
+
+/* Cabecera de la tarjeta */
+.fg-card__header {
+    background: linear-gradient(135deg, var(--fg-lila-50) 0%, var(--fg-lila-100) 100%);
+    border-bottom: 1px solid var(--fg-lila-200);
+    padding: 18px 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.fg-card__header-icon {
+    width: 42px;
+    height: 42px;
+    background: linear-gradient(135deg, var(--fg-lila-500), var(--fg-lila-700));
+    color: #fff;
+    border-radius: var(--fg-r-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+    box-shadow: var(--fg-shadow-sm);
+}
+
+.fg-card__header-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--fg-lila-800);
+    letter-spacing: 0.01em;
+}
+
+.fg-card__header-subtitle {
+    font-size: 0.78rem;
+    color: var(--fg-gris-400);
+    margin-top: 2px;
+}
+
+/* Cuerpo de la tarjeta */
+.fg-card__body {
+    padding: 24px;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   SECCIÓN DENTRO DEL FORMULARIO
+   ══════════════════════════════════════════════════════════════ */
+.fg-section {
+    margin-bottom: 28px;
+}
+
+.fg-section:last-of-type {
+    margin-bottom: 0;
+}
+
+.fg-section-title {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--fg-lila-600);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--fg-lila-100);
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   GRID DE CAMPOS
+   ══════════════════════════════════════════════════════════════ */
+.fg-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 18px;
+}
+
+.fg-grid--1 { grid-template-columns: 1fr; }
+.fg-grid--2 { grid-template-columns: repeat(2, 1fr); }
+.fg-grid--3 { grid-template-columns: repeat(3, 1fr); }
+
+.fg-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.fg-group--full {
+    grid-column: 1 / -1;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   ETIQUETA (label)
+   ══════════════════════════════════════════════════════════════ */
+.fg-label {
+    font-size: 0.73rem;
+    font-weight: 700;
+    color: var(--fg-lila-700);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.fg-label i {
+    font-size: 0.8rem;
+    color: var(--fg-lila-500);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   INPUTS, SELECTS, TEXTAREAS
+   ══════════════════════════════════════════════════════════════ */
+.fg-input {
+    width: 100%;
+    padding: 11px 14px;
+    font-size: 0.875rem;
+    font-family: inherit;
+    color: var(--fg-gris-700);
+    background: var(--fg-gris-50);
+    border: 1.5px solid var(--fg-gris-200);
+    border-radius: var(--fg-r-sm);
+    outline: none;
+    transition: border-color var(--fg-tr), box-shadow var(--fg-tr), background var(--fg-tr);
+    appearance: none;
+    -webkit-appearance: none;
+}
+
+.fg-input::placeholder {
+    color: var(--fg-gris-400);
+    font-size: 0.83rem;
+}
+
+.fg-input:hover:not(:focus):not(:disabled) {
+    border-color: var(--fg-lila-300);
+}
+
+.fg-input:focus {
+    background: var(--fg-blanco);
+    border-color: var(--fg-lila-500);
+    box-shadow: var(--fg-shadow-glow);
+}
+
+.fg-input:disabled,
+.fg-input[readonly] {
+    background: var(--fg-gris-100);
+    color: var(--fg-gris-400);
+    cursor: not-allowed;
+    border-color: var(--fg-gris-200);
+}
+
+.fg-input.invalid {
+    border-color: var(--fg-error);
+    background: var(--fg-error-light);
+}
+
+textarea.fg-input {
+    min-height: 100px;
+    resize: vertical;
+    line-height: 1.5;
+}
+
+select.fg-input {
+    cursor: pointer;
+    padding-right: 36px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%239333ea' stroke-width='1.8' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   CAMPOS DE SOLO LECTURA (ver detalles)
+   ══════════════════════════════════════════════════════════════ */
+.fg-readonly {
+    width: 100%;
+    padding: 11px 14px;
+    font-size: 0.875rem;
+    font-family: inherit;
+    color: var(--fg-gris-700);
+    background: var(--fg-gris-100);
+    border: 1.5px solid var(--fg-gris-200);
+    border-radius: var(--fg-r-sm);
+    font-weight: 500;
+    min-height: 42px;
+    display: flex;
+    align-items: center;
+}
+
+.fg-readonly--highlight {
+    background: var(--fg-lila-50);
+    border-color: var(--fg-lila-200);
+    color: var(--fg-lila-800);
+    font-weight: 600;
+}
+
+.fg-readonly--money {
+    background: #f0fdf4;
+    border-color: #bbf7d0;
+    color: #065f46;
+    font-weight: 700;
+    font-size: 1rem;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   HINTS Y BADGES AUXILIARES
+   ══════════════════════════════════════════════════════════════ */
+.fg-hint {
+    font-size: 0.72rem;
+    color: var(--fg-gris-400);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 2px;
+}
+
+.fg-hint i {
+    color: var(--fg-lila-400);
+    font-size: 0.78rem;
+}
+
+.fg-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 10px;
+    border-radius: var(--fg-r-full);
+    font-size: 0.72rem;
+    font-weight: 600;
+}
+
+.fg-badge--info    { background:#dbeafe; color:#1e40af; }
+.fg-badge--success { background:#dcfce7; color:#166534; }
+.fg-badge--warning { background:#fef9c3; color:#92400e; }
+.fg-badge--danger  { background:#fee2e2; color:#991b1b; }
+.fg-badge--lila    { background:var(--fg-lila-100); color:var(--fg-lila-800); }
+
+/* ══════════════════════════════════════════════════════════════
+   ALERTAS (éxito, error, advertencia)
+   ══════════════════════════════════════════════════════════════ */
+.fg-alert {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 18px;
+    border-radius: var(--fg-r-md);
+    font-size: 0.875rem;
+    margin-bottom: 20px;
+    animation: fg-slideDown var(--fg-tr) both;
+}
+
+.fg-alert i {
+    font-size: 1.1rem;
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+.fg-alert--success {
+    background: var(--fg-exito-light);
+    border: 1px solid var(--fg-exito-border);
+    border-left: 4px solid var(--fg-exito);
+    color: var(--fg-exito-text);
+}
+
+.fg-alert--error {
+    background: var(--fg-error-light);
+    border: 1px solid var(--fg-error-border);
+    border-left: 4px solid var(--fg-error);
+    color: var(--fg-error-text);
+}
+
+.fg-alert--warning {
+    background: var(--fg-warn-light);
+    border: 1px solid var(--fg-warn-border);
+    border-left: 4px solid var(--fg-warn);
+    color: var(--fg-warn-text);
+}
+
+@keyframes fg-slideDown {
+    from { opacity: 0; transform: translateY(-8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   BURBUJAS DE ERROR (validación inline)
+   ══════════════════════════════════════════════════════════════ */
+.fg-input-wrap {
+    position: relative;
+}
+
+.fg-bubble {
+    display: none;
+    align-items: flex-start;
+    gap: 6px;
+    padding: 8px 12px;
+    margin-top: 6px;
+    background: var(--fg-error-light);
+    border: 1px solid var(--fg-error-border);
+    border-left: 3px solid var(--fg-error);
+    border-radius: var(--fg-r-sm);
+    font-size: 0.78rem;
+    color: var(--fg-error-text);
+    animation: fg-slideDown var(--fg-tr-fast) both;
+}
+
+.fg-bubble.visible {
+    display: flex;
+}
+
+.fg-bubble-icon {
+    color: var(--fg-error);
+    font-size: 0.9rem;
+    flex-shrink: 0;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   BOTONES DE ACCIÓN (guardar, cancelar, volver)
+   ══════════════════════════════════════════════════════════════ */
+.fg-actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+    padding-top: 12px;
+    border-top: 1px solid var(--fg-lila-100);
+    margin-top: 24px;
+}
+
+.fg-actions--center {
+    justify-content: center;
+}
+
+.fg-actions--end {
+    justify-content: flex-end;
+}
+
+/* Botón primario (guardar) */
+.fg-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 22px;
+    font-family: inherit;
+    font-size: 0.875rem;
+    font-weight: 600;
+    border: none;
+    border-radius: var(--fg-r-md);
+    cursor: pointer;
+    text-decoration: none;
+    transition: background var(--fg-tr), transform var(--fg-tr), box-shadow var(--fg-tr);
+}
+
+.fg-btn:hover {
+    transform: translateY(-2px);
+}
+
+.fg-btn--primary {
+    background: linear-gradient(135deg, var(--fg-lila-600), var(--fg-lila-700));
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(147,51,234,0.25);
+}
+
+.fg-btn--primary:hover {
+    background: linear-gradient(135deg, var(--fg-lila-500), var(--fg-lila-600));
+    box-shadow: 0 6px 18px rgba(147,51,234,0.35);
+    color: #fff;
+}
+
+.fg-btn--secondary {
+    background: var(--fg-gris-100);
+    color: var(--fg-gris-700);
+    border: 1.5px solid var(--fg-gris-200);
+}
+
+.fg-btn--secondary:hover {
+    background: var(--fg-gris-200);
+    color: var(--fg-gris-900);
+}
+
+.fg-btn--danger {
+    background: #fee2e2;
+    color: #991b1b;
+    border: 1.5px solid #fecaca;
+}
+
+.fg-btn--danger:hover {
+    background: #fecaca;
+    color: #7f1d1d;
+}
+
+.fg-btn--success {
+    background: #dcfce7;
+    color: #166534;
+    border: 1.5px solid #bbf7d0;
+}
+
+.fg-btn--success:hover {
+    background: #bbf7d0;
+}
+
+.fg-btn--sm {
+    padding: 7px 14px;
+    font-size: 0.78rem;
+}
+
+.fg-btn--lg {
+    padding: 14px 28px;
+    font-size: 1rem;
+}
+
+.fg-btn--full {
+    width: 100%;
+    justify-content: center;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   DIVISORES
+   ══════════════════════════════════════════════════════════════ */
+.fg-divider {
+    border: none;
+    border-top: 1px dashed var(--fg-lila-100);
+    margin: 20px 0;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   ESTADO VACÍO
+   ══════════════════════════════════════════════════════════════ */
+.fg-empty {
+    text-align: center;
+    padding: 48px 24px;
+    color: var(--fg-gris-400);
+}
+
+.fg-empty__icon {
+    font-size: 3rem;
+    margin-bottom: 12px;
+    color: var(--fg-lila-300);
+}
+
+.fg-empty__text {
+    font-size: 0.95rem;
+    color: var(--fg-gris-400);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   TABLA DE DATOS (para ver/detalles con tabla)
+   ══════════════════════════════════════════════════════════════ */
+.fg-table-wrap {
+    width: 100%;
+    overflow-x: auto;
+    border-radius: var(--fg-r-md);
+    border: 1px solid var(--fg-lila-100);
+}
+
+.fg-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 0.85rem;
+    min-width: 550px;
+}
+
+.fg-table thead th {
+    background: linear-gradient(135deg, var(--fg-lila-50), var(--fg-lila-100));
+    color: var(--fg-lila-700);
+    font-weight: 700;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 12px 16px;
+    border-bottom: 2px solid var(--fg-lila-200);
+    white-space: nowrap;
+}
+
+.fg-table thead th:first-child { border-radius: var(--fg-r-md) 0 0 0; }
+.fg-table thead th:last-child  { border-radius: 0 var(--fg-r-md) 0 0; }
+
+.fg-table tbody tr {
+    border-bottom: 1px solid var(--fg-gris-100);
+    transition: background var(--fg-tr-fast);
+}
+
+.fg-table tbody tr:hover {
+    background: var(--fg-lila-50);
+}
+
+.fg-table tbody td {
+    padding: 12px 16px;
+    color: var(--fg-gris-700);
+    vertical-align: middle;
+}
+
+.fg-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   FILA DE DETALLE (key-value layout dentro de tarjetas)
+   ══════════════════════════════════════════════════════════════ */
+.fg-detail-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+}
+
+.fg-detail-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.fg-detail-label {
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: var(--fg-lila-600);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.fg-detail-value {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--fg-gris-700);
+}
+
+.fg-detail-value--money {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #059669;
+}
+
+.fg-detail-value--id {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: var(--fg-lila-100);
+    color: var(--fg-lila-800);
+    padding: 2px 10px;
+    border-radius: var(--fg-r-full);
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   FILA DINÁMICA (agregar múltiples entradas)
+   ══════════════════════════════════════════════════════════════ */
+.fg-dyn-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.fg-dyn-row .fg-input {
+    flex: 1;
+}
+
+.fg-btn-remove {
+    background: #fee2e2;
+    border: none;
+    border-radius: var(--fg-r-sm);
+    color: #dc2626;
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: background var(--fg-tr-fast);
+    flex-shrink: 0;
+}
+
+.fg-btn-remove:hover { background: #fecaca; }
+
+.fg-btn-add {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: transparent;
+    border: 1.5px dashed var(--fg-lila-300);
+    border-radius: var(--fg-r-sm);
+    color: var(--fg-lila-600);
+    padding: 8px 16px;
+    cursor: pointer;
+    font-size: 0.82rem;
+    font-weight: 600;
+    transition: background var(--fg-tr-fast), border-style var(--fg-tr-fast);
+    margin-top: 4px;
+    font-family: inherit;
+}
+
+.fg-btn-add:hover {
+    background: var(--fg-lila-50);
+    border-style: solid;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   CHECKBOXES Y RADIO CHIPS
+   ══════════════════════════════════════════════════════════════ */
+.fg-check-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 8px;
+}
+
+.fg-check-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 14px;
+    border: 1.5px solid var(--fg-gris-200);
+    border-radius: var(--fg-r-sm);
+    cursor: pointer;
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--fg-gris-700);
+    transition: border-color var(--fg-tr-fast), background var(--fg-tr-fast);
+}
+
+.fg-check-label:hover {
+    border-color: var(--fg-lila-300);
+    background: var(--fg-lila-50);
+}
+
+.fg-check-label:has(input:checked) {
+    border-color: var(--fg-lila-500);
+    background: var(--fg-lila-50);
+    color: var(--fg-lila-800);
+}
+
+.fg-check-label input {
+    accent-color: var(--fg-lila-600);
+    width: 15px;
+    height: 15px;
+}
+
+.fg-radio-group {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.fg-radio-chip {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border: 1.5px solid var(--fg-gris-200);
+    border-radius: var(--fg-r-full);
+    cursor: pointer;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--fg-gris-700);
+    transition: all var(--fg-tr-fast);
+}
+
+.fg-radio-chip:has(input:checked) {
+    border-color: var(--fg-lila-500);
+    background: var(--fg-lila-600);
+    color: #fff;
+}
+
+.fg-radio-chip input {
+    display: none;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   BADGE DE SOLO-LECTURA (info adicional bajo el input)
+   ══════════════════════════════════════════════════════════════ */
+.fg-readonly-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.72rem;
+    color: var(--fg-lila-600);
+    background: var(--fg-lila-50);
+    border: 1px solid var(--fg-lila-200);
+    padding: 4px 10px;
+    border-radius: var(--fg-r-full);
+    margin-top: 4px;
+    font-weight: 500;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   IMAGEN PREVIEW (para productos)
+   ══════════════════════════════════════════════════════════════ */
+.fg-img-preview {
+    width: 100%;
+    max-width: 220px;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: var(--fg-r-md);
+    border: 2px solid var(--fg-lila-200);
+    display: block;
+    margin: 0 auto;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   RESPONSIVE
+   ══════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+    .fg-container   { padding: 20px 16px 48px; }
+    .fg-grid--2,
+    .fg-grid--3     { grid-template-columns: 1fr; }
+    .fg-actions     { flex-direction: column; align-items: stretch; }
+    .fg-btn         { justify-content: center; }
+    .fg-card__body  { padding: 16px; }
+    .fg-detail-grid { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 480px) {
+    .fg-container    { padding: 16px 12px 40px; }
+    .fg-page-title   { font-size: 1.2rem; }
+    .fg-detail-grid  { grid-template-columns: 1fr; }
+    .fg-radio-group  { flex-direction: column; }
+    .fg-check-grid   { grid-template-columns: 1fr 1fr; }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   COMPATIBILIDAD CON CLASES ANTIGUAS (fs-* -> fg-*)
+   Permite migración gradual sin romper lo existente.
+   ══════════════════════════════════════════════════════════════ */
+.fs-container  { @extend .fg-container; }
+.fs-page-title { @extend .fg-page-title; }
+.fs-form       { @extend .fg-card__body; }
+.fs-section    { @extend .fg-section; }
+.fs-section-title { @extend .fg-section-title; }
+.fs-grid       { @extend .fg-grid; }
+.fs-group      { @extend .fg-group; }
+.fs-group--full{ @extend .fg-group--full; }
+.fs-label      { @extend .fg-label; }
+.fs-input      { @extend .fg-input; }
+.fs-readonly   { @extend .fg-readonly; }
+.fs-hint       { @extend .fg-hint; }
+.fs-bubble     { @extend .fg-bubble; }
+.fs-bubble.visible { display: flex; }
+.fs-bubble-icon{ @extend .fg-bubble-icon; }
+.fs-dyn-row    { @extend .fg-dyn-row; }
+.fs-btn-remove { @extend .fg-btn-remove; }
+.fs-btn-add    { @extend .fg-btn-add; }
+.fs-check-grid { @extend .fg-check-grid; }
+.fs-check-label{ @extend .fg-check-label; }
+.fs-radio-group{ @extend .fg-radio-group; }
+.fs-radio-chip { @extend .fg-radio-chip; }
+.fs-readonly-badge { @extend .fg-readonly-badge; }
+
+/* Botones compatibles btn-save / btn-cancel */
+.btn-save {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 22px;
+    font-family: inherit;
+    font-size: 0.875rem;
+    font-weight: 600;
+    border: none;
+    border-radius: var(--fg-r-md);
+    cursor: pointer;
+    text-decoration: none;
+    background: linear-gradient(135deg, var(--fg-lila-600), var(--fg-lila-700));
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(147,51,234,0.25);
+    transition: background var(--fg-tr), transform var(--fg-tr), box-shadow var(--fg-tr);
+}
+
+.btn-save:hover {
+    background: linear-gradient(135deg, var(--fg-lila-500), var(--fg-lila-600));
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(147,51,234,0.35);
+    color: #fff;
+}
+
+.btn-cancel {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 22px;
+    font-family: inherit;
+    font-size: 0.875rem;
+    font-weight: 600;
+    border: 1.5px solid var(--fg-gris-200);
+    border-radius: var(--fg-r-md);
+    cursor: pointer;
+    text-decoration: none;
+    background: var(--fg-gris-100);
+    color: var(--fg-gris-700);
+    transition: background var(--fg-tr), transform var(--fg-tr);
+}
+
+.btn-cancel:hover {
+    background: var(--fg-gris-200);
+    transform: translateY(-2px);
+    color: var(--fg-gris-900);
+}

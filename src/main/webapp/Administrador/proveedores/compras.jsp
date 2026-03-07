@@ -81,7 +81,7 @@
 
     <!-- TOOLBAR -->
     <div class="toolbar">
-        <a href="<%=request.getContextPath()%>/CompraServlet?action=nueva&usuarioId=<%= proveedor.getUsuarioId()%>"
+        <a href="<%=request.getContextPath()%>/ProveedorServlet?action=nuevaCompra&id=<%= proveedor.getProveedorId()%>"
            class="btn-nueva-compra">
             <i class="fa-solid fa-plus"></i> Nueva compra
         </a>
@@ -145,15 +145,11 @@
                     </div>
 
                     <div class="compra-card__foot">
-                        <a href="<%=request.getContextPath()%>/CompraServlet?action=detalle&id=<%= compra.getCompraId() %>&proveedorId=<%= proveedor != null ? proveedor.getUsuarioId() : "" %>"
+                        <a href="<%=request.getContextPath()%>/CompraServlet?action=detalle&id=<%= compra.getCompraId() %>&proveedorId=<%= proveedor != null ? proveedor.getProveedorId() : "" %>"
                            class="btn-detalle">
                             <i class="fa-solid fa-eye"></i> Ver detalle
                         </a>
-                        <a href="<%=request.getContextPath()%>/CompraServlet?action=eliminar&id=<%= compra.getCompraId() %>&proveedorId=<%= proveedor != null ? proveedor.getUsuarioId() : "" %>"
-                           class="btn-eliminar-sm"
-                           onclick="return confirm('¿Eliminar la compra #<%= compra.getCompraId() %>? Esta acción no se puede deshacer.')">
-                            <i class="fa-solid fa-trash"></i> Eliminar
-                        </a>
+                        
                     </div>
 
                 </div>

@@ -15,7 +15,6 @@ import java.util.Map;
 
 @WebServlet("/UsuarioServlet")
 public class UsuarioServlet extends HttpServlet {
-
     private UsuarioDAO usuarioDAO;
     private DesempenoDAO desempenoDAO;
 
@@ -25,174 +24,231 @@ public class UsuarioServlet extends HttpServlet {
         desempenoDAO = new DesempenoDAO();
     }
 
+    // ==================== GET ====================
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setCharacterEncoding("UTF-8");
+        
+        // ■■ Validar sesión de administrador ■■
+        HttpSession session = req.getSession(false);
+        if (session == null || session.getAttribute("admin") == null) {
+            resp.sendRedirect(req.getContextPath() + "/inicio-sesion.jsp");
+            return;
+        }
 
         String accion = req.getParameter("accion");
         if (accion == null) accion = "listar";
 
         switch (accion) {
-            case "nuevo":
-                req.getRequestDispatcher("/Administrador/usuarios/agregar_usuario.jsp")
-                        .forward(req, resp);
-                break;
-
-            case "editar":
+            case "nuevo" -> req.getRequestDispatcher("/Administrador/usuarios/agregar_usuario.jsp").forward(req, resp);
+            
+            case "editar" -> {
                 int id = Integer.parseInt(req.getParameter("id"));
                 req.setAttribute("usuario", usuarioDAO.obtenerUsuarioPorId(id));
-                req.getRequestDispatcher("/Administrador/usuarios/editar_usuario.jsp")
-                        .forward(req, resp);
-                break;
-
-            case "historial":
-                List<Map<String, Object>> historial =
-                        usuarioDAO.obtenerHistorialUsuariosConDesempeno();
+                req.getRequestDispatcher("/Administrador/usuarios/editar_usuario.jsp").forward(req, resp);
+            }
+            
+            case "historial" -> {
+                List<Map<String, Object>> historial = usuarioDAO.obtenerHistorialUsuariosConDesempeno();
                 req.setAttribute("historial", historial);
-                req.getRequestDispatcher("/Administrador/usuarios/historial.jsp")
-                        .forward(req, resp);
-                break;
+                req.getRequestDispatcher("/Administrador/usuarios/historial.jsp").forward(req, resp);
+            }
+            
+            case "verificarDocumento" -> {
+                String doc = req.getParameter("documento");
+                String idActualStr = req.getParameter("idActual");
+                boolean existe;
+                if (idActualStr != null && idActualStr.matches("\\d+")) {
+                    existe = usuarioDAO.existeDocumentoParaOtro(doc, Integer.parseInt(idActualStr));
+                } else {
+                    existe = usuarioDAO.existeDocumento(doc);
+                }
+                resp.setContentType("application/json");
+                resp.getWriter().write("{\"existe\": " + existe + "}");
+            }
+            
+            case "verificarCorreo" -> {
+                String correo = req.getParameter("correo");
+                String idActualStr = req.getParameter("idActual");
+                boolean existe;
+                if (idActualStr != null && idActualStr.matches("\\d+")) {
+                    existe = usuarioDAO.existeCorreoParaOtro(correo, Integer.parseInt(idActualStr));
+                } else {
+                    existe = usuarioDAO.existeCorreo(correo);
+                }
+                resp.setContentType("application/json");
+                resp.getWriter().write("{\"existe\": " + existe + "}");
+            }
+            
+            default -> {
+                // ■■ RF07: Filtros por rol y estado ■■
+                String filtroRol = req.getParameter("filtroRol");
+                String filtroEstado = req.getParameter("filtroEstado");
+                
+                String msg = req.getParameter("msg");
+                if (msg != null) req.setAttribute("msg", msg);
+                
+                String correoDestino = req.getParameter("correoDestino");
+                if (correoDestino != null) req.setAttribute("correoDestino", correoDestino);
 
-            default:
-                req.setAttribute("usuarios", usuarioDAO.listarUsuarios());
+                req.setAttribute("usuarios", usuarioDAO.listarUsuarios(filtroRol, filtroEstado));
                 req.setAttribute("totalUsuarios", usuarioDAO.contarUsuarios());
                 req.setAttribute("usuariosActivos", usuarioDAO.contarUsuariosActivos());
-                req.getRequestDispatcher("/Administrador/usuarios/listar_usuario.jsp")
-                        .forward(req, resp);
+                req.getRequestDispatcher("/Administrador/usuarios.jsp").forward(req, resp);
+            }
         }
     }
 
+    // ==================== POST ====================
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
-
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setCharacterEncoding("UTF-8");
+        
+        // ■■ Validar sesión de administrador ■■
+        HttpSession session = req.getSession(false);
+        if (session == null || session.getAttribute("admin") == null) {
+            resp.sendRedirect(req.getContextPath() + "/inicio-sesion.jsp");
+            return;
+        }
+        
+        model.Administrador adminSesion = (model.Administrador) session.getAttribute("admin");
+        int adminId = (adminSesion != null) ? adminSesion.getId() : -1;
         String accion = req.getParameter("accion");
 
-        /* =========================
-           AGREGAR USUARIO
-           ========================= */
+        /* ========================================================= AGREGAR USUARIO ========================================================= */
         if ("agregar".equals(accion)) {
+            String nombre = req.getParameter("nombre");
+            String correo = req.getParameter("correo");
+            String telefono = req.getParameter("telefono");
+            String documento = req.getParameter("documento");
+            String contrasena = req.getParameter("contrasena"); // puede estar vacía
+            String rol = req.getParameter("rol");
 
-            String nombre     = req.getParameter("nombre");
-            String correo     = req.getParameter("correo");
-            String telefono   = req.getParameter("telefono");
-            String documento  = req.getParameter("documento");
-            String contrasena = req.getParameter("contrasena");
-            String rol        = req.getParameter("rol");
-
-            // ---- VALIDACIONES ----
-            if (nombre == null || nombre.trim().isEmpty()
-                    || correo == null || correo.trim().isEmpty()
-                    || telefono == null || telefono.trim().isEmpty()) {
-
-                req.setAttribute("error", "Todos los campos obligatorios deben completarse");
-                req.getRequestDispatcher("/Administrador/usuarios/agregar_usuario.jsp")
-                        .forward(req, resp);
+            // ■■ Validaciones ■■
+            if (nombre == null || nombre.trim().isEmpty()) {
+                reenviarConError(req, resp, "El nombre es obligatorio.", "/Administrador/usuarios/agregar_usuario.jsp");
                 return;
             }
-
+            if (correo == null || correo.trim().isEmpty()) {
+                reenviarConError(req, resp, "El correo es obligatorio (se usará para enviar las credenciales).", "/Administrador/usuarios/agregar_usuario.jsp");
+                return;
+            }
             if (!correo.matches("^[^@]+@[^@]+\\.[^@]+$")) {
-                req.setAttribute("error", "El correo no tiene un formato válido");
-                req.getRequestDispatcher("/Administrador/usuarios/agregar_usuario.jsp")
-                        .forward(req, resp);
+                reenviarConError(req, resp, "El correo no tiene un formato válido.", "/Administrador/usuarios/agregar_usuario.jsp");
+                return;
+            }
+            if (telefono == null || telefono.trim().isEmpty()) {
+                reenviarConError(req, resp, "El teléfono es obligatorio.", "/Administrador/usuarios/agregar_usuario.jsp");
                 return;
             }
 
-            if (contrasena == null || contrasena.trim().isEmpty()) {
-                req.setAttribute("error", "La contraseña es obligatoria");
-                req.getRequestDispatcher("/Administrador/usuarios/agregar_usuario.jsp")
-                        .forward(req, resp);
+            // ■■ RF06: Validación de unicidad en servidor (segunda línea de defensa) ■■
+            if (documento != null && !documento.trim().isEmpty() && usuarioDAO.existeDocumento(documento)) {
+                reenviarConError(req, resp, "Ya existe un usuario con ese documento.", "/Administrador/usuarios/agregar_usuario.jsp");
                 return;
             }
-            // ----------------------
+            if (usuarioDAO.existeCorreo(correo)) {
+                reenviarConError(req, resp, "Ya existe un usuario con ese correo.", "/Administrador/usuarios/agregar_usuario.jsp");
+                return;
+            }
 
             Usuario u = new Usuario();
             u.setNombre(nombre.trim());
             u.setCorreo(correo.trim());
             u.setTelefono(telefono.trim());
             u.setDocumento(documento);
-            u.setContrasena(contrasena);
+            u.setContrasena(contrasena); // puede ser null/vacía → DAO genera la contraseña
             u.setRol(rol != null && !rol.trim().isEmpty() ? rol.trim() : "vendedor");
             u.setEstado("Activo".equals(req.getParameter("estado")));
 
-            usuarioDAO.agregarUsuario(u);
-            resp.sendRedirect("UsuarioServlet");
+            boolean exito = usuarioDAO.agregarUsuario(u);
+
+            if (exito) {
+                resp.sendRedirect(req.getContextPath() + "/UsuarioServlet?msg=creado&correoDestino=" + 
+                    java.net.URLEncoder.encode(correo.trim(), "UTF-8"));
+            } else {
+                reenviarConError(req, resp, "No se pudo crear el usuario. Verifica que el nombre, documento o correo no estén repetidos.", "/Administrador/usuarios/agregar_usuario.jsp");
+            }
         }
 
-        /* =========================
-           EDITAR USUARIO
-           ========================= */
+        /* ========================================================= EDITAR USUARIO (RF08) ========================================================= */
         else if ("editar".equals(accion)) {
-
             try {
                 int usuarioId = Integer.parseInt(req.getParameter("id"));
-                String nombre  = req.getParameter("nombre");
-                String correo  = req.getParameter("correo");
+                String nombre = req.getParameter("nombre");
+                String correo = req.getParameter("correo");
                 String telefono = req.getParameter("telefono");
-                String rol     = req.getParameter("rol");
+                String rol = req.getParameter("rol");
                 String observaciones = req.getParameter("observaciones");
 
-                // ---- VALIDACIONES ----
-                if (nombre == null || nombre.trim().isEmpty()
-                        || correo == null || correo.trim().isEmpty()
-                        || rol == null || rol.trim().isEmpty()) {
-
-                    req.setAttribute("error", "Nombre, correo y rol son obligatorios");
-                    req.setAttribute("usuario",
-                            usuarioDAO.obtenerUsuarioPorId(usuarioId));
-                    req.getRequestDispatcher("/Administrador/usuarios/editar_usuario.jsp")
-                            .forward(req, resp);
+                // ■■ RF08: Validaciones ■■
+                if (nombre == null || nombre.trim().isEmpty() || correo == null || correo.trim().isEmpty() || 
+                    rol == null || rol.trim().isEmpty()) {
+                    req.setAttribute("error", "Nombre, correo y rol son obligatorios.");
+                    req.setAttribute("usuario", usuarioDAO.obtenerUsuarioPorId(usuarioId));
+                    req.getRequestDispatcher("/Administrador/usuarios/editar_usuario.jsp").forward(req, resp);
                     return;
                 }
-
                 if (!correo.matches("^[^@]+@[^@]+\\.[^@]+$")) {
-                    req.setAttribute("error", "Formato de correo inválido");
-                    req.setAttribute("usuario",
-                            usuarioDAO.obtenerUsuarioPorId(usuarioId));
-                    req.getRequestDispatcher("/Administrador/usuarios/editar_usuario.jsp")
-                            .forward(req, resp);
+                    req.setAttribute("error", "Formato de correo inválido.");
+                    req.setAttribute("usuario", usuarioDAO.obtenerUsuarioPorId(usuarioId));
+                    req.getRequestDispatcher("/Administrador/usuarios/editar_usuario.jsp").forward(req, resp);
                     return;
                 }
-                // ----------------------
+
+                // ■■ RF08: Validar unicidad de correo para OTRO usuario ■■
+                if (usuarioDAO.existeCorreoParaOtro(correo, usuarioId)) {
+                    req.setAttribute("error", "El correo ya está en uso por otro usuario.");
+                    req.setAttribute("usuario", usuarioDAO.obtenerUsuarioPorId(usuarioId));
+                    req.getRequestDispatcher("/Administrador/usuarios/editar_usuario.jsp").forward(req, resp);
+                    return;
+                }
 
                 Usuario u = new Usuario();
                 u.setUsuarioId(usuarioId);
-                u.setNombre(nombre);
-                u.setCorreo(correo);
+                u.setNombre(nombre.trim());
+                u.setCorreo(correo.trim());
                 u.setTelefono(telefono);
-                u.setRol(rol);
+                u.setRol(rol.trim());
                 u.setEstado("Activo".equals(req.getParameter("estado")));
 
-                boolean exito = usuarioDAO.editarUsuario(u);
+                // ■■ RF08: NO se edita documento (campo inmutable) ■■
+                // El documento se mantiene como estaba originalmente
+
+                boolean exito = usuarioDAO.editarUsuario(u, adminId);
 
                 if (exito) {
-                    Desempeno_Vendedor desempeno =
-                            desempenoDAO.obtenerUltimoDesempenoPorUsuario(usuarioId);
-
+                    Desempeno_Vendedor desempeno = desempenoDAO.obtenerUltimoDesempenoPorUsuario(usuarioId);
                     if (desempeno != null) {
                         desempeno.setObservaciones(observaciones);
-                        desempenoDAO.actualizarDesempeno(desempeno);
+                        desempenoDAO.actualizarDesempeno(desempeno, usuarioId);
                     } else {
                         desempeno = new Desempeno_Vendedor();
                         desempeno.setUsuarioId(usuarioId);
                         desempeno.setVentasTotales(BigDecimal.ZERO);
                         desempeno.setComisionPorcentaje(BigDecimal.ZERO);
                         desempeno.setComisionGanada(BigDecimal.ZERO);
-                        desempeno.setPeriodo(
-                                new java.sql.Date(System.currentTimeMillis()));
+                        desempeno.setPeriodo(new java.sql.Date(System.currentTimeMillis()));
                         desempeno.setObservaciones(observaciones);
-
-                        desempenoDAO.insertarDesempeno(desempeno);
+                        desempenoDAO.insertarDesempeno(desempeno, usuarioId);
                     }
+                    resp.sendRedirect(req.getContextPath() + "/UsuarioServlet?msg=actualizado");
+                } else {
+                    req.setAttribute("error", "No se pudo actualizar el usuario.");
+                    req.setAttribute("usuario", usuarioDAO.obtenerUsuarioPorId(usuarioId));
+                    req.getRequestDispatcher("/Administrador/usuarios/editar_usuario.jsp").forward(req, resp);
                 }
-
-                resp.sendRedirect(req.getContextPath() + "/UsuarioServlet");
-
             } catch (Exception e) {
                 e.printStackTrace();
-                resp.sendRedirect(req.getContextPath()
-                        + "/UsuarioServlet?error=editar");
+                resp.sendRedirect(req.getContextPath() + "/UsuarioServlet?error=editar");
             }
         }
+    }
+
+    // ■■ Auxiliar ■■
+    private void reenviarConError(HttpServletRequest req, HttpServletResponse resp, String mensaje, String vista) 
+            throws ServletException, IOException {
+        req.setAttribute("error", mensaje);
+        req.getRequestDispatcher(vista).forward(req, resp);
     }
 }

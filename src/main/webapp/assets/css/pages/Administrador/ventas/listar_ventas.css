@@ -1,214 +1,237 @@
 @import url('../../../base/global.css');
 
+/* --- RESET Y BASE --- */
 * {
-    margin: var(--margin_padding_reset);
-    padding: var(--margin_padding_reset);
+    margin: 0;
+    padding: 0;
     box-sizing: border-box;
 }
 
 body {
     font-family: var(--fuente-titulos);
     background: var(--color-fondo-admin);
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    min-height: var(--alto-minimo-body);
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
+    min-height: 100vh;
+    display: block; /* Cambiado de flex a block para permitir que el contenedor use todo el ancho */
     padding-top: 140px;
 }
 
-/* Tabla */
-.Ventas-listar__tabla-contenedor{
-    width: var(--ancho-tabla-Ventas);
-    overflow-x: auto;
-    border-radius: 15px;
-    background-color: var(--color-fondo-card-productos);
-    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
-    padding: 10px;
+/* --- CONTENEDOR DE LA PÁGINA --- */
+.prov-page {
+    width: 95%;
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 20px;
 }
 
-.Ventas-listar__tabla{
-    width: var(--ancho-interno-tabla-Ventas);
-    border-collapse: collapse;
-    border-radius: 12px;
-}
-
-.Ventas-listar__tabla th, 
-.Ventas-listar__tabla td {
-    padding: 15px 10px;
-    text-align: center;
-    /* border-left: 1px solid saddlebrown; */
-    /* border-bottom: 1px solid saddlebrown; */
-}
-
-.Ventas-listar__tabla th {
-    background-color: var(--color-columnas-tabla);
-    font-weight: 700;
-    font-size: var(--tamano-label);
-    /* border: 1px solid saddlebrown; */
-}
-
-.Ventas-listar__tabla tbody {
-    background-color: var(--color-tablas);
-    font-weight: 500;
-    font-size: 16px;
-    /* border: 1px solid saddlebrown; */
-}
-
-/* Estado */
-.estado {
-    padding: 5px 12px;
-    border-radius: 10px;
-    color: rgb(0, 0, 0);
-    font-size: 16px;
-    font-weight: var(--peso-texto-semi);
-}
-
-.estado--activo{
-    background-color: rgb(120, 172, 120);
-}
-
-.estado--inactivo{
-    background-color: rgb(236, 93, 93);
-}
-
-/* Acciones */
-.Ventas-listar__acciones {
-    width: 150px;
-}
-
-.iconos {
+/* --- HEADER Y ESTADÍSTICAS --- */
+.list-card__header {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
-    gap: 12px;
+    margin-bottom: 25px;
+    gap: 20px;
 }
 
-.iconos i {
-    font-size: 18px;
-    padding: 6px;
+.list-card__header h2 {
+    color: #333;
+    font-size: 1.8rem;
+}
+
+.stats-row {
+    display: flex;
+    gap: 15px;
+}
+
+.stat-chip {
+    background: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    font-size: 0.9rem;
+    border-left: 4px solid var(--color-principal, #3498db);
+}
+
+.stat-chip--warning {
+    border-left-color: #f39c12;
+}
+
+/* --- FORMULARIO DE FILTROS --- */
+.filtros-form {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    margin-bottom: 30px;
+}
+
+.filtros-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.filtros-row select, 
+.filtros-row input {
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    flex: 1;
+    min-width: 160px;
+}
+
+.btn-save--sm, .btn-cancel--sm {
+    padding: 12px 20px;
     border-radius: 8px;
     cursor: pointer;
-    transition: transform .2s ease;
-}
-
-/* Contadores */
-.contadores {
+    font-weight: bold;
     display: flex;
-    justify-content: center;
-    align-items: stretch;
-    gap: 25px;
-    padding: 20px;
-    flex-wrap: wrap;
-    max-width: 1200px;
-    margin: 0 auto;
+    align-items: center;
+    gap: 8px;
+    border: none;
+    transition: 0.3s ease;
 }
 
-.contador-card {
-    flex: 1;
-    min-width: 220px;
-    max-width: 260px;
-    background: var(--color-fondo-contadores);
-    border-radius: 20px;
-    padding: 25px 20px;
+.btn-save--sm { background: #2ecc71; color: white; }
+.btn-cancel--sm { background: #e74c3c; color: white; text-decoration: none; }
+
+/* --- GRID DE TARJETAS (AQUÍ ESTÁ LA MAGIA) --- */
+.cards-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); /* Crea las columnas automáticamente */
+    gap: 25px;
+    padding-bottom: 50px;
+}
+
+/* --- ESTILO DE LA TARJETA (CARD) --- */
+.venta-card {
+    background: white;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.08);
     display: flex;
     flex-direction: column;
+    border: 1px solid #eee;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.venta-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.12);
+    border-color: var(--color-principal, #3498db);
+}
+
+.venta-card__header {
+    display: flex;
+    justify-content: space-between;
     align-items: center;
-    text-align: center;
-    transition: all 0.3s ease;
-    border-left: 5px solid var(--borde-contadores);
-}
-
-.contador-card:hover {
-    transform: translateY(-5px);
-}
-
-.contador-card h2 {
-    font-size: 18px;
-    font-weight: 600;
-    color: #000000;
     margin-bottom: 15px;
+    border-bottom: 1px solid #f0f0f0;
+    padding-bottom: 10px;
+}
+
+.venta-card__id {
+    font-weight: 800;
+    color: #2c3e50;
+    font-size: 1.1rem;
+}
+
+.venta-card__date {
+    color: #95a5a6;
+    font-size: 0.85rem;
+}
+
+.venta-card__body {
+    flex-grow: 1; /* Empuja el footer hacia abajo */
+}
+
+.venta-card__info {
+    margin-bottom: 12px;
+}
+
+.info-label {
+    font-size: 0.75rem;
+    color: #7f8c8d;
+    text-transform: uppercase;
     letter-spacing: 0.5px;
+    margin-bottom: 2px;
 }
 
-.contador-card__numero {
-    font-size: 32px;
-    font-weight: 700;
-    color: #ffffff;
-    padding: 15px 25px;
-    border-radius: 50px; 
-    background: var(--color-fondo-num-contadores);
-    transition: all 0.3s ease;
+.info-value {
+    font-weight: 600;
+    color: #333;
+    font-size: 1rem;
 }
 
-.contador-card__numero:hover {
-    transform: scale(1.1);
+.venta-card__total {
+    background: #f8f9fa;
+    padding: 10px;
+    border-radius: 8px;
+    margin-top: 10px;
+    text-align: center;
 }
 
-/* ===== Media Queries para móviles ===== */
+.total-amount {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: #27ae60;
+}
+
+.venta-card__footer {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* --- BADGES Y BOTONES --- */
+.status-badge {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.status--success { background: #dff9fb; color: #130f40; border: 1px solid #badc58; }
+.status--pending { background: #fef9e7; color: #9a7d0a; border: 1px solid #f7dc6f; }
+.status--danger { background: #fdedec; color: #922b21; border: 1px solid #f5b7b1; }
+
+.btn-view {
+    background: #3498db;
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: 0.2s;
+}
+
+.btn-view:hover {
+    background: #2980b9;
+}
+
+/* --- RESPONSIVE --- */
 @media screen and (max-width: 768px) {
-
-    body {
-        padding-top: 100px;
-    }
-
-    /* Contenedor de tabla */
-    .Ventas-listar__tabla-contenedor {
-        width: 95%;
-        margin-left: 10px; 
-    }
-
-    /* Ocultar encabezado */
-    .Ventas-listar__tabla thead {
-        display: none;
-    }
-
-    .Ventas-listar__tabla tbody,
-    .Ventas-listar__tabla tr,
-    .Ventas-listar__tabla td {
-        display: block;
-        width: 100%;
-    }
-
-    .Ventas-listar__tabla tr {
-        margin-bottom: 50px;
-        border: 1px solid #ccc;
-        border-radius: 10px;
-        padding: 10px;
-        background: var(--color-fondo-tarjeta-hover);
-    }
-
-    .Ventas-listar__tabla td {
-        text-align: right;
-        padding: 10px 15px;
-        position: relative;
-        border: none;
-        /* border-bottom: 1px solid rgba(0,0,0,0.1); */
-    }
-
-    .Ventas-listar__tabla td::before {
-        content: attr(data-label);
-        float: left;
-        font-weight: 600;
-    }
-
-    .Ventas-listar__acciones {
-        display: flex;
-        justify-content: flex-end;
-        gap: 10px;
-        margin-top: 10px;
-    }
-
-    /* Contadores verticales */
-    .contadores {
+    .list-card__header {
         flex-direction: column;
-        align-items: center;
-        gap: 15px;
+        align-items: flex-start;
+    }
+    
+    .stats-row {
+        width: 100%;
+        flex-direction: column;
     }
 
-    .contador-card {
-        max-width: 90%;
+    .filtros-row {
+        flex-direction: column;
+    }
+
+    .cards-container {
+        grid-template-columns: 1fr; /* Una sola columna en móvil */
     }
 }

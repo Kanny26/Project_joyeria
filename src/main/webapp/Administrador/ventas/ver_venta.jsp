@@ -22,6 +22,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Venta #<%= (venta != null) ? venta.getVentaId() : "" %> | Admin</title>
     <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/main.css">
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/forms-global.css">
     <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/pages/Administrador/ventas/ver_ventas.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
@@ -31,8 +32,11 @@
         <img src="<%= request.getContextPath() %>/assets/Imagenes/iconos/admin.png" alt="Admin">
     </div>
     <h1 class="navbar-admin__title">AAC27</h1>
-    <a href="<%= request.getContextPath() %>/AdminVentaServlet?action=listar">
-        <i class="fa-solid fa-arrow-left navbar-admin__home-icon"></i>
+    <a href="<%= request.getContextPath() %>/Administrador/ventas/listar" class="navbar-admin__home-link">
+        <span class="navbar-admin__home-icon-wrap">
+            <i class="fa-solid fa-arrow-left"></i>
+            <span class="navbar-admin__home-text">Volver</span>
+        </span>
     </a>
 </nav>
 
@@ -123,7 +127,7 @@
     <% } else { %>
     <div class="titulo">
         <p style="text-align:center;margin-top:2rem;">No se encontró la venta solicitada.</p>
-        <a href="<%= request.getContextPath() %>/AdminVentaServlet?action=listar">Volver al listado</a>
+        <a href="<%= request.getContextPath() %>/Administrador/ventas/listar">Volver al listado</a>
     </div>
     <% } %>
 </main>

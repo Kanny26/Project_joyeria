@@ -66,7 +66,7 @@
                 <form action="<%= request.getContextPath() %>/ProveedorServlet"
                       method="post" style="flex: 1;">
                     <input type="hidden" name="action" value="eliminar">
-                    <input type="hidden" name="id"     value="<%= proveedor.getUsuarioId() %>">
+                    <input type="hidden" name="id"     value="<%= proveedor.getProveedorId() %>">
                     <button type="submit" class="btn-danger" style="width: 100%;">
                         <i class="fa-solid fa-user-slash"></i> Desactivar Proveedor
                     </button>

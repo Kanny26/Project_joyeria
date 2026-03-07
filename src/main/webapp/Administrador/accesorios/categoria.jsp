@@ -5,7 +5,7 @@
 <%
     Administrador admin = (Administrador) session.getAttribute("admin");
     if (admin == null) {
-        response.sendRedirect(request.getContextPath() + "/Administrador/inicio-sesion.jsp");
+        response.sendRedirect(request.getContextPath() + "/inicio-sesion.jsp");
         return;
     }
 
@@ -26,7 +26,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= categoria != null ? categoria.getNombre() : "Búsqueda" %> - AAC27</title>
-
     <link rel="stylesheet" href="<%=request.getContextPath()%>/assets/css/main.css">
     <link rel="stylesheet" href="<%=request.getContextPath()%>/assets/css/pages/Administrador/gest-productos.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -38,9 +37,7 @@
         <img src="<%=request.getContextPath()%>/assets/Imagenes/iconos/admin.png" alt="Admin">
     </div>
     <h1 class="navbar-admin__title">AAC27</h1>
-    
-    <a href="<%=request.getContextPath()%>/CategoriaServlet"
-       class="navbar-admin__home-link">
+    <a href="<%=request.getContextPath()%>/CategoriaServlet" class="navbar-admin__home-link">
         <span class="navbar-admin__home-icon-wrap">
             <i class="fa-solid fa-arrow-left"></i>
             <span class="navbar-admin__home-text">Volver atrás</span>
@@ -56,7 +53,6 @@
 
     <div class="cards__barra-superior">
 
-        <!-- Botón Agregar Producto -->
         <% if (categoria != null) { %>
         <a href="<%=request.getContextPath()%>/ProductoServlet?action=nuevo&categoria=<%= categoria.getCategoriaId() %>"
            class="cards__boton-agregar">
@@ -64,7 +60,6 @@
         </a>
         <% } %>
 
-        <!-- Barra de búsqueda con selector de filtro -->
         <form action="<%=request.getContextPath()%>/CategoriaServlet"
               method="get"
               class="cards__busqueda"
@@ -74,44 +69,35 @@
                 <input type="hidden" name="id" value="<%= categoria.getCategoriaId() %>">
             <% } %>
 
-            <!-- Selector de campo a filtrar -->
-            <select name="filtro"
-                    id="filtroSelect"
+            <select name="filtro" id="filtroSelect"
                     class="cards__busqueda-filtro"
                     onchange="actualizarPlaceholder(this)">
-                <option value="todos"    <%= "todos".equals(filtroActivo)    ? "selected" : "" %>>Todos</option>
-                <option value="nombre"   <%= "nombre".equals(filtroActivo)   ? "selected" : "" %>>Nombre</option>
-                <option value="material" <%= "material".equals(filtroActivo) ? "selected" : "" %>>Material</option>
-                <option value="stock"    <%= "stock".equals(filtroActivo)    ? "selected" : "" %>>Stock</option>
+                <option value="todos"        <%= "todos".equals(filtroActivo)        ? "selected" : "" %>>Todos</option>
+                <option value="nombre"       <%= "nombre".equals(filtroActivo)       ? "selected" : "" %>>Nombre</option>
+                <option value="material"     <%= "material".equals(filtroActivo)     ? "selected" : "" %>>Material</option>
+                <option value="subcategoria" <%= "subcategoria".equals(filtroActivo) ? "selected" : "" %>>Subcategoría</option>
+                <option value="stock"        <%= "stock".equals(filtroActivo)        ? "selected" : "" %>>Stock</option>
             </select>
 
-            <!-- Separador visual -->
             <span class="cards__busqueda-sep"></span>
 
-            <!-- Input de texto -->
-            <input type="text"
-                   name="q"
-                   id="searchInput"
+            <input type="text" name="q" id="searchInput"
                    class="cards__busqueda-input"
                    placeholder="Buscar productos..."
                    value="<%= termino %>"
                    autocomplete="off">
 
-            <!-- Icono lupa -->
             <i class="fa-solid fa-magnifying-glass cards__busqueda-icono"></i>
 
-            <!-- Botón limpiar (solo si hay búsqueda activa) -->
             <% if (!termino.isEmpty()) { %>
                 <a href="<%=request.getContextPath()%>/CategoriaServlet<%= categoria != null ? "?id=" + categoria.getCategoriaId() : "" %>"
-                   class="cards__busqueda-clear"
-                   title="Limpiar búsqueda">
+                   class="cards__busqueda-clear" title="Limpiar búsqueda">
                     <i class="fa-solid fa-xmark"></i>
                 </a>
             <% } %>
         </form>
     </div>
 
-    <!-- Info de búsqueda activa -->
     <% if (!termino.isEmpty()) { %>
         <div class="cards__busqueda-info">
             <i class="fa-solid fa-circle-info"></i>
@@ -122,8 +108,9 @@
                 <% if (!"todos".equals(filtroActivo)) { %>
                     &nbsp;&mdash;&nbsp; filtrado por
                     <span class="cards__busqueda-badge">
-                        <%= "nombre".equals(filtroActivo) ? "nombre"
-                          : "material".equals(filtroActivo) ? "material"
+                        <%= "nombre".equals(filtroActivo)       ? "nombre"
+                          : "material".equals(filtroActivo)     ? "material"
+                          : "subcategoria".equals(filtroActivo) ? "subcategoría"
                           : "stock" %>
                     </span>
                 <% } %>
@@ -131,7 +118,6 @@
         </div>
     <% } %>
 
-    <!-- Grid de productos -->
     <section class="cards__contenedor">
 
         <% if (productos != null && !productos.isEmpty()) {
@@ -154,16 +140,22 @@
                 <span class="product__value"><%= p.getNombre() %></span>
             </h3>
 
-            <!-- CORREGIDO: usar getCategoriaNombre() en lugar de getCategoria().getNombre() -->
             <h4 class="product__category">
                 <span class="product__label">Categoría:</span>
                 <span class="product__value">
-                    <%= categoria != null ? categoria.getNombre() : 
+                    <%= categoria != null ? categoria.getNombre() :
                         (p.getCategoriaNombre() != null ? p.getCategoriaNombre() : "Sin categoría") %>
                 </span>
             </h4>
 
-            <!-- CORREGIDO: usar getMaterialNombre() en lugar de getMaterial().getNombre() -->
+            <h4 class="product__subcategory">
+                <span class="product__label">Subcategoría:</span>
+                <span class="product__value">
+                    <%= p.getSubcategoriaNombre() != null && !p.getSubcategoriaNombre().isEmpty()
+                        ? p.getSubcategoriaNombre() : "—" %>
+                </span>
+            </h4>
+
             <h4 class="product__material">
                 <span class="product__label">Material:</span>
                 <span class="product__value">
@@ -191,7 +183,6 @@
                 </span>
             </h4>
 
-            <!-- CORREGIDO: usar SimpleDateFormat para formatear Date -->
             <h4 class="product__date">
                 <span class="product__label">En stock desde:</span>
                 <span class="product__value">
@@ -233,10 +224,11 @@
 
 <script>
 const placeholders = {
-    todos:    'Buscar por nombre, material, stock...',
-    nombre:   'Ej: anillo, collar, topito...',
-    material: 'Ej: acero inoxidable, plata...',
-    stock:    'Ej: 5, 10, 0...'
+    todos:        'Buscar por nombre, material, subcategoría, stock...',
+    nombre:       'Ej: anillo, collar, topito...',
+    material:     'Ej: acero inoxidable, plata...',
+    subcategoria: 'Ej: matrimonio, cumpleaños, uso diario...',
+    stock:        'Ej: 5, 10, 0...'
 };
 
 function actualizarPlaceholder(sel) {
@@ -244,10 +236,8 @@ function actualizarPlaceholder(sel) {
         placeholders[sel.value] || 'Buscar productos...';
 }
 
-// Aplicar placeholder correcto al cargar
 actualizarPlaceholder(document.getElementById('filtroSelect'));
 
-// Enviar con Enter
 document.getElementById('searchInput').addEventListener('keydown', function(e) {
     if (e.key === 'Enter') {
         e.preventDefault();

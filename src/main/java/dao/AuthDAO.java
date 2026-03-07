@@ -7,27 +7,20 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-/**
- * DAO unificado de autenticación.
- * Retorna los datos del usuario y su rol sin importar si es admin o vendedor.
- */
 public class AuthDAO {
+    private static final Logger LOGGER = Logger.getLogger(AuthDAO.class.getName());
 
-    /**
-     * Valida credenciales y retorna un mapa con:
-     * - "id"     → usuario_id
-     * - "nombre" → nombre
-     * - "rol"    → cargo del rol (ej: "administrador", "vendedor")
-     * Retorna null si las credenciales son incorrectas.
-     */
     public Map<String, Object> validar(String nombre, String password) {
         String sql = """
-            SELECT u.usuario_id, u.nombre, u.pass, r.cargo
-            FROM Usuario u
-            INNER JOIN Rol r ON u.usuario_id = r.usuario_id
+            SELECT u.usuario_id, u.nombre, u.pass, r.cargo 
+            FROM Usuario u 
+            INNER JOIN Usuario_Rol ur ON ur.usuario_id = u.usuario_id 
+            INNER JOIN Rol r ON r.rol_id = ur.rol_id 
             WHERE u.nombre = ? AND u.estado = 1
-            """;
+        """;
 
         try (Connection con = ConexionDB.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
@@ -37,20 +30,18 @@ public class AuthDAO {
 
             if (rs.next()) {
                 String passBD = rs.getString("pass");
-
+                // Verificación segura con BCrypt
                 if (BCrypt.checkpw(password, passBD)) {
                     Map<String, Object> datos = new HashMap<>();
-                    datos.put("id",     rs.getInt("usuario_id"));
+                    datos.put("id", rs.getInt("usuario_id"));
                     datos.put("nombre", rs.getString("nombre"));
-                    datos.put("rol",    rs.getString("cargo"));
+                    datos.put("rol", rs.getString("cargo"));
                     return datos;
                 }
             }
-
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Error en autenticación", e);
         }
-
         return null;
     }
 }

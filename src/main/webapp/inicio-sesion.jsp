@@ -3,6 +3,7 @@
 <%
     String error = (String) request.getAttribute("error");
     if (error == null) error = request.getParameter("error");
+    String msg = request.getParameter("msg");
 %>
 <!DOCTYPE html>
 <html lang="es">
@@ -51,6 +52,12 @@
                             <% } %>
                         </p>
                     <% } %>
+                    <% if ("password_actualizado".equals(msg)) { %>
+                        <p style="color:#16a34a;font-size:13px;background:#e8f8f0;padding:10px 14px;
+                                  border-radius:8px;border-left:4px solid #16a34a;margin-bottom:12px;">
+                            <i class="fa-solid fa-circle-check"></i> ¡Contraseña actualizada! Ya puedes iniciar sesión.
+                        </p>
+                    <% } %>
                     <div class="inicio-sesion__input-grupo"> 
                         <i class="fas fa-user icon-left"></i> 
                         <input 
@@ -75,7 +82,7 @@
                     </div> 
 
                     <a 
-                        href="<%=request.getContextPath()%>/Recuperar_pass/ing-codigo.jsp" 
+                        href="<%=request.getContextPath()%>/recuperar" 
                         class="inicio-sesion__link-recuperar" 
                     > 
                         ¿Olvidaste tu contraseña? 
