@@ -4,6 +4,7 @@ import model.Venta;
 import model.DetalleVenta;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
+import com.itextpdf.text.pdf.draw.DottedLineSeparator;
 import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
 import java.math.BigDecimal;

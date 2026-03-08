@@ -2,12 +2,14 @@ package controller;
 
 import dao.CategoriaDAO;
 import dao.ClienteDAO;
+import dao.MetodoPagoDAO;
 import dao.PostventaDAO;
 import dao.ProductoDAO;
 import dao.VentaDAO;
 import model.CasoPostventa;
 import model.Categoria;
 import model.DetalleVenta;
+import model.MetodoPago;
 import model.Producto;
 import model.Usuario;
 import model.Venta;
@@ -34,6 +36,7 @@ public class VentaVendedorServlet extends HttpServlet {
     private ClienteDAO clienteDAO;
     private PostventaDAO postventaDAO;
     private CategoriaDAO categoriaDAO;
+    private MetodoPagoDAO metodoPagoDAO;
 
     @Override
     public void init() throws ServletException {
@@ -42,11 +45,9 @@ public class VentaVendedorServlet extends HttpServlet {
         clienteDAO = new ClienteDAO();
         postventaDAO = new PostventaDAO();
         categoriaDAO = new CategoriaDAO();
+        metodoPagoDAO = new MetodoPagoDAO();
     }
-
-    // ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
     // GET
-    // ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         if (!estaAutenticado(req, resp)) return;
@@ -158,11 +159,24 @@ public class VentaVendedorServlet extends HttpServlet {
     // ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
     // VISTAS GET
     // ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
-    private void mostrarFormularioNueva(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    private void mostrarFormularioNueva(HttpServletRequest req, HttpServletResponse resp) 
+            throws ServletException, IOException {
+        
+        // 1. Cargar las categorías
         req.setAttribute("categorias", categoriaDAO.listarCategorias());
+        
+        // 2. MOVER AQUÍ: Cargar métodos de pago ANTES del forward
+        try {
+            List<MetodoPago> metodos = metodoPagoDAO.listarTodos();
+            req.setAttribute("metodosPago", metodos);
+        } catch (Exception e) {
+            e.printStackTrace(); // Es mejor loguear el error para saber si el DAO falla
+        }
+
+        // 3. Al final, despachar al JSP
         req.getRequestDispatcher("/vendedor/registrar_venta.jsp").forward(req, resp);
     }
-
+    
     private void listarMisVentas(HttpServletRequest req, HttpServletResponse resp) throws Exception {
         Usuario vendedor = getVendedor(req);
         if (vendedor == null) {
@@ -284,7 +298,10 @@ public class VentaVendedorServlet extends HttpServlet {
         String emailCliente = req.getParameter("clienteEmail");
         String fechaStr = req.getParameter("fechaVenta");
         String metodoPago = req.getParameter("metodoPago");
-        String modalidad = req.getParameter("modalidad");
+        // CORRECCIÓN BUG 2: El JSP envía "tipoPago" (CONTADO/CREDITO), no "modalidad".
+        // Se lee tipoPago y se convierte al valor que espera el DAO ("anticipo"/"contado").
+        String tipoPago = req.getParameter("tipoPago");
+        String modalidad = "CREDITO".equals(tipoPago) ? "anticipo" : "contado";
 
         // Validaciones básicas
         if (nombreCliente == null || nombreCliente.isBlank()) {
@@ -357,9 +374,16 @@ public class VentaVendedorServlet extends HttpServlet {
         // Validaciones de anticipo
         BigDecimal montoAnticipo = null;
         BigDecimal saldoPendiente = null;
-        
+
+        // VALIDACIÓN: crédito solo permitido si el total supera $250.000
+        if ("anticipo".equals(modalidad) && total.compareTo(new BigDecimal("250000")) <= 0) {
+            reenviarConError(req, resp, "El crédito solo está disponible para compras mayores a $250.000.", "/vendedor/registrar_venta.jsp");
+            return;
+        }
+
         if ("anticipo".equals(modalidad)) {
-            String anticipoStr = req.getParameter("montoAnticipo");
+            // CORRECCIÓN BUG 2 (cont.): El JSP usa name="anticipo", no "montoAnticipo".
+            String anticipoStr = req.getParameter("anticipo");
             if (anticipoStr == null || anticipoStr.isBlank()) {
                 reenviarConError(req, resp, "Ingresa el monto del anticipo.", "/vendedor/registrar_venta.jsp");
                 return;

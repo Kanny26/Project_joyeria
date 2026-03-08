@@ -28,11 +28,12 @@
         <img src="<%= request.getContextPath() %>/assets/Imagenes/iconos/Seller.png" alt="Vendedor">
     </div>
     <h1 class="navbar-admin__title">AAC27</h1>
-    <a href="<%= request.getContextPath() %>/VentaVendedorServlet?action=misVentas" class="navbar-admin__home-link">
-        <span class="navbar-admin__home-icon-wrap">
-            <i class="fa-solid fa-list"></i>
-            <span class="navbar-admin__home-text">Mis ventas</span>
-        </span>
+    <a href="<%=request.getContextPath()%>/vendedor/vendedor_principal.jsp" class="navbar-admin__home-link">
+	    <span class="navbar-admin__home-icon-wrap">
+	        <i class="fa-solid fa-arrow-left"></i>
+		    <span class="navbar-admin__home-text">Volver atrás</span>
+		    <i class="fa-solid fa-house-chimney"></i>
+	    </span>
     </a>
 </nav>
 
@@ -45,7 +46,7 @@
         </div>
     <% } %>
 
-    <form action="<%= request.getContextPath() %>/VentaVendedorServlet" method="get" id="formVenta">
+   <form action="<%= request.getContextPath() %>/VentaVendedorServlet?action=guardarVenta" method="post" id="formVenta">
         <input type="hidden" name="action" value="guardarVenta">
 
         <%-- Datos del cliente --%>
@@ -75,30 +76,53 @@
                     <label><i class="fa-solid fa-calendar-day"></i> Fecha de venta *</label>
                     <input type="date" name="fechaVenta" id="fechaVenta" required>
                 </div>
+                
+               <div class="form-row">
                 <div class="form-group">
-                    <label><i class="fa-solid fa-credit-card"></i> Método de pago *</label>
-                    <select name="metodoPago" required>
-                        <option value="">-- Selecciona --</option>
-                        <option value="Efectivo">Efectivo</option>
-                        <option value="Transferencia">Transferencia</option>
+                    <label><i class="fa-solid fa-wallet"></i> Método de pago</label>
+                    <select name="metodoPago" id="metodoPagoId" required>
+                        <option value="">-- Selecciona un método --</option>
+                        <%
+                            java.util.List<model.MetodoPago> metodosPagoList = (java.util.List<model.MetodoPago>) request.getAttribute("metodosPago");
+                            if (metodosPagoList != null) {
+                                for (model.MetodoPago mp : metodosPagoList) { %>
+                                    <option value="<%= mp.getMetodoPagoId() %>"><%= mp.getNombre() %></option>
+                        <%      }
+                            }
+                        %>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label><i class="fa-solid fa-layer-group"></i> Modalidad *</label>
-                    <select name="modalidad" id="modalidad" onchange="toggleAnticipo()" required>
-                        <option value="contado">Contado (pago completo)</option>
-                        <option value="anticipo">Anticipo (pago parcial)</option>
+                    <label><i class="fa-solid fa-hand-holding-dollar"></i> Tipo de pago</label>
+                    <select name="tipoPago" id="tipoPago" onchange="toggleCredito(this.value)">
+                        <option value="CONTADO">Contado</option>
+                        <option value="CREDITO">Crédito</option>
                     </select>
                 </div>
             </div>
-            <div id="anticipoRow" class="form-row" style="margin-top:.5rem;">
-                <div class="form-group">
-                    <label><i class="fa-solid fa-hand-holding-dollar"></i> Monto anticipo *</label>
-                    <input type="number" name="montoAnticipo" id="montoAnticipo"
-                           step="0.01" min="0.01" placeholder="0.00">
+
+            <!-- Campos de crédito (ocultos por defecto) -->
+            <div id="seccionCredito" style="display:none;">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label><i class="fa-regular fa-calendar-xmark"></i> Fecha límite de pago</label>
+                        <input type="date" name="fechaVencimiento" id="fechaVencimiento">
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fa-solid fa-money-bill-wave"></i> Anticipo (opcional)</label>
+                        <input type="number" name="anticipo" id="anticipo" min="0" step="0.01" placeholder="0.00">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label><i class="fa-solid fa-circle-check"></i> Estado del crédito</label>
+                        <select name="estadoCredito">
+                            <option value="activo">Activo (pendiente de pago)</option>
+                            <option value="pagado">Pagado (ya saldado)</option>
+                        </select>
+                    </div>
                 </div>
             </div>
-        </div>
 
         <%-- Carrito de productos --%>
         <div class="form-card" style="margin-bottom:1.5rem;">
@@ -177,6 +201,7 @@
         </div>
     </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script type="text/javascript">
 // Variables de estado
 const AppVenta = {
@@ -345,6 +370,16 @@ function renderCarrito() {
     });
 
     totalDisp.textContent = '$' + total.toLocaleString('es-CO', { minimumFractionDigits: 2 });
+
+    // Si el total baja de $250.000 y estaba en crédito, resetear a contado
+    const selectTipo = document.getElementById('tipoPago');
+    if (selectTipo && selectTipo.value === 'CREDITO' && total < MINIMO_CREDITO) {
+        selectTipo.value = 'CONTADO';
+        toggleCredito('CONTADO');
+        if (ids.length > 0) {
+            alert('⚠️ El total bajó de $250.000. Se cambió el tipo de pago a Contado.');
+        }
+    }
 }
 
 function removerDelCarrito(id) {
@@ -352,16 +387,70 @@ function removerDelCarrito(id) {
     renderCarrito();
 }
 
-function toggleAnticipo() {
-    const mod = document.getElementById('modalidad').value;
-    const row = document.getElementById('anticipoRow');
-    const inp = document.getElementById('montoAnticipo');
-    row.style.display = mod === 'anticipo' ? 'grid' : 'none';
-    if(inp) {
-        inp.required = (mod === 'anticipo');
-        if (mod !== 'anticipo') inp.value = '';
+const MINIMO_CREDITO = 250000;
+
+function getTotalCarrito() {
+    let total = 0;
+    Object.values(AppVenta.carrito).forEach(item => {
+        total += item.precio * item.cantidad;
+    });
+    return total;
+}
+function toggleCredito(valor) {
+    const seccion = document.getElementById('seccionCredito');
+    const fechaVenc = document.getElementById('fechaVencimiento');
+    const selectTipo = document.getElementById('tipoPago');
+
+    if (valor === 'CREDITO') {
+        const total = getTotalCarrito();
+        
+        if (total < MINIMO_CREDITO) {
+            // Formatear el dinero para la modal
+            const totalFormateado = total.toLocaleString('es-CO', { 
+                style: 'currency', 
+                currency: 'COP' 
+            });
+
+            // Reemplazo del alert por SweetAlert2
+            Swal.fire({
+                title: '¡Monto Insuficiente!',
+                html: `El crédito solo está disponible para compras mayores a <b>$250.000</b>.<br><br>Tu total actual es: <b>${totalFormateado}</b>`,
+                icon: 'warning',
+                confirmButtonText: 'Entendido',
+                confirmButtonColor: '#3085d6'
+            });
+
+            // Resetear el select y ocultar sección
+            selectTipo.value = 'CONTADO';
+            seccion.style.display = 'none';
+            if (fechaVenc) { 
+                fechaVenc.required = false; 
+                fechaVenc.value = ''; 
+            }
+            return;
+        }
+    }
+
+    // Lógica normal si pasa la validación o si es CONTADO
+    seccion.style.display = (valor === 'CREDITO') ? 'block' : 'none';
+    if (fechaVenc) {
+        fechaVenc.required = (valor === 'CREDITO');
+        if (valor !== 'CREDITO') fechaVenc.value = '';
     }
 }
+
+//Cargar métodos de pago via AJAX
+function cargarMetodosPago() {
+ fetch(ctx + '/CompraServlet?action=obtenerCategorias') // reuse AJAX approach
+ .catch(() => {});
+ 
+ // Poblar desde los datos del servidor usando JSP scriptlet
+ const select = document.getElementById('metodoPagoId');
+ if (!select) return;
+ // Los métodos de pago vienen del atributo de request "metodosPago"
+ // Se generan como <option> desde JSP scriptlet abajo
+}
+
 </script>
 </body>
 </html>

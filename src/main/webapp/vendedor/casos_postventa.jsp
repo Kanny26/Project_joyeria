@@ -28,11 +28,12 @@
         <img src="<%= request.getContextPath() %>/assets/Imagenes/iconos/Seller.png" alt="Vendedor">
     </div>
     <h1 class="navbar-admin__title">AAC27</h1>
-    <a href="<%= request.getContextPath() %>/VentaVendedorServlet?action=misVentas" class="navbar-admin__home-link">
-        <span class="navbar-admin__home-icon-wrap">
-            <i class="fa-solid fa-arrow-left"></i>
-            <span class="navbar-admin__home-text">Mis ventas</span>
-        </span>
+     <a href="<%=request.getContextPath()%>/vendedor/vendedor_principal.jsp" class="navbar-admin__home-link">
+	    <span class="navbar-admin__home-icon-wrap">
+	        <i class="fa-solid fa-arrow-left"></i>
+		    <span class="navbar-admin__home-text">Volver atrás</span>
+		    <i class="fa-solid fa-house-chimney"></i>
+	    </span>
     </a>
 </nav>
 

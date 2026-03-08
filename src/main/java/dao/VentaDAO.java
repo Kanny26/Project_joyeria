@@ -334,12 +334,19 @@ public class VentaDAO {
                     ps.executeBatch();
                 }
 
+                // CORRECCIÓN BUG 1: El formulario envía el metodo_pago_id (número),
+                // no el nombre. Se parsea directamente en lugar de buscarlo por nombre.
                 int metodoPagoId;
-                try (PreparedStatement ps = con.prepareStatement(sqlGetMetodo)) {
-                    ps.setString(1, venta.getMetodoPago());
-                    try (ResultSet rs = ps.executeQuery()) {
-                        if (!rs.next()) throw new SQLException("Método de pago no encontrado: " + venta.getMetodoPago());
-                        metodoPagoId = rs.getInt("metodo_pago_id");
+                try {
+                    metodoPagoId = Integer.parseInt(venta.getMetodoPago());
+                } catch (NumberFormatException e) {
+                    // Fallback: si por alguna razón llega el nombre, buscarlo en BD
+                    try (PreparedStatement ps = con.prepareStatement(sqlGetMetodo)) {
+                        ps.setString(1, venta.getMetodoPago());
+                        try (ResultSet rs = ps.executeQuery()) {
+                            if (!rs.next()) throw new SQLException("Método de pago no encontrado: " + venta.getMetodoPago());
+                            metodoPagoId = rs.getInt("metodo_pago_id");
+                        }
                     }
                 }
 
@@ -384,7 +391,7 @@ public class VentaDAO {
                 }
 
                 registrarAuditoria(con, usuarioIdAuditoria, "CREAR", "Venta", ventaId, null,
-                        "Venta #" + ventaId + " Total: " + venta.getTotal());
+                        "{\"descripcion\": \"Venta #" + ventaId + " Total: " + venta.getTotal() + "\"}");
                 con.commit();
                 return ventaId;
 
@@ -411,7 +418,7 @@ public class VentaDAO {
                     ps.executeUpdate();
                 }
                 registrarAuditoria(con, usuarioIdAuditoria, "DEVOLUCION", "Venta", ventaId, null,
-                        "Stock retornado Prod#" + productoId + " Cant: " + cantidad);
+                        "{\"descripcion\": \"Stock retornado Prod#" + productoId + " Cant: " + cantidad + "\"}");
                 con.commit();
                 return true;
             } catch (Exception e) {

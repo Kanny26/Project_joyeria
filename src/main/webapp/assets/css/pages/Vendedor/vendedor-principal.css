@@ -58,7 +58,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
    MAIN WRAPPER
    ══════════════════════════════════════════ */
 .dash-main {
-    max-width: 1280px;
+    max-width: 1615px;
     margin: 0 auto;
     padding: 28px 32px 48px;
     display: flex;
@@ -94,7 +94,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
     justify-content: space-between;
     position: relative;
     overflow: hidden;
-    min-height: 260px;
+    height: 442px;
     padding-bottom: 28px;
 }
 
@@ -118,7 +118,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .hero-card__body { position: relative; z-index: 1; }
 
 .hero-card__title {
-    font-size: 30px;
+    font-size: 42px;
     font-weight: 900;
     letter-spacing: -.5px;
     color: var(--txt-main);
@@ -126,7 +126,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 }
 
 .hero-card__sub {
-    font-size: 14px;
+    font-size: 25px;
     color: var(--txt-muted);
     margin-bottom: 20px;
 }
@@ -186,7 +186,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .hero-card__date {
     position: absolute;
     top: 18px; right: 22px;
-    font-size: 12px;
+    font-size: 18px;
     font-weight: 600;
     color: var(--txt-muted);
     display: flex; align-items: center; gap: 5px;
@@ -214,7 +214,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
     margin-bottom: 4px;
 }
 .notif-card__title {
-    font-size: 14px;
+    font-size: 18px;
     font-weight: 800;
     display: flex; align-items: center; gap: 7px;
     color: var(--txt-main);
@@ -244,7 +244,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 }
 
 .notif-item__ico {
-    width: 36px; height: 36px;
+    width: 38px; height: 38px;
     border-radius: var(--radius-sm);
     display: flex; align-items: center; justify-content: center;
     font-size: 14px;
@@ -256,7 +256,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 
 .notif-item__txt {
     flex: 1;
-    font-size: 12.5px;
+    font-size: 14px;
     color: var(--txt-main);
     line-height: 1.4;
 }
@@ -297,10 +297,10 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 }
 
 .stat-card__ico {
-    width: 46px; height: 46px;
+    width: 60px; height: 60px;
     border-radius: var(--radius-md);
     display: flex; align-items: center; justify-content: center;
-    font-size: 19px;
+    font-size: 30px;
     margin-bottom: 28px;
 }
 .stat-card__ico--rose     { background: #fde8ee; color: #b84a6a; }
@@ -317,7 +317,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .stat-card__menu:hover { color: var(--txt-muted); }
 
 .stat-card__lbl {
-    font-size: 12px;
+    font-size: 20px;
     color: var(--txt-muted);
     font-weight: 600;
     margin-bottom: 5px;
@@ -342,7 +342,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
     margin-top: 24px;
     align-items: flex-start;
     justify-content: space-between;
-    width: 100%;
+    width: 115%;
 }
 
 /* Cada ítem: círculo + etiqueta */
@@ -352,6 +352,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
     align-items: center;
     gap: 8px;
     text-decoration: none;
+    width: 150px;
 }
 .hero-icon-item:hover .icono-boton__circulo {
     transform: scale(1.08) translateY(-4px);
@@ -379,7 +380,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 
 /* Círculo */
 .icono-boton__circulo {
-    width: 110px; height: 110px;
+    width: 180px; height: 180px;
     border-radius: 50%;
     background: var(--dash-surface);
     display: flex; align-items: center; justify-content: center;
@@ -388,14 +389,14 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 }
 
 .icono-boton__img {
-    width: 52px; height: 52px;
+    width: 72px; height: 72px;
     object-fit: contain;
     transition: transform var(--tr);
 }
 
 /* Etiqueta debajo del círculo */
 .icono-boton__titulo {
-    font-size: 13px;
+    font-size: 22px;
     font-weight: 800;
     color: var(--txt-main);
     text-align: center;

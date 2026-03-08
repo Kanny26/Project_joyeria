@@ -131,7 +131,6 @@ public class CompraServlet extends HttpServlet {
             throw new IllegalArgumentException(
                     "La fecha de entrega no puede ser anterior a la fecha de compra");
 
-        // ── Método de pago → Pago_Compra.metodo_pago_id ─────────────
         String mpStr = request.getParameter("metodoPagoId");
         if (mpStr == null || !mpStr.matches("\\d+") || mpStr.equals("0"))
             throw new IllegalArgumentException("Debes seleccionar un método de pago");
