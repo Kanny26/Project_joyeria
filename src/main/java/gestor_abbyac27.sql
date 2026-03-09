@@ -407,20 +407,20 @@ INSERT INTO Rol (cargo) VALUES ('vendedor'), ('administrador');
 
 INSERT INTO Usuario (nombre, pass, estado, pass_temporal) VALUES
 ('AdminKS', '$2a$12$X5/dP8Dv4BZ8GH8UH0iO9uvyaEjLEqHB/Bs42s6bgSFap9HJXwtq.', 1, 0),
-('Marlen Becerra', '$2a$12$PZNBe5s32ircmWR/8sWeReZeb6ITXj6P5vuZBoV4pwUufJYbKhaE2', 1, 1),
-('Carlos Ruiz', '$2a$12$Rcee5SKxan4RlZ7QGWGCO.YZjzzqlqdQbfocNEKghO2f6dDjGVMFG', 1, 1), 
-('Stephany Moreno', '$2a$12$eHtUZELmuS85zMhRflFHCuO5zapW709VVdmZdituhJMReLVFYtkMq', 1, 1),
-('Felipe Mora', '$2a$12$Rcee5SKxan4RlZ7QGWGCO.YZjzzqlqdQbfocNEKghO2f6dDjGVMFG', 1, 1), 
-('Gabriela Silva', '$2a$12$Rcee5SKxan4RlZ7QGWGCO.YZjzzqlqdQbfocNEKghO2f6dDjGVMFG', 1, 1),
-('Héctor Díaz', '$2a$12$Rcee5SKxan4RlZ7QGWGCO.YZjzzqlqdQbfocNEKghO2f6dDjGVMFG', 1, 1),
- ('Isabella Vega', '$2a$12$Rcee5SKxan4RlZ7QGWGCO.YZjzzqlqdQbfocNEKghO2f6dDjGVMFG', 1, 1),
-('Javier Ortiz', '$2a$12$Rcee5SKxan4RlZ7QGWGCO.YZjzzqlqdQbfocNEKghO2f6dDjGVMFG', 1, 1), 
-('Karen López', '$2a$12$Rcee5SKxan4RlZ7QGWGCO.YZjzzqlqdQbfocNEKghO2f6dDjGVMFG', 1, 1),
-('Luis Castro', '$2a$12$Rcee5SKxan4RlZ7QGWGCO.YZjzzqlqdQbfocNEKghO2f6dDjGVMFG', 1, 1),
- ('María Pérez', '$2a$12$Rcee5SKxan4RlZ7QGWGCO.YZjzzqlqdQbfocNEKghO2f6dDjGVMFG', 1, 1),
-('Nicolás Silva', '$2a$12$Rcee5SKxan4RlZ7QGWGCO.YZjzzqlqdQbfocNEKghO2f6dDjGVMFG', 1, 1), 
-('Olga Ruiz', '$2a$12$Rcee5SKxan4RlZ7QGWGCO.YZjzzqlqdQbfocNEKghO2f6dDjGVMFG', 1, 1),
-('Pablo Díaz', '$2a$12$Rcee5SKxan4RlZ7QGWGCO.YZjzzqlqdQbfocNEKghO2f6dDjGVMFG', 1, 1);
+('Marlen Becerra', '$2a$12$jD20U/siCtFoC03VDdr80.i01..QnzNfW0/RoiSw91zcSjRUJSHBi', 1, 1),
+('Carlos Ruiz', '$2a$12$jD20U/siCtFoC03VDdr80.i01..QnzNfW0/RoiSw91zcSjRUJSHBi', 1, 1), 
+('Stephany Moreno', '$2a$12$jD20U/siCtFoC03VDdr80.i01..QnzNfW0/RoiSw91zcSjRUJSHBi', 1, 1),
+('Felipe Mora', '$2a$12$jD20U/siCtFoC03VDdr80.i01..QnzNfW0/RoiSw91zcSjRUJSHBi', 1, 1), 
+('Gabriela Silva', '$2a$12$jD20U/siCtFoC03VDdr80.i01..QnzNfW0/RoiSw91zcSjRUJSHBi', 1, 1),
+('Héctor Díaz', '$2a$12$jD20U/siCtFoC03VDdr80.i01..QnzNfW0/RoiSw91zcSjRUJSHBi', 1, 1),
+ ('Isabella Vega', '$2a$12$jD20U/siCtFoC03VDdr80.i01..QnzNfW0/RoiSw91zcSjRUJSHBi', 1, 1),
+('Javier Ortiz', '$2a$12$jD20U/siCtFoC03VDdr80.i01..QnzNfW0/RoiSw91zcSjRUJSHBi', 1, 1), 
+('Karen López', '$2a$12$jD20U/siCtFoC03VDdr80.i01..QnzNfW0/RoiSw91zcSjRUJSHBi', 1, 1),
+('Luis Castro', '$2a$12$jD20U/siCtFoC03VDdr80.i01..QnzNfW0/RoiSw91zcSjRUJSHBi', 1, 1),
+ ('María Pérez', '$2a$12$jD20U/siCtFoC03VDdr80.i01..QnzNfW0/RoiSw91zcSjRUJSHBi', 1, 1),
+('Nicolás Silva', '$2a$12$jD20U/siCtFoC03VDdr80.i01..QnzNfW0/RoiSw91zcSjRUJSHBi', 1, 1), 
+('Olga Ruiz', '$2a$12$jD20U/siCtFoC03VDdr80.i01..QnzNfW0/RoiSw91zcSjRUJSHBi', 1, 1),
+('Pablo Díaz', '$2a$12$jD20U/siCtFoC03VDdr80.i01..QnzNfW0/RoiSw91zcSjRUJSHBi', 1, 1);
 
 INSERT IGNORE INTO Usuario_Rol (usuario_id, rol_id) VALUES
 (1, 2), (2, 1), (3, 1), (4, 1), (5, 1), (6, 1), (7, 1), (8, 1),
@@ -432,7 +432,7 @@ INSERT INTO Telefono_Usuario (telefono, usuario_id) VALUES
 ('3201234567', 11), ('3212345678', 12), ('3223456789', 13), ('3234567890', 14), ('3245678901', 15);
 
 INSERT INTO Correo_Usuario (email, usuario_id) VALUES
-('admin@abbyac27.com', 1), ('marlenbe211@gmail.com', 2), ('carlos.ruiz@abbyac27.com', 3),
+('marlenbe211@gmail.com', 1), ('marlenbe211@gmail.com', 2), ('carlos.ruiz@abbyac27.com', 3),
 ('stephanymoreno1826@gmail.com', 4), ('felipe.andrade@abbyac27.com', 5), ('gabriela.silva@abbyac27.com', 6),
 ('hector.diaz@abbyac27.com', 7), ('isabella.ramirez@abbyac27.com', 8), ('javier.ortiz@abbyac27.com', 9),
 ('karen.lopez@abbyac27.com', 10), ('luis.castro@abbyac27.com', 11), ('maria.perez@abbyac27.com', 12),
@@ -775,4 +775,5 @@ SELECT 'Categoria', COUNT(*) FROM Categoria UNION ALL
 SELECT 'Material', COUNT(*) FROM Material; -- 75. Resumen general de tablas
 */
 
-SELECT COUNT(*) FROM Venta;
+SELECT * FROM Venta;
+
