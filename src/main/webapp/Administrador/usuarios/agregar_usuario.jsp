@@ -70,12 +70,10 @@
                     <select id="rol" name="rol" class="fs-input" required>
                         <option value="vendedor">Vendedor</option>
                         <option value="administrador">Administrador</option>
-                        <option value="proveedor">Proveedor</option>
-                        <option value="cliente">Cliente</option>
                     </select>
                     <div class="fs-hint">
                         <i class="fa-solid fa-wand-magic-sparkles"></i>
-                        <span>Contraseña a generar: <strong id="preview-rol">VEN001</strong></span>
+                        <span>Contraseña a generar: <strong id="preview-rol">VEN001 o el numero que va</strong></span>
                     </div>
                 </div>
                 <div class="fs-group">

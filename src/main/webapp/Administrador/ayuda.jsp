@@ -31,10 +31,10 @@
     </div>
     <h1 class="navbar-admin__title">AAC27</h1>
     </div>
-    <a href="<%=request.getContextPath()%>/CerrarSesionServlet" class="navbar-admin__home-link">
+    <a href="<%=request.getContextPath()%>/Administrador/admin-principal.jsp" class="navbar-admin__home-link">
         <span class="navbar-admin__home-icon-wrap">
             <i class="fa-solid fa-right-from-bracket"></i>
-            <span class="navbar-admin__home-text">Cerrar sesión</span>
+            <span class="navbar-admin__home-text">Volver atras</span>
         </span>
     </a>
 </nav>

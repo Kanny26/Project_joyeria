@@ -8,6 +8,7 @@ import model.Categoria;
 import model.Producto;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -18,6 +19,11 @@ import java.io.IOException;
 import java.util.List;
 
 @WebServlet("/CategoriaServlet")
+@MultipartConfig(
+	    fileSizeThreshold = 1024 * 1024 * 2, // 2MB
+	    maxFileSize = 1024 * 1024 * 10,      // 10MB
+	    maxRequestSize = 1024 * 1024 * 50    // 50MB
+	)
 public class CategoriaServlet extends HttpServlet {
     private CategoriaDAO categoriaDAO;
     private ProductoDAO productoDAO;
@@ -126,17 +132,24 @@ public class CategoriaServlet extends HttpServlet {
 
     private void guardarCategoria(HttpServletRequest request, HttpServletResponse response) throws Exception {
         String nombre = request.getParameter("nombre");
-        String icono = request.getParameter("icono");
-        String subcatIdStr = request.getParameter("subcategoriaId");
+        
+        // 1. Obtener la parte del archivo
+        javax.servlet.http.Part filePart = request.getPart("archivoIcono"); 
+        String fileName = filePart.getSubmittedFileName();
+        
+        // 2. Definir la ruta donde se guardarán las imágenes
+        // Esto apunta a: src/main/webapp/assets/Imagenes/iconos/
+        String uploadPath = getServletContext().getRealPath("") + "assets/Imagenes/iconos";
+        java.io.File uploadDir = new java.io.File(uploadPath);
+        if (!uploadDir.exists()) uploadDir.mkdir();
 
-        if (nombre == null || nombre.trim().isEmpty()) throw new Exception("El nombre es obligatorio.");
+        // 3. Guardar el archivo físicamente en el servidor
+        filePart.write(uploadPath + java.io.File.separator + fileName);
 
+        // 4. Crear el objeto con el nombre del archivo para la BD
         Categoria c = new Categoria();
         c.setNombre(nombre.trim());
-        c.setIcono(icono != null ? icono.trim() : "default.png");
-        if (subcatIdStr != null && !subcatIdStr.isEmpty()) {
-            c.setSubcategoriaId(Integer.parseInt(subcatIdStr));
-        }
+        c.setIcono(fileName); // Guardamos solo el nombre del archivo en la BD
 
         categoriaDAO.guardar(c);
         response.sendRedirect(request.getContextPath() + "/CategoriaServlet?msg=creado");
