@@ -1,12 +1,16 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
-    if (session.getAttribute("admin") == null) { response.sendRedirect(request.getContextPath() + "/inicio-sesion.jsp"); return; }
+    if (session.getAttribute("admin") == null) { 
+        response.sendRedirect(request.getContextPath() + "/inicio-sesion.jsp"); 
+        return; 
+    }
     String errorServidor = (String) request.getAttribute("error");
 %>
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agregar Usuario - AAC27</title>
     <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/main.css">
     <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/forms-global.css">
@@ -15,7 +19,9 @@
 </head>
 <body>
 <nav class="navbar-admin">
-    <div class="navbar-admin__catalogo"><img src="<%= request.getContextPath() %>/assets/Imagenes/iconos/admin.png" alt="Admin"></div>
+    <div class="navbar-admin__catalogo">
+        <img src="<%= request.getContextPath() %>/assets/Imagenes/iconos/admin.png" alt="Admin">
+    </div>
     <h1 class="navbar-admin__title">AAC27</h1>
     <a href="<%= request.getContextPath() %>/UsuarioServlet" class="navbar-admin__home-link">
         <span class="navbar-admin__home-icon-wrap">
@@ -29,11 +35,10 @@
 <main class="fs-container">
     <h2 class="fs-page-title"><i class="fa-solid fa-user-plus"></i> Añadir Usuario</h2>
 
-    <form id="formUsuario" class="fs-form" method="post"
-          action="<%= request.getContextPath() %>/UsuarioServlet">
+    <form id="formUsuario" class="fs-form" method="post" action="<%= request.getContextPath() %>/UsuarioServlet">
         <input type="hidden" name="accion" value="agregar">
+        <input type="hidden" id="contrasenaEnvio" name="contrasena" value="VendedorAA27">
 
-        <!-- SECCIÓN: Datos personales -->
         <div class="fs-section">
             <div class="fs-section-title"><i class="fa-solid fa-user"></i> Datos Personales</div>
             <div class="fs-grid">
@@ -61,7 +66,6 @@
             </div>
         </div>
 
-        <!-- SECCIÓN: Rol y estado -->
         <div class="fs-section">
             <div class="fs-section-title"><i class="fa-solid fa-shield-halved"></i> Rol y Estado</div>
             <div class="fs-grid">
@@ -72,9 +76,9 @@
                         <option value="administrador">Administrador</option>
                     </select>
                     <div class="fs-hint">
-                        <i class="fa-solid fa-wand-magic-sparkles"></i>
-                        <span>Contraseña a generar: <strong id="preview-rol">VEN001 o el numero que va</strong></span>
-                    </div>
+					    <i class="fa-solid fa-wand-magic-sparkles"></i>
+					    <span>Contraseña a generar: <strong id="preview-rol">VendedorAA27</strong></span>
+					</div>
                 </div>
                 <div class="fs-group">
                     <label class="fs-label"><i class="fa-solid fa-toggle-on"></i> Estado</label>
@@ -97,7 +101,7 @@
         </div>
 
         <div class="fs-actions">
-            <button type="submit" class="fs-btn-save" id="btnGuardar"><i class="fa-solid fa-user-plus"></i> Crear Usuario</button>
+            <button type="button" class="fs-btn-save" id="btnGuardar"><i class="fa-solid fa-user-plus"></i> Crear Usuario</button>
             <button type="button" class="fs-btn-cancel" onclick="history.back()"><i class="fa-solid fa-xmark"></i> Cancelar</button>
         </div>
     </form>
@@ -109,21 +113,30 @@
 document.addEventListener('DOMContentLoaded', () => Swal.fire({ icon:'error', title:'Error', text:'<%= errorServidor.replace("'","\\'") %>' }));
 <% } %>
 
-const PREFIJOS = { vendedor:'VEN', administrador:'ADM', proveedor:'PRO', cliente:'CLI' };
-const LABELS   = { vendedor:'Vendedor', administrador:'Administrador', proveedor:'Proveedor', cliente:'Cliente' };
-const rolSel   = document.getElementById('rol');
-const prevRol  = document.getElementById('preview-rol');
+// Mapeo de contraseñas y etiquetas
+const PASSWORDS = { 
+    vendedor: 'VendedorAA27', 
+    administrador: 'AdminAA27' 
+};
 
+const LABELS = { 
+    vendedor: 'Vendedor', 
+    administrador: 'Administrador' 
+};
+
+const rolSel  = document.getElementById('rol');
+const prevRol = document.getElementById('preview-rol');
+const passEnvio = document.getElementById('contrasenaEnvio');
+
+// Actualizar vista previa y el input oculto al cambiar el rol
 rolSel.addEventListener('change', function() {
-    prevRol.textContent = (PREFIJOS[rolSel.value] || 'USR') + '001';
+    const pass = PASSWORDS[rolSel.value] || 'N/A';
+    prevRol.textContent = pass;
+    passEnvio.value = pass;
 });
 
-// ── Listener en el BOTÓN (no en el form) para evitar que el browser
-//    intercepte el submit antes de e.preventDefault() ──────────────
+// Validación y envío con SweetAlert2
 document.getElementById('btnGuardar').addEventListener('click', function(e) {
-    e.preventDefault();
-    e.stopPropagation();
-
     var nombre   = document.getElementById('nombre').value.trim();
     var correo   = document.getElementById('correo').value.trim();
     var telefono = document.getElementById('telefono').value.trim();
@@ -142,7 +155,7 @@ document.getElementById('btnGuardar').addEventListener('click', function(e) {
         return;
     }
 
-    var prefijo = PREFIJOS[rolVal] || 'USR';
+    var passwordFinal = PASSWORDS[rolVal] || "Error";
 
     Swal.fire({
         icon: 'question',
@@ -152,7 +165,7 @@ document.getElementById('btnGuardar').addEventListener('click', function(e) {
               '<p style="margin:6px 0"><strong>Correo:</strong> ' + correo + '</p>' +
               '<p style="margin:6px 0"><strong>Teléfono:</strong> ' + telefono + '</p>' +
               '<p style="margin:6px 0"><strong>Rol:</strong> ' + (LABELS[rolVal] || rolVal) + '</p>' +
-              '<p style="margin:6px 0"><strong>Contraseña generada:</strong> <code style="background:#7c3aed;color:#fff;padding:2px 8px;border-radius:4px;">' + prefijo + '001</code></p>' +
+              '<p style="margin:6px 0"><strong>Contraseña a asignar:</strong> <code style="background:#7c3aed;color:#fff;padding:2px 8px;border-radius:4px;">' + passwordFinal + '</code></p>' +
               '</div>',
         showCancelButton: true,
         confirmButtonText: 'Sí, crear',
@@ -161,6 +174,9 @@ document.getElementById('btnGuardar').addEventListener('click', function(e) {
         cancelButtonColor: '#6b7280'
     }).then(function(r) {
         if (r.isConfirmed) {
+            // Aseguramos el valor final antes de enviar
+            passEnvio.value = passwordFinal;
+            
             document.getElementById('btnGuardar').disabled = true;
             Swal.fire({
                 title: 'Procesando...',
