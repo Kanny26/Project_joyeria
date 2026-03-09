@@ -5,18 +5,6 @@
 <%@ page import="java.text.NumberFormat" %>
 <%@ page import="java.util.Locale" %>
 
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ventas | AAC27 Admin</title>
-    <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/main.css">
-    <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/pages/Administrador/ventas/listar_ventas.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-</head>
-<body>
-
 <%
     // Configuración de formatos
     NumberFormat moneda = NumberFormat.getCurrencyInstance(new Locale("es", "CO"));
@@ -25,8 +13,8 @@
     // 🔒 Recuperar atributos con fallback seguro (NUNCA null)
     List<Venta> ventas = (List<Venta>) request.getAttribute("ventas");
     if (ventas == null) {
-        System.err.println("⚠️ WARNING: 'ventas' es null en JSP. ¿Acceso directo? Forzando lista vacía.");
-        ventas = new java.util.ArrayList<>();
+        response.sendRedirect(request.getContextPath() + "/Administrador/ventas/listar");
+        return;
     }
     
     Object totalVentasObj = request.getAttribute("totalVentas");
@@ -44,6 +32,18 @@
     // Debug final
     System.out.println("✅ JSP cargado - ventas.size(): " + ventas.size());
 %>
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ventas | AAC27 Admin</title>
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/main.css">
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/pages/Administrador/ventas/listar_ventas.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
 
 <nav class="navbar-admin">
     <div class="navbar-admin__catalogo">
@@ -119,7 +119,7 @@
                 %>
                 <div class="venta-card">
                     <div class="venta-card__header">
-                        <span class="venta-card__id">#<%= v.getVentaId() %></span>
+                        <span class="venta-card__id">Venta #<%= v.getVentaId() %></span>
                         <span class="venta-card__date"><%= v.getFechaEmision() != null ? sdf.format(v.getFechaEmision()) : "---" %></span>
                     </div>
                     

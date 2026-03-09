@@ -33,7 +33,7 @@
         <section class="iconos-contenedor">
 
             <article class="iconos-item">
-                <a href="<%= request.getContextPath() %>/Administrador/ventas/listar_ventas.jsp" class="icono-boton">
+                <a href="<%= request.getContextPath() %>/Administrador/ventas/listar" class="icono-boton">
                     <div class="icono-boton__circulo">
                         <img class="icono-boton__img"
                              src="<%= request.getContextPath() %>/assets/Imagenes/iconos/listar_ventas.png"
@@ -44,7 +44,7 @@
             </article>
 
             <article class="iconos-item">
-                <a href="<%= request.getContextPath() %>/Administrador/ventas/listar_postventa.jsp" class="icono-boton">
+                <a href="<%= request.getContextPath() %>/Administrador/postventa/listar" class="icono-boton">
                     <div class="icono-boton__circulo">
                         <img class="icono-boton__img"
                              src="<%= request.getContextPath() %>/assets/Imagenes/iconos/postventa.png"

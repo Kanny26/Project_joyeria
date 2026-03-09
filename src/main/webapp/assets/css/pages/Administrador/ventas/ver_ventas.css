@@ -1,10 +1,6 @@
 @import url('../../../base/global.css');
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
     font-family: var(--fuente-titulos);
@@ -12,331 +8,271 @@ body {
     min-height: 100vh;
     display: flex;
     justify-content: center;
-}
-
-.factura{
-    background-color: var(--color-card-venta);
-    margin-top: 160px;
-    width: 750px;
-    height: 750px;
-    padding: 45px;
-    border-radius: 14px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-}
-
-/* ENCABEZADO */
-.factura__header{
-    display: flex;
-    justify-content: space-between;
     align-items: flex-start;
+    padding-top: 140px;
 }
 
-.factura__logo h1{
-    font-size: 36px;
-    color: var(--color-texto-general);
-    letter-spacing: 1px;
-    margin-bottom: 4px;
-}
-
-.slogan{
-    font-size: 14px;
-    color: var(--color-texto-general);
-}
-
-.factura__info p{
-    text-align: right;
-    font-size: 14px;
-}
-
-/* LÍNEA */
-.linea-div{
+/* ==============================
+   PÁGINA CONTENEDOR
+============================== */
+.prov-page {
     width: 100%;
-    height: 2px;
-    background: var(--color-texto-general);
-    margin: 25px 0;
-}
-
-/* CLIENTE */
-.factura__cliente{
-    margin-bottom: 35px;
-}
-
-.label{
-    font-size: 14px;
-    color: var(--color-texto-general);
-    font-weight: 600;
-}
-
-.cliente-nombre{
-    font-size: 22px;
-    margin: 6px 0 4px 0;
-    color: var(--color-texto-general);
-}
-
-.estado{
-    display: inline-block;
-    margin-top: 12px;
-    padding: 6px 16px;
-    border-radius: 18px;
-    font-weight: 600;
-    font-size: 14px;
-}
-
-.estado--pagado{
-    background: #d6f5d6;
-    color: #2f8a2f;
-    border: 1px solid #a8e6a8;
-}
-
-/* TABLA */
-.tabla{
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 25px;
-}
-
-.tabla th{
-    background: var(--color-encabezado-venta);
-    padding: 12px;
-    font-size: 14px;
-    text-align: left;
-    color: #5c3d2e;
-}
-
-.tabla td{
-    padding: 12px;
-    border-bottom: 1px solid #f0e3d9;
-    font-size: 14px;
-}
-
-.tabla tbody tr{
-    background: #fff7f1;
-}
-
-/* TOTALES */
-.totales{
-    width: 300px;
-    margin-left: auto;
-    font-size: 15px;
-}
-
-.totales p{
+    max-width: 1400px;
+    padding: 0 24px 60px;
     display: flex;
-    justify-content: space-between;
-    margin: 6px 0;
+    flex-direction: column;
+    align-items: center;
 }
 
-.total-final{
-    margin-top: 10px;
-    background: var(--color-texto-general);
-    color: #fff;
-    padding: 12px;
-    border-radius: 6px;
+/* ==============================
+   DETALLE VENTA — WRAPPER
+============================== */
+.detalle-wrapper { max-width: 820px; width: 100%; }
+
+/* ── Meta superior ── */
+.venta-meta {
+    background: #fff;
+    border-radius: 18px;
+    border: 1.5px solid #ede9fe;
+    box-shadow: 0 4px 24px rgba(124,58,237,.07);
+    padding: 1.6rem 1.8rem;
+    margin-bottom: 1.4rem;
+}
+
+.venta-meta__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1.2rem;
+}
+
+.venta-meta__id { display: flex; align-items: center; gap: .8rem; }
+
+.venta-meta__icon {
+    width: 50px; height: 50px;
+    background: linear-gradient(135deg, #a78bfa, #7c3aed);
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 1.3rem;
+    flex-shrink: 0;
+}
+
+.venta-meta__titulo { font-size: 1.4rem; font-weight: 800; color: #1e1b4b; }
+.venta-meta__sub    { font-size: .82rem; color: #9ca3af; }
+
+/* Badges de fecha y método */
+.venta-meta__badges { display: flex; gap: .6rem; flex-wrap: wrap; align-items: center; }
+
+.badge {
+    padding: .35rem .85rem;
+    border-radius: 20px;
+    font-size: .78rem;
     font-weight: 700;
 }
+.badge--fecha    { background: #f0fdf4; color: #059669; border: 1px solid #bbf7d0; }
+.badge--metodo   { background: #eff6ff; color: #3b82f6; border: 1px solid #bfdbfe; }
+.badge--vendedor { background: #faf5ff; color: #7c3aed; border: 1px solid #ddd6fe; }
 
-/* CONDICIONES */
-.condiciones h3{
-    margin-top: 30px;
-    font-size: 16px;
-    color: var(--color-texto-general);
+/* Estado badge */
+.estado-pill {
+    display: inline-flex; align-items: center; gap: .4rem;
+    padding: .35rem .9rem;
+    border-radius: 20px;
+    font-size: .78rem; font-weight: 700;
+}
+.estado-pill--pagado    { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+.estado-pill--pendiente { background: #fef9c3; color: #854d0e; border: 1px solid #fde68a; }
+.estado-pill--rechazado { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+
+/* Grid de stats */
+.venta-meta__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: .8rem;
 }
 
-.condiciones p{
-    font-size: 14px;
-    margin-top: 5px;
-    line-height: 1.6;
-    color: #6a5140;
+.meta-item {
+    background: #f9fafb;
+    border-radius: 10px;
+    padding: .8rem 1rem;
+}
+.meta-item__label {
+    font-size: .72rem; font-weight: 700;
+    color: #7c3aed; text-transform: uppercase;
+    letter-spacing: .04em; margin-bottom: .25rem;
+    display: flex; align-items: center; gap: .3rem;
+}
+.meta-item__value       { font-size: .95rem; font-weight: 700; color: #1e1b4b; }
+.meta-item__value--money { color: #059669; font-size: 1.1rem; }
+.meta-item__value--danger { color: #dc2626; font-size: 1rem; }
+
+/* ── Bloque anticipo/saldo ── */
+.pago-resumen {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.4rem;
+}
+.pago-chip {
+    border-radius: 12px;
+    padding: .75rem 1.1rem;
+    display: flex; flex-direction: column; gap: .2rem;
+    min-width: 140px;
+}
+.pago-chip--anticipo { background: #dcfce7; }
+.pago-chip--saldo    { background: #fee2e2; }
+.pago-chip__label { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; }
+.pago-chip--anticipo .pago-chip__label { color: #16a34a; }
+.pago-chip--saldo    .pago-chip__label { color: #dc2626; }
+.pago-chip__value { font-weight: 800; font-size: 1.05rem; }
+.pago-chip--anticipo .pago-chip__value { color: #059669; }
+.pago-chip--saldo    .pago-chip__value { color: #991b1b; }
+
+/* ── Tabla de detalles ── */
+.detalles-card {
+    background: #fff;
+    border-radius: 18px;
+    border: 1.5px solid #ede9fe;
+    box-shadow: 0 4px 24px rgba(124,58,237,.07);
+    overflow: hidden;
+    margin-bottom: 1.4rem;
 }
 
-/* Pantallas extra grandes (>= 1440px) */
-@media (min-width: 1440px) {
-    .factura {
-        width: 800px;
-        height: auto;
-        padding: 50px;
-    }
+.detalles-card__header {
+    padding: 1.1rem 1.5rem;
+    border-bottom: 1.5px solid #ede9fe;
+    font-weight: 800; font-size: .95rem; color: #1e1b4b;
+    display: flex; align-items: center; gap: .5rem;
+}
+.detalles-card__header i { color: #7c3aed; }
+.detalles-count {
+    background: #7c3aed; color: #fff;
+    border-radius: 20px; padding: .1rem .55rem;
+    font-size: .72rem; font-weight: 700; margin-left: .3rem;
 }
 
-/* Tablet (769px a 1024px) */
-@media (min-width: 769px) and (max-width: 1024px) {
-    .factura {
-        width: 90%;
-        max-width: 650px;
-        height: auto;
-        padding: 35px;
-        margin-top: 120px;
-    }
+.detalles-table { width: 100%; border-collapse: collapse; font-size: .87rem; }
+.detalles-table thead th {
+    background: #f5f3ff; color: #5b21b6;
+    font-weight: 700; text-transform: uppercase;
+    font-size: .72rem; letter-spacing: .04em;
+    padding: .75rem 1.2rem; text-align: left;
+    border-bottom: 2px solid #ede9fe;
+}
+.detalles-table thead th:last-child { text-align: right; }
+.detalles-table tbody tr { border-bottom: 1px solid #f3f0ff; transition: background .1s; }
+.detalles-table tbody tr:last-child { border-bottom: none; }
+.detalles-table tbody tr:hover { background: #fafafe; }
+.detalles-table tbody td { padding: .85rem 1.2rem; vertical-align: middle; }
 
-    .factura__header {
-        flex-direction: column;
-        gap: 10px;
-        align-items: flex-start;
-    }
+.prod-name { font-weight: 700; color: #1e1b4b; }
+.prod-id   { font-size: .75rem; color: #9ca3af; margin-top: .1rem; }
+.precio-cell { color: #374151; }
 
-    .factura__logo h1 {
-        font-size: 32px;
-    }
-
-    .slogan {
-        font-size: 13px;
-    }
-
-    .factura__info p {
-        font-size: 13px;
-        text-align: left;
-    }
-
-    .cliente-nombre {
-        font-size: 20px;
-    }
-
-    .tabla th,
-    .tabla td {
-        font-size: 13px;
-        padding: 10px 8px;
-    }
-
-    .totales {
-        width: 100%;
-        max-width: 280px;
-        font-size: 14px;
-    }
+.cant-badge {
+    background: #ede9fe; color: #5b21b6;
+    border-radius: 20px; padding: .2rem .7rem;
+    font-weight: 700; font-size: .82rem;
+    display: inline-block;
 }
 
-/* Phablet (481px a 768px) */
-@media (min-width: 481px) and (max-width: 768px) {
-    .factura {
-        width: 95%;
-        max-width: 550px;
-        padding: 30px;
-        margin-top: 100px;
-        overflow-x: auto;
-    }
+.subtotal-cell-right { font-weight: 800; color: #059669; text-align: right; }
 
-    .factura__header {
-        flex-direction: column;
-        gap: 12px;
-        align-items: flex-start;
-    }
-
-    .factura__logo h1 {
-        font-size: 28px;
-    }
-
-    .slogan {
-        font-size: 12px;
-    }
-
-    .factura__info p {
-        font-size: 12px;
-        text-align: left;
-    }
-
-    .cliente-nombre {
-        font-size: 18px;
-    }
-
-    .tabla {
-        width: 100%;
-        min-width: 450px;
-        font-size: 12px;
-    }
-
-    .tabla th,
-    .tabla td {
-        padding: 8px 6px;
-        white-space: nowrap;
-    }
-
-    .totales {
-        width: 100%;
-        max-width: 250px;
-        font-size: 13px;
-    }
+.detalles-table tfoot td {
+    padding: 1rem 1.2rem;
+    border-top: 2px solid #ede9fe;
+    font-weight: 800;
 }
-/* Móvil pequeño (<= 480px) */
+.total-label { color: #1e1b4b; font-size: .9rem; }
+.total-value { text-align: right; font-size: 1.15rem; color: #059669; }
+
+/* ── Condiciones ── */
+.condiciones-card {
+    background: #fff;
+    border-radius: 18px;
+    border: 1.5px solid #ede9fe;
+    box-shadow: 0 4px 24px rgba(124,58,237,.07);
+    padding: 1.3rem 1.6rem;
+    margin-bottom: 1.4rem;
+}
+.condiciones-card h3 {
+    font-size: .9rem; font-weight: 800;
+    color: #1e1b4b; margin-bottom: .5rem;
+    display: flex; align-items: center; gap: .4rem;
+}
+.condiciones-card h3 i { color: #7c3aed; font-size: .85rem; }
+.condiciones-card p {
+    font-size: .84rem; color: #6b7280; line-height: 1.7;
+}
+
+/* ── Barra de acciones ── */
+.acciones-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: .8rem;
+}
+
+.btn-volver {
+    display: inline-flex; align-items: center; gap: .45rem;
+    background: #f5f3ff; color: #7c3aed;
+    border-radius: 12px; padding: .65rem 1.3rem;
+    font-weight: 700; font-size: .88rem;
+    text-decoration: none; transition: background .15s;
+}
+.btn-volver:hover { background: #ede9fe; }
+
+.acciones-group { display: flex; gap: .6rem; flex-wrap: wrap; }
+
+.btn-print {
+    display: inline-flex; align-items: center; gap: .45rem;
+    background: #f0fdf4; color: #059669;
+    border-radius: 12px; padding: .65rem 1.3rem;
+    font-weight: 700; font-size: .88rem;
+    cursor: pointer; border: 1.5px solid #bbf7d0;
+    transition: background .15s;
+    font-family: inherit;
+}
+.btn-print:hover { background: #dcfce7; }
+
+/* ── Estado vacío ── */
+.empty-detalle {
+    text-align: center; padding: 2rem;
+    color: #9ca3af; font-size: .85rem;
+}
+.empty-detalle i {
+    display: block; font-size: 1.5rem;
+    margin-bottom: .5rem; color: #ddd6fe;
+}
+
+/* ==============================
+   PRINT
+============================== */
+@media print {
+    .navbar-admin, .acciones-bar { display: none !important; }
+    .prov-page { padding: 0 !important; }
+    .venta-meta,
+    .detalles-card,
+    .condiciones-card { box-shadow: none !important; border: 1px solid #ccc !important; }
+}
+
+/* ==============================
+   RESPONSIVE
+============================== */
+@media (max-width: 768px) {
+    body { padding-top: 100px; }
+    .venta-meta__top { flex-direction: column; align-items: flex-start; }
+    .venta-meta__grid { grid-template-columns: 1fr 1fr; }
+}
+
 @media (max-width: 480px) {
-    body {
-        padding: 10px;
-    }
-
-    .factura {
-        width: 100%;
-        padding: 15px;
-        margin-top: 80px;
-        border-radius: 12px;
-        overflow-x: auto; /* Scroll horizontal para la tabla */
-    }
-
-    .factura__header {
-        flex-direction: column;
-        gap: 10px;
-        align-items: flex-start;
-    }
-
-    .factura__logo h1 {
-        font-size: 22px;
-    }
-
-    .slogan {
-        font-size: 11px;
-    }
-
-    .factura__info p {
-        font-size: 11px;
-        text-align: left;
-    }
-
-    .linea-div {
-        margin: 20px 0;
-    }
-
-    .cliente-nombre {
-        font-size: 16px;
-    }
-
-    .label {
-        font-size: 12px;
-    }
-
-    .estado {
-        font-size: 12px;
-        padding: 5px 10px;
-    }
-
-    /* ---------------- TABLA ---------------- */
-    .tabla {
-        width: 100%;
-        min-width: 350px; /* Anchura mínima para la tabla */
-        font-size: 11px;
-        margin-bottom: 20px;
-        border-collapse: collapse;
-    }
-
-    .tabla th,
-    .tabla td {
-        padding: 5px 6px;
-        white-space: nowrap; /* Evita que el texto se rompa */
-    }
-
-    /* ---------------- TOTALES ---------------- */
-    .totales {
-        width: 100%;
-        font-size: 12px;
-    }
-
-    .total-final {
-        font-size: 13px;
-        padding: 10px;
-    }
-
-    /* ---------------- CONDICIONES ---------------- */
-    .condiciones h3 {
-        font-size: 14px;
-    }
-
-    .condiciones p {
-        font-size: 12px;
-    }
+    .prov-page { padding: 0 12px 40px; }
+    .venta-meta { padding: 1.1rem; }
+    .venta-meta__grid { grid-template-columns: 1fr; }
+    .detalles-table { font-size: .78rem; }
+    .detalles-table thead th,
+    .detalles-table tbody td { padding: .6rem .8rem; }
 }

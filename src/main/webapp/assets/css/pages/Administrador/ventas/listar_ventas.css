@@ -48,11 +48,11 @@ body {
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     font-size: 0.9rem;
-    border-left: 4px solid var(--color-principal, #3498db);
+    border-left: 4px solid #83ccfd;
 }
 
 .stat-chip--warning {
-    border-left-color: #f39c12;
+    border-left-color: #ff0000;
 }
 
 /* --- FORMULARIO DE FILTROS --- */
@@ -92,8 +92,8 @@ body {
     transition: 0.3s ease;
 }
 
-.btn-save--sm { background: #2ecc71; color: white; }
-.btn-cancel--sm { background: #e74c3c; color: white; text-decoration: none; }
+.btn-save--sm { background:linear-gradient(135deg, #7c3aed, #a78bfa); color: white; }
+.btn-cancel--sm { background: #eff6ff; border: 1px solid #bfdbfe; color: #3b82f6; text-decoration: none; }
 
 /* --- GRID DE TARJETAS (AQUÍ ESTÁ LA MAGIA) --- */
 .cards-container {
@@ -175,7 +175,7 @@ body {
 .total-amount {
     font-size: 1.4rem;
     font-weight: 800;
-    color: #27ae60;
+    color:#059669;
 }
 
 .venta-card__footer {
@@ -199,8 +199,8 @@ body {
 .status--danger { background: #fdedec; color: #922b21; border: 1px solid #f5b7b1; }
 
 .btn-view {
-    background: #3498db;
-    color: white;
+    background:linear-gradient(135deg, #ede9fe, #ddd6fe);
+    color: #7c3aed;
     width: 40px;
     height: 40px;
     border-radius: 10px;
