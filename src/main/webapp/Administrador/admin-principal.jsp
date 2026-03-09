@@ -104,6 +104,12 @@
                         </div>
                         <span class="icono-boton__titulo">Usuarios</span>
                     </a>
+                    <a href="<%=request.getContextPath()%>/Administrador/ayuda.jsp" class="hero-icon-item">
+					    <div class="icono-boton__circulo">
+					        <img class="icono-boton__img" src="<%=request.getContextPath()%>/assets/Imagenes/iconos/preguntas.png" alt="Ayuda">
+					    </div>
+					    <span class="icono-boton__titulo">Preguntas</span>
+					</a>
                 </div>
             </div>
             <!-- fecha flotante -->

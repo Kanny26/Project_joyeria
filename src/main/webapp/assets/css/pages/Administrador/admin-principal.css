@@ -45,7 +45,7 @@
 
 body {
     font-family: 'Nunito', sans-serif;
-    background: var(--dash-bg);
+   background: var(--color-fondo-admin);
     min-height: 100vh;
     padding-top: 90px;   /* espacio para tu navbar fijo */
     color: var(--txt-main);

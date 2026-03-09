@@ -264,4 +264,68 @@ public class EmailService {
         sb.append("</td></tr></table></td></tr></table></body></html>");
         return sb.toString();
     }
+    /**
+     * Envía una consulta de soporte técnico al equipo de desarrollo.
+     * @param nombreAdmin nombre del administrador que consulta
+     * @param asunto el tema de la consulta
+     * @param mensaje el contenido de la duda
+     * @return boolean true si se envió correctamente
+     */
+    public static boolean enviarConsultaSoporte(String nombreAdmin, String asunto, String mensaje) {
+        try {
+            Properties config = cargarConfiguracion();
+            if (config == null) return false;
+
+            final String remitente = config.getProperty("mail.from");
+            final String appPass = config.getProperty("mail.password");
+            // El destino siempre será el correo de soporte
+            final String destinoSoporte = "marlenbe211@gmail.com"; 
+
+            Properties smtpProps = new Properties();
+            smtpProps.put("mail.smtp.auth", "true");
+            smtpProps.put("mail.smtp.starttls.enable", "true");
+            smtpProps.put("mail.smtp.host", config.getProperty("mail.smtp.host", "smtp.gmail.com"));
+            smtpProps.put("mail.smtp.port", config.getProperty("mail.smtp.port", "587"));
+
+            Session session = Session.getInstance(smtpProps, new Authenticator() {
+                @Override
+                protected PasswordAuthentication getPasswordAuthentication() {
+                    return new PasswordAuthentication(remitente, appPass);
+                }
+            });
+
+            Message msg = new MimeMessage(session);
+            msg.setFrom(new InternetAddress(remitente, "AAC27 - Soporte Interno"));
+            msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(destinoSoporte));
+            
+            // Asunto personalizado para que sepas quién escribe
+            msg.setSubject("TICKET SOPORTE: " + asunto + " (De: " + nombreAdmin + ")");
+            
+            // Construimos un HTML sencillo pero profesional para el mensaje
+            String htmlContent = buildHtmlSoporte(nombreAdmin, asunto, mensaje);
+            msg.setContent(htmlContent, "text/html; charset=UTF-8");
+
+            Transport.send(msg);
+            return true;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    private static String buildHtmlSoporte(String nombre, String asunto, String mensaje) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("<div style='font-family: Arial, sans-serif; border: 1px solid #c5c2df; border-radius: 8px; overflow: hidden; max-width: 600px;'>");
+        sb.append("<div style='background: #1a1a2e; color: white; padding: 20px; text-align: center;'>");
+        sb.append("<h1>Nueva Consulta de Soporte</h1></div>");
+        sb.append("<div style='padding: 25px; color: #333;'>");
+        sb.append("<p><strong>Administrador:</strong> ").append(nombre).append("</p>");
+        sb.append("<p><strong>Asunto:</strong> ").append(asunto).append("</p>");
+        sb.append("<hr style='border: 0; border-top: 1px solid #eee; margin: 20px 0;'>");
+        sb.append("<p style='background: #f9f9f9; padding: 15px; border-radius: 5px;'>").append(mensaje).append("</p>");
+        sb.append("</div>");
+        sb.append("<div style='background: #f4f6f8; padding: 10px; text-align: center; font-size: 12px; color: #999;'>");
+        sb.append("Enviado desde el sistema de ayuda de AAC27</div></div>");
+        return sb.toString();
+    }
 }

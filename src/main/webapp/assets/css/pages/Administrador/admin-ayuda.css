@@ -1,0 +1,333 @@
+/* ═══════════════════════════════════════════════
+   admin-ayuda.css  —  Página de Ayuda & Configuración
+   Paleta: lilas profundos, menta suave, blanco cálido
+   ═══════════════════════════════════════════════ */
+
+:root {
+  --lila-50:  #f5f3ff;
+  --lila-100: #ede9fe;
+  --lila-200: #ddd6fe;
+  --lila-300: #c4b5fd;
+  --lila-400: #a78bfa;
+  --lila-500: #8b5cf6;
+  --lila-600: #7c3aed;
+  --lila-700: #6d28d9;
+  --lila-800: #5b21b6;
+  --lila-900: #4c1d95;
+
+  --rose:     #fb7185;
+  --amber:    #fbbf24;
+  --mint:     #34d399;
+  --sky:      #38bdf8;
+
+  --white:    #ffffff;
+  --bg:       #f6f4ff;
+  --text-dark:#1e1b4b;
+  --text-mid: #4c3d8f;
+  --text-soft:#7c6fb0;
+  --border:   #e4dffa;
+  --shadow-sm: 0 2px 12px rgba(109,40,217,.08);
+  --shadow-md: 0 6px 28px rgba(109,40,217,.13);
+  --radius:   18px;
+  --radius-sm:12px;
+}
+
+/* ─── Reset mínimo ─── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background: var(--color-fondo-admin);
+  color: var(--text-dark);
+  min-height: 100vh;
+}
+
+/* ══════════════════════════════
+   HERO HEADER de la página
+══════════════════════════════ */
+.ayuda-hero {
+	color: black;
+  padding: 3rem 2.5rem 5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.ayuda-hero::before {
+  content: '';
+  position: absolute;
+  top: -60px; right: -80px;
+  width: 320px; height: 320px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.07);
+}
+.ayuda-hero::after {
+  content: '';
+  position: absolute;
+  bottom: -40px; left: 40px;
+  width: 180px; height: 180px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.05);
+}
+
+.ayuda-hero__inner {
+  max-width: 900px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+  margin-top: 110px;
+}
+
+.ayuda-hero__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  background: rgba(255,255,255,.18);
+  border: 1px solid rgba(255,255,255,.3);
+  border-radius: 50px;
+  padding: .3rem .9rem;
+  color: var(--text-dark);
+  font-size: .78rem;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+
+.ayuda-hero__title {
+  font-size: 2.4rem;
+  font-weight: 900;
+  color: var(--text-dark);
+  line-height: 1.15;
+  margin-bottom: .6rem;
+}
+
+.ayuda-hero__sub {
+  font-size: 1rem;
+  color: var(--text-dark);
+  font-weight: 500;
+  max-width: 520px;
+}
+
+/* buscador decorativo */
+.ayuda-search {
+  display: flex;
+  align-items: center;
+  gap: .7rem;
+  background: rgba(255,255,255,.15);
+  border: 1.5px solid rgba(255,255,255,.3);
+  border-radius: 50px;
+  padding: .6rem 1.2rem;
+  margin-top: 1.6rem;
+  max-width: 420px;
+  backdrop-filter: blur(6px);
+  cursor: text;
+}
+.ayuda-search input {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--white);
+  font-family: 'Nunito', sans-serif;
+  font-size: .9rem;
+  font-weight: 600;
+  flex: 1;
+}
+.ayuda-search input::placeholder { color: rgba(255,255,255,.6); }
+.ayuda-search i { color: rgba(255,255,255,.7); }
+
+/* ══════════════════════════════
+   CONTENIDO PRINCIPAL
+══════════════════════════════ */
+.ayuda-main {
+  max-width: 960px;
+  margin: -2.5rem auto 3rem;
+  padding: 0 1.5rem;
+  position: relative;
+  z-index: 2;
+}
+
+/* ── Sección: título de grupo ── */
+.ayuda-section { margin-bottom: 2.4rem; }
+
+.ayuda-section__label {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  font-size: .78rem;
+  font-weight: 800;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--lila-600);
+  margin-bottom: 1rem;
+}
+.ayuda-section__label::after {
+  content: '';
+  flex: 1;
+  height: 1.5px;
+  background: var(--lila-200);
+  border-radius: 10px;
+}
+
+/* ── Grid de cards ── */
+.ayuda-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+  gap: 1.1rem;
+}
+
+/* ── CARD base ── */
+.ayuda-card {
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.4rem 1.5rem 1.3rem;
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease;
+  position: relative;
+  overflow: hidden;
+}
+.ayuda-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  border-radius: var(--radius) var(--radius) 0 0;
+  background: linear-gradient(90deg, var(--lila-500), var(--lila-300));
+  opacity: 0;
+  transition: opacity .22s;
+}
+.ayuda-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--lila-300);
+}
+.ayuda-card:hover::before { opacity: 1; }
+
+.ayuda-card__head {
+  display: flex;
+  align-items: center;
+  gap: .85rem;
+  margin-bottom: .9rem;
+}
+
+.ayuda-card__ico {
+  width: 44px; height: 44px;
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+/* variantes de color del ícono */
+.ico--lila   { background: var(--lila-100); color: var(--lila-600); }
+.ico--rose   { background: #fff1f2;          color: #e11d48; }
+.ico--amber  { background: #fffbeb;          color: #d97706; }
+.ico--mint   { background: #ecfdf5;          color: #059669; }
+.ico--sky    { background: #f0f9ff;          color: #0284c7; }
+.ico--pink   { background: #fdf2f8;          color: #9d174d; }
+
+.ayuda-card__title {
+  font-size: .95rem;
+  font-weight: 800;
+  color: var(--text-dark);
+  line-height: 1.2;
+}
+.ayuda-card__cat {
+  font-size: .72rem;
+  font-weight: 700;
+  color: var(--text-soft);
+  text-transform: uppercase;
+  letter-spacing: .06em;
+}
+
+.ayuda-card__body {
+  font-size: .84rem;
+  color: var(--text-mid);
+  line-height: 1.65;
+}
+
+/* badge "importante" */
+.ayuda-card__badge {
+  position: absolute;
+  top: 1rem; right: 1rem;
+  background: var(--lila-100);
+  color: var(--lila-700);
+  font-size: .65rem;
+  font-weight: 800;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  padding: .2rem .55rem;
+  border-radius: 50px;
+}
+.ayuda-card__badge--warn { background: #fff7ed; color: #c2410c; }
+.ayuda-card__badge--ok   { background: #ecfdf5; color: #065f46; }
+
+/* ── Card expandible (acordeón simple) ── */
+.ayuda-card--expand .ayuda-card__body {
+  display: none;
+  margin-top: .1rem;
+}
+.ayuda-card--expand.open .ayuda-card__body { display: block; }
+
+.ayuda-card__arrow {
+  margin-left: auto;
+  font-size: .8rem;
+  color: var(--lila-400);
+  transition: transform .2s;
+}
+.ayuda-card--expand.open .ayuda-card__arrow { transform: rotate(90deg); }
+
+/* ── Card ancha (full row) ── */
+.ayuda-card--wide {
+  grid-column: 1 / -1;
+}
+
+/* ── CARD de contacto / CTA ── */
+.cta-card {
+  background: linear-gradient(135deg, var(--lila-700) 0%, var(--lila-500) 100%);
+  border-radius: var(--radius);
+  padding: 2rem 2.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  box-shadow: 0 8px 32px rgba(109,40,217,.25);
+}
+.cta-card__txt h3 {
+  font-size: 1.15rem;
+  font-weight: 900;
+  color: var(--white);
+  margin-bottom: .3rem;
+}
+.cta-card__txt p {
+  font-size: .87rem;
+  color: rgba(255,255,255,.8);
+  font-weight: 500;
+}
+.cta-card__btn {
+  background: var(--white);
+  color: var(--lila-700);
+  border: none;
+  border-radius: 50px;
+  padding: .65rem 1.6rem;
+  font-family: 'Nunito', sans-serif;
+  font-size: .88rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: transform .18s, box-shadow .18s;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+}
+.cta-card__btn:hover { transform: scale(1.05); box-shadow: 0 4px 16px rgba(0,0,0,.15); }
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+  .ayuda-hero { padding: 2rem 1.2rem 4rem; }
+  .ayuda-hero__title { font-size: 1.7rem; }
+  .ayuda-main { padding: 0 1rem; }
+  .cta-card { flex-direction: column; text-align: center; }
+}
