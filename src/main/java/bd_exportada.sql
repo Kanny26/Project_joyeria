@@ -43,7 +43,7 @@ CREATE TABLE `abono_credito` (
 
 LOCK TABLES `abono_credito` WRITE;
 /*!40000 ALTER TABLE `abono_credito` DISABLE KEYS */;
-INSERT INTO `abono_credito` VALUES (1,1,1,3000000.00,'2026-03-08 19:26:07','confirmado'),(2,2,2,1500000.00,'2026-03-08 19:26:07','confirmado'),(3,3,1,1400000.00,'2026-03-08 19:26:07','confirmado'),(4,4,5,0.00,'2026-03-08 19:26:07','pendiente'),(5,5,3,3200000.00,'2026-03-08 19:26:07','confirmado'),(6,6,7,0.00,'2026-03-08 19:26:07','pendiente'),(7,7,1,3600000.00,'2026-03-08 19:26:07','confirmado'),(8,8,4,620000.00,'2026-03-08 19:26:07','confirmado'),(9,9,6,2700000.00,'2026-03-08 19:26:07','confirmado'),(10,10,8,0.00,'2026-03-08 19:26:07','pendiente'),(11,11,2,2700000.00,'2026-03-08 19:26:07','confirmado'),(12,12,3,880000.00,'2026-03-08 19:26:07','confirmado'),(13,13,1,4000000.00,'2026-03-08 19:26:07','confirmado'),(14,14,5,0.00,'2026-03-08 19:26:07','pendiente'),(15,15,7,2600000.00,'2026-03-08 19:26:07','confirmado');
+INSERT INTO `abono_credito` VALUES (1,1,1,3000000.00,'2026-03-09 10:39:54','confirmado'),(2,2,2,1500000.00,'2026-03-09 10:39:54','confirmado'),(3,3,1,1400000.00,'2026-03-09 10:39:54','confirmado'),(4,4,5,0.00,'2026-03-09 10:39:54','pendiente'),(5,5,3,3200000.00,'2026-03-09 10:39:54','confirmado'),(6,6,7,0.00,'2026-03-09 10:39:54','pendiente'),(7,7,1,3600000.00,'2026-03-09 10:39:54','confirmado'),(8,8,4,620000.00,'2026-03-09 10:39:54','confirmado'),(9,9,6,2700000.00,'2026-03-09 10:39:54','confirmado'),(10,10,8,0.00,'2026-03-09 10:39:54','pendiente'),(11,11,2,2700000.00,'2026-03-09 10:39:54','confirmado'),(12,12,3,880000.00,'2026-03-09 10:39:54','confirmado'),(13,13,1,4000000.00,'2026-03-09 10:39:54','confirmado'),(14,14,5,0.00,'2026-03-09 10:39:54','pendiente'),(15,15,7,2600000.00,'2026-03-09 10:39:54','confirmado');
 /*!40000 ALTER TABLE `abono_credito` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -70,7 +70,7 @@ CREATE TABLE `auditoria_log` (
   KEY `idx_entidad` (`entidad`),
   KEY `idx_fecha` (`fecha_hora`),
   CONSTRAINT `auditoria_log_ibfk_1` FOREIGN KEY (`usuario_id`) REFERENCES `usuario` (`usuario_id`) ON DELETE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -79,7 +79,6 @@ CREATE TABLE `auditoria_log` (
 
 LOCK TABLES `auditoria_log` WRITE;
 /*!40000 ALTER TABLE `auditoria_log` DISABLE KEYS */;
-INSERT INTO `auditoria_log` VALUES (1,1,'DEVOLUCION','Venta',14,NULL,'{\"descripcion\": \"Stock retornado Prod#14 Cant: 1\"}',NULL,'2026-03-08 21:15:53');
 /*!40000 ALTER TABLE `auditoria_log` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -110,7 +109,7 @@ CREATE TABLE `caso_postcompra` (
 
 LOCK TABLES `caso_postcompra` WRITE;
 /*!40000 ALTER TABLE `caso_postcompra` DISABLE KEYS */;
-INSERT INTO `caso_postcompra` VALUES (1,1,'reclamo',5,'Entrega parcial del pedido','2026-03-08','aprobado'),(2,2,'cambio',3,'Producto diferente al solicitado','2026-03-08','en_proceso'),(3,3,'devolucion',2,'Material no cumple especificaciones','2026-03-08','aprobado'),(4,4,'reclamo',1,'Demora en la entrega','2026-03-08','cancelado'),(5,5,'cambio',4,'Cambio de referencia de producto','2026-03-08','aprobado'),(6,6,'devolucion',6,'Defectos de fabricación','2026-03-08','en_proceso'),(7,7,'reclamo',10,'Facturación incorrecta','2026-03-08','aprobado'),(8,8,'cambio',2,'Empaque dañado en transporte','2026-03-08','aprobado'),(9,9,'devolucion',3,'Producto fuera de stock confirmado','2026-03-08','cancelado'),(10,10,'reclamo',1,'Error en precios acordados','2026-03-08','en_proceso'),(11,11,'cambio',5,'Solicitud de variante de color','2026-03-08','aprobado'),(12,12,'devolucion',4,'Calidad no esperada','2026-03-08','en_proceso'),(13,13,'reclamo',15,'Falta de documentos de importación','2026-03-08','aprobado'),(14,14,'cambio',1,'Cambio de fecha de entrega','2026-03-08','aprobado'),(15,15,'devolucion',8,'Producto no corresponde a muestra','2026-03-08','en_proceso');
+INSERT INTO `caso_postcompra` VALUES (1,1,'reclamo',5,'Entrega parcial del pedido','2026-03-09','aprobado'),(2,2,'cambio',3,'Producto diferente al solicitado','2026-03-09','en_proceso'),(3,3,'devolucion',2,'Material no cumple especificaciones','2026-03-09','aprobado'),(4,4,'reclamo',1,'Demora en la entrega','2026-03-09','cancelado'),(5,5,'cambio',4,'Cambio de referencia de producto','2026-03-09','aprobado'),(6,6,'devolucion',6,'Defectos de fabricación','2026-03-09','en_proceso'),(7,7,'reclamo',10,'Facturación incorrecta','2026-03-09','aprobado'),(8,8,'cambio',2,'Empaque dañado en transporte','2026-03-09','aprobado'),(9,9,'devolucion',3,'Producto fuera de stock confirmado','2026-03-09','cancelado'),(10,10,'reclamo',1,'Error en precios acordados','2026-03-09','en_proceso'),(11,11,'cambio',5,'Solicitud de variante de color','2026-03-09','aprobado'),(12,12,'devolucion',4,'Calidad no esperada','2026-03-09','en_proceso'),(13,13,'reclamo',15,'Falta de documentos de importación','2026-03-09','aprobado'),(14,14,'cambio',1,'Cambio de fecha de entrega','2026-03-09','aprobado'),(15,15,'devolucion',8,'Producto no corresponde a muestra','2026-03-09','en_proceso');
 /*!40000 ALTER TABLE `caso_postcompra` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -141,7 +140,7 @@ CREATE TABLE `caso_postventa` (
 
 LOCK TABLES `caso_postventa` WRITE;
 /*!40000 ALTER TABLE `caso_postventa` DISABLE KEYS */;
-INSERT INTO `caso_postventa` VALUES (1,1,'cambio',1,'Talla incorrecta del anillo','2026-03-08','aprobado'),(2,2,'devolucion',1,'Cliente cambió de opinión','2026-03-08','aprobado'),(3,3,'reclamo',1,'Pieza llegó con pequeño detalle','2026-03-08','cancelado'),(4,4,'cambio',2,'Prefiere otro diseño de aretes','2026-03-08','aprobado'),(5,5,'devolucion',1,'Problema con el cierre','2026-03-08','en_proceso'),(6,6,'reclamo',1,'Demora en la entrega','2026-03-08','cancelado'),(7,7,'cambio',1,'Color no era el esperado','2026-03-08','aprobado'),(8,8,'devolucion',1,'Error en el pedido','2026-03-08','aprobado'),(9,9,'reclamo',1,'Empaque dañado','2026-03-08','en_proceso'),(10,10,'cambio',1,'Talla de manilla incorrecta','2026-03-08','aprobado'),(11,11,'devolucion',1,'Cliente insatisfecho','2026-03-08','cancelado'),(12,12,'reclamo',1,'Producto diferente al mostrado','2026-03-08','en_proceso'),(13,13,'cambio',3,'Cambio de modelo en topitos','2026-03-08','aprobado'),(14,14,'devolucion',1,'Cancelación de evento','2026-03-08','aprobado'),(15,15,'reclamo',1,'Detalle en el broche','2026-03-08','aprobado');
+INSERT INTO `caso_postventa` VALUES (1,1,'cambio',1,'Talla incorrecta del anillo','2026-03-09','aprobado'),(2,2,'devolucion',1,'Cliente cambió de opinión','2026-03-09','aprobado'),(3,3,'reclamo',1,'Pieza llegó con pequeño detalle','2026-03-09','en_proceso'),(4,4,'cambio',2,'Prefiere otro diseño de aretes','2026-03-09','aprobado'),(5,5,'devolucion',1,'Problema con el cierre','2026-03-09','en_proceso'),(6,6,'reclamo',1,'Demora en la entrega','2026-03-09','cancelado'),(7,7,'cambio',1,'Color no era el esperado','2026-03-09','aprobado'),(8,8,'devolucion',1,'Error en el pedido','2026-03-09','aprobado'),(9,9,'reclamo',1,'Empaque dañado','2026-03-09','en_proceso'),(10,10,'cambio',1,'Talla de manilla incorrecta','2026-03-09','aprobado'),(11,11,'devolucion',1,'Cliente insatisfecho','2026-03-09','cancelado'),(12,12,'reclamo',1,'Producto diferente al mostrado','2026-03-09','en_proceso'),(13,13,'cambio',3,'Cambio de modelo en topitos','2026-03-09','aprobado'),(14,14,'devolucion',1,'Cancelación de evento','2026-03-09','en_proceso'),(15,15,'reclamo',1,'Detalle en el broche','2026-03-09','aprobado');
 /*!40000 ALTER TABLE `caso_postventa` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -198,7 +197,7 @@ CREATE TABLE `cliente` (
 
 LOCK TABLES `cliente` WRITE;
 /*!40000 ALTER TABLE `cliente` DISABLE KEYS */;
-INSERT INTO `cliente` VALUES (1,'María Fernanda Castro','1234567890','2026-03-08',50000.00,1),(2,'Juan Pablo Ramírez','2345678901','2026-03-08',100000.00,1),(3,'Ana Lucía Gómez','3456789012','2026-03-08',75000.00,1),(4,'Carlos Andrés Díaz','4567890123','2026-03-08',200000.00,1),(5,'Laura Sofía Martínez','5678901234','2026-03-08',80000.00,1),(6,'Diego Fernando López','6789012345','2026-03-08',150000.00,1),(7,'Valeria Alejandra Ruiz','7890123456','2026-03-08',90000.00,1),(8,'Sebastián Mora Silva','8901234567','2026-03-08',120000.00,1),(9,'Camila Andrea Pérez','9012345678','2026-03-08',60000.00,1),(10,'Andrés Felipe Torres','1023456789','2026-03-08',180000.00,1),(11,'Daniela Paola Vega','1123456780','2026-03-08',70000.00,1),(12,'Mateo Alejandro Herrera','1223456781','2026-03-08',130000.00,1),(13,'Sofía Isabel Mendoza','1323456782','2026-03-08',85000.00,1),(14,'Santiago David Castro','1423456783','2026-03-08',160000.00,1),(15,'Isabella María Ortiz','1523456784','2026-03-08',95000.00,1);
+INSERT INTO `cliente` VALUES (1,'María Fernanda Castro','1234567890','2026-03-09',50000.00,1),(2,'Juan Pablo Ramírez','2345678901','2026-03-09',100000.00,1),(3,'Ana Lucía Gómez','3456789012','2026-03-09',75000.00,1),(4,'Carlos Andrés Díaz','4567890123','2026-03-09',200000.00,1),(5,'Laura Sofía Martínez','5678901234','2026-03-09',80000.00,1),(6,'Diego Fernando López','6789012345','2026-03-09',150000.00,1),(7,'Valeria Alejandra Ruiz','7890123456','2026-03-09',90000.00,1),(8,'Sebastián Mora Silva','8901234567','2026-03-09',120000.00,1),(9,'Camila Andrea Pérez','9012345678','2026-03-09',60000.00,1),(10,'Andrés Felipe Torres','1023456789','2026-03-09',180000.00,1),(11,'Daniela Paola Vega','1123456780','2026-03-09',70000.00,1),(12,'Mateo Alejandro Herrera','1223456781','2026-03-09',130000.00,1),(13,'Sofía Isabel Mendoza','1323456782','2026-03-09',85000.00,1),(14,'Santiago David Castro','1423456783','2026-03-09',160000.00,1),(15,'Isabella María Ortiz','1523456784','2026-03-09',95000.00,1);
 /*!40000 ALTER TABLE `cliente` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -229,7 +228,7 @@ CREATE TABLE `compra` (
 
 LOCK TABLES `compra` WRITE;
 /*!40000 ALTER TABLE `compra` DISABLE KEYS */;
-INSERT INTO `compra` VALUES (1,1,1,'2026-03-08','2026-03-11'),(2,2,2,'2026-03-08','2026-03-13'),(3,3,3,'2026-03-08','2026-03-10'),(4,4,4,'2026-03-08','2026-03-12'),(5,5,5,'2026-03-08','2026-03-11'),(6,6,6,'2026-03-08','2026-03-14'),(7,7,7,'2026-03-08','2026-03-10'),(8,8,8,'2026-03-08','2026-03-13'),(9,9,9,'2026-03-08','2026-03-11'),(10,10,10,'2026-03-08','2026-03-12'),(11,11,11,'2026-03-08','2026-03-10'),(12,12,12,'2026-03-08','2026-03-13'),(13,13,13,'2026-03-08','2026-03-11'),(14,14,14,'2026-03-08','2026-03-12'),(15,15,15,'2026-03-08','2026-03-10');
+INSERT INTO `compra` VALUES (1,1,1,'2026-03-09','2026-03-12'),(2,2,2,'2026-03-09','2026-03-14'),(3,3,3,'2026-03-09','2026-03-11'),(4,4,4,'2026-03-09','2026-03-13'),(5,5,5,'2026-03-09','2026-03-12'),(6,6,6,'2026-03-09','2026-03-15'),(7,7,7,'2026-03-09','2026-03-11'),(8,8,8,'2026-03-09','2026-03-14'),(9,9,9,'2026-03-09','2026-03-12'),(10,10,10,'2026-03-09','2026-03-13'),(11,11,11,'2026-03-09','2026-03-11'),(12,12,12,'2026-03-09','2026-03-14'),(13,13,13,'2026-03-09','2026-03-12'),(14,14,14,'2026-03-09','2026-03-13'),(15,15,15,'2026-03-09','2026-03-11');
 /*!40000 ALTER TABLE `compra` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -341,7 +340,7 @@ CREATE TABLE `credito_compra` (
 
 LOCK TABLES `credito_compra` WRITE;
 /*!40000 ALTER TABLE `credito_compra` DISABLE KEYS */;
-INSERT INTO `credito_compra` VALUES (1,1,3000000.00,0.00,'2026-03-08','2026-04-07','pagado'),(2,2,3000000.00,1500000.00,'2026-03-08','2026-04-07','activo'),(3,3,1400000.00,0.00,'2026-03-08','2026-04-07','pagado'),(4,4,1350000.00,1350000.00,'2026-03-08','2026-04-07','activo'),(5,5,3200000.00,0.00,'2026-03-08','2026-04-07','pagado'),(6,6,3000000.00,3000000.00,'2026-03-08','2026-04-07','activo'),(7,7,3600000.00,0.00,'2026-03-08','2026-04-07','pagado'),(8,8,1240000.00,620000.00,'2026-03-08','2026-04-07','activo'),(9,9,2700000.00,0.00,'2026-03-08','2026-04-07','pagado'),(10,10,3750000.00,3750000.00,'2026-03-08','2026-04-07','activo'),(11,11,2700000.00,0.00,'2026-03-08','2026-04-07','pagado'),(12,12,1760000.00,880000.00,'2026-03-08','2026-04-07','activo'),(13,13,4000000.00,0.00,'2026-03-08','2026-04-07','pagado'),(14,14,2550000.00,2550000.00,'2026-03-08','2026-04-07','activo'),(15,15,2600000.00,0.00,'2026-03-08','2026-04-07','pagado');
+INSERT INTO `credito_compra` VALUES (1,1,3000000.00,0.00,'2026-03-09','2026-04-08','pagado'),(2,2,3000000.00,1500000.00,'2026-03-09','2026-04-08','activo'),(3,3,1400000.00,0.00,'2026-03-09','2026-04-08','pagado'),(4,4,1350000.00,1350000.00,'2026-03-09','2026-04-08','activo'),(5,5,3200000.00,0.00,'2026-03-09','2026-04-08','pagado'),(6,6,3000000.00,3000000.00,'2026-03-09','2026-04-08','activo'),(7,7,3600000.00,0.00,'2026-03-09','2026-04-08','pagado'),(8,8,1240000.00,620000.00,'2026-03-09','2026-04-08','activo'),(9,9,2700000.00,0.00,'2026-03-09','2026-04-08','pagado'),(10,10,3750000.00,3750000.00,'2026-03-09','2026-04-08','activo'),(11,11,2700000.00,0.00,'2026-03-09','2026-04-08','pagado'),(12,12,1760000.00,880000.00,'2026-03-09','2026-04-08','activo'),(13,13,4000000.00,0.00,'2026-03-09','2026-04-08','pagado'),(14,14,2550000.00,2550000.00,'2026-03-09','2026-04-08','activo'),(15,15,2600000.00,0.00,'2026-03-09','2026-04-08','pagado');
 /*!40000 ALTER TABLE `credito_compra` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -464,7 +463,7 @@ CREATE TABLE `historial_caso_postcompra` (
 
 LOCK TABLES `historial_caso_postcompra` WRITE;
 /*!40000 ALTER TABLE `historial_caso_postcompra` DISABLE KEYS */;
-INSERT INTO `historial_caso_postcompra` VALUES (1,1,'en_proceso','2026-03-08 19:26:08','Reclamo por entrega parcial',1),(2,1,'aprobado','2026-03-08 19:26:08','Proveedor envió resto del pedido',1),(3,2,'en_proceso','2026-03-08 19:26:08','Solicitud de cambio de producto',2),(4,3,'en_proceso','2026-03-08 19:26:08','Devolución por calidad',3),(5,3,'aprobado','2026-03-08 19:26:08','Devolución aceptada, crédito aplicado',3),(6,4,'en_proceso','2026-03-08 19:26:08','Reclamo por demora',4),(7,4,'cancelado','2026-03-08 19:26:08','Proveedor compensó con descuento',4),(8,5,'en_proceso','2026-03-08 19:26:08','Cambio de referencia solicitado',5),(9,5,'aprobado','2026-03-08 19:26:08','Cambio procesado con proveedor',5),(10,6,'en_proceso','2026-03-08 19:26:08','Devolución por defectos',6),(11,7,'en_proceso','2026-03-08 19:26:08','Reclamo administrativo',7),(12,7,'aprobado','2026-03-08 19:26:08','Factura corregida y enviada',7),(13,8,'en_proceso','2026-03-08 19:26:08','Daño en transporte reportado',8),(14,8,'aprobado','2026-03-08 19:26:08','Proveedor reemplazó productos',8),(15,9,'en_proceso','2026-03-08 19:26:08','Cancelación por falta de stock',9);
+INSERT INTO `historial_caso_postcompra` VALUES (1,1,'en_proceso','2026-03-09 10:39:54','Reclamo por entrega parcial',1),(2,1,'aprobado','2026-03-09 10:39:54','Proveedor envió resto del pedido',1),(3,2,'en_proceso','2026-03-09 10:39:54','Solicitud de cambio de producto',2),(4,3,'en_proceso','2026-03-09 10:39:54','Devolución por calidad',3),(5,3,'aprobado','2026-03-09 10:39:54','Devolución aceptada, crédito aplicado',3),(6,4,'en_proceso','2026-03-09 10:39:54','Reclamo por demora',4),(7,4,'cancelado','2026-03-09 10:39:54','Proveedor compensó con descuento',4),(8,5,'en_proceso','2026-03-09 10:39:54','Cambio de referencia solicitado',5),(9,5,'aprobado','2026-03-09 10:39:54','Cambio procesado con proveedor',5),(10,6,'en_proceso','2026-03-09 10:39:54','Devolución por defectos',6),(11,7,'en_proceso','2026-03-09 10:39:54','Reclamo administrativo',7),(12,7,'aprobado','2026-03-09 10:39:54','Factura corregida y enviada',7),(13,8,'en_proceso','2026-03-09 10:39:54','Daño en transporte reportado',8),(14,8,'aprobado','2026-03-09 10:39:54','Proveedor reemplazó productos',8),(15,9,'en_proceso','2026-03-09 10:39:54','Cancelación por falta de stock',9);
 /*!40000 ALTER TABLE `historial_caso_postcompra` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -487,7 +486,7 @@ CREATE TABLE `historial_caso_postventa` (
   KEY `usuario_id` (`usuario_id`),
   CONSTRAINT `historial_caso_postventa_ibfk_1` FOREIGN KEY (`caso_id`) REFERENCES `caso_postventa` (`caso_id`),
   CONSTRAINT `historial_caso_postventa_ibfk_2` FOREIGN KEY (`usuario_id`) REFERENCES `usuario` (`usuario_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -496,7 +495,7 @@ CREATE TABLE `historial_caso_postventa` (
 
 LOCK TABLES `historial_caso_postventa` WRITE;
 /*!40000 ALTER TABLE `historial_caso_postventa` DISABLE KEYS */;
-INSERT INTO `historial_caso_postventa` VALUES (1,1,'en_proceso','2026-03-08 19:26:08','Caso recibido para revisión',2),(2,1,'aprobado','2026-03-08 19:26:08','Autorizado cambio de talla',2),(3,2,'en_proceso','2026-03-08 19:26:08','Solicitud de devolución recibida',3),(4,2,'aprobado','2026-03-08 19:26:08','Devolución aprobada, reembolso procesado',3),(5,3,'en_proceso','2026-03-08 19:26:08','Reclamo en evaluación técnica',4),(6,4,'en_proceso','2026-03-08 19:26:08','Cambio de aretes solicitado',5),(7,4,'aprobado','2026-03-08 19:26:08','Nuevos aretes enviados al cliente',5),(8,5,'en_proceso','2026-03-08 19:26:08','Revisión de garantía en proceso',6),(9,6,'en_proceso','2026-03-08 19:26:08','Reclamo por demora registrado',7),(10,6,'cancelado','2026-03-08 19:26:08','Cliente aceptó compensación',7),(11,7,'en_proceso','2026-03-08 19:26:08','Solicitud de cambio de color',8),(12,7,'aprobado','2026-03-08 19:26:08','Cambio aprobado, nuevo producto enviado',8),(13,8,'en_proceso','2026-03-08 19:26:08','Error de pedido confirmado',9),(14,8,'aprobado','2026-03-08 19:26:08','Producto correcto enviado',9),(15,9,'en_proceso','2026-03-08 19:26:08','Reclamo por empaque dañado',10),(16,14,'aprobado','2026-03-08 21:15:52','',1),(17,3,'cancelado','2026-03-08 21:16:20','',1);
+INSERT INTO `historial_caso_postventa` VALUES (1,1,'en_proceso','2026-03-09 10:39:54','Caso recibido para revisión',2),(2,1,'aprobado','2026-03-09 10:39:54','Autorizado cambio de talla',2),(3,2,'en_proceso','2026-03-09 10:39:54','Solicitud de devolución recibida',3),(4,2,'aprobado','2026-03-09 10:39:54','Devolución aprobada, reembolso procesado',3),(5,3,'en_proceso','2026-03-09 10:39:54','Reclamo en evaluación técnica',4),(6,4,'en_proceso','2026-03-09 10:39:54','Cambio de aretes solicitado',5),(7,4,'aprobado','2026-03-09 10:39:54','Nuevos aretes enviados al cliente',5),(8,5,'en_proceso','2026-03-09 10:39:54','Revisión de garantía en proceso',6),(9,6,'en_proceso','2026-03-09 10:39:54','Reclamo por demora registrado',7),(10,6,'cancelado','2026-03-09 10:39:54','Cliente aceptó compensación',7),(11,7,'en_proceso','2026-03-09 10:39:54','Solicitud de cambio de color',8),(12,7,'aprobado','2026-03-09 10:39:54','Cambio aprobado, nuevo producto enviado',8),(13,8,'en_proceso','2026-03-09 10:39:54','Error de pedido confirmado',9),(14,8,'aprobado','2026-03-09 10:39:54','Producto correcto enviado',9),(15,9,'en_proceso','2026-03-09 10:39:54','Reclamo por empaque dañado',10);
 /*!40000 ALTER TABLE `historial_caso_postventa` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -521,7 +520,7 @@ CREATE TABLE `inventario_movimiento` (
   KEY `idx_inventario_fecha` (`fecha`,`producto_id`),
   CONSTRAINT `inventario_movimiento_ibfk_1` FOREIGN KEY (`producto_id`) REFERENCES `producto` (`producto_id`),
   CONSTRAINT `inventario_movimiento_ibfk_2` FOREIGN KEY (`usuario_id`) REFERENCES `usuario` (`usuario_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -530,7 +529,7 @@ CREATE TABLE `inventario_movimiento` (
 
 LOCK TABLES `inventario_movimiento` WRITE;
 /*!40000 ALTER TABLE `inventario_movimiento` DISABLE KEYS */;
-INSERT INTO `inventario_movimiento` VALUES (1,1,1,'entrada',20,'2026-03-08 19:26:07','COMPRA-001'),(2,2,2,'entrada',10,'2026-03-08 19:26:07','COMPRA-002'),(3,3,3,'entrada',5,'2026-03-08 19:26:07','COMPRA-003'),(4,4,4,'entrada',15,'2026-03-08 19:26:07','COMPRA-004'),(5,5,5,'entrada',8,'2026-03-08 19:26:07','COMPRA-005'),(6,6,6,'entrada',12,'2026-03-08 19:26:07','COMPRA-006'),(7,7,7,'entrada',30,'2026-03-08 19:26:07','COMPRA-007'),(8,8,8,'entrada',4,'2026-03-08 19:26:07','COMPRA-008'),(9,9,9,'entrada',10,'2026-03-08 19:26:07','COMPRA-009'),(10,10,10,'entrada',25,'2026-03-08 19:26:07','COMPRA-010'),(11,11,11,'entrada',15,'2026-03-08 19:26:07','COMPRA-011'),(12,12,12,'entrada',8,'2026-03-08 19:26:07','COMPRA-012'),(13,13,13,'entrada',50,'2026-03-08 19:26:07','COMPRA-013'),(14,14,14,'entrada',3,'2026-03-08 19:26:07','COMPRA-014'),(15,15,15,'entrada',20,'2026-03-08 19:26:07','COMPRA-015'),(16,14,1,'entrada',1,'2026-03-08 21:15:53','DEVOLUCION-VENTA-14');
+INSERT INTO `inventario_movimiento` VALUES (1,1,1,'entrada',20,'2026-03-09 10:39:54','COMPRA-001'),(2,2,2,'entrada',10,'2026-03-09 10:39:54','COMPRA-002'),(3,3,3,'entrada',5,'2026-03-09 10:39:54','COMPRA-003'),(4,4,4,'entrada',15,'2026-03-09 10:39:54','COMPRA-004'),(5,5,5,'entrada',8,'2026-03-09 10:39:54','COMPRA-005'),(6,6,6,'entrada',12,'2026-03-09 10:39:54','COMPRA-006'),(7,7,7,'entrada',30,'2026-03-09 10:39:54','COMPRA-007'),(8,8,8,'entrada',4,'2026-03-09 10:39:54','COMPRA-008'),(9,9,9,'entrada',10,'2026-03-09 10:39:54','COMPRA-009'),(10,10,10,'entrada',25,'2026-03-09 10:39:54','COMPRA-010'),(11,11,11,'entrada',15,'2026-03-09 10:39:54','COMPRA-011'),(12,12,12,'entrada',8,'2026-03-09 10:39:54','COMPRA-012'),(13,13,13,'entrada',50,'2026-03-09 10:39:54','COMPRA-013'),(14,14,14,'entrada',3,'2026-03-09 10:39:54','COMPRA-014'),(15,15,15,'entrada',20,'2026-03-09 10:39:54','COMPRA-015');
 /*!40000 ALTER TABLE `inventario_movimiento` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -610,7 +609,7 @@ CREATE TABLE `pago_compra` (
 
 LOCK TABLES `pago_compra` WRITE;
 /*!40000 ALTER TABLE `pago_compra` DISABLE KEYS */;
-INSERT INTO `pago_compra` VALUES (1,1,4,3000000.00,'2026-03-08 19:26:07','confirmado'),(2,2,7,3000000.00,'2026-03-08 19:26:07','confirmado'),(3,3,1,1400000.00,'2026-03-08 19:26:07','confirmado'),(4,4,5,1350000.00,'2026-03-08 19:26:07','confirmado'),(5,5,2,3200000.00,'2026-03-08 19:26:07','confirmado'),(6,6,3,3000000.00,'2026-03-08 19:26:07','confirmado'),(7,7,1,3600000.00,'2026-03-08 19:26:07','confirmado'),(8,8,4,1240000.00,'2026-03-08 19:26:07','confirmado'),(9,9,6,2700000.00,'2026-03-08 19:26:07','confirmado'),(10,10,7,3750000.00,'2026-03-08 19:26:07','confirmado'),(11,11,8,2700000.00,'2026-03-08 19:26:07','confirmado'),(12,12,1,1760000.00,'2026-03-08 19:26:07','confirmado'),(13,13,2,4000000.00,'2026-03-08 19:26:07','confirmado'),(14,14,4,2550000.00,'2026-03-08 19:26:07','pendiente'),(15,15,5,2600000.00,'2026-03-08 19:26:07','confirmado');
+INSERT INTO `pago_compra` VALUES (1,1,4,3000000.00,'2026-03-09 10:39:54','confirmado'),(2,2,7,3000000.00,'2026-03-09 10:39:54','confirmado'),(3,3,1,1400000.00,'2026-03-09 10:39:54','confirmado'),(4,4,5,1350000.00,'2026-03-09 10:39:54','confirmado'),(5,5,2,3200000.00,'2026-03-09 10:39:54','confirmado'),(6,6,3,3000000.00,'2026-03-09 10:39:54','confirmado'),(7,7,1,3600000.00,'2026-03-09 10:39:54','confirmado'),(8,8,4,1240000.00,'2026-03-09 10:39:54','confirmado'),(9,9,6,2700000.00,'2026-03-09 10:39:54','confirmado'),(10,10,7,3750000.00,'2026-03-09 10:39:54','confirmado'),(11,11,8,2700000.00,'2026-03-09 10:39:54','confirmado'),(12,12,1,1760000.00,'2026-03-09 10:39:54','confirmado'),(13,13,2,4000000.00,'2026-03-09 10:39:54','confirmado'),(14,14,4,2550000.00,'2026-03-09 10:39:54','pendiente'),(15,15,5,2600000.00,'2026-03-09 10:39:54','confirmado');
 /*!40000 ALTER TABLE `pago_compra` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -642,7 +641,7 @@ CREATE TABLE `pago_venta` (
 
 LOCK TABLES `pago_venta` WRITE;
 /*!40000 ALTER TABLE `pago_venta` DISABLE KEYS */;
-INSERT INTO `pago_venta` VALUES (1,1,1,320000.00,'2026-03-08 19:26:07','confirmado'),(2,2,2,480000.00,'2026-03-08 19:26:07','confirmado'),(3,3,3,450000.00,'2026-03-08 19:26:07','confirmado'),(4,4,5,360000.00,'2026-03-08 19:26:07','confirmado'),(5,5,6,650000.00,'2026-03-08 19:26:07','confirmado'),(6,6,7,390000.00,'2026-03-08 19:26:07','confirmado'),(7,7,1,240000.00,'2026-03-08 19:26:07','confirmado'),(8,8,2,500000.00,'2026-03-08 19:26:07','confirmado'),(9,9,8,420000.00,'2026-03-08 19:26:07','confirmado'),(10,10,1,280000.00,'2026-03-08 19:26:07','confirmado'),(11,11,3,350000.00,'2026-03-08 19:26:07','confirmado'),(12,12,4,400000.00,'2026-03-08 19:26:07','confirmado'),(13,13,1,450000.00,'2026-03-08 19:26:07','confirmado'),(14,14,2,1500000.00,'2026-03-08 19:26:07','pendiente'),(15,15,5,260000.00,'2026-03-08 19:26:07','confirmado');
+INSERT INTO `pago_venta` VALUES (1,1,1,320000.00,'2026-03-09 10:39:54','confirmado'),(2,2,2,480000.00,'2026-03-09 10:39:54','confirmado'),(3,3,3,450000.00,'2026-03-09 10:39:54','confirmado'),(4,4,5,360000.00,'2026-03-09 10:39:54','confirmado'),(5,5,6,650000.00,'2026-03-09 10:39:54','confirmado'),(6,6,7,390000.00,'2026-03-09 10:39:54','confirmado'),(7,7,1,240000.00,'2026-03-09 10:39:54','confirmado'),(8,8,2,500000.00,'2026-03-09 10:39:54','confirmado'),(9,9,8,420000.00,'2026-03-09 10:39:54','confirmado'),(10,10,1,280000.00,'2026-03-09 10:39:54','confirmado'),(11,11,3,350000.00,'2026-03-09 10:39:54','confirmado'),(12,12,4,400000.00,'2026-03-09 10:39:54','confirmado'),(13,13,1,450000.00,'2026-03-09 10:39:54','confirmado'),(14,14,2,1500000.00,'2026-03-09 10:39:54','pendiente'),(15,15,5,260000.00,'2026-03-09 10:39:54','confirmado');
 /*!40000 ALTER TABLE `pago_venta` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -715,7 +714,7 @@ CREATE TABLE `producto` (
 
 LOCK TABLES `producto` WRITE;
 /*!40000 ALTER TABLE `producto` DISABLE KEYS */;
-INSERT INTO `producto` VALUES (1,'ANI001','Anillo Plata Liso','Anillo en Plata Ley 950 fabricado en taller.',10,1,45000.00,95000.00,'2026-03-08','anillo_plata.jpg',NULL,NULL,2,1,2,2),(2,'ANI002','Anillo Brillo 15 Años','Diseño elegante con circonia para quinceañeras.',8,1,300000.00,480000.00,'2026-03-08','anillo_brillo.jpg',NULL,NULL,2,1,2,2),(3,'ANI003','Anillo Compromiso Celestial','Plata 925 con diamante sintético, estilo minimalista.',6,1,280000.00,450000.00,'2026-03-08','anillo_celestial.jpg',NULL,NULL,2,1,3,3),(4,'ARE001','Aretes Murano','Aretes largos fabricados con murano y plata.',15,1,12000.00,35000.00,'2026-03-08','aretes_murano.jpg',NULL,NULL,5,3,7,2),(5,'ARE002','Aretes Cristal Swarovski','Aretes earcuff con cristales austriacos.',5,1,400000.00,650000.00,'2026-03-08','aretes_cristal.jpg',NULL,NULL,11,5,5,5),(6,'COL001','Collar Dije Covergold','Collar corto con dije de corazón en covergold.',12,1,15000.00,35000.00,'2026-03-08','collar_cover.jpg',NULL,NULL,2,7,7,2),(7,'COL002','Rosario en Plata','Rosario de Plata Ley 950 tejido a mano.',5,1,80000.00,180000.00,'2026-03-08','rosario_plata.jpg',NULL,NULL,1,6,5,1),(8,'PUL001','Pulsera Hilo Chino','Pulsera tejida en hilo chino con balín de plata.',30,1,8000.00,25000.00,'2026-03-08','pulsera_hilo.jpg',NULL,NULL,11,11,12,2),(9,'PUL002','Manilla Miyuki','Manilla tejida en Miyuki con herrajes de rodio.',10,1,25000.00,60000.00,'2026-03-08','manilla_miyuki.jpg',NULL,NULL,7,12,11,3),(10,'MAN001','Manilla Titanio Hombre','Manilla resistente de titanio para uso diario.',18,1,150000.00,280000.00,'2026-03-08','manilla_titanio.jpg',NULL,NULL,14,12,15,9),(11,'DIJ001','Dije Corazón Oro','Dije en forma de corazón.',14,1,180000.00,350000.00,'2026-03-08','dije_corazon.jpg',NULL,NULL,4,9,13,10),(12,'DEN001','Denario Plata','Denario de Plata Ley 950 con balines.',11,1,35000.00,75000.00,'2026-03-08','denario_plata.jpg',NULL,NULL,1,10,5,1),(13,'TOP001','Topitos Covergold','Topitos básicos en covergold para uso diario.',25,1,5000.00,15000.00,'2026-03-08','topitos_cover.jpg',NULL,NULL,2,2,12,4),(14,'CON001','Conjunto Boda Completo','Set de anillo, aretes y collar para novia.',4,1,850000.00,1500000.00,'2026-03-08','conjunto_boda.jpg',NULL,NULL,3,4,1,13),(15,'TOB001','Tobillera Verano Plata','Tobillera delicada de plata con detalles de perlas.',16,1,130000.00,260000.00,'2026-03-08','tobillera_verano.jpg',NULL,NULL,2,8,15,14);
+INSERT INTO `producto` VALUES (1,'ANI001','Anillo Plata Liso','Anillo en Plata Ley 950 fabricado en taller.',10,1,45000.00,95000.00,'2026-03-09','anillo_plata.jpg',NULL,NULL,2,1,2,2),(2,'ANI002','Anillo Brillo 15 Años','Diseño elegante con circonia para quinceañeras.',8,1,300000.00,480000.00,'2026-03-09','anillo_brillo.jpg',NULL,NULL,2,1,2,2),(3,'ANI003','Anillo Compromiso Celestial','Plata 925 con diamante sintético, estilo minimalista.',6,1,280000.00,450000.00,'2026-03-09','anillo_celestial.jpg',NULL,NULL,2,1,3,3),(4,'ARE001','Aretes Murano','Aretes largos fabricados con murano y plata.',15,1,12000.00,35000.00,'2026-03-09','aretes_murano.jpg',NULL,NULL,5,3,7,2),(5,'ARE002','Aretes Cristal Swarovski','Aretes earcuff con cristales austriacos.',5,1,400000.00,650000.00,'2026-03-09','aretes_cristal.jpg',NULL,NULL,11,5,5,5),(6,'COL001','Collar Dije Covergold','Collar corto con dije de corazón en covergold.',12,1,15000.00,35000.00,'2026-03-09','collar_cover.jpg',NULL,NULL,2,7,7,2),(7,'COL002','Rosario en Plata','Rosario de Plata Ley 950 tejido a mano.',5,1,80000.00,180000.00,'2026-03-09','rosario_plata.jpg',NULL,NULL,1,6,5,1),(8,'PUL001','Pulsera Hilo Chino','Pulsera tejida en hilo chino con balín de plata.',30,1,8000.00,25000.00,'2026-03-09','pulsera_hilo.jpg',NULL,NULL,11,11,12,2),(9,'PUL002','Manilla Miyuki','Manilla tejida en Miyuki con herrajes de rodio.',10,1,25000.00,60000.00,'2026-03-09','manilla_miyuki.jpg',NULL,NULL,7,12,11,3),(10,'MAN001','Manilla Titanio Hombre','Manilla resistente de titanio para uso diario.',18,1,150000.00,280000.00,'2026-03-09','manilla_titanio.jpg',NULL,NULL,14,12,15,9),(11,'DIJ001','Dije Corazón Oro','Dije en forma de corazón.',14,1,180000.00,350000.00,'2026-03-09','dije_corazon.jpg',NULL,NULL,4,9,13,10),(12,'DEN001','Denario Plata','Denario de Plata Ley 950 con balines.',11,1,35000.00,75000.00,'2026-03-09','denario_plata.jpg',NULL,NULL,1,10,5,1),(13,'TOP001','Topitos Covergold','Topitos básicos en covergold para uso diario.',25,1,5000.00,15000.00,'2026-03-09','topitos_cover.jpg',NULL,NULL,2,2,12,4),(14,'CON001','Conjunto Boda Completo','Set de anillo, aretes y collar para novia.',3,1,850000.00,1500000.00,'2026-03-09','conjunto_boda.jpg',NULL,NULL,3,4,1,13),(15,'TOB001','Tobillera Verano Plata','Tobillera delicada de plata con detalles de perlas.',16,1,130000.00,260000.00,'2026-03-09','tobillera_verano.jpg',NULL,NULL,2,8,15,14);
 /*!40000 ALTER TABLE `producto` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -745,7 +744,7 @@ CREATE TABLE `proveedor` (
 
 LOCK TABLES `proveedor` WRITE;
 /*!40000 ALTER TABLE `proveedor` DISABLE KEYS */;
-INSERT INTO `proveedor` VALUES (1,'Joyeria Aurora','900987654-1','2026-03-08','2024-01-15',5000000.00,1),(2,'Joyeria samaritans','800111222-3','2026-03-08','2024-03-10',2000000.00,1),(3,'Suministros Joyeros S.A.S','901555444-5','2026-03-08','2023-11-20',10000000.00,1),(4,'Perlas del Caribe Ltda','890333222-1','2026-03-08','2025-01-05',1500000.00,1),(5,'Herrajes diamante','900777888-9','2026-03-08','2024-06-12',500000.00,1),(6,'Distribuidora Plata asaleya','800444555-2','2026-03-08','2024-08-22',3000000.00,1),(7,'Distri acero fatima','901222333-0','2026-03-08','2023-05-30',0.00,1),(8,'Empaques Elegance','890666777-4','2026-03-08','2024-02-14',1000000.00,1),(9,'Insumos Joyeros del Eje','900111000-8','2026-03-08','2024-09-01',2500000.00,1),(10,'Brillo Eterno Mayorista','800999888-7','2026-03-08','2024-10-10',6000000.00,1),(11,'Cristales Glam','901333444-6','2026-03-08','2025-02-01',800000.00,1),(12,'Willy Johns','890888999-5','2026-03-08','2023-08-15',4000000.00,1),(13,'Relojería Continental','900444333-2','2026-03-08','2024-04-18',1200000.00,1),(14,'Relojeria y accesorios delaida','800222111-0','2026-03-08','2024-11-30',2000000.00,1),(15,'Importaciones Zafiro','901666777-3','2026-03-08','2025-01-20',7500000.00,1);
+INSERT INTO `proveedor` VALUES (1,'Joyeria Aurora','900987654-1','2026-03-09','2024-01-15',5000000.00,1),(2,'Joyeria samaritans','800111222-3','2026-03-09','2024-03-10',2000000.00,1),(3,'Suministros Joyeros S.A.S','901555444-5','2026-03-09','2023-11-20',10000000.00,1),(4,'Perlas del Caribe Ltda','890333222-1','2026-03-09','2025-01-05',1500000.00,1),(5,'Herrajes diamante','900777888-9','2026-03-09','2024-06-12',500000.00,1),(6,'Distribuidora Plata asaleya','800444555-2','2026-03-09','2024-08-22',3000000.00,1),(7,'Distri acero fatima','901222333-0','2026-03-09','2023-05-30',0.00,1),(8,'Empaques Elegance','890666777-4','2026-03-09','2024-02-14',1000000.00,1),(9,'Insumos Joyeros del Eje','900111000-8','2026-03-09','2024-09-01',2500000.00,1),(10,'Brillo Eterno Mayorista','800999888-7','2026-03-09','2024-10-10',6000000.00,1),(11,'Cristales Glam','901333444-6','2026-03-09','2025-02-01',800000.00,1),(12,'Willy Johns','890888999-5','2026-03-09','2023-08-15',4000000.00,1),(13,'Relojería Continental','900444333-2','2026-03-09','2024-04-18',1200000.00,1),(14,'Relojeria y accesorios delaida','800222111-0','2026-03-09','2024-11-30',2000000.00,1),(15,'Importaciones Zafiro','901666777-3','2026-03-09','2025-01-20',7500000.00,1);
 /*!40000 ALTER TABLE `proveedor` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -786,15 +785,15 @@ DROP TABLE IF EXISTS `recuperacion_contrasena`;
 CREATE TABLE `recuperacion_contrasena` (
   `recuperacion_id` int unsigned NOT NULL AUTO_INCREMENT,
   `usuario_id` int unsigned NOT NULL,
-  `token` varchar(255) NOT NULL,
+  `codigo_verificacion` int NOT NULL,
   `fecha_solicitud` datetime NOT NULL,
   `fecha_expiracion` datetime NOT NULL,
   `estado` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`recuperacion_id`),
-  UNIQUE KEY `token` (`token`),
+  UNIQUE KEY `codigo_verificacion` (`codigo_verificacion`),
   KEY `usuario_id` (`usuario_id`),
   CONSTRAINT `recuperacion_contrasena_ibfk_1` FOREIGN KEY (`usuario_id`) REFERENCES `usuario` (`usuario_id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -803,7 +802,7 @@ CREATE TABLE `recuperacion_contrasena` (
 
 LOCK TABLES `recuperacion_contrasena` WRITE;
 /*!40000 ALTER TABLE `recuperacion_contrasena` DISABLE KEYS */;
-INSERT INTO `recuperacion_contrasena` VALUES (1,2,'tok_abc123xyz789','2026-03-08 19:26:08','2026-03-08 20:26:08',1),(2,3,'tok_def456uvw012','2026-03-08 19:26:08','2026-03-08 20:26:08',1),(3,4,'tok_ghi789rst345','2026-03-08 19:26:08','2026-03-08 20:26:08',0),(4,5,'tok_jkl012opq678','2026-03-08 19:26:08','2026-03-08 20:26:08',1),(5,6,'tok_mno345lmn901','2026-03-08 19:26:08','2026-03-08 20:26:08',1),(6,7,'tok_pqr678ijk234','2026-03-08 19:26:08','2026-03-08 20:26:08',0),(7,8,'tok_stu901ghi567','2026-03-08 19:26:08','2026-03-08 20:26:08',1),(8,9,'tok_vwx234def890','2026-03-08 19:26:08','2026-03-08 20:26:08',1),(9,10,'tok_yza567abc123','2026-03-08 19:26:08','2026-03-08 20:26:08',1),(10,11,'tok_bcd890xyz456','2026-03-08 19:26:08','2026-03-08 20:26:08',0),(11,12,'tok_efg123uvw789','2026-03-08 19:26:08','2026-03-08 20:26:08',1),(12,13,'tok_hij456rst012','2026-03-08 19:26:08','2026-03-08 20:26:08',1),(13,14,'tok_klm789opq345','2026-03-08 19:26:08','2026-03-08 20:26:08',1),(14,15,'tok_nop012lmn678','2026-03-08 19:26:08','2026-03-08 20:26:08',0),(15,2,'tok_qrs345ijk901','2026-03-08 17:26:08','2026-03-08 18:26:08',0),(16,1,'751290:70e8effd-4c04-4a5e-936c-30d3ed3cc817','2026-03-08 19:26:31','2026-03-08 19:41:31',1);
+INSERT INTO `recuperacion_contrasena` VALUES (1,2,452810,'2026-03-09 10:39:54','2026-03-09 10:54:54',1);
 /*!40000 ALTER TABLE `recuperacion_contrasena` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -987,7 +986,7 @@ CREATE TABLE `usuario` (
 
 LOCK TABLES `usuario` WRITE;
 /*!40000 ALTER TABLE `usuario` DISABLE KEYS */;
-INSERT INTO `usuario` VALUES (1,'AdminKS','$2a$12$X5/dP8Dv4BZ8GH8UH0iO9uvyaEjLEqHB/Bs42s6bgSFap9HJXwtq.',1,0,'2026-03-08 19:26:07'),(2,'Marlen Becerra','$2a$12$jD20U/siCtFoC03VDdr80.i01..QnzNfW0/RoiSw91zcSjRUJSHBi',1,1,'2026-03-08 19:26:07'),(3,'Carlos Ruiz','$2a$12$jD20U/siCtFoC03VDdr80.i01..QnzNfW0/RoiSw91zcSjRUJSHBi',1,1,'2026-03-08 19:26:07'),(4,'Stephany Moreno','$2a$12$jD20U/siCtFoC03VDdr80.i01..QnzNfW0/RoiSw91zcSjRUJSHBi',1,1,'2026-03-08 19:26:07'),(5,'Felipe Mora','$2a$12$jD20U/siCtFoC03VDdr80.i01..QnzNfW0/RoiSw91zcSjRUJSHBi',1,1,'2026-03-08 19:26:07'),(6,'Gabriela Silva','$2a$12$jD20U/siCtFoC03VDdr80.i01..QnzNfW0/RoiSw91zcSjRUJSHBi',1,1,'2026-03-08 19:26:07'),(7,'Héctor Díaz','$2a$12$jD20U/siCtFoC03VDdr80.i01..QnzNfW0/RoiSw91zcSjRUJSHBi',1,1,'2026-03-08 19:26:07'),(8,'Isabella Vega','$2a$12$jD20U/siCtFoC03VDdr80.i01..QnzNfW0/RoiSw91zcSjRUJSHBi',1,1,'2026-03-08 19:26:07'),(9,'Javier Ortiz','$2a$12$jD20U/siCtFoC03VDdr80.i01..QnzNfW0/RoiSw91zcSjRUJSHBi',1,1,'2026-03-08 19:26:07'),(10,'Karen López','$2a$12$jD20U/siCtFoC03VDdr80.i01..QnzNfW0/RoiSw91zcSjRUJSHBi',1,1,'2026-03-08 19:26:07'),(11,'Luis Castro','$2a$12$jD20U/siCtFoC03VDdr80.i01..QnzNfW0/RoiSw91zcSjRUJSHBi',1,1,'2026-03-08 19:26:07'),(12,'María Pérez','$2a$12$jD20U/siCtFoC03VDdr80.i01..QnzNfW0/RoiSw91zcSjRUJSHBi',1,1,'2026-03-08 19:26:07'),(13,'Nicolás Silva','$2a$12$jD20U/siCtFoC03VDdr80.i01..QnzNfW0/RoiSw91zcSjRUJSHBi',1,1,'2026-03-08 19:26:07'),(14,'Olga Ruiz','$2a$12$jD20U/siCtFoC03VDdr80.i01..QnzNfW0/RoiSw91zcSjRUJSHBi',1,1,'2026-03-08 19:26:07'),(15,'Pablo Díaz','$2a$12$jD20U/siCtFoC03VDdr80.i01..QnzNfW0/RoiSw91zcSjRUJSHBi',1,1,'2026-03-08 19:26:07');
+INSERT INTO `usuario` VALUES (1,'AdminKS','$2a$12$X5/dP8Dv4BZ8GH8UH0iO9uvyaEjLEqHB/Bs42s6bgSFap9HJXwtq.',1,0,'2026-03-09 10:39:54'),(2,'Marlen Becerra','$2a$12$jD20U/siCtFoC03VDdr80.i01..QnzNfW0/RoiSw91zcSjRUJSHBi',1,1,'2026-03-09 10:39:54'),(3,'Carlos Ruiz','$2a$12$jD20U/siCtFoC03VDdr80.i01..QnzNfW0/RoiSw91zcSjRUJSHBi',1,1,'2026-03-09 10:39:54'),(4,'Stephany Moreno','$2a$12$jD20U/siCtFoC03VDdr80.i01..QnzNfW0/RoiSw91zcSjRUJSHBi',1,1,'2026-03-09 10:39:54'),(5,'Felipe Mora','$2a$12$jD20U/siCtFoC03VDdr80.i01..QnzNfW0/RoiSw91zcSjRUJSHBi',1,1,'2026-03-09 10:39:54'),(6,'Gabriela Silva','$2a$12$jD20U/siCtFoC03VDdr80.i01..QnzNfW0/RoiSw91zcSjRUJSHBi',1,1,'2026-03-09 10:39:54'),(7,'Héctor Díaz','$2a$12$jD20U/siCtFoC03VDdr80.i01..QnzNfW0/RoiSw91zcSjRUJSHBi',1,1,'2026-03-09 10:39:54'),(8,'Isabella Vega','$2a$12$jD20U/siCtFoC03VDdr80.i01..QnzNfW0/RoiSw91zcSjRUJSHBi',1,1,'2026-03-09 10:39:54'),(9,'Javier Ortiz','$2a$12$jD20U/siCtFoC03VDdr80.i01..QnzNfW0/RoiSw91zcSjRUJSHBi',1,1,'2026-03-09 10:39:54'),(10,'Karen López','$2a$12$jD20U/siCtFoC03VDdr80.i01..QnzNfW0/RoiSw91zcSjRUJSHBi',1,1,'2026-03-09 10:39:54'),(11,'Luis Castro','$2a$12$jD20U/siCtFoC03VDdr80.i01..QnzNfW0/RoiSw91zcSjRUJSHBi',1,1,'2026-03-09 10:39:54'),(12,'María Pérez','$2a$12$jD20U/siCtFoC03VDdr80.i01..QnzNfW0/RoiSw91zcSjRUJSHBi',1,1,'2026-03-09 10:39:54'),(13,'Nicolás Silva','$2a$12$jD20U/siCtFoC03VDdr80.i01..QnzNfW0/RoiSw91zcSjRUJSHBi',1,1,'2026-03-09 10:39:54'),(14,'Olga Ruiz','$2a$12$jD20U/siCtFoC03VDdr80.i01..QnzNfW0/RoiSw91zcSjRUJSHBi',1,1,'2026-03-09 10:39:54'),(15,'Pablo Díaz','$2a$12$jD20U/siCtFoC03VDdr80.i01..QnzNfW0/RoiSw91zcSjRUJSHBi',1,1,'2026-03-09 10:39:54');
 /*!40000 ALTER TABLE `usuario` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1044,7 +1043,7 @@ CREATE TABLE `venta` (
 
 LOCK TABLES `venta` WRITE;
 /*!40000 ALTER TABLE `venta` DISABLE KEYS */;
-INSERT INTO `venta` VALUES (1,2,1,'2026-03-08'),(2,3,2,'2026-03-08'),(3,4,3,'2026-03-08'),(4,5,4,'2026-03-08'),(5,6,5,'2026-03-08'),(6,7,6,'2026-03-08'),(7,8,7,'2026-03-08'),(8,9,8,'2026-03-08'),(9,10,9,'2026-03-08'),(10,11,10,'2026-03-08'),(11,12,11,'2026-03-08'),(12,13,12,'2026-03-08'),(13,14,13,'2026-03-08'),(14,15,14,'2026-03-08'),(15,2,15,'2026-03-08');
+INSERT INTO `venta` VALUES (1,2,1,'2026-03-09'),(2,3,2,'2026-03-09'),(3,4,3,'2026-03-09'),(4,5,4,'2026-03-09'),(5,6,5,'2026-03-09'),(6,7,6,'2026-03-09'),(7,8,7,'2026-03-09'),(8,9,8,'2026-03-09'),(9,10,9,'2026-03-09'),(10,11,10,'2026-03-09'),(11,12,11,'2026-03-09'),(12,13,12,'2026-03-09'),(13,14,13,'2026-03-09'),(14,15,14,'2026-03-09'),(15,2,15,'2026-03-09');
 /*!40000 ALTER TABLE `venta` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1095,4 +1094,4 @@ SET character_set_client = @saved_cs_client;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-03-08 21:29:51
+-- Dump completed on 2026-03-09 10:40:51

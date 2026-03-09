@@ -68,7 +68,7 @@ CREATE TABLE Rol_Permiso (
 CREATE TABLE Recuperacion_Contrasena (
     recuperacion_id  INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     usuario_id       INT UNSIGNED NOT NULL,
-    token            VARCHAR(255) UNIQUE NOT NULL,
+    codigo_verificacion  INT UNIQUE NOT NULL,
     fecha_solicitud  DATETIME     NOT NULL,
     fecha_expiracion DATETIME     NOT NULL,
     estado           BOOLEAN      NOT NULL DEFAULT 1,
@@ -633,22 +633,8 @@ INSERT INTO Rol_Permiso (rol_id, permiso_id) VALUES
 (2, 1), (2, 2), (2, 3), (2, 4), (2, 5), (2, 6), (2, 7), (2, 8),
 (2, 9), (2, 10), (2, 11), (2, 12), (2, 13), (2, 14), (2, 15);
 
-INSERT INTO Recuperacion_Contrasena (usuario_id, token, fecha_solicitud, fecha_expiracion, estado) VALUES
-(2, 'tok_abc123xyz789', NOW(), DATE_ADD(NOW(), INTERVAL 1 HOUR), 1),
-(3, 'tok_def456uvw012', NOW(), DATE_ADD(NOW(), INTERVAL 1 HOUR), 1),
-(4, 'tok_ghi789rst345', NOW(), DATE_ADD(NOW(), INTERVAL 1 HOUR), 0),
-(5, 'tok_jkl012opq678', NOW(), DATE_ADD(NOW(), INTERVAL 1 HOUR), 1),
-(6, 'tok_mno345lmn901', NOW(), DATE_ADD(NOW(), INTERVAL 1 HOUR), 1),
-(7, 'tok_pqr678ijk234', NOW(), DATE_ADD(NOW(), INTERVAL 1 HOUR), 0),
-(8, 'tok_stu901ghi567', NOW(), DATE_ADD(NOW(), INTERVAL 1 HOUR), 1),
-(9, 'tok_vwx234def890', NOW(), DATE_ADD(NOW(), INTERVAL 1 HOUR), 1),
-(10, 'tok_yza567abc123', NOW(), DATE_ADD(NOW(), INTERVAL 1 HOUR), 1),
-(11, 'tok_bcd890xyz456', NOW(), DATE_ADD(NOW(), INTERVAL 1 HOUR), 0),
-(12, 'tok_efg123uvw789', NOW(), DATE_ADD(NOW(), INTERVAL 1 HOUR), 1),
-(13, 'tok_hij456rst012', NOW(), DATE_ADD(NOW(), INTERVAL 1 HOUR), 1),
-(14, 'tok_klm789opq345', NOW(), DATE_ADD(NOW(), INTERVAL 1 HOUR), 1),
-(15, 'tok_nop012lmn678', NOW(), DATE_ADD(NOW(), INTERVAL 1 HOUR), 0),
-(2, 'tok_qrs345ijk901', DATE_SUB(NOW(), INTERVAL 2 HOUR), DATE_SUB(NOW(), INTERVAL 1 HOUR), 0);
+INSERT INTO Recuperacion_Contrasena (usuario_id, codigo_verificacion, fecha_solicitud, fecha_expiracion, estado) 
+VALUES (2, '452810', NOW(), DATE_ADD(NOW(), INTERVAL 15 MINUTE), 1);
 
 -- 4. Confirmar Transacción
 COMMIT;
@@ -775,5 +761,5 @@ SELECT 'Categoria', COUNT(*) FROM Categoria UNION ALL
 SELECT 'Material', COUNT(*) FROM Material; -- 75. Resumen general de tablas
 */
 
-SELECT * FROM Venta;
+SELECT * FROM Rol_permiso;
 
