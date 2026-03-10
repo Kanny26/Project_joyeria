@@ -81,11 +81,11 @@
 
         <form action="<%=request.getContextPath()%>/ProveedorServlet" method="get" class="cards__busqueda" id="formBusquedaProveedor">
             <input type="hidden" name="action" value="buscar">
-            <select name="filtro" id="filtroSelectProveedor" class="cards__busqueda-filtro" onchange="actualizarPlaceholderProveedor(this)">
-                <option value="todos"     <%= "todos".equals(filtroActivo)     ? "selected" : "" %>>Todos</option>
-                <option value="nombre"    <%= "nombre".equals(filtroActivo)    ? "selected" : "" %>>Nombre</option>
-                <option value="documento" <%= "documento".equals(filtroActivo) ? "selected" : "" %>>Documento</option>
-            </select>
+           <select name="filtro" id="filtroSelectProveedor" class="cards__busqueda-filtro" onchange="actualizarPlaceholderProveedor(this)">
+			    <option value="todos"      <%= "todos".equals(filtroActivo)      ? "selected" : "" %>>Todos</option>
+			    <option value="nombre"     <%= "nombre".equals(filtroActivo)     ? "selected" : "" %>>Nombre</option>
+			    <option value="materiales" <%= "materiales".equals(filtroActivo) ? "selected" : "" %>>Materiales</option>
+			</select>
             <span class="cards__busqueda-sep"></span>
             <input type="text" name="q" id="searchInputProveedor" class="cards__busqueda-input" placeholder="Buscar proveedores..." value="<%= busqueda %>" autocomplete="off">
             <i class="fa-solid fa-magnifying-glass cards__busqueda-icono"></i>
@@ -103,7 +103,7 @@
             <span>
                 <strong><%= proveedores.size() %></strong> resultado<%= proveedores.size() != 1 ? "s" : "" %> para &ldquo;<em><%= busqueda %></em>&rdquo;
                 <% if (!"todos".equals(filtroActivo)) { %>
-                    &mdash; filtrado por <span class="prov-badge-filtro"><%= "nombre".equals(filtroActivo) ? "nombre" : "documento" %></span>
+                    &mdash; filtrado por <span class="prov-badge-filtro"><%= "nombre".equals(filtroActivo) ? "nombre" : "material" %></span>
                 <% } %>
             </span>
         </div>
@@ -124,7 +124,10 @@
                     <div class="prov-card__avatar"><i class="fa-solid fa-building"></i></div>
                     <div class="prov-card__header-info">
                         <h3 class="prov-card__nombre"><%= p.getNombre() %></h3>
-                        <span class="prov-card__doc"><i class="fa-solid fa-id-card"></i> <%= p.getDocumento() != null ? p.getDocumento() : "Sin documento" %></span>
+                        <span class="prov-card__doc">
+						    <i class="fa-solid fa-id-card"></i> 
+						    <%= p.getDocumento() != null ? p.getDocumento() : "Sin documento" %>
+						</span>
                     </div>
 
                     <form method="post" action="<%=request.getContextPath()%>/ProveedorServlet" class="form-estado" id="form-estado-<%= p.getProveedorId() %>">
@@ -194,10 +197,10 @@
 
 <script type="text/javascript">
 var placeholdersProveedor = {
-    todos:     'Buscar por nombre o documento...',
-    nombre:    'Ej: Joyeria strawberry...',
-    documento: 'Ej: 12345678...'
-};
+	    todos:      'Buscar por nombre o materiales...',
+	    nombre:     'Ej: Joyeria strawberry...',
+	    materiales: 'Ej: Oro, Acero, Mostacilla...'
+	};
 
 function actualizarPlaceholderProveedor(sel) {
     var input = document.getElementById('searchInputProveedor');

@@ -271,40 +271,42 @@ function mostrarCategorias() {
     content.innerHTML = '<div class="sin-resultados"><i class="fa-solid fa-circle-notch fa-spin"></i><br>Cargando categorías...</div>';
     
     fetch(ctx + '/CompraServlet?action=obtenerCategorias')
-        .then(res => res.json())
-        .then(categorias => {
-            if (!categorias || categorias.length === 0) {
-                content.innerHTML = '<div class="sin-resultados"><i class="fa-solid fa-triangle-exclamation"></i><br>No hay categorías disponibles</div>';
-                return;
-            }
-            
-            let html = '<div class="categorias-grid">';
-            categorias.forEach(c => {
-                const iconoHtml = c.icono 
-                    ? '<img src="' + ctx + '/assets/Imagenes/iconos/' + c.icono + '" alt="' + c.nombre + '">'
-                    : '<i class="fa-solid fa-box"></i>';
-                
-                html += '<div class="categoria-card" data-id="' + c.id + '" data-nombre="' + escapeHtml(c.nombre) + '">' +
-                        '<div class="categoria-card__icon">' + iconoHtml + '</div>' +
-                        '<div class="categoria-card__nombre">' + escapeHtml(c.nombre) + '</div>' +
-                        '</div>';
-            });
-            html += '</div>';
-            content.innerHTML = html;
-            
-            // Agregar eventos a las tarjetas
-            content.querySelectorAll('.categoria-card').forEach(card => {
-                card.addEventListener('click', function() {
-                    const id = this.dataset.id;
-                    const nombre = this.dataset.nombre;
-                    seleccionarCategoria(id, nombre);
-                });
-            });
-        })
-        .catch(err => {
-            console.error(err);
-            content.innerHTML = '<div class="sin-resultados"><i class="fa-solid fa-triangle-exclamation"></i><br>Error al cargar categorías</div>';
+    .then(res => {
+        if (res.status === 401) {
+            window.location.href = ctx + '/inicio-sesion.jsp';
+            return null;
+        }
+        if (!res.ok) throw new Error('Error HTTP: ' + res.status);
+        return res.json();
+    })
+    .then(categorias => {
+        if (!categorias) return;
+        if (!categorias.length) {
+            content.innerHTML = '<div class="sin-resultados"><i class="fa-solid fa-triangle-exclamation"></i><br>No hay categorías disponibles</div>';
+            return;
+        }
+        let html = '<div class="categorias-grid">';
+        categorias.forEach(c => {
+            const iconoHtml = c.icono
+                ? '<img src="' + ctx + '/assets/Imagenes/iconos/' + c.icono + '" alt="' + escapeHtml(c.nombre) + '">'
+                : '<i class="fa-solid fa-box"></i>';
+            html += '<div class="categoria-card" data-id="' + c.id + '" data-nombre="' + escapeHtml(c.nombre) + '">' +
+                    '<div class="categoria-card__icon">' + iconoHtml + '</div>' +
+                    '<div class="categoria-card__nombre">' + escapeHtml(c.nombre) + '</div>' +
+                    '</div>';
         });
+        html += '</div>';
+        content.innerHTML = html;
+        content.querySelectorAll('.categoria-card').forEach(card => {
+            card.addEventListener('click', function() {
+                seleccionarCategoria(this.dataset.id, this.dataset.nombre);
+            });
+        });
+    })
+    .catch(err => {
+        console.error('Error categorías:', err);
+        content.innerHTML = '<div class="sin-resultados"><i class="fa-solid fa-triangle-exclamation"></i><br>Error al cargar categorías</div>';
+    });
 }
 
 // ==================== CARGAR PRODUCTOS POR CATEGORÍA ====================

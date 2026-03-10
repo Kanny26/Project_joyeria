@@ -325,16 +325,6 @@ CREATE TABLE Historial_Caso_Postcompra (
     FOREIGN KEY (usuario_id) REFERENCES Usuario(usuario_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- MÓDULO 13: DESEMPEÑO DE VENDEDORES
-CREATE TABLE Desempeno_Vendedor (
-    desempeno_id        INT UNSIGNED  AUTO_INCREMENT PRIMARY KEY,
-    usuario_id          INT UNSIGNED  NOT NULL,
-    ventas_totales      DECIMAL(12,2) NOT NULL,
-    comision_porcentaje DECIMAL(5,2)  NOT NULL,
-    periodo             DATE          NOT NULL,
-    FOREIGN KEY (usuario_id) REFERENCES Usuario(usuario_id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
 CREATE TABLE  Auditoria_Log (
     log_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     usuario_id INT UNSIGNED,
@@ -432,7 +422,7 @@ INSERT INTO Telefono_Usuario (telefono, usuario_id) VALUES
 ('3201234567', 11), ('3212345678', 12), ('3223456789', 13), ('3234567890', 14), ('3245678901', 15);
 
 INSERT INTO Correo_Usuario (email, usuario_id) VALUES
-('marlenbe211@gmail.com', 1), ('marlenbe211@gmail.com', 2), ('carlos.ruiz@abbyac27.com', 3),
+('marlenbe211@gmail.com', 1), ('santiago.morenob500@gmail.com', 2), ('carlos.ruiz@abbyac27.com', 3),
 ('stephanymoreno1826@gmail.com', 4), ('felipe.andrade@abbyac27.com', 5), ('gabriela.silva@abbyac27.com', 6),
 ('hector.diaz@abbyac27.com', 7), ('isabella.ramirez@abbyac27.com', 8), ('javier.ortiz@abbyac27.com', 9),
 ('karen.lopez@abbyac27.com', 10), ('luis.castro@abbyac27.com', 11), ('maria.perez@abbyac27.com', 12),
@@ -622,13 +612,6 @@ INSERT INTO Historial_Caso_Postcompra (caso_id, estado, observacion, usuario_id)
 (8, 'en_proceso', 'Daño en transporte reportado', 8), (8, 'aprobado', 'Proveedor reemplazó productos', 8),
 (9, 'en_proceso', 'Cancelación por falta de stock', 9);
 
-INSERT INTO Desempeno_Vendedor (usuario_id, ventas_totales, comision_porcentaje, periodo) VALUES
-(2, 320000.00, 5.00, '2026-03-01'), (3, 480000.00, 5.00, '2026-03-01'), (4, 450000.00, 5.00, '2026-03-01'),
-(5, 360000.00, 5.00, '2026-03-01'), (6, 650000.00, 5.00, '2026-03-01'), (7, 390000.00, 5.00, '2026-03-01'),
-(8, 240000.00, 5.00, '2026-03-01'), (9, 500000.00, 5.00, '2026-03-01'), (10, 420000.00, 5.00, '2026-03-01'),
-(11, 280000.00, 5.00, '2026-03-01'), (12, 350000.00, 5.00, '2026-03-01'), (13, 400000.00, 5.00, '2026-03-01'),
-(14, 450000.00, 5.00, '2026-03-01'), (15, 1500000.00, 5.00, '2026-03-01'), (2, 260000.00, 5.00, '2026-02-01');
-
 INSERT INTO Rol_Permiso (rol_id, permiso_id) VALUES
 (2, 1), (2, 2), (2, 3), (2, 4), (2, 5), (2, 6), (2, 7), (2, 8),
 (2, 9), (2, 10), (2, 11), (2, 12), (2, 13), (2, 14), (2, 15);
@@ -760,6 +743,7 @@ SELECT 'Proveedor', COUNT(*) FROM Proveedor UNION ALL
 SELECT 'Categoria', COUNT(*) FROM Categoria UNION ALL 
 SELECT 'Material', COUNT(*) FROM Material; -- 75. Resumen general de tablas
 */
-
-SELECT * FROM Rol_permiso;
+Select * from Compra;
+SELECT * FROM gestor_abbyac27.Inventario_Movimiento;
+select * from Producto;
 

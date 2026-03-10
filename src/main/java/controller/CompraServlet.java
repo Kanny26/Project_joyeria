@@ -330,7 +330,15 @@ public class CompraServlet extends HttpServlet {
     private boolean estaAutenticado(HttpServletRequest req, HttpServletResponse res) throws IOException {
         HttpSession s = req.getSession(false);
         if (s == null || s.getAttribute("admin") == null) {
-            res.sendRedirect(req.getContextPath() + "/inicio-sesion.jsp");
+            // ■■ Si es petición AJAX (fetch), devolver JSON en vez de redirigir ■■
+            String accept = req.getHeader("Accept");
+            if (accept != null && accept.contains("application/json")) {
+                res.setContentType("application/json;charset=UTF-8");
+                res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                res.getWriter().write("{\"error\":\"sesion_expirada\"}");
+            } else {
+                res.sendRedirect(req.getContextPath() + "/inicio-sesion.jsp");
+            }
             return false;
         }
         return true;

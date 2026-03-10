@@ -2,9 +2,27 @@
 <%@ page import="model.Usuario"%>
 <%
     Object adm = session.getAttribute("admin");
-    if (adm == null) { response.sendRedirect(request.getContextPath() + "/inicio-sesion.jsp"); return; }
+    if (adm == null) {
+        response.sendRedirect(request.getContextPath() + "/inicio-sesion.jsp");
+        return;
+    }
+
     Usuario usuario = (Usuario) request.getAttribute("usuario");
-    if (usuario == null) { response.sendRedirect(request.getContextPath() + "/UsuarioServlet"); return; }
+    if (usuario == null) {
+        response.sendRedirect(request.getContextPath() + "/UsuarioServlet");
+        return;
+    }
+
+    // Funciona tanto si el admin en sesión es model.Administrador como model.Usuario
+    boolean esMismoUsuario = false;
+    if (adm instanceof model.Administrador) {
+        model.Administrador adminLogueado = (model.Administrador) adm;
+        esMismoUsuario = (adminLogueado.getId() == usuario.getUsuarioId());
+    } else if (adm instanceof model.Usuario) {
+        model.Usuario adminLogueado = (model.Usuario) adm;
+        esMismoUsuario = (adminLogueado.getUsuarioId() == usuario.getUsuarioId());
+    }
+
     String error = (String) request.getAttribute("error");
 %>
 <!DOCTYPE html>
@@ -44,7 +62,7 @@
 
         <!-- SECCIÓN: Datos no editables (RF08) -->
         <div class="fs-section">
-            <div class="fs-section-title"><i class="fa-solid fa-lock"></i> Datos No Editables (RF08)</div>
+            <div class="fs-section-title"><i class="fa-solid fa-lock"></i></div>
             <div class="fs-grid">
                 <div class="fs-group">
                     <label class="fs-label"><i class="fa-solid fa-id-card"></i> Documento</label>
@@ -82,35 +100,48 @@
                            value="<%= usuario.getTelefono() != null ? usuario.getTelefono() : "" %>">
                 </div>
                 <div class="fs-group">
-                    <label class="fs-label" for="rol"><i class="fa-solid fa-user-gear"></i> Rol *</label>
-                    <select id="rol" name="rol" class="fs-input" required>
-                        <option value="Administrador" <%= "Administrador".equals(usuario.getRol()) ? "selected" : "" %>>Administrador</option>
-                        <option value="Vendedor"      <%= "Vendedor".equals(usuario.getRol())      ? "selected" : "" %>>Vendedor</option>
-                        <option value="Proveedor"     <%= "Proveedor".equals(usuario.getRol())     ? "selected" : "" %>>Proveedor</option>
-                        <option value="Cliente"       <%= "Cliente".equals(usuario.getRol())       ? "selected" : "" %>>Cliente</option>
-                    </select>
-                </div>
-                <div class="fs-group fs-group--full">
-                    <label class="fs-label"><i class="fa-solid fa-comment-dots"></i> Observaciones de Desempeño</label>
-                    <textarea name="observaciones" class="fs-input" rows="3" placeholder="Observaciones opcionales..."></textarea>
-                </div>
+				    <label class="fs-label" for="rol"><i class="fa-solid fa-user-gear"></i> Rol *</label>
+				    
+				    <% if (esMismoUsuario) { %>
+				        <div class="fs-readonly">
+				            <i class="fa-solid fa-lock" style="color:#d1d5db;font-size:0.8rem;"></i>
+				            <%= usuario.getRol() %>
+				        </div>
+				        <span class="fs-readonly-badge"><i class="fa-solid fa-circle-info"></i> No puedes cambiar tu propio rol</span>
+				        <input type="hidden" name="rol" value="<%= usuario.getRol() %>">
+				    <% } else { %>
+				        <select id="rol" name="rol" class="fs-input" required>
+				            <option value="Administrador" <%= "Administrador".equals(usuario.getRol()) ? "selected" : "" %>>Administrador</option>
+				            <option value="Vendedor"      <%= "Vendedor".equals(usuario.getRol())      ? "selected" : "" %>>Vendedor</option>
+				        </select>
+				    <% } %>
+				</div>
             </div>
         </div>
 
         <!-- SECCIÓN: Estado -->
-        <div class="fs-section">
-            <div class="fs-section-title"><i class="fa-solid fa-toggle-on"></i> Estado del Usuario</div>
-            <div class="fs-radio-group">
-                <label class="fs-radio-chip">
-                    <input type="radio" name="estado" value="Activo" <%= usuario.isEstado() ? "checked" : "" %>>
-                    <i class="fa-solid fa-circle-check" style="color:#16a34a;"></i> Activo
-                </label>
-                <label class="fs-radio-chip">
-                    <input type="radio" name="estado" value="Inactivo" <%= !usuario.isEstado() ? "checked" : "" %>>
-                    <i class="fa-solid fa-circle-xmark" style="color:#dc2626;"></i> Inactivo
-                </label>
-            </div>
-        </div>
+		<div class="fs-section">
+		    <div class="fs-section-title"><i class="fa-solid fa-toggle-on"></i> Estado del Usuario</div>
+		    <div class="fs-radio-group">
+		        <% if (esMismoUsuario) { %>
+		            <div class="fs-readonly">
+		                <i class="fa-solid fa-lock" style="color:#d1d5db;font-size:0.8rem;"></i>
+		                Activo
+		            </div>
+		            <span class="fs-readonly-badge"><i class="fa-solid fa-circle-info"></i> No puedes inactivarte a ti mismo</span>
+		            <input type="hidden" name="estado" value="Activo">
+		        <% } else { %>
+		            <label class="fs-radio-chip">
+		                <input type="radio" name="estado" value="Activo" <%= usuario.isEstado() ? "checked" : "" %>>
+		                <i class="fa-solid fa-circle-check" style="color:#16a34a;"></i> Activo
+		            </label>
+		            <label class="fs-radio-chip">
+		                <input type="radio" name="estado" value="Inactivo" <%= !usuario.isEstado() ? "checked" : "" %>>
+		                <i class="fa-solid fa-circle-xmark" style="color:#dc2626;"></i> Inactivo
+		            </label>
+		        <% } %>
+		    </div>
+		</div>
 
         <div class="fs-actions">
             <button type="submit" class="fs-btn-save"><i class="fa-solid fa-floppy-disk"></i> Guardar Cambios</button>
@@ -137,6 +168,17 @@ document.getElementById('formEditar').addEventListener('submit', function(e) {
         if (r.isConfirmed) { Swal.fire({ title:'Guardando...', allowOutsideClick:false, didOpen:()=>Swal.showLoading() }); form.submit(); }
     });
 });
+<% if (esMismoUsuario) { %>
+document.addEventListener('DOMContentLoaded', function() {
+    Swal.fire({
+        icon: 'info',
+        title: 'Restricción de seguridad',
+        html: 'No puedes cambiar <strong>tu propio rol</strong> ni <strong>inactivarte</strong> a ti mismo.<br>Estos campos son de solo lectura para tu cuenta.',
+        confirmButtonColor: '#7c3aed',
+        confirmButtonText: 'Entendido'
+    });
+});
+<% } %>
 </script>
 </body>
 </html>

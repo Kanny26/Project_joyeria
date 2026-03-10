@@ -304,7 +304,7 @@
                         <i class="fa-solid fa-lock" style="color:#d1d5db;font-size:0.8rem;"></i>
                         <%= p.getFechaInicio() != null ? p.getFechaInicio() : "—" %>
                     </div>
-                    <span class="readonly-badge"><i class="fa-solid fa-circle-info"></i> No editable (RF08)</span>
+                    <span class="readonly-badge"><i class="fa-solid fa-circle-info"></i> No editable</span>
                 </div>
                 <div class="form-product__group">
                     <label class="form-product__label" for="minimoCompra">

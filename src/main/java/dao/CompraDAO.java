@@ -9,18 +9,6 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * DAO de Compra.
- *
- * insertarConTransaccion() escribe en:
- *   1. Compra              (siempre)
- *   2. Detalle_Compra      (siempre, un registro por producto)
- *   3. Pago_Compra         (siempre; monto = total si es contado, monto = anticipo si es crédito)
- *   4. Credito_Compra      (solo si esCredito == true)
- *   5. Abono_Credito       (solo si esCredito == true y anticipo > 0)
- *
- * Todo en una sola transacción: si algo falla se hace rollback completo.
- */
 public class CompraDAO {
 
     // ════════════════════════════════════════════════════════════════════
@@ -40,43 +28,30 @@ public class CompraDAO {
             /* 2. Insertar Detalle_Compra */
             insertarDetalles(con, compraId, compra.getDetalles());
 
-            /* 3. Insertar Pago_Compra
-             *    - Si es contado  → monto = total, estado = 'confirmado'
-             *    - Si es crédito  → monto = anticipo, estado = 'pendiente'
-             *      (el pago queda pendiente hasta confirmar el anticipo)
-             */
-            BigDecimal montoPago   = compra.isEsCredito() ? compra.getAnticipo() : compra.getTotal();
-            String     estadoPago  = compra.isEsCredito() ? "pendiente"          : "confirmado";
+            /* 3. ■■ Registrar movimiento de inventario (entrada) y actualizar stock ■■ */
+            registrarEntradaInventario(con, compra.getDetalles(), compra.getUsuarioId(),
+                    "Compra #" + compraId);
+
+            /* 4. Insertar Pago_Compra */
+            BigDecimal montoPago  = compra.isEsCredito() ? compra.getAnticipo() : compra.getTotal();
+            String     estadoPago = compra.isEsCredito() ? "pendiente"          : "confirmado";
             insertarPagoCompra(con, compraId, compra.getMetodoPagoId(), montoPago, estadoPago);
 
-            /* 4. Si es crédito → Credito_Compra */
+            /* 5. Si es crédito → Credito_Compra */
             if (compra.isEsCredito()) {
-                BigDecimal saldoPendiente = compra.getTotal().subtract(compra.getAnticipo())
-                                                             .max(BigDecimal.ZERO);
-                // Si el admin marcó estadoCredito = 'pagado', forzamos saldo = 0
+                BigDecimal saldoPendiente = compra.getTotal()
+                        .subtract(compra.getAnticipo()).max(BigDecimal.ZERO);
                 if ("pagado".equals(compra.getEstadoCredito())) {
                     saldoPendiente = BigDecimal.ZERO;
                 }
+                int creditoId = insertarCreditoCompra(con, compraId, compra.getTotal(),
+                        saldoPendiente, compra.getFechaCompra(),
+                        compra.getFechaVencimiento(), compra.getEstadoCredito());
 
-                int creditoId = insertarCreditoCompra(
-                    con,
-                    compraId,
-                    compra.getTotal(),
-                    saldoPendiente,
-                    compra.getFechaCompra(),
-                    compra.getFechaVencimiento(),
-                    compra.getEstadoCredito()
-                );
-
-                /* 5. Abono_Credito con el anticipo (si anticipo > 0) */
+                /* 6. Abono_Credito con el anticipo (si anticipo > 0) */
                 if (compra.getAnticipo().compareTo(BigDecimal.ZERO) > 0) {
-                    insertarAbonoCredito(
-                        con,
-                        creditoId,
-                        compra.getMetodoPagoId(),
-                        compra.getAnticipo(),
-                        "confirmado"   // el anticipo ya se pagó al registrar
-                    );
+                    insertarAbonoCredito(con, creditoId, compra.getMetodoPagoId(),
+                            compra.getAnticipo(), "confirmado");
                 }
             }
 
@@ -87,12 +62,51 @@ public class CompraDAO {
             if (con != null) { try { con.rollback(); } catch (SQLException ignored) {} }
             throw e;
         } finally {
-            if (con != null) { try { con.setAutoCommit(true); con.close(); } catch (SQLException ignored) {} }
+            if (con != null) {
+                try { con.setAutoCommit(true); con.close(); } catch (SQLException ignored) {}
+            }
         }
     }
 
     // ════════════════════════════════════════════════════════════════════
-    // Pasos individuales
+    // ■■ NUEVO: Registrar entrada en inventario + actualizar stock ■■
+    // ════════════════════════════════════════════════════════════════════
+    private void registrarEntradaInventario(Connection con, List<DetalleCompra> detalles,
+                                             int usuarioId, String referencia) throws SQLException {
+        String sqlMovimiento = """
+            INSERT INTO Inventario_Movimiento 
+                (producto_id, usuario_id, tipo, cantidad, fecha, referencia)
+            VALUES (?, ?, 'entrada', ?, NOW(), ?)
+            """;
+
+        String sqlStock = """
+            UPDATE Producto SET stock = stock + ? WHERE producto_id = ?
+            """;
+
+        try (PreparedStatement psMovimiento = con.prepareStatement(sqlMovimiento);
+             PreparedStatement psStock      = con.prepareStatement(sqlStock)) {
+
+            for (DetalleCompra d : detalles) {
+                // ■■ Movimiento de inventario ■■
+                psMovimiento.setInt(1, d.getProductoId());
+                psMovimiento.setInt(2, usuarioId);
+                psMovimiento.setInt(3, d.getCantidad());
+                psMovimiento.setString(4, referencia);
+                psMovimiento.addBatch();
+
+                // ■■ Actualizar stock del producto ■■
+                psStock.setInt(1, d.getCantidad());
+                psStock.setInt(2, d.getProductoId());
+                psStock.addBatch();
+            }
+
+            psMovimiento.executeBatch();
+            psStock.executeBatch();
+        }
+    }
+
+    // ════════════════════════════════════════════════════════════════════
+    // Pasos individuales (sin cambios)
     // ════════════════════════════════════════════════════════════════════
 
     private int insertarCompra(Connection con, Compra c) throws SQLException {
@@ -125,10 +139,6 @@ public class CompraDAO {
         }
     }
 
-    /**
-     * Inserta en Pago_Compra.
-     * Columnas: compra_id, metodo_pago_id, monto, fecha (DEFAULT NOW()), estado
-     */
     private void insertarPagoCompra(Connection con, int compraId, int metodoPagoId,
                                     BigDecimal monto, String estado) throws SQLException {
         String sql = "INSERT INTO Pago_Compra (compra_id, metodo_pago_id, monto, estado) VALUES (?,?,?,?)";
@@ -141,10 +151,6 @@ public class CompraDAO {
         }
     }
 
-    /**
-     * Inserta en Credito_Compra.
-     * Columnas: compra_id, monto_total, saldo_pendiente, fecha_inicio, fecha_vencimiento, estado
-     */
     private int insertarCreditoCompra(Connection con, int compraId, BigDecimal montoTotal,
                                        BigDecimal saldoPendiente, java.util.Date fechaInicio,
                                        java.util.Date fechaVencimiento, String estado) throws SQLException {
@@ -166,10 +172,6 @@ public class CompraDAO {
         }
     }
 
-    /**
-     * Inserta en Abono_Credito el anticipo inicial.
-     * Columnas: credito_id, metodo_pago_id, monto_abono, fecha (DEFAULT NOW()), estado
-     */
     private void insertarAbonoCredito(Connection con, int creditoId, int metodoPagoId,
                                        BigDecimal montoAbono, String estado) throws SQLException {
         String sql = "INSERT INTO Abono_Credito (credito_id, metodo_pago_id, monto_abono, estado) VALUES (?,?,?,?)";
@@ -183,7 +185,7 @@ public class CompraDAO {
     }
 
     // ════════════════════════════════════════════════════════════════════
-    // Obtener compra por ID (con detalles y crédito si existe)
+    // Obtener compra por ID
     // ════════════════════════════════════════════════════════════════════
     public Compra obtenerPorId(int compraId) throws Exception {
         String sql =
@@ -192,10 +194,9 @@ public class CompraDAO {
             "       cc.credito_id, cc.monto_total, cc.saldo_pendiente, " +
             "       cc.fecha_inicio, cc.fecha_vencimiento, cc.estado AS estado_credito " +
             "FROM Compra c " +
-            "LEFT JOIN Pago_Compra  pc ON pc.compra_id  = c.compra_id " +
+            "LEFT JOIN Pago_Compra   pc ON pc.compra_id = c.compra_id " +
             "LEFT JOIN Credito_Compra cc ON cc.compra_id = c.compra_id " +
-            "WHERE c.compra_id = ? " +
-            "LIMIT 1";
+            "WHERE c.compra_id = ? LIMIT 1";
 
         try (Connection con = ConexionDB.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
@@ -209,8 +210,7 @@ public class CompraDAO {
                 compra.setFechaCompra(rs.getDate("fecha_compra"));
                 compra.setFechaEntrega(rs.getDate("fecha_entrega"));
                 compra.setMetodoPagoId(rs.getInt("metodo_pago_id"));
-                compra.setTotal(rs.getBigDecimal("monto_pago"));      // monto registrado en Pago_Compra
-                // Crédito (puede ser null si fue contado)
+                compra.setTotal(rs.getBigDecimal("monto_pago"));
                 BigDecimal montoTotal = rs.getBigDecimal("monto_total");
                 if (montoTotal != null) {
                     compra.setEsCredito(true);
@@ -251,12 +251,9 @@ public class CompraDAO {
     }
 
     // ════════════════════════════════════════════════════════════════════
-    // Eliminar compra (CASCADE borra detalles, pagos, créditos y abonos)
+    // Eliminar compra
     // ════════════════════════════════════════════════════════════════════
     public boolean eliminarConTransaccion(int compraId) throws Exception {
-        // ON DELETE CASCADE está definido en la BD para Detalle_Compra,
-        // Pago_Compra, Credito_Compra (y por extensión Abono_Credito).
-        // Solo hace falta eliminar el registro padre.
         try (Connection con = ConexionDB.getConnection();
              PreparedStatement ps = con.prepareStatement("DELETE FROM Compra WHERE compra_id = ?")) {
             ps.setInt(1, compraId);
@@ -265,14 +262,14 @@ public class CompraDAO {
     }
 
     // ════════════════════════════════════════════════════════════════════
-    // Listar compras por proveedor (con detalles y total real)
+    // Listar compras por proveedor
     // ════════════════════════════════════════════════════════════════════
     public List<Compra> listarPorProveedor(int proveedorId) throws Exception {
         String sql =
             "SELECT c.compra_id, c.proveedor_id, c.usuario_id, c.fecha_compra, c.fecha_entrega, " +
             "       COALESCE(cc.monto_total, pc.monto, 0) AS total_real " +
             "FROM Compra c " +
-            "LEFT JOIN Pago_Compra pc ON pc.compra_id = c.compra_id " +
+            "LEFT JOIN Pago_Compra    pc ON pc.compra_id = c.compra_id " +
             "LEFT JOIN Credito_Compra cc ON cc.compra_id = c.compra_id " +
             "WHERE c.proveedor_id = ? " +
             "ORDER BY c.fecha_compra DESC";
@@ -289,8 +286,8 @@ public class CompraDAO {
                     c.setUsuarioId(rs.getInt("usuario_id"));
                     c.setFechaCompra(rs.getDate("fecha_compra"));
                     c.setFechaEntrega(rs.getDate("fecha_entrega"));
-                    java.math.BigDecimal total = rs.getBigDecimal("total_real");
-                    c.setTotal(total != null ? total : java.math.BigDecimal.ZERO);
+                    BigDecimal total = rs.getBigDecimal("total_real");
+                    c.setTotal(total != null ? total : BigDecimal.ZERO);
                     c.setDetalles(obtenerDetalles(con, c.getCompraId()));
                     lista.add(c);
                 }

@@ -57,27 +57,59 @@ public class ProveedorDAO {
         }
         return null;
     }
+    public List<Proveedor> buscar(String q, String filtro) throws Exception {
+        String sql;
+        switch (filtro) {
+            case "nombre":
+                sql = """
+                    SELECT DISTINCT p.proveedor_id, p.nombre, p.documento, p.fecha_registro, 
+                           p.fecha_inicio, p.estado, p.minimo_compra 
+                    FROM Proveedor p 
+                    WHERE p.nombre LIKE ?
+                    ORDER BY p.fecha_registro DESC
+                    """;
+                break;
+            case "materiales":
+                sql = """
+                    SELECT DISTINCT p.proveedor_id, p.nombre, p.documento, p.fecha_registro, 
+                           p.fecha_inicio, p.estado, p.minimo_compra 
+                    FROM Proveedor p 
+                    JOIN Proveedor_Material pm ON p.proveedor_id = pm.proveedor_id 
+                    JOIN Material m ON pm.material_id = m.material_id 
+                    WHERE m.nombre LIKE ?
+                    ORDER BY p.fecha_registro DESC
+                    """;
+                break;
+            default: // todos
+                sql = """
+                    SELECT DISTINCT p.proveedor_id, p.nombre, p.documento, p.fecha_registro, 
+                           p.fecha_inicio, p.estado, p.minimo_compra 
+                    FROM Proveedor p 
+                    LEFT JOIN Proveedor_Material pm ON p.proveedor_id = pm.proveedor_id 
+                    LEFT JOIN Material m ON pm.material_id = m.material_id 
+                    WHERE p.nombre LIKE ? OR m.nombre LIKE ?
+                    ORDER BY p.fecha_registro DESC
+                    """;
+                break;
+        }
 
-    public List<Proveedor> buscar(String criterio, String filtro) {
         List<Proveedor> lista = new ArrayList<>();
-        String campo = "documento".equals(filtro) ? "p.documento" : "p.nombre";
-        String sql = "SELECT p.proveedor_id, p.nombre, p.documento, " +
-                     "p.fecha_registro, p.fecha_inicio, p.estado, p.minimo_compra " +
-                     "FROM Proveedor p WHERE " + campo + " LIKE ? ORDER BY p.fecha_registro DESC";
-        try (Connection conn = ConexionDB.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, "%" + criterio + "%");
-            try (ResultSet rs = stmt.executeQuery()) {
+        try (Connection con = ConexionDB.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            String param = "%" + q + "%";
+            ps.setString(1, param);
+            if ("todos".equals(filtro)) ps.setString(2, param);
+            try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     Proveedor p = mapearProveedor(rs);
-                    p.setTelefonos(obtenerTelefonos(p.getProveedorId()));
-                    p.setCorreos(obtenerCorreos(p.getProveedorId()));
-                    p.setMateriales(obtenerMateriales(p.getProveedorId()));
+                    int id = p.getProveedorId();
+                    try { p.setTelefonos(obtenerTelefonos(id)); } catch (Exception e) { p.setTelefonos(new ArrayList<>()); }
+                    try { p.setCorreos(obtenerCorreos(id)); }    catch (Exception e) { p.setCorreos(new ArrayList<>()); }
+                    try { p.setMateriales(obtenerMateriales(id)); } catch (Exception e) { p.setMateriales(new ArrayList<>()); }
                     lista.add(p);
                 }
             }
-        } catch (Exception e) {
-            System.err.println("Error al buscar proveedores: " + e.getMessage());
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return lista;
@@ -210,37 +242,43 @@ public class ProveedorDAO {
     }
 
     // ==================== ACTUALIZAR (UPDATE) ====================
+ // ==================== ACTUALIZAR (UPDATE) ====================
     public boolean actualizar(Proveedor p, List<String> telefonos, List<String> correos, List<Integer> materialesIds, int usuarioId) {
         Connection conn = null;
         try {
             conn = ConexionDB.getConnection();
             conn.setAutoCommit(false);
 
-            // ■■ Capturar estado anterior para auditoría ■■
-            Proveedor anterior = obtenerPorId(p.getProveedorId());
-            String nombreAnterior = anterior != null ? anterior.getNombre() : "N/A";
+            // ■■ Capturar nombre anterior para auditoría (con la misma conexión) ■■
+            String nombreAnterior = "N/A";
+            try (PreparedStatement ps = conn.prepareStatement(
+                    "SELECT nombre FROM Proveedor WHERE proveedor_id = ?")) {
+                ps.setInt(1, p.getProveedorId());
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) nombreAnterior = rs.getString("nombre");
+                }
+            }
 
-            // ■■ RF11: NO se actualiza fecha_inicio (inmutable) ■■
             String sqlProveedor = """
                 UPDATE Proveedor 
-                SET nombre = ?, documento = ?, estado = ?, minimo_compra = ? 
+                SET estado = ?, minimo_compra = ? 
                 WHERE proveedor_id = ?
                 """;
             try (PreparedStatement stmt = conn.prepareStatement(sqlProveedor)) {
-                stmt.setString(1, p.getNombre());
-                stmt.setString(2, p.getDocumento());
-                stmt.setBoolean(3, p.isEstado());
-                stmt.setDouble(4, p.getMinimoCompra() != null ? p.getMinimoCompra() : 0.0);
-                // ■■ CORREGIDO: getProveedorId() ■■
-                stmt.setInt(5, p.getProveedorId());
+                stmt.setBoolean(1, p.isEstado());
+                stmt.setDouble(2, p.getMinimoCompra() != null ? p.getMinimoCompra() : 0.0);
+                stmt.setInt(3, p.getProveedorId());
                 stmt.executeUpdate();
             }
 
             // Reemplazar teléfonos
-            eliminarTelefonos(p.getProveedorId(), conn);
+            try (PreparedStatement stmt = conn.prepareStatement(
+                    "DELETE FROM Telefono_Proveedor WHERE proveedor_id = ?")) {
+                stmt.setInt(1, p.getProveedorId()); stmt.executeUpdate();
+            }
             if (telefonos != null && !telefonos.isEmpty()) {
-                String sqlTel = "INSERT INTO Telefono_Proveedor(telefono, proveedor_id) VALUES(?, ?)";
-                try (PreparedStatement stmt = conn.prepareStatement(sqlTel)) {
+                try (PreparedStatement stmt = conn.prepareStatement(
+                        "INSERT INTO Telefono_Proveedor(telefono, proveedor_id) VALUES(?, ?)")) {
                     for (String tel : telefonos) {
                         if (tel != null && !tel.trim().isEmpty()) {
                             stmt.setString(1, tel.trim());
@@ -253,10 +291,13 @@ public class ProveedorDAO {
             }
 
             // Reemplazar correos
-            eliminarCorreos(p.getProveedorId(), conn);
+            try (PreparedStatement stmt = conn.prepareStatement(
+                    "DELETE FROM Correo_Proveedor WHERE proveedor_id = ?")) {
+                stmt.setInt(1, p.getProveedorId()); stmt.executeUpdate();
+            }
             if (correos != null && !correos.isEmpty()) {
-                String sqlCorreo = "INSERT INTO Correo_Proveedor(email, proveedor_id) VALUES(?, ?)";
-                try (PreparedStatement stmt = conn.prepareStatement(sqlCorreo)) {
+                try (PreparedStatement stmt = conn.prepareStatement(
+                        "INSERT INTO Correo_Proveedor(email, proveedor_id) VALUES(?, ?)")) {
                     for (String correo : correos) {
                         if (correo != null && !correo.trim().isEmpty()) {
                             stmt.setString(1, correo.trim().toLowerCase());
@@ -269,10 +310,13 @@ public class ProveedorDAO {
             }
 
             // Reemplazar materiales
-            eliminarMateriales(p.getProveedorId(), conn);
+            try (PreparedStatement stmt = conn.prepareStatement(
+                    "DELETE FROM Proveedor_Material WHERE proveedor_id = ?")) {
+                stmt.setInt(1, p.getProveedorId()); stmt.executeUpdate();
+            }
             if (materialesIds != null && !materialesIds.isEmpty()) {
-                String sqlMat = "INSERT INTO Proveedor_Material(proveedor_id, material_id) VALUES(?, ?)";
-                try (PreparedStatement stmt = conn.prepareStatement(sqlMat)) {
+                try (PreparedStatement stmt = conn.prepareStatement(
+                        "INSERT INTO Proveedor_Material(proveedor_id, material_id) VALUES(?, ?)")) {
                     for (Integer matId : materialesIds) {
                         if (matId != null) {
                             stmt.setInt(1, p.getProveedorId());
@@ -284,24 +328,70 @@ public class ProveedorDAO {
                 }
             }
 
-            // ■■ RF38: Registro de auditoría ■■
             registrarAuditoria(conn, usuarioId, "EDITAR", "Proveedor", p.getProveedorId(), nombreAnterior, p.getNombre());
-
             conn.commit();
             System.out.println("■ Proveedor actualizado con éxito. ID: " + p.getProveedorId());
             return true;
         } catch (Exception e) {
             System.err.println("■ Error al actualizar proveedor: " + e.getMessage());
             e.printStackTrace();
-            if (conn != null) {
-                try { conn.rollback(); } catch (SQLException ex) { ex.printStackTrace(); }
-            }
+            if (conn != null) { try { conn.rollback(); } catch (SQLException ex) { ex.printStackTrace(); } }
             return false;
         } finally {
-            if (conn != null) {
-                try { conn.setAutoCommit(true); conn.close(); } catch (SQLException e) { e.printStackTrace(); }
-            }
+            if (conn != null) { try { conn.setAutoCommit(true); conn.close(); } catch (SQLException e) { e.printStackTrace(); } }
         }
+    }
+
+    // ■■ Verificar teléfono duplicado en cualquier proveedor ■■
+    public boolean existeTelefonoProveedor(String telefono) {
+        String sql = "SELECT COUNT(*) FROM Telefono_Proveedor WHERE telefono = ?";
+        try (Connection conn = ConexionDB.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, telefono.trim());
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() && rs.getInt(1) > 0;
+            }
+        } catch (Exception e) { e.printStackTrace(); }
+        return false;
+    }
+
+    public boolean existeTelefonoParaOtro(String telefono, int proveedorId) {
+        String sql = "SELECT COUNT(*) FROM Telefono_Proveedor WHERE telefono = ? AND proveedor_id != ?";
+        try (Connection conn = ConexionDB.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, telefono.trim());
+            ps.setInt(2, proveedorId);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() && rs.getInt(1) > 0;
+            }
+        } catch (Exception e) { e.printStackTrace(); }
+        return false;
+    }
+
+    // ■■ Verificar correo duplicado en cualquier proveedor ■■
+    public boolean existeCorreoProveedor(String correo) {
+        String sql = "SELECT COUNT(*) FROM Correo_Proveedor WHERE email = ?";
+        try (Connection conn = ConexionDB.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, correo.trim().toLowerCase());
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() && rs.getInt(1) > 0;
+            }
+        } catch (Exception e) { e.printStackTrace(); }
+        return false;
+    }
+
+    public boolean existeCorreoParaOtroProveedor(String correo, int proveedorId) {
+        String sql = "SELECT COUNT(*) FROM Correo_Proveedor WHERE email = ? AND proveedor_id != ?";
+        try (Connection conn = ConexionDB.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, correo.trim().toLowerCase());
+            ps.setInt(2, proveedorId);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() && rs.getInt(1) > 0;
+            }
+        } catch (Exception e) { e.printStackTrace(); }
+        return false;
     }
 
     // ==================== ESTADO Y ELIMINACIÓN ====================
@@ -434,22 +524,25 @@ public class ProveedorDAO {
             stmt.executeUpdate();
         }
     }
-
-    // ■■ RF38: Método de auditoría ■■
     private void registrarAuditoria(Connection conn, int usuarioId, String accion, String entidad, 
-                                    int entidadId, String datosAnteriores, String datosNuevos) throws SQLException {
-        String sql = """
-            INSERT INTO Auditoria_Log(usuario_id, accion, entidad, entidad_id, datos_anteriores, datos_nuevos, fecha_hora)
-            VALUES(?, ?, ?, ?, ?, ?, NOW())
-            """;
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, usuarioId);
-            stmt.setString(2, accion);
-            stmt.setString(3, entidad);
-            stmt.setInt(4, entidadId);
-            stmt.setString(5, datosAnteriores);
-            stmt.setString(6, datosNuevos);
-            stmt.executeUpdate();
-        }
-    }
+            int entidadId, String datosAnteriores, String datosNuevos) throws SQLException {
+			String sql = """
+			INSERT INTO Auditoria_Log(usuario_id, accion, entidad, entidad_id, datos_anteriores, datos_nuevos, fecha_hora)
+			VALUES(?, ?, ?, ?, ?, ?, NOW())
+			""";
+			try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+			stmt.setInt(1, usuarioId);
+			stmt.setString(2, accion);
+			stmt.setString(3, entidad);
+			stmt.setInt(4, entidadId);
+			// ■■ Envolver en JSON válido ■■
+			stmt.setString(5, datosAnteriores != null 
+			? "{\"valor\": \"" + datosAnteriores.replace("\"", "\\\"") + "\"}" 
+			: null);
+			stmt.setString(6, datosNuevos != null 
+			? "{\"valor\": \"" + datosNuevos.replace("\"", "\\\"") + "\"}" 
+			: null);
+			stmt.executeUpdate();
+			}
+}
 }
