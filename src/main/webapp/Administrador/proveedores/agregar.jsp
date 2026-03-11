@@ -44,8 +44,8 @@
 <main class="fs-container">
     <h2 class="fs-page-title"><i class="fa-solid fa-truck-ramp-box" style="color: #7c3aed;"></i> Registrar Nuevo Proveedor</h2>
 
-    <form id="formProveedor" class="fs-form" method="post" action="<%=request.getContextPath()%>/ProveedorServlet" novalidate>
-        <input type="hidden" name="action" value="guardar">
+    <form id="formProveedor" class="fs-form" method="post" action="<%=request.getContextPath()%>/ProveedorServlet">
+    <input type="hidden" name="action" value="guardar">
 
         <div class="fs-section">
             <div class="fs-section-title"><i class="fa-solid fa-building"></i> Identificación Comercial</div>
