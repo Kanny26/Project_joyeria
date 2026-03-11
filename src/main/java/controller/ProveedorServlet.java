@@ -399,24 +399,37 @@ public class ProveedorServlet extends HttpServlet {
         request.getRequestDispatcher("/Administrador/proveedores/compras.jsp").forward(request, response);
     }
 
-    private void mostrarFormularioCompra(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        String idStr = request.getParameter("id");
-        if (idStr == null || !idStr.matches("\\d+")) {
-            response.sendRedirect(request.getContextPath() + "/ProveedorServlet?action=listar");
-            return;
-        }
-        int proveedorId   = Integer.parseInt(idStr);
-        Proveedor proveedor = proveedorDAO.obtenerPorId(proveedorId);
-        if (proveedor == null) {
-            response.sendRedirect(request.getContextPath() + "/ProveedorServlet?action=listar");
-            return;
-        }
-        List<Categoria> categorias    = categoriaDAO.listarCategorias();
-        List<MetodoPago> metodosPago  = metodoPagoDAO.listarTodos();
-        request.setAttribute("proveedor",    proveedor);
-        request.setAttribute("proveedorId",  proveedorId);
-        request.setAttribute("categorias",   categorias);
-        request.setAttribute("metodosPago",  metodosPago);
-        request.getRequestDispatcher("/Administrador/proveedores/agregar_compra.jsp").forward(request, response);
-    }
+ // ══════════════════════════════════════════════════════════════════
+ // REEMPLAZA el método mostrarFormularioCompra en ProveedorServlet.java
+ // Añade: import dao.MetodoPagoDAO; y private MetodoPagoDAO metodoPagoDAO;
+ // en init(): metodoPagoDAO = new MetodoPagoDAO();
+ // ══════════════════════════════════════════════════════════════════
+
+     private void mostrarFormularioCompra(HttpServletRequest request,
+                                           HttpServletResponse response) throws Exception {
+         String idStr = request.getParameter("id");
+         if (idStr == null || !idStr.matches("\\d+")) {
+             response.sendRedirect(request.getContextPath() + "/ProveedorServlet?action=listar");
+             return;
+         }
+
+         int proveedorId = Integer.parseInt(idStr);
+         Proveedor proveedor = proveedorDAO.obtenerPorId(proveedorId);
+         if (proveedor == null) {
+             response.sendRedirect(request.getContextPath() + "/ProveedorServlet?action=listar");
+             return;
+         }
+
+         // ── Cargar datos necesarios para el formulario ──
+         List<Categoria>  categorias  = categoriaDAO.listarCategorias();
+         List<MetodoPago> metodosPago = metodoPagoDAO.listarTodos();
+
+         request.setAttribute("proveedor",   proveedor);
+         request.setAttribute("proveedorId", String.valueOf(proveedorId)); // String para el JSP
+         request.setAttribute("categorias",  categorias);
+         request.setAttribute("metodosPago", metodosPago);
+
+         request.getRequestDispatcher("/Administrador/proveedores/agregar_compra.jsp")
+                .forward(request, response);
+     }
 }

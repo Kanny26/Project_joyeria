@@ -2,6 +2,7 @@ package dao;
 
 import config.ConexionDB;
 import model.Producto;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,52 +10,49 @@ import java.util.List;
 public class ProductoDAO {
 
     private static final String SELECT_BASE = """
-        SELECT p.producto_id, p.codigo, p.nombre, p.descripcion, p.stock, p.precio_unitario, 
-               p.precio_venta, p.imagen, p.imagen_data, p.imagen_tipo, p.fecha_registro, 
+        SELECT p.producto_id, p.codigo, p.nombre, p.descripcion, p.stock, p.precio_unitario,
+               p.precio_venta, p.imagen, p.imagen_data, p.imagen_tipo, p.fecha_registro,
                p.material_id, p.categoria_id, p.subcategoria_id, p.proveedor_id, p.estado,
-               m.nombre AS material_nombre, c.nombre AS categoria_nombre, 
-               s.nombre AS subcategoria_nombre, prov.nombre AS proveedor_nombre 
-        FROM Producto p 
-        INNER JOIN Material m ON m.material_id = p.material_id 
-        INNER JOIN Categoria c ON c.categoria_id = p.categoria_id 
-        INNER JOIN Proveedor prov ON prov.proveedor_id = p.proveedor_id 
-        LEFT JOIN Subcategoria s ON s.subcategoria_id = p.subcategoria_id
+               m.nombre AS material_nombre, c.nombre AS categoria_nombre,
+               s.nombre AS subcategoria_nombre,
+               prov.nombre AS proveedor_nombre
+        FROM Producto p
+        INNER JOIN Material     m    ON m.material_id     = p.material_id
+        INNER JOIN Categoria    c    ON c.categoria_id    = p.categoria_id
+        INNER JOIN Proveedor    prov ON prov.proveedor_id = p.proveedor_id
+        LEFT  JOIN Subcategoria s    ON s.subcategoria_id = p.subcategoria_id
         """;
 
-    // ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+    // ══════════════════════════════════════════════════════════
     // LISTAR POR CATEGORÍA
-    // ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+    // ══════════════════════════════════════════════════════════
     public List<Producto> listarPorCategoria(int categoriaId) throws Exception {
         List<Producto> lista = new ArrayList<>();
         String sql = SELECT_BASE + " WHERE p.categoria_id = ? AND p.estado = 1 ORDER BY p.codigo ASC";
-        
         try (Connection con = ConexionDB.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, categoriaId);
             try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    lista.add(mapearProducto(rs));
-                }
+                while (rs.next()) lista.add(mapearProducto(rs));
             }
         }
         return lista;
     }
 
-    // ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+    // ══════════════════════════════════════════════════════════
     // LISTAR DISPONIBLES (stock > 0, sin BLOB, para ventas)
-    // ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+    // ══════════════════════════════════════════════════════════
     public List<Producto> listarProductosDisponibles() throws Exception {
         List<Producto> lista = new ArrayList<>();
         String sql = """
-            SELECT p.producto_id, p.codigo, p.nombre, p.descripcion, p.stock, p.precio_venta, 
-                   p.imagen, m.nombre AS material_nombre, c.nombre AS categoria_nombre 
-            FROM Producto p 
-            INNER JOIN Material m ON m.material_id = p.material_id 
-            INNER JOIN Categoria c ON c.categoria_id = p.categoria_id 
-            WHERE p.stock > 0 AND p.estado = 1 
+            SELECT p.producto_id, p.codigo, p.nombre, p.descripcion, p.stock, p.precio_venta,
+                   p.imagen, m.nombre AS material_nombre, c.nombre AS categoria_nombre
+            FROM Producto p
+            INNER JOIN Material  m ON m.material_id  = p.material_id
+            INNER JOIN Categoria c ON c.categoria_id = p.categoria_id
+            WHERE p.stock > 0 AND p.estado = 1
             ORDER BY p.nombre
             """;
-        
         try (Connection con = ConexionDB.getConnection();
              PreparedStatement ps = con.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
@@ -74,57 +72,35 @@ public class ProductoDAO {
         }
         return lista;
     }
-    
-    public int obtenerTotalEntradasPorCompras(int productoId) throws Exception {
-        int total = 0;
-        // Esta consulta suma todas las cantidades de las facturas de proveedores
-        String sql = "SELECT SUM(cantidad) FROM detalle_compra WHERE producto_id = ?";
-        
-        try (Connection con = ConexionDB.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setInt(1, productoId);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    total = rs.getInt(1);
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return total;
-    }
-    // ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+    // ══════════════════════════════════════════════════════════
     // OBTENER POR ID (completo, con imagen_data)
-    // ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+    // ══════════════════════════════════════════════════════════
     public Producto obtenerPorId(int id) throws Exception {
         String sql = SELECT_BASE + " WHERE p.producto_id = ?";
-        
         try (Connection con = ConexionDB.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, id);
             try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    return mapearProducto(rs);
-                }
+                if (rs.next()) return mapearProducto(rs);
             }
         }
         return null;
     }
 
-    // ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+    // ══════════════════════════════════════════════════════════
     // OBTENER CON STOCK (para validación en ventas, sin BLOB)
-    // ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+    // ══════════════════════════════════════════════════════════
     public Producto obtenerProductoConStock(int productoId) throws Exception {
         String sql = """
-            SELECT p.producto_id, p.codigo, p.nombre, p.descripcion, p.stock, 
-                   p.precio_unitario, p.precio_venta, p.imagen, 
+            SELECT p.producto_id, p.codigo, p.nombre, p.descripcion, p.stock,
+                   p.precio_unitario, p.precio_venta, p.imagen,
                    m.nombre AS material_nombre, c.nombre AS categoria_nombre
-            FROM Producto p 
-            INNER JOIN Material m ON m.material_id = p.material_id 
-            INNER JOIN Categoria c ON c.categoria_id = p.categoria_id 
+            FROM Producto p
+            INNER JOIN Material  m ON m.material_id  = p.material_id
+            INNER JOIN Categoria c ON c.categoria_id = p.categoria_id
             WHERE p.producto_id = ?
             """;
-        
         try (Connection con = ConexionDB.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, productoId);
@@ -148,22 +124,27 @@ public class ProductoDAO {
         return null;
     }
 
-    // ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+    // ══════════════════════════════════════════════════════════
     // GUARDAR NUEVO PRODUCTO
-    // ■■ Stock siempre inicia en 0 — el stock solo entra por compras ■■
-    // ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
-    public void guardar(Producto p, int usuarioId, int proveedorId) throws Exception {
-        if (p.getPrecioVenta().compareTo(p.getPrecioUnitario()) < 0) {
+    // ■ proveedor_id es OBLIGATORIO (NOT NULL en BD)
+    // ■ subcategoria_id es opcional (puede ser NULL)
+    // ■ stock siempre inicia en 0
+    // ══════════════════════════════════════════════════════════
+    public void guardar(Producto p, int usuarioId) throws Exception {
+        if (p.getPrecioVenta().compareTo(p.getPrecioUnitario()) < 0)
             throw new Exception("El precio de venta no puede ser menor al precio de costo.");
-        }
+        if (p.getDescripcion() != null && p.getDescripcion().length() > 500)
+            throw new Exception("La descripción no puede superar los 500 caracteres.");
+        if (p.getProveedorId() <= 0)
+            throw new Exception("Debes seleccionar un proveedor.");
 
-        // ■■ Forzar stock = 0 al crear ■■
-        p.setStock(0);
+        p.setStock(0); // stock siempre empieza en 0
 
         String sql = """
-            INSERT INTO Producto (codigo, nombre, descripcion, stock, precio_unitario, 
-                    precio_venta, fecha_registro, material_id, categoria_id, subcategoria_id, 
-                    proveedor_id, imagen, imagen_data, imagen_tipo, estado) 
+            INSERT INTO Producto
+                (codigo, nombre, descripcion, stock, precio_unitario,
+                 precio_venta, fecha_registro, material_id, categoria_id,
+                 subcategoria_id, proveedor_id, imagen, imagen_data, imagen_tipo, estado)
             VALUES (?, ?, ?, 0, ?, ?, CURDATE(), ?, ?, ?, ?, ?, ?, ?, 1)
             """;
 
@@ -181,13 +162,13 @@ public class ProductoDAO {
                     ps.setInt(6, p.getMaterialId());
                     ps.setInt(7, p.getCategoriaId());
 
-                    if (p.getSubcategoriaId() > 0) {
-                        ps.setInt(8, p.getSubcategoriaId());
-                    } else {
-                        ps.setNull(8, Types.INTEGER);
-                    }
+                    // subcategoria_id — opcional (puede ser NULL)
+                    if (p.getSubcategoriaId() > 0) ps.setInt(8, p.getSubcategoriaId());
+                    else                            ps.setNull(8, Types.INTEGER);
 
-                    ps.setInt(9, proveedorId);
+                    // proveedor_id — OBLIGATORIO (NOT NULL en BD)
+                    ps.setInt(9, p.getProveedorId());
+
                     ps.setString(10, p.getImagen());
 
                     if (p.getImagenData() != null && p.getImagenData().length > 0) {
@@ -201,12 +182,9 @@ public class ProductoDAO {
                     ps.executeUpdate();
 
                     try (ResultSet keys = ps.getGeneratedKeys()) {
-                        if (keys.next()) {
-                            p.setProductoId(keys.getInt(1));
-                        }
+                        if (keys.next()) p.setProductoId(keys.getInt(1));
                     }
                 }
-
                 con.commit();
             } catch (Exception e) {
                 con.rollback();
@@ -217,25 +195,30 @@ public class ProductoDAO {
         }
     }
 
-    // ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
-    // ACTUALIZAR PRODUCTO
-    // ■■ El stock NO se toca aquí — se maneja por ajustarStock() ■■
-    // ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+    // ══════════════════════════════════════════════════════════
+    // ACTUALIZAR PRODUCTO (stock NO se toca aquí)
+    // ══════════════════════════════════════════════════════════
     public void actualizar(Producto p, int usuarioId) throws Exception {
-        if (p.getPrecioVenta().compareTo(p.getPrecioUnitario()) < 0) {
+        if (p.getPrecioVenta().compareTo(p.getPrecioUnitario()) < 0)
             throw new Exception("El precio de venta no puede ser menor al precio de costo.");
-        }
+        if (p.getDescripcion() != null && p.getDescripcion().length() > 500)
+            throw new Exception("La descripción no puede superar los 500 caracteres.");
+        if (p.getProveedorId() <= 0)
+            throw new Exception("Debes seleccionar un proveedor.");
 
         boolean nuevaImg = p.getImagenData() != null && p.getImagenData().length > 0;
 
         String sql = nuevaImg ? """
-            UPDATE Producto SET nombre=?, descripcion=?, precio_unitario=?, 
-                    precio_venta=?, material_id=?, categoria_id=?, subcategoria_id=?, 
-                    imagen=?, imagen_data=?, imagen_tipo=? 
+            UPDATE Producto
+            SET nombre=?, descripcion=?, precio_unitario=?, precio_venta=?,
+                material_id=?, categoria_id=?, subcategoria_id=?, proveedor_id=?,
+                imagen=?, imagen_data=?, imagen_tipo=?
             WHERE producto_id=?
             """ : """
-            UPDATE Producto SET nombre=?, descripcion=?, precio_unitario=?, 
-                    precio_venta=?, material_id=?, categoria_id=?, subcategoria_id=?, imagen=? 
+            UPDATE Producto
+            SET nombre=?, descripcion=?, precio_unitario=?, precio_venta=?,
+                material_id=?, categoria_id=?, subcategoria_id=?, proveedor_id=?,
+                imagen=?
             WHERE producto_id=?
             """;
 
@@ -250,24 +233,21 @@ public class ProductoDAO {
                     ps.setInt(5, p.getMaterialId());
                     ps.setInt(6, p.getCategoriaId());
 
-                    if (p.getSubcategoriaId() > 0) {
-                        ps.setInt(7, p.getSubcategoriaId());
-                    } else {
-                        ps.setNull(7, Types.INTEGER);
-                    }
+                    if (p.getSubcategoriaId() > 0) ps.setInt(7, p.getSubcategoriaId());
+                    else                            ps.setNull(7, Types.INTEGER);
 
-                    ps.setString(8, p.getImagen());
+                    // proveedor_id — OBLIGATORIO
+                    ps.setInt(8, p.getProveedorId());
+                    ps.setString(9, p.getImagen());
 
-                    int idx = 9;
+                    int idx = 10;
                     if (nuevaImg) {
                         ps.setBytes(idx++, p.getImagenData());
                         ps.setString(idx++, p.getImagenTipo());
                     }
                     ps.setInt(idx, p.getProductoId());
-
                     ps.executeUpdate();
                 }
-
                 con.commit();
             } catch (Exception e) {
                 con.rollback();
@@ -278,9 +258,9 @@ public class ProductoDAO {
         }
     }
 
-    // ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
-    // AJUSTE MANUAL DE STOCK + REGISTRO EN Inventario_Movimiento
-    // ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+    // ══════════════════════════════════════════════════════════
+    // AJUSTE MANUAL DE STOCK
+    // ══════════════════════════════════════════════════════════
     public void actualizarStock(int productoId, int nuevoStock) throws Exception {
         String sql = "UPDATE Producto SET stock = ? WHERE producto_id = ?";
         try (Connection con = ConexionDB.getConnection();
@@ -291,8 +271,12 @@ public class ProductoDAO {
         }
     }
 
-    public void registrarMovimiento(int productoId, int usuarioId, String tipo,
-                                    int cantidad, String referencia) throws Exception {
+    // ══════════════════════════════════════════════════════════
+    // REGISTRAR MOVIMIENTO DE INVENTARIO
+    // ══════════════════════════════════════════════════════════
+    public void registrarMovimiento(int productoId, int usuarioId,
+                                    String tipo, int cantidad,
+                                    String referencia) throws Exception {
         String sql = """
             INSERT INTO Inventario_Movimiento
                 (producto_id, usuario_id, tipo, cantidad, fecha, referencia)
@@ -309,12 +293,25 @@ public class ProductoDAO {
         }
     }
 
-    // ■■ Eliminación lógica (estado = 0) ■■
-    public void eliminar(int id, int usuarioId) throws Exception {
-        String sql = "UPDATE Producto SET estado = 0 WHERE producto_id = ?";
+    public int obtenerTotalEntradasPorCompras(int productoId) throws Exception {
+        String sql = "SELECT COALESCE(SUM(cantidad), 0) FROM detalle_compra WHERE producto_id = ?";
+        try (Connection con = ConexionDB.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, productoId);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() ? rs.getInt(1) : 0;
+            }
+        }
+    }
 
+    // ══════════════════════════════════════════════════════════
+    // ELIMINACIÓN LÓGICA (estado = 0)
+    // ══════════════════════════════════════════════════════════
+    public void eliminar(int id, int usuarioId) throws Exception {
+        String sql           = "UPDATE Producto SET estado = 0 WHERE producto_id = ?";
         String sqlInventario = """
-            INSERT INTO Inventario_Movimiento (producto_id, usuario_id, tipo, cantidad, fecha, referencia) 
+            INSERT INTO Inventario_Movimiento
+                (producto_id, usuario_id, tipo, cantidad, fecha, referencia)
             VALUES (?, ?, 'salida', ?, NOW(), ?)
             """;
 
@@ -337,7 +334,6 @@ public class ProductoDAO {
                         psInv.executeUpdate();
                     }
                 }
-
                 con.commit();
             } catch (Exception e) {
                 con.rollback();
@@ -348,35 +344,23 @@ public class ProductoDAO {
         }
     }
 
-    // ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
-    // AUXILIAR: obtener stock actual (con conexión existente)
-    // ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
-    private int obtenerStockActual(Connection con, int productoId) throws Exception {
-        String sql = "SELECT stock FROM Producto WHERE producto_id = ?";
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setInt(1, productoId);
-            try (ResultSet rs = ps.executeQuery()) {
-                return rs.next() ? rs.getInt("stock") : 0;
-            }
-        }
-    }
-
-    // ■■ RF14: Validar si categoría tiene productos activos ■■
+    // ══════════════════════════════════════════════════════════
+    // RF14 — Validar si categoría tiene productos activos
+    // ══════════════════════════════════════════════════════════
     public boolean tieneProductosActivos(int categoriaId) throws Exception {
         String sql = "SELECT COUNT(*) FROM Producto WHERE categoria_id = ? AND estado = 1";
         try (Connection con = ConexionDB.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, categoriaId);
             try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) return rs.getInt(1) > 0;
+                return rs.next() && rs.getInt(1) > 0;
             }
         }
-        return false;
     }
 
-    // ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+    // ══════════════════════════════════════════════════════════
     // BÚSQUEDA GLOBAL
-    // ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+    // ══════════════════════════════════════════════════════════
     public List<Producto> buscarGlobal(String termino, String filtro) throws Exception {
         List<Producto> lista = new ArrayList<>();
         String sql = buildSearchSql(false, filtro);
@@ -390,9 +374,9 @@ public class ProductoDAO {
         return lista;
     }
 
-    // ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+    // ══════════════════════════════════════════════════════════
     // BÚSQUEDA EN CATEGORÍA
-    // ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+    // ══════════════════════════════════════════════════════════
     public List<Producto> buscarEnCategoria(int categoriaId, String termino, String filtro) throws Exception {
         List<Producto> lista = new ArrayList<>();
         String sql = buildSearchSql(true, filtro);
@@ -408,27 +392,30 @@ public class ProductoDAO {
 
     private String buildSearchSql(boolean porCategoria, String filtro) {
         String base = """
-            SELECT p.producto_id, p.codigo, p.nombre, p.descripcion, p.stock, 
-                   p.precio_unitario, p.precio_venta, p.imagen, NULL AS imagen_data, 
-                   p.imagen_tipo, p.fecha_registro, p.material_id, p.categoria_id, 
+            SELECT p.producto_id, p.codigo, p.nombre, p.descripcion, p.stock,
+                   p.precio_unitario, p.precio_venta, p.imagen, NULL AS imagen_data,
+                   p.imagen_tipo, p.fecha_registro, p.material_id, p.categoria_id,
                    p.subcategoria_id, p.proveedor_id, p.estado,
-                   m.nombre AS material_nombre, c.nombre AS categoria_nombre, 
-                   s.nombre AS subcategoria_nombre, prov.nombre AS proveedor_nombre 
-            FROM Producto p 
-            INNER JOIN Material m ON m.material_id = p.material_id 
-            INNER JOIN Categoria c ON c.categoria_id = p.categoria_id 
-            INNER JOIN Proveedor prov ON prov.proveedor_id = p.proveedor_id 
-            LEFT JOIN Subcategoria s ON s.subcategoria_id = p.subcategoria_id 
-            WHERE
+                   m.nombre AS material_nombre, c.nombre AS categoria_nombre,
+                   s.nombre AS subcategoria_nombre,
+                   prov.nombre AS proveedor_nombre
+            FROM Producto p
+            INNER JOIN Material     m    ON m.material_id     = p.material_id
+            INNER JOIN Categoria    c    ON c.categoria_id    = p.categoria_id
+            INNER JOIN Proveedor    prov ON prov.proveedor_id = p.proveedor_id
+            LEFT  JOIN Subcategoria s    ON s.subcategoria_id = p.subcategoria_id
+            WHERE\s
             """;
+
         StringBuilder sb = new StringBuilder(base);
         if (porCategoria) sb.append(" p.categoria_id = ? AND (");
-        else sb.append(" (");
+        else              sb.append(" (");
+
         switch (filtro != null ? filtro : "todos") {
-            case "nombre"      -> sb.append("p.nombre LIKE ? OR p.codigo LIKE ?");
-            case "material"    -> sb.append("m.nombre LIKE ?");
-            case "stock"       -> sb.append("CAST(p.stock AS CHAR) LIKE ?");
-            case "subcategoria"-> sb.append("s.nombre LIKE ?");
+            case "nombre"       -> sb.append("p.nombre LIKE ? OR p.codigo LIKE ?");
+            case "material"     -> sb.append("m.nombre LIKE ?");
+            case "stock"        -> sb.append("CAST(p.stock AS CHAR) LIKE ?");
+            case "subcategoria" -> sb.append("s.nombre LIKE ?");
             default -> sb.append(
                 "p.nombre LIKE ? OR p.codigo LIKE ? OR p.descripcion LIKE ? " +
                 "OR m.nombre LIKE ? OR CAST(p.stock AS CHAR) LIKE ? OR s.nombre LIKE ?");
@@ -438,22 +425,25 @@ public class ProductoDAO {
     }
 
     private void bindParams(PreparedStatement ps, int start, String termino,
-                             String filtro, int categoriaId) throws SQLException {
+                            String filtro, int categoriaId) throws SQLException {
         int i = start;
         if (categoriaId > 0) ps.setInt(i++, categoriaId);
         String like = "%" + termino + "%";
         switch (filtro != null ? filtro : "todos") {
-            case "nombre"       -> { ps.setString(i++, like); ps.setString(i++, like); }
-            case "material"     -> ps.setString(i++, like);
-            case "stock"        -> ps.setString(i++, like);
-            case "subcategoria" -> ps.setString(i++, like);
+            case "nombre"       -> { ps.setString(i++, like); ps.setString(i, like); }
+            case "material"     -> ps.setString(i, like);
+            case "stock"        -> ps.setString(i, like);
+            case "subcategoria" -> ps.setString(i, like);
             default -> {
                 ps.setString(i++, like); ps.setString(i++, like); ps.setString(i++, like);
-                ps.setString(i++, like); ps.setString(i++, like); ps.setString(i++, like);
+                ps.setString(i++, like); ps.setString(i++, like); ps.setString(i, like);
             }
         }
     }
 
+    // ══════════════════════════════════════════════════════════
+    // MAPEO ResultSet → Producto
+    // ══════════════════════════════════════════════════════════
     private Producto mapearProducto(ResultSet rs) throws SQLException {
         Producto p = new Producto();
         p.setProductoId(rs.getInt("producto_id"));
@@ -467,17 +457,31 @@ public class ProductoDAO {
         p.setImagenData(rs.getBytes("imagen_data"));
         p.setImagenTipo(rs.getString("imagen_tipo"));
         p.setEstado(rs.getBoolean("estado"));
+
         Date f = rs.getDate("fecha_registro");
         if (f != null) p.setFechaRegistro(f);
+
         p.setMaterialId(rs.getInt("material_id"));
         p.setCategoriaId(rs.getInt("categoria_id"));
         p.setSubcategoriaId(rs.getInt("subcategoria_id"));
-        if (rs.getObject("proveedor_id") != null) p.setProveedorId(rs.getInt("proveedor_id"));
+        p.setProveedorId(rs.getInt("proveedor_id"));
+
         p.setMaterialNombre(rs.getString("material_nombre"));
         p.setCategoriaNombre(rs.getString("categoria_nombre"));
         p.setSubcategoriaNombre(rs.getString("subcategoria_nombre"));
-        if (rs.getObject("proveedor_nombre") != null) p.setProveedorNombre(rs.getString("proveedor_nombre"));
+        p.setProveedorNombre(rs.getString("proveedor_nombre"));
+
         return p;
+    }
+
+    private int obtenerStockActual(Connection con, int productoId) throws Exception {
+        String sql = "SELECT stock FROM Producto WHERE producto_id = ?";
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, productoId);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() ? rs.getInt("stock") : 0;
+            }
+        }
     }
 
     private String generarCodigo(Connection con, int categoriaId) throws SQLException {
@@ -489,9 +493,11 @@ public class ProductoDAO {
                 if (rs.next() && rs.getString("p") != null) prefijo = rs.getString("p");
             }
         }
+
         int siguiente = 1;
         String sqlUltimo = """
-            SELECT codigo FROM Producto WHERE categoria_id = ? AND estado = 1 
+            SELECT codigo FROM Producto
+            WHERE categoria_id = ? AND estado = 1
             ORDER BY producto_id DESC LIMIT 1
             """;
         try (PreparedStatement ps = con.prepareStatement(sqlUltimo)) {

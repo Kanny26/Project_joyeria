@@ -54,6 +54,7 @@
         </div>
 
         <div class="product-details">
+
             <div class="product-row">
                 <span class="product-label">Código</span>
                 <span class="product-info-text"><%= producto.getCodigo() %></span>
@@ -86,6 +87,26 @@
                 </span>
             </div>
 
+            <%-- ══════════════════════════════════════════
+                 CAMPO PROVEEDOR — obligatorio en la BD
+                 El DAO ya carga proveedorNombre via JOIN
+            ══════════════════════════════════════════ --%>
+            <div class="product-row">
+                <span class="product-label">
+                    <i class="fa-solid fa-truck" style="color:#7c3aed; font-size:.85rem;"></i>
+                    Proveedor
+                </span>
+                <span class="product-info-text">
+                    <% if (producto.getProveedorNombre() != null && !producto.getProveedorNombre().isEmpty()) { %>
+                        <strong style="color:#4c3b6e;"><%= producto.getProveedorNombre() %></strong>
+                    <% } else { %>
+                        <span style="color:#ef4444; font-weight:600;">
+                            <i class="fa-solid fa-triangle-exclamation"></i> Sin proveedor asignado
+                        </span>
+                    <% } %>
+                </span>
+            </div>
+
             <div class="product-row">
                 <span class="product-label">Precio de Costo</span>
                 <span class="product-value price">$<%= String.format("%,.0f", producto.getPrecioUnitario()) %></span>
@@ -108,7 +129,9 @@
 
             <div class="product-row">
                 <span class="product-label">Descripción</span>
-                <p class="product-info-text"><%= producto.getDescripcion() != null ? producto.getDescripcion() : "Sin descripción" %></p>
+                <p class="product-info-text">
+                    <%= producto.getDescripcion() != null ? producto.getDescripcion() : "Sin descripción" %>
+                </p>
             </div>
 
             <div class="product-row">

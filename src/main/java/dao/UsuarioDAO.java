@@ -11,7 +11,6 @@ import java.util.*;
 
 public class UsuarioDAO {
 
-    // ==================== VALIDACIONES DE UNICIDAD (RF06) ====================
     public boolean existeDocumento(String documento) {
         String sql = "SELECT COUNT(*) FROM Usuario WHERE documento = ?";
         try (Connection conn = ConexionDB.getConnection();
@@ -96,21 +95,18 @@ public class UsuarioDAO {
         // ■■ 1. Determinar la contraseña a usar ■■
         String contrasenaTextoPlano = PasswordGeneratorService.obtenerContrasena(
             usuario.getRol(), 
-            usuario.getContrasena() // puede ser null o vacía
+            usuario.getContrasena()
         );
 
-        // Guardamos la contraseña en texto plano para enviar por correo ANTES de hashearla
         usuario.setContrasena(contrasenaTextoPlano);
 
         try (Connection conn = ConexionDB.getConnection()) {
             conn.setAutoCommit(false);
-
             int usuarioId;
 
             // ■■ 2. Insertar en la tabla Usuario ■■
             try (PreparedStatement ps = conn.prepareStatement(sqlUsuario, Statement.RETURN_GENERATED_KEYS)) {
                 ps.setString(1, usuario.getNombre());
-                // ■ Guardamos el HASH en la BD, nunca la contraseña en texto plano ■■
                 ps.setString(2, BCrypt.hashpw(contrasenaTextoPlano, BCrypt.gensalt()));
                 ps.setBoolean(3, usuario.isEstado());
                 ps.executeUpdate();
@@ -122,8 +118,13 @@ public class UsuarioDAO {
 
             // ■■ 3. Asignar rol ■■
             String cargo = (usuario.getRol() != null && !usuario.getRol().trim().isEmpty())
-                ? usuario.getRol().trim() : "vendedor";
+                ? usuario.getRol().trim().toLowerCase() : "vendedor";
             
+            // Validar que el rol sea uno de los permitidos
+            if (!cargo.equals("superadministrador") && !cargo.equals("administrador") && !cargo.equals("vendedor")) {
+                throw new SQLException("Rol no válido: " + cargo);
+            }
+
             int rolId;
             try (PreparedStatement psGetRol = conn.prepareStatement("SELECT rol_id FROM Rol WHERE cargo=?")) {
                 psGetRol.setString(1, cargo);
@@ -151,7 +152,7 @@ public class UsuarioDAO {
                 }
             }
 
-            // ■■ 5. Correo (tabla relacional) ■■
+            // ■■ 5. Correo ■■
             if (usuario.getCorreo() != null && !usuario.getCorreo().trim().isEmpty()) {
                 try (PreparedStatement psCorreo = conn.prepareStatement(sqlCorreo)) {
                     psCorreo.setString(1, usuario.getCorreo().trim().toLowerCase());
@@ -160,24 +161,23 @@ public class UsuarioDAO {
                 }
             }
 
-            // ■■ 6. Confirmar transacción ■■
             conn.commit();
             System.out.println("■ Usuario guardado con ID: " + usuarioId + " | Contraseña generada: " + contrasenaTextoPlano);
 
-            // ■■ 7. Enviar correo con credenciales ■■
+            // ■■ 6. Enviar correo con credenciales ■■
             if (usuario.getCorreo() != null && !usuario.getCorreo().trim().isEmpty()) {
                 boolean correoEnviado = EmailService.enviarCredenciales(
                     usuario.getCorreo().trim(),
                     usuario.getNombre(),
                     cargo,
-                    contrasenaTextoPlano // texto plano, nunca el hash
+                    contrasenaTextoPlano
                 );
                 if (!correoEnviado) {
                     System.err.println("■ Usuario creado pero el correo no pudo enviarse a: " + usuario.getCorreo());
                 }
             }
 
-            // ■■ RF38: Registro de auditoría (aislado para que un fallo aquí no revierta la creación) ■■
+            // ■■ RF38: Auditoría ■■
             try {
                 registrarAuditoria(conn, usuarioId, "CREAR", "Usuario", usuarioId, null, usuario.getNombre());
             } catch (Exception eAudit) {
@@ -211,7 +211,7 @@ public class UsuarioDAO {
         
         if (filtroRol != null && !filtroRol.isEmpty() && !"todos".equals(filtroRol)) {
             sql.append(" AND r.cargo = ?");
-            params.add(filtroRol);
+            params.add(filtroRol.toLowerCase());
         }
         
         if (filtroEstado != null && !filtroEstado.isEmpty() && !"todos".equals(filtroEstado)) {
@@ -254,12 +254,8 @@ public class UsuarioDAO {
             conn = ConexionDB.getConnection();
             conn.setAutoCommit(false);
 
-            // ■■ Capturar estado anterior para auditoría ■■
             Usuario anterior = obtenerUsuarioPorId(usuario.getUsuarioId());
             String nombreAnterior = anterior != null ? anterior.getNombre() : "N/A";
-
-            // ■■ RF08: NO se permite editar documento (campo inmutable) ■■
-            // El documento NO se actualiza, solo nombre, estado, rol, teléfono, correo
 
             try (PreparedStatement ps = conn.prepareStatement(
                     "UPDATE Usuario SET nombre=?, estado=? WHERE usuario_id=?")) {
@@ -270,11 +266,16 @@ public class UsuarioDAO {
             }
 
             // Actualizar rol
+            String cargo = usuario.getRol() != null ? usuario.getRol().trim().toLowerCase() : "vendedor";
+            if (!cargo.equals("superadministrador") && !cargo.equals("administrador") && !cargo.equals("vendedor")) {
+                throw new SQLException("Rol no válido: " + cargo);
+            }
+
             int rolId;
             try (PreparedStatement psGetRol = conn.prepareStatement("SELECT rol_id FROM Rol WHERE cargo=?")) {
-                psGetRol.setString(1, usuario.getRol());
+                psGetRol.setString(1, cargo);
                 ResultSet rsRol = psGetRol.executeQuery();
-                if (!rsRol.next()) throw new SQLException("Rol no encontrado: " + usuario.getRol());
+                if (!rsRol.next()) throw new SQLException("Rol no encontrado: " + cargo);
                 rolId = rsRol.getInt("rol_id");
             }
 
@@ -316,7 +317,7 @@ public class UsuarioDAO {
             }
             if (usuario.getCorreo() != null && !usuario.getCorreo().trim().isEmpty()) {
                 try (PreparedStatement ps = conn.prepareStatement("INSERT INTO Correo_Usuario(email, usuario_id) VALUES(?,?)")) {
-                    ps.setString(1, usuario.getCorreo().trim());
+                    ps.setString(1, usuario.getCorreo().trim().toLowerCase());
                     ps.setInt(2, usuario.getUsuarioId());
                     ps.executeUpdate();
                 }
@@ -324,7 +325,6 @@ public class UsuarioDAO {
 
             conn.commit();
 
-            // ■■ RF38: Registro de auditoría (aislado para que un fallo aquí no revierta la edición) ■■
             try {
                 registrarAuditoria(conn, usuarioQueEditaId, "EDITAR", "Usuario", usuario.getUsuarioId(), nombreAnterior, usuario.getNombre());
             } catch (Exception eAudit) {
@@ -335,9 +335,7 @@ public class UsuarioDAO {
 
         } catch (Exception e) {
             e.printStackTrace();
-            try {
-                if (conn != null) conn.rollback();
-            } catch (Exception ignored) {}
+            try { if (conn != null) conn.rollback(); } catch (Exception ignored) {}
             return false;
         } finally {
             try {
@@ -402,7 +400,6 @@ public class UsuarioDAO {
         }
     }
 
-    // ■■ RF38: Método de auditoría ■■
     private void registrarAuditoria(Connection conn, int usuarioId, String accion, String entidad, 
                                     int entidadId, String datosAnteriores, String datosNuevos) throws SQLException {
         String sql = """
@@ -420,8 +417,7 @@ public class UsuarioDAO {
         }
     }
 
-	public List<Map<String, Object>> obtenerHistorialUsuariosConDesempeno() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    public List<Map<String, Object>> obtenerHistorialUsuariosConDesempeno() {
+        return null;
+    }
 }

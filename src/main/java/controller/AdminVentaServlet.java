@@ -61,7 +61,7 @@ public class AdminVentaServlet extends HttpServlet {
                     req.setAttribute("totalVentas", ventas != null ? ventas.size() : 0);
                     req.setAttribute("totalPendientes", ventaDAO.contarPendientes());
                     
-                    String vista = "/Administrador/ventas/listar_ventas.jsp";
+                    String vista = "/Administrador/ventas.jsp";
                     System.out.println("🔄 Forwarding a: " + vista);
                     
                     req.getRequestDispatcher(vista).forward(req, resp);

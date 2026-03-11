@@ -30,35 +30,39 @@ public class LoginServlet extends HttpServlet {
         Map<String, Object> datos = authDAO.validar(nombre, pass);
 
         if (datos == null) {
-            // Mensaje genérico por seguridad (RF02)
             request.setAttribute("error", "Usuario o contraseña incorrectos");
             request.getRequestDispatcher("/inicio-sesion.jsp").forward(request, response);
             return;
         }
 
         // ■■ PREVENCIÓN DE FIJACIÓN DE SESIÓN ■■
-        // Invalidar sesión anterior antes de crear una nueva autenticada
         HttpSession oldSession = request.getSession(false);
         if (oldSession != null) {
             oldSession.invalidate();
         }
         HttpSession session = request.getSession(true);
-        session.setMaxInactiveInterval(900); // 15 minutos (RF04)
+        session.setMaxInactiveInterval(900); // 15 minutos
 
-        // Cabeceras de seguridad para evitar caché en páginas sensibles
+        // Cabeceras de seguridad
         response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
         response.setHeader("Pragma", "no-cache");
         response.setDateHeader("Expires", 0);
 
         String rol = (String) datos.get("rol");
 
+        // ✅ CORRECCIÓN PRINCIPAL: Superadmin y admin van a la misma vista
         switch (rol) {
+            case "superadministrador":
             case "administrador": {
+                // Ambos roles usan el mismo objeto Administrador y misma vista
                 Administrador admin = new Administrador();
                 admin.setId((int) datos.get("id"));
                 admin.setNombre((String) datos.get("nombre"));
+                
                 session.setAttribute("admin", admin);
-                session.setAttribute("rol", "administrador");
+                session.setAttribute("rol", rol); // Guarda el rol exacto: "superadministrador" o "administrador"
+                
+                // ✅ Ambos redirigen a la misma vista principal
                 response.sendRedirect(request.getContextPath() + "/Administrador/admin-principal.jsp");
                 break;
             }

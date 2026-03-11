@@ -1,5 +1,4 @@
 package controller;
-
 import dao.CategoriaDAO;
 import dao.ClienteDAO;
 import dao.MetodoPagoDAO;
@@ -14,7 +13,6 @@ import model.Producto;
 import model.Usuario;
 import model.Venta;
 import utils.PDFGenerator;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
@@ -28,9 +26,9 @@ import java.util.List;
 
 @WebServlet("/VentaVendedorServlet")
 public class VentaVendedorServlet extends HttpServlet {
-    
+
     private static final long serialVersionUID = 1L;
-    
+
     private VentaDAO ventaDAO;
     private ProductoDAO productoDAO;
     private ClienteDAO clienteDAO;
@@ -40,16 +38,18 @@ public class VentaVendedorServlet extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        ventaDAO = new VentaDAO();
-        productoDAO = new ProductoDAO();
-        clienteDAO = new ClienteDAO();
-        postventaDAO = new PostventaDAO();
-        categoriaDAO = new CategoriaDAO();
+        ventaDAO      = new VentaDAO();
+        productoDAO   = new ProductoDAO();
+        clienteDAO    = new ClienteDAO();
+        postventaDAO  = new PostventaDAO();
+        categoriaDAO  = new CategoriaDAO();
         metodoPagoDAO = new MetodoPagoDAO();
     }
-    // GET
+
+    // ── GET ──────────────────────────────────────────────────────────────────
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
         if (!estaAutenticado(req, resp)) return;
 
         String action = req.getParameter("action");
@@ -57,14 +57,14 @@ public class VentaVendedorServlet extends HttpServlet {
 
         try {
             switch (action) {
-                case "nueva" -> mostrarFormularioNueva(req, resp);
-                case "verVenta" -> verVenta(req, resp);
-                case "misVentas" -> listarMisVentas(req, resp);
-                case "registrarPostventa" -> mostrarFormularioPostventa(req, resp);
-                case "misCasos" -> listarMisCasos(req, resp);
-                case "obtenerCategorias" -> obtenerCategoriasJSON(resp);
-                case "obtenerProductosPorCategoria" -> obtenerProductosPorCategoriaJSON(req, resp);
-                case "descargarFactura" -> descargarFacturaPDF(req, resp);
+                case "nueva"                       -> mostrarFormularioNueva(req, resp);
+                case "verVenta"                    -> verVenta(req, resp);
+                case "misVentas"                   -> listarMisVentas(req, resp);
+                case "registrarPostventa"          -> mostrarFormularioPostventa(req, resp);
+                case "misCasos"                    -> listarMisCasos(req, resp);
+                case "obtenerCategorias"           -> obtenerCategoriasJSON(resp);
+                case "obtenerProductosPorCategoria"-> obtenerProductosPorCategoriaJSON(req, resp);
+                case "descargarFactura"            -> descargarFacturaPDF(req, resp);
                 default -> resp.sendRedirect(req.getContextPath() + "/VentaVendedorServlet?action=misVentas");
             }
         } catch (Exception e) {
@@ -74,11 +74,10 @@ public class VentaVendedorServlet extends HttpServlet {
         }
     }
 
-    // ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
-    // POST
-    // ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+    // ── POST ─────────────────────────────────────────────────────────────────
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
         if (!estaAutenticado(req, resp)) return;
         req.setCharacterEncoding("UTF-8");
 
@@ -87,24 +86,22 @@ public class VentaVendedorServlet extends HttpServlet {
 
         try {
             switch (action) {
-                case "guardarVenta" -> guardarVenta(req, resp);
-                case "abonar" -> procesarAbono(req, resp);
-                case "guardarPostventa" -> guardarPostventa(req, resp);
+                case "guardarVenta"    -> guardarVenta(req, resp);
+                case "abonar"          -> procesarAbono(req, resp);
+                case "guardarPostventa"-> guardarPostventa(req, resp);
                 default -> resp.sendRedirect(req.getContextPath() + "/VentaVendedorServlet?action=misVentas");
             }
         } catch (Exception e) {
+            e.printStackTrace();
             req.setAttribute("error", "Error: " + e.getMessage());
             req.getRequestDispatcher("/vendedor/mensajesexito.jsp").forward(req, resp);
         }
     }
 
-    // ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
-    // JSON — MODAL DE SELECCIÓN DE PRODUCTOS
-    // ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+    // ── JSON ─────────────────────────────────────────────────────────────────
     private void obtenerCategoriasJSON(HttpServletResponse resp) throws IOException {
         resp.setContentType("application/json;charset=UTF-8");
         resp.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
-        
         try {
             List<Categoria> categorias = categoriaDAO.listarCategorias();
             StringBuilder json = new StringBuilder("[");
@@ -124,10 +121,10 @@ public class VentaVendedorServlet extends HttpServlet {
         }
     }
 
-    private void obtenerProductosPorCategoriaJSON(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    private void obtenerProductosPorCategoriaJSON(HttpServletRequest req, HttpServletResponse resp)
+            throws IOException {
         resp.setContentType("application/json;charset=UTF-8");
         resp.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
-        
         String categoriaIdStr = req.getParameter("categoriaId");
         if (categoriaIdStr == null || !categoriaIdStr.matches("\\d+")) {
             resp.getWriter().write("[]");
@@ -156,27 +153,27 @@ public class VentaVendedorServlet extends HttpServlet {
         }
     }
 
-    // ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
-    // VISTAS GET
-    // ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
-    private void mostrarFormularioNueva(HttpServletRequest req, HttpServletResponse resp) 
+    // ── VISTAS GET ────────────────────────────────────────────────────────────
+    private void mostrarFormularioNueva(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        
-        // 1. Cargar las categorías
-        req.setAttribute("categorias", categoriaDAO.listarCategorias());
-        
-        // 2. MOVER AQUÍ: Cargar métodos de pago ANTES del forward
-        try {
-            List<MetodoPago> metodos = metodoPagoDAO.listarTodos();
-            req.setAttribute("metodosPago", metodos);
-        } catch (Exception e) {
-            e.printStackTrace(); // Es mejor loguear el error para saber si el DAO falla
-        }
-
-        // 3. Al final, despachar al JSP
+        cargarAtributosFormulario(req);
         req.getRequestDispatcher("/vendedor/registrar_venta.jsp").forward(req, resp);
     }
-    
+
+    /** Carga categorías y métodos de pago en el request (reutilizable). */
+    private void cargarAtributosFormulario(HttpServletRequest req) {
+        try {
+            req.setAttribute("categorias", categoriaDAO.listarCategorias());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            req.setAttribute("metodosPago", metodoPagoDAO.listarTodos());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private void listarMisVentas(HttpServletRequest req, HttpServletResponse resp) throws Exception {
         Usuario vendedor = getVendedor(req);
         if (vendedor == null) {
@@ -188,7 +185,6 @@ public class VentaVendedorServlet extends HttpServlet {
         req.getRequestDispatcher("/vendedor/ventas_realizadas.jsp").forward(req, resp);
     }
 
-    // ■■ MÉTODO AUXILIAR: Validar propiedad con primitivos int ■■
     private boolean esVentaDelVendedor(Venta venta, Usuario vendedor) {
         if (venta == null || vendedor == null) return false;
         return venta.getUsuarioId() == vendedor.getUsuarioId();
@@ -196,46 +192,28 @@ public class VentaVendedorServlet extends HttpServlet {
 
     private void verVenta(HttpServletRequest req, HttpServletResponse resp) throws Exception {
         int id = parseId(req.getParameter("id"));
-        if (id <= 0) {
-            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "ID de venta inválido");
-            return;
-        }
-        
+        if (id <= 0) { resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "ID de venta inválido"); return; }
+
         Venta venta = ventaDAO.obtenerPorId(id);
         Usuario vendedor = getVendedor(req);
-        
-        // ■■ RF23: Validación estricta de propiedad (primitivos int) ■■
         if (!esVentaDelVendedor(venta, vendedor)) {
             resp.sendError(HttpServletResponse.SC_FORBIDDEN, "Acceso denegado: No es tu venta");
             return;
         }
-        
         req.setAttribute("venta", venta);
         req.setAttribute("detalles", venta.getDetalles());
-        
-        if ("true".equals(req.getParameter("imprimir"))) {
-            req.setAttribute("imprimir", true);
-        }
-        
+        if ("true".equals(req.getParameter("imprimir"))) req.setAttribute("imprimir", true);
         req.getRequestDispatcher("/vendedor/ver_venta.jsp").forward(req, resp);
     }
 
     private void mostrarFormularioPostventa(HttpServletRequest req, HttpServletResponse resp) throws Exception {
         int ventaId = parseId(req.getParameter("ventaId"));
-        if (ventaId <= 0) {
-            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "ID de venta inválido");
-            return;
-        }
-        
+        if (ventaId <= 0) { resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "ID de venta inválido"); return; }
+
         Venta venta = ventaDAO.obtenerPorId(ventaId);
         Usuario vendedor = getVendedor(req);
-        
-        // ■■ Validación de propiedad (primitivos int) ■■
-        if (!esVentaDelVendedor(venta, vendedor)) {
-            resp.sendError(HttpServletResponse.SC_FORBIDDEN, "Acceso denegado");
-            return;
-        }
-        
+        if (!esVentaDelVendedor(venta, vendedor)) { resp.sendError(HttpServletResponse.SC_FORBIDDEN, "Acceso denegado"); return; }
+
         req.setAttribute("venta", venta);
         req.setAttribute("detalles", venta.getDetalles());
         req.getRequestDispatcher("/vendedor/registrar_postventa.jsp").forward(req, resp);
@@ -243,45 +221,28 @@ public class VentaVendedorServlet extends HttpServlet {
 
     private void listarMisCasos(HttpServletRequest req, HttpServletResponse resp) throws Exception {
         Usuario vendedor = getVendedor(req);
-        if (vendedor == null) {
-            resp.sendRedirect(req.getContextPath() + "/inicio-sesion.jsp");
-            return;
-        }
-        // ■■ CORREGIDO: Listar solo casos del vendedor autenticado ■■
+        if (vendedor == null) { resp.sendRedirect(req.getContextPath() + "/inicio-sesion.jsp"); return; }
         List<CasoPostventa> casos = postventaDAO.listarPorVendedor(vendedor.getUsuarioId());
         req.setAttribute("casos", casos);
         req.getRequestDispatcher("/vendedor/casos_postventa.jsp").forward(req, resp);
     }
 
-    // ■■ RF21: Método para descargar factura en PDF ■■
     private void descargarFacturaPDF(HttpServletRequest req, HttpServletResponse resp) throws Exception {
         int ventaId = parseId(req.getParameter("id"));
-        if (ventaId <= 0) {
-            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "ID de venta inválido");
-            return;
-        }
-        
+        if (ventaId <= 0) { resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "ID de venta inválido"); return; }
+
         Venta venta = ventaDAO.obtenerPorId(ventaId);
         Usuario vendedor = getVendedor(req);
-        
-        // ■■ Validación de propiedad (primitivos int) ■■
-        if (!esVentaDelVendedor(venta, vendedor)) {
-            resp.sendError(HttpServletResponse.SC_FORBIDDEN, "Acceso denegado");
-            return;
-        }
-        
+        if (!esVentaDelVendedor(venta, vendedor)) { resp.sendError(HttpServletResponse.SC_FORBIDDEN, "Acceso denegado"); return; }
+
         try {
-            // ■■ Generar PDF con PDFGenerator ■■
             byte[] pdfBytes = PDFGenerator.generarFacturaPDF(venta);
-            
             resp.setContentType("application/pdf");
             resp.setHeader("Content-Disposition", "attachment; filename=\"Factura_" + ventaId + ".pdf\"");
             resp.setContentLength(pdfBytes.length);
             resp.getOutputStream().write(pdfBytes);
             resp.getOutputStream().flush();
-            
         } catch (Exception e) {
-            // ■■ Fallback: Redirigir a vista de impresión ■■
             req.setAttribute("venta", venta);
             req.setAttribute("detalles", venta.getDetalles());
             req.setAttribute("imprimir", true);
@@ -289,123 +250,93 @@ public class VentaVendedorServlet extends HttpServlet {
         }
     }
 
-    // ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
-    // LÓGICA POST: Guardar venta
-    // ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+    // ── GUARDAR VENTA ─────────────────────────────────────────────────────────
     private void guardarVenta(HttpServletRequest req, HttpServletResponse resp) throws Exception {
-        String nombreCliente = req.getParameter("clienteNombre");
+        String nombreCliente   = req.getParameter("clienteNombre");
         String telefonoCliente = req.getParameter("clienteTelefono");
-        String emailCliente = req.getParameter("clienteEmail");
-        String fechaStr = req.getParameter("fechaVenta");
-        String metodoPago = req.getParameter("metodoPago");
-        // CORRECCIÓN BUG 2: El JSP envía "tipoPago" (CONTADO/CREDITO), no "modalidad".
-        // Se lee tipoPago y se convierte al valor que espera el DAO ("anticipo"/"contado").
-        String tipoPago = req.getParameter("tipoPago");
-        String modalidad = "CREDITO".equals(tipoPago) ? "anticipo" : "contado";
+        String emailCliente    = req.getParameter("clienteEmail");
+        String fechaStr        = req.getParameter("fechaVenta");
+        String metodoPago      = req.getParameter("metodoPago");
+        String tipoPago        = req.getParameter("tipoPago");
+        String modalidad       = "CREDITO".equals(tipoPago) ? "anticipo" : "contado";
 
-        // Validaciones básicas
         if (nombreCliente == null || nombreCliente.isBlank()) {
-            reenviarConError(req, resp, "El nombre del cliente es obligatorio.", "/vendedor/registrar_venta.jsp");
-            return;
+            reenviarConError(req, resp, "El nombre del cliente es obligatorio.", "/vendedor/registrar_venta.jsp"); return;
         }
         if (metodoPago == null || metodoPago.isBlank()) {
-            reenviarConError(req, resp, "El método de pago es obligatorio.", "/vendedor/registrar_venta.jsp");
-            return;
+            reenviarConError(req, resp, "El método de pago es obligatorio.", "/vendedor/registrar_venta.jsp"); return;
         }
         if (fechaStr == null || fechaStr.isBlank()) {
-            reenviarConError(req, resp, "La fecha de venta es obligatoria.", "/vendedor/registrar_venta.jsp");
-            return;
+            reenviarConError(req, resp, "La fecha de venta es obligatoria.", "/vendedor/registrar_venta.jsp"); return;
         }
 
-        // ■■ Obtener arrays de productos ■■
         String[] productoIds = req.getParameterValues("productoId");
-        String[] cantidades = req.getParameterValues("cantidad");
-        String[] precios = req.getParameterValues("precioUnitario");
+        String[] cantidades  = req.getParameterValues("cantidad");
+        String[] precios     = req.getParameterValues("precioUnitario");
 
         if (productoIds == null || productoIds.length == 0) {
-            reenviarConError(req, resp, "Debes agregar al menos un producto.", "/vendedor/registrar_venta.jsp");
-            return;
+            reenviarConError(req, resp, "Debes agregar al menos un producto.", "/vendedor/registrar_venta.jsp"); return;
         }
 
         List<DetalleVenta> detalles = new ArrayList<>();
         BigDecimal total = BigDecimal.ZERO;
 
-        // ■■ VALIDAR STOCK PARA CADA PRODUCTO INDIVIDUALMENTE ■■
         for (int i = 0; i < productoIds.length; i++) {
             if (productoIds[i] == null || productoIds[i].trim().isEmpty()) continue;
-            
             try {
-                int prodId = Integer.parseInt(productoIds[i].trim());
-                int cant = Integer.parseInt(cantidades[i].trim());
+                int prodId       = Integer.parseInt(productoIds[i].trim());
+                int cant         = Integer.parseInt(cantidades[i].trim());
                 BigDecimal precio = new BigDecimal(precios[i].trim());
+                Producto prod    = productoDAO.obtenerProductoConStock(prodId);
 
-                // ■■ CORRECCIÓN: Obtener producto completo con stock ■■
-                Producto prod = productoDAO.obtenerProductoConStock(prodId);
-                
                 if (prod == null) {
-                    reenviarConError(req, resp, "Producto no encontrado: " + prodId, "/vendedor/registrar_venta.jsp");
-                    return;
+                    reenviarConError(req, resp, "Producto no encontrado: " + prodId, "/vendedor/registrar_venta.jsp"); return;
                 }
-                
-                // ■■ RF16: Validar que haya stock suficiente ■■
                 if (prod.getStock() < cant) {
-                    reenviarConError(req, resp, 
-                        "Stock insuficiente para: " + prod.getNombre() + 
-                        ". Disponible: " + prod.getStock() + ", Solicitado: " + cant, 
-                        "/vendedor/registrar_venta.jsp");
-                    return;
+                    reenviarConError(req, resp,
+                        "Stock insuficiente para: " + prod.getNombre() +
+                        ". Disponible: " + prod.getStock() + ", Solicitado: " + cant,
+                        "/vendedor/registrar_venta.jsp"); return;
                 }
-
                 DetalleVenta detalle = new DetalleVenta(prodId, prod.getNombre(), cant, precio, cant);
                 detalles.add(detalle);
                 total = total.add(detalle.getSubtotal());
-                
             } catch (NumberFormatException e) {
-                reenviarConError(req, resp, "Formato de número inválido en los datos del producto.", "/vendedor/registrar_venta.jsp");
-                return;
+                reenviarConError(req, resp, "Formato de número inválido en los datos del producto.", "/vendedor/registrar_venta.jsp"); return;
             }
         }
 
         if (detalles.isEmpty()) {
-            reenviarConError(req, resp, "No hay productos válidos en la venta.", "/vendedor/registrar_venta.jsp");
-            return;
+            reenviarConError(req, resp, "No hay productos válidos en la venta.", "/vendedor/registrar_venta.jsp"); return;
         }
 
-        // Validaciones de anticipo
-        BigDecimal montoAnticipo = null;
-        BigDecimal saldoPendiente = null;
-
-        // VALIDACIÓN: crédito solo permitido si el total supera $250.000
         if ("anticipo".equals(modalidad) && total.compareTo(new BigDecimal("250000")) <= 0) {
-            reenviarConError(req, resp, "El crédito solo está disponible para compras mayores a $250.000.", "/vendedor/registrar_venta.jsp");
-            return;
+            reenviarConError(req, resp, "El crédito solo está disponible para compras mayores a $250.000.", "/vendedor/registrar_venta.jsp"); return;
         }
+
+        BigDecimal montoAnticipo = null;
+        BigDecimal saldoPendiente;
 
         if ("anticipo".equals(modalidad)) {
-            // CORRECCIÓN BUG 2 (cont.): El JSP usa name="anticipo", no "montoAnticipo".
             String anticipoStr = req.getParameter("anticipo");
             if (anticipoStr == null || anticipoStr.isBlank()) {
-                reenviarConError(req, resp, "Ingresa el monto del anticipo.", "/vendedor/registrar_venta.jsp");
-                return;
+                reenviarConError(req, resp, "Ingresa el monto del anticipo.", "/vendedor/registrar_venta.jsp"); return;
             }
             montoAnticipo = new BigDecimal(anticipoStr);
             if (montoAnticipo.compareTo(BigDecimal.ZERO) <= 0 || montoAnticipo.compareTo(total) >= 0) {
-                reenviarConError(req, resp, "El anticipo debe ser mayor a 0 y menor al total.", "/vendedor/registrar_venta.jsp");
-                return;
+                reenviarConError(req, resp, "El anticipo debe ser mayor a 0 y menor al total.", "/vendedor/registrar_venta.jsp"); return;
             }
             saldoPendiente = total.subtract(montoAnticipo);
         } else {
             saldoPendiente = BigDecimal.ZERO;
         }
 
-        // Registrar cliente y venta
         int clienteId = clienteDAO.registrarOObtenerCliente(nombreCliente, telefonoCliente, emailCliente);
         Date fechaEmision = new SimpleDateFormat("yyyy-MM-dd").parse(fechaStr);
-        Usuario vendedor = getVendedor(req);
-        
+        Usuario vendedor  = getVendedor(req);
+
         if (vendedor == null) {
-            reenviarConError(req, resp, "Sesión expirada. Inicia sesión nuevamente.", "/vendedor/registrar_venta.jsp");
-            return;
+            reenviarConError(req, resp, "Sesión expirada. Inicia sesión nuevamente.", "/vendedor/registrar_venta.jsp"); return;
         }
 
         Venta venta = new Venta(vendedor.getUsuarioId(), clienteId, fechaEmision, total, metodoPago);
@@ -414,7 +345,6 @@ public class VentaVendedorServlet extends HttpServlet {
         venta.setSaldoPendiente(saldoPendiente);
 
         int ventaIdGenerado = ventaDAO.insertar(venta, detalles, modalidad, montoAnticipo, saldoPendiente, vendedor.getUsuarioId());
-
         if (ventaIdGenerado > 0) {
             req.setAttribute("mensaje", "Venta #" + ventaIdGenerado + " registrada exitosamente.");
             req.setAttribute("venta", ventaDAO.obtenerPorId(ventaIdGenerado));
@@ -424,63 +354,45 @@ public class VentaVendedorServlet extends HttpServlet {
         }
     }
 
-    // ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
-    // LÓGICA POST: Abonar saldo
-    // ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+    // ── ABONAR ────────────────────────────────────────────────────────────────
     private void procesarAbono(HttpServletRequest req, HttpServletResponse resp) throws Exception {
-        int ventaId = parseId(req.getParameter("ventaId"));
+        int ventaId    = parseId(req.getParameter("ventaId"));
         String montoStr = req.getParameter("montoAbono");
-        
+
         if (ventaId <= 0 || montoStr == null || montoStr.isBlank()) {
-            reenviarConError(req, resp, "Datos de abono inválidos.", "/vendedor/ver_venta.jsp");
-            return;
-        }
-        
-        BigDecimal monto = new BigDecimal(montoStr);
-        Venta venta = ventaDAO.obtenerPorId(ventaId);
-        Usuario vendedor = getVendedor(req);
-        
-        // ■■ Validación con primitivos int ■■
-        if (!esVentaDelVendedor(venta, vendedor)) {
-            resp.sendError(HttpServletResponse.SC_FORBIDDEN);
-            return;
+            reenviarConError(req, resp, "Datos de abono inválidos.", "/vendedor/ver_venta.jsp"); return;
         }
 
+        BigDecimal monto  = new BigDecimal(montoStr);
+        Venta venta       = ventaDAO.obtenerPorId(ventaId);
+        Usuario vendedor  = getVendedor(req);
+
+        if (!esVentaDelVendedor(venta, vendedor)) { resp.sendError(HttpServletResponse.SC_FORBIDDEN); return; }
         if (venta.getSaldoPendiente() == null || monto.compareTo(venta.getSaldoPendiente()) > 0) {
-            reenviarConError(req, resp, "El monto no puede superar el saldo pendiente ($" + venta.getSaldoPendiente() + ").", "/vendedor/ver_venta.jsp");
-            return;
+            reenviarConError(req, resp, "El monto no puede superar el saldo pendiente ($" + venta.getSaldoPendiente() + ").", "/vendedor/ver_venta.jsp"); return;
         }
 
         ventaDAO.abonarSaldo(ventaId, monto);
         resp.sendRedirect(req.getContextPath() + "/VentaVendedorServlet?action=verVenta&id=" + ventaId + "&exito=abono");
     }
 
-    // ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
-    // LÓGICA POST: Guardar caso postventa
-    // ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+    // ── POSTVENTA ─────────────────────────────────────────────────────────────
     private void guardarPostventa(HttpServletRequest req, HttpServletResponse resp) throws Exception {
-        int ventaId = parseId(req.getParameter("ventaId"));
-        String tipo = req.getParameter("tipo");
+        int ventaId       = parseId(req.getParameter("ventaId"));
+        String tipo       = req.getParameter("tipo");
         String cantidadStr = req.getParameter("cantidad");
-        String motivo = req.getParameter("motivo");
+        String motivo     = req.getParameter("motivo");
 
         if (ventaId <= 0 || cantidadStr == null || cantidadStr.isBlank()) {
-            reenviarConError(req, resp, "Datos del caso postventa inválidos.", "/vendedor/registrar_postventa.jsp");
-            return;
+            reenviarConError(req, resp, "Datos del caso postventa inválidos.", "/vendedor/registrar_postventa.jsp"); return;
         }
 
-        Venta venta = ventaDAO.obtenerPorId(ventaId);
+        Venta venta      = ventaDAO.obtenerPorId(ventaId);
         Usuario vendedor = getVendedor(req);
-        
-        // ■■ Validación con primitivos int ■■
-        if (!esVentaDelVendedor(venta, vendedor)) {
-            resp.sendError(HttpServletResponse.SC_FORBIDDEN);
-            return;
-        }
+        if (!esVentaDelVendedor(venta, vendedor)) { resp.sendError(HttpServletResponse.SC_FORBIDDEN); return; }
 
         if (!Arrays.asList("cambio", "devolucion", "reclamo").contains(tipo)) {
-            reenviarConError(req, resp, "Tipo de caso inválido.", "/vendedor/registrar_postventa.jsp");
-            return;
+            reenviarConError(req, resp, "Tipo de caso inválido.", "/vendedor/registrar_postventa.jsp"); return;
         }
 
         int cantidad;
@@ -488,8 +400,7 @@ public class VentaVendedorServlet extends HttpServlet {
             cantidad = Integer.parseInt(cantidadStr);
             if (cantidad <= 0) throw new NumberFormatException();
         } catch (NumberFormatException e) {
-            reenviarConError(req, resp, "La cantidad debe ser un número válido mayor a 0.", "/vendedor/registrar_postventa.jsp");
-            return;
+            reenviarConError(req, resp, "La cantidad debe ser un número válido mayor a 0.", "/vendedor/registrar_postventa.jsp"); return;
         }
 
         CasoPostventa caso = new CasoPostventa();
@@ -500,7 +411,6 @@ public class VentaVendedorServlet extends HttpServlet {
         caso.setFecha(new Date());
 
         int casoId = postventaDAO.registrar(caso);
-
         if (casoId > 0) {
             req.setAttribute("mensaje", "Caso #" + casoId + " registrado. Queda en revisión.");
             req.setAttribute("caso", postventaDAO.obtenerPorId(casoId));
@@ -510,14 +420,11 @@ public class VentaVendedorServlet extends HttpServlet {
         }
     }
 
-    // ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
-    // AUXILIARES
-    // ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+    // ── AUXILIARES ────────────────────────────────────────────────────────────
     private boolean estaAutenticado(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         HttpSession session = req.getSession(false);
         if (session == null || session.getAttribute("vendedor") == null) {
             String action = req.getParameter("action");
-            // ■■ Permitir JSON para autocomplete sin redirigir ■■
             if ("obtenerCategorias".equals(action) || "obtenerProductosPorCategoria".equals(action)) {
                 resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 resp.setContentType("application/json");
@@ -538,23 +445,24 @@ public class VentaVendedorServlet extends HttpServlet {
 
     private int parseId(String param) {
         if (param == null || !param.matches("\\d+")) return -1;
-        try {
-            return Integer.parseInt(param);
-        } catch (NumberFormatException e) {
-            return -1;
-        }
+        try { return Integer.parseInt(param); } catch (NumberFormatException e) { return -1; }
     }
 
-    private void reenviarConError(HttpServletRequest req, HttpServletResponse resp, String mensaje, String vista) throws ServletException, IOException {
+    /**
+     * Reenvía al formulario con un mensaje de error.
+     * CORRECCIÓN: siempre recarga categorías Y métodos de pago para que el
+     * formulario se renderice correctamente tras un error de validación.
+     */
+    private void reenviarConError(HttpServletRequest req, HttpServletResponse resp,
+                                  String mensaje, String vista)
+            throws ServletException, IOException {
         req.setAttribute("error", mensaje);
-        // Recargar datos necesarios para el formulario
         if (vista.contains("registrar_venta")) {
-            req.setAttribute("categorias", categoriaDAO.listarCategorias());
+            cargarAtributosFormulario(req); // carga categorías + metodosPago
         }
         req.getRequestDispatcher(vista).forward(req, resp);
     }
 
-    // ■■ CORREGIDO: Escape JSON más robusto ■■
     private String escapeJson(String text) {
         if (text == null) return "";
         return text.replace("\\", "\\\\")
@@ -566,14 +474,14 @@ public class VentaVendedorServlet extends HttpServlet {
                    .replace("\r", "\\r")
                    .replace("\t", "\\t");
     }
-    
+
     @Override
     public void destroy() {
-        // Liberar recursos si es necesario
-        ventaDAO = null;
-        productoDAO = null;
-        clienteDAO = null;
-        postventaDAO = null;
-        categoriaDAO = null;
+        ventaDAO      = null;
+        productoDAO   = null;
+        clienteDAO    = null;
+        postventaDAO  = null;
+        categoriaDAO  = null;
+        metodoPagoDAO = null;
     }
 }

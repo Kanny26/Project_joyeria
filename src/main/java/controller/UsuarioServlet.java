@@ -26,7 +26,8 @@ public class UsuarioServlet extends HttpServlet {
         req.setCharacterEncoding("UTF-8");
 
         HttpSession session = req.getSession(false);
-        if (session == null || session.getAttribute("admin") == null) {
+        // ✅ PERMITIR ACCESO A SUPERADMINISTRADOR Y ADMINISTRADOR
+        if (session == null || (session.getAttribute("admin") == null && session.getAttribute("superadmin") == null)) {
             resp.sendRedirect(req.getContextPath() + "/inicio-sesion.jsp");
             return;
         }
@@ -99,13 +100,21 @@ public class UsuarioServlet extends HttpServlet {
         req.setCharacterEncoding("UTF-8");
 
         HttpSession session = req.getSession(false);
-        if (session == null || session.getAttribute("admin") == null) {
+        // ✅ PERMITIR ACCESO A SUPERADMINISTRADOR Y ADMINISTRADOR
+        if (session == null || (session.getAttribute("admin") == null && session.getAttribute("superadmin") == null)) {
             resp.sendRedirect(req.getContextPath() + "/inicio-sesion.jsp");
             return;
         }
 
-        model.Administrador adminSesion = (model.Administrador) session.getAttribute("admin");
-        int adminId = (adminSesion != null) ? adminSesion.getId() : -1;
+        // Obtener ID del usuario que realiza la acción (puede ser admin o superadmin)
+        Object adminObj = session.getAttribute("admin");
+        Object superAdminObj = session.getAttribute("superadmin");
+        int adminId = -1;
+        if (adminObj instanceof model.Administrador) {
+            adminId = ((model.Administrador) adminObj).getId();
+        } else if (superAdminObj instanceof model.Usuario) {
+            adminId = ((model.Usuario) superAdminObj).getUsuarioId();
+        }
 
         String accion = req.getParameter("accion");
 
@@ -143,13 +152,27 @@ public class UsuarioServlet extends HttpServlet {
                 return;
             }
 
+            // ✅ VALIDACIÓN DE JERARQUÍA: Solo superadmin puede crear admins
+            String rolNormalizado = rol != null ? rol.trim().toLowerCase() : "vendedor";
+            String rolSesion = session.getAttribute("rol") != null ? session.getAttribute("rol").toString().toLowerCase() : "";
+            
+            if (rolNormalizado.equals("administrador") && !rolSesion.equals("superadministrador")) {
+                reenviarConError(req, resp, "No tienes permiso para crear usuarios con rol de administrador.", 
+                        "/Administrador/usuarios/agregar_usuario.jsp");
+                return;
+            }
+            if (!rolNormalizado.equals("vendedor") && !rolNormalizado.equals("administrador")) {
+                reenviarConError(req, resp, "Rol no válido.", "/Administrador/usuarios/agregar_usuario.jsp");
+                return;
+            }
+
             Usuario u = new Usuario();
             u.setNombre(nombre.trim());
             u.setCorreo(correo.trim());
             u.setTelefono(telefono.trim());
             u.setDocumento(documento);
             u.setContrasena(contrasena);
-            u.setRol(rol != null && !rol.trim().isEmpty() ? rol.trim() : "vendedor");
+            u.setRol(rolNormalizado);
             u.setEstado("Activo".equals(req.getParameter("estado")));
 
             boolean exito = usuarioDAO.agregarUsuario(u);
@@ -174,11 +197,7 @@ public class UsuarioServlet extends HttpServlet {
                 Usuario usuarioActual = usuarioDAO.obtenerUsuarioPorId(usuarioId);
 
                 // ■■ Bloquear auto-cambio de rol ■■
-                if (usuarioActual != null
-                        && rol != null
-                        && !usuarioActual.getRol().equals(rol)
-                        && adminSesion != null
-                        && adminSesion.getId() == usuarioId) {
+                if (usuarioActual != null && rol != null && adminId == usuarioId) {
                     req.setAttribute("error", "No puedes cambiar tu propio rol.");
                     req.setAttribute("usuario", usuarioActual);
                     req.getRequestDispatcher("/Administrador/usuarios/editar_usuario.jsp").forward(req, resp);
@@ -186,9 +205,7 @@ public class UsuarioServlet extends HttpServlet {
                 }
 
                 // ■■ Bloquear auto-inactivación ■■
-                if (adminSesion != null
-                        && adminSesion.getId() == usuarioId
-                        && "Inactivo".equals(estado)) {
+                if (adminId == usuarioId && "Inactivo".equals(estado)) {
                     req.setAttribute("error", "No puedes inactivarte a ti mismo.");
                     req.setAttribute("usuario", usuarioActual);
                     req.getRequestDispatcher("/Administrador/usuarios/editar_usuario.jsp").forward(req, resp);
@@ -217,12 +234,23 @@ public class UsuarioServlet extends HttpServlet {
                     return;
                 }
 
+                // ✅ VALIDACIÓN DE JERARQUÍA EN EDICIÓN
+                String rolNormalizado = rol.trim().toLowerCase();
+                String rolSesion = session.getAttribute("rol") != null ? session.getAttribute("rol").toString().toLowerCase() : "";
+                
+                if (rolNormalizado.equals("administrador") && !rolSesion.equals("superadministrador")) {
+                    req.setAttribute("error", "No tienes permiso para asignar rol de administrador.");
+                    req.setAttribute("usuario", usuarioDAO.obtenerUsuarioPorId(usuarioId));
+                    req.getRequestDispatcher("/Administrador/usuarios/editar_usuario.jsp").forward(req, resp);
+                    return;
+                }
+
                 Usuario u = new Usuario();
                 u.setUsuarioId(usuarioId);
                 u.setNombre(nombre.trim());
-                u.setCorreo(correo.trim());
+                u.setCorreo(correo.trim().toLowerCase());
                 u.setTelefono(telefono);
-                u.setRol(rol.trim());
+                u.setRol(rolNormalizado);
                 u.setEstado("Activo".equals(estado));
 
                 boolean exito = usuarioDAO.editarUsuario(u, adminId);
@@ -241,7 +269,6 @@ public class UsuarioServlet extends HttpServlet {
         }
     }
 
-    // ■■ Auxiliar ■■
     private void reenviarConError(HttpServletRequest req, HttpServletResponse resp, String mensaje, String vista)
             throws ServletException, IOException {
         req.setAttribute("error", mensaje);

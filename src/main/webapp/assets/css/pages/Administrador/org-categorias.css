@@ -1,7 +1,8 @@
+/* ══════════ IMPORTS GLOBALES ══════════ */
 @import url('../../base/global.css');
 @import url('../../Tipografias/styles.css');
 
-/* RESET */
+/* ══════════ RESET ══════════ */
 * {
     margin: var(--margin_padding_reset);
     padding: var(--margin_padding_reset);
@@ -11,233 +12,1024 @@
 body {
     font-family: var(--fuente-titulos);
     background: var(--color-fondo-admin);
-    background-size: cover;
+    background-size: 200% 200%;
     background-position: center;
-    background-repeat: no-repeat;
-    min-height: var(--alto-minimo-body);
+    min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    padding-top: 140px;
+    padding-top: 120px;
+    animation: gradientShift 15s ease infinite;
 }
 
-
-/* =========================== */
-/* CATÁLOGO ADMIN */
-/* =========================== */
-
-.catalogo-admin {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
 }
 
-.catalogo-admin__titulo {
-    font-size: var(--tamano-titulo-card);
-    color: var(--color-titulo-cards);
-    margin-bottom: 40px;
-    text-shadow: var(--color-sombra-texto) 4px 4px 4px;
-    transition: transform .3s ease, color .3s ease;
-}
-
-.catalogo-admin__titulo:hover {
-    color: var(--color-texto-hover-cards);
-}
-
-/* CONTENEDOR DE TARJETAS */
-.catalogo-admin__contenedor {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: var(--gap-cards-catalogo);
+/* ══════════ MAIN CONTAINER ══════════ */
+.catalogo-main {
+    width: 100%;
     max-width: 1200px;
+    padding: 0 20px;
+    animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ══════════ HEADER ══════════ */
+.catalogo-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 45px;
     justify-content: center;
 }
 
-/* TARJETA */
-.catalogo-admin__contenedor-item {
-    list-style: none;
+
+.catalogo-header__title {
+    font-size: 40px;
+    font-weight: 800;
+    background: black;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: -0.5px;
 }
 
-.catalogo-admin__tarjeta {
+
+/* ══════════ TABS PILLS ══════════ */
+.tabs-container {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 32px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.tab-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 50px;
+    background: linear-gradient(135deg, #f5f3ff 0%, #fce7f3 100%);
+    color: #8b7aa8;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(139, 122, 168, 0.1);
+    font-family: inherit;
+}
+
+.tab-pill i {
+    font-size: 1.1rem;
+}
+
+.tab-pill:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(139, 122, 168, 0.2);
+    background: linear-gradient(135deg, #eef 0%, #fce7f3 100%);
+}
+
+.tab-pill.active {
+    background: var(--color-fondo-card-productos);
+    color: black;
+    box-shadow: 0 6px 24px rgba(201, 177, 255, 0.4);
+    transform: translateY(-2px);
+}
+
+/* ══════════ ALERT MESSAGES ══════════ */
+.alert-message {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 20px;
+    border-radius: 16px;
+    margin-bottom: 24px;
+    font-weight: 500;
+    animation: slideDown 0.4s ease;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.alert-success {
+    background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+    color: #155724;
+    border: 2px solid #a3d9b1;
+}
+
+.alert-error {
+    background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+    color: #721c24;
+    border: 2px solid #f1aeb5;
+}
+
+.alert-message i {
+    font-size: 1.3rem;
+}
+
+/* ══════════ BOTÓN AGREGAR (estilo solicitado) ══════════ */
+.btn-floating,
+.cards__boton-agregar {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 25px;
+    font-size: 15px;
+    font-weight: 600;
+    background: var(--color-boton-secundario, #28a745);
+    color: var(--color-texto-principal, white);
+    border: none;
+    border-radius: 8px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: inherit;
+    margin-bottom: 32px;
+}
+
+.btn-floating i,
+.cards__boton-agregar i {
+    font-size: 1.1rem;
+    transition: transform 0.3s ease;
+}
+
+.btn-floating:hover,
+.cards__boton-agregar:hover {
+    transform: translateY(-2px);
+    background: var(--color-boton-secundario-hover, #218838);
+}
+
+.btn-floating:hover i,
+.cards__boton-agregar:hover i {
+    transform: rotate(5deg);
+}
+
+/* Responsive: botón full width en móvil */
+@media (max-width: 480px) {
+    .btn-floating,
+    .cards__boton-agregar {
+        width: 100%;
+        justify-content: center;
+    }
+}
+/* ══════════ CIRCLES GRID ══════════ */
+.circles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 32px;
+    justify-items: center;
+}
+
+/* ══════════ CIRCLE CARD ══════════ */
+.circle-card {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: var(--ancho-card);
-    padding: 20px;
-    border-radius: var(--radio-borde-card);
-    text-align: center;
-    transition: transform .3s ease;
-    text-decoration: none;
+    gap: 12px;
+    animation: fadeIn 0.5s ease;
 }
 
-.catalogo-admin__tarjeta:hover {
-    transform: scale(1.03);
+.circle-card__wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    transition: transform 0.3s ease;
 }
 
-/* CÍRCULO ICONO (igual que home) */
-.catalogo-admin__icono {
-    width: var(--ancho-iconos-admin);
-    height: var(--alto-iconos-admin);
+.circle-card__wrapper:hover {
+    transform: translateY(-8px);
+}
+
+.circle-card__icon-container {
+    width: 140px;
+    height: 140px;
     border-radius: 50%;
-    /* background-image: url('../../../../assets/Imagenes/fondos/fondo_cards.jpg'); */
-    background-color: var(--color-cards);
+    background: linear-gradient(
+        44deg,
+        #e3b7c2b8,
+        #c5c2df
+    );
     display: flex;
-    justify-content: center;
     align-items: center;
-    margin-bottom: 15px;
-    transition: transform .3s ease, box-shadow .3s ease;
-}
-
-.catalogo-admin__icono:hover {
-    transform: scale(1.1);
-    box-shadow: var(--sombra-hover);
-}
-
-.catalogo-admin__icono img {
-    width: var(--tamano-imagen-icono);
-    height: var(--tamano-imagen-icono);
-    transition: transform .3s ease;
-}
-
-/* BOTÓN H3 EFECTO (MISMO DEL HOME) */
-.catalogo-admin__titulo-tarjeta {
-    background-color: var(--color-fondo-boton);
-    width: var(--ancho-h3-categorias);
-    height: var(--alto-h3-categorias);
-    border-radius: 20px;
-    display: flex;
     justify-content: center;
-    align-items: center;
-    font-size: var(--tamano-texto-h3);
-    color: var(--color-texto-principal);
-    font-weight: var(--peso-texto-semi);
+    margin-bottom: 16px;
+    box-shadow: 0 8px 24px rgba(139, 122, 168, 0.2);
+    transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
-    cursor: pointer;
-    box-shadow: 0 2px 6px var(--color-sombra-oscura);
 }
 
-/* Fondos animados divididos */
-.catalogo-admin__titulo-tarjeta::before,
-.catalogo-admin__titulo-tarjeta::after {
-    content: "";
+.circle-card__icon-container::before {
+    content: '';
     position: absolute;
-    width: 50%;
-    height: 100%;
-    top: 0;
-    transition: transform .3s ease;
-    z-index: 0;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(135deg, rgba(227,183,194,.3), rgba(197,194,223,.4));
+    opacity: 0;
+    transition: opacity 0.3s ease;
 }
 
-.catalogo-admin__titulo-tarjeta::before {
+.circle-card__wrapper:hover .circle-card__icon-container {
+    box-shadow: 0 12px 36px rgba(139, 122, 168, 0.3);
+    transform: scale(1.05);
+}
+
+.circle-card__wrapper:hover .circle-card__icon-container::before {
+    opacity: 1;
+}
+
+/* Variantes por tipo */
+.circle-card__icon-container--subcategoria {
+    background: linear-gradient(
+        44deg,
+        #e3b7c2b8,
+        #c5c2df
+    );
+}
+
+.circle-card__icon-container--subcategoria:hover {
+    box-shadow: 0 12px 36px rgba(2, 132, 199, 0.3);
+}
+
+.circle-card__icon-container--material {
+    background: linear-gradient(
+        44deg,
+        #e3b7c2b8,
+        #c5c2df
+    );
+}
+
+.circle-card__icon-container--material:hover {
+    box-shadow: 0 12px 36px rgba(220, 38, 38, 0.3);
+}
+
+.circle-card__icon-container--metodopago {
+    background: linear-gradient(
+        44deg,
+        #e3b7c2b8,
+        #c5c2df
+    );
+}
+
+.circle-card__icon-container--metodopago:hover {
+    box-shadow: 0 12px 36px rgba(22, 163, 74, 0.3);
+}
+
+.circle-card__icon {
+    width: 70px;
+    height: 70px;
+    object-fit: contain;
+    z-index: 1;
+}
+
+.circle-card__icon-container i {
+    font-size: 3.5rem;
+    color: #8b7aa8;
+    z-index: 1;
+    transition: transform 0.3s ease;
+}
+
+.circle-card__wrapper:hover .circle-card__icon-container i {
+    transform: scale(1.1);
+}
+
+.circle-card__icon-container--subcategoria i {
+    color: #0284c7;
+}
+
+.circle-card__icon-container--material i {
+    color: #dc2626;
+}
+
+.circle-card__icon-container--metodopago i {
+    color: #16a34a;
+}
+
+/* Label debajo del círculo */
+.circle-card__label {
+    background: linear-gradient(
+        145deg,
+        #E9CDD2,
+        #CFA8B3
+    );
+    padding: 10px 24px;
+    border-radius: 50px;
+    box-shadow: 0 4px 12px rgba(201, 177, 255, 0.3);
+    transition: all 0.3s ease;
+}
+
+.circle-card__wrapper:hover .circle-card__label {
+    box-shadow: 0 6px 20px rgba(201, 177, 255, 0.4);
+    transform: scale(1.05);
+}
+
+.circle-card__label span {
+    font-weight: 600;
+    color: #5a4a6e;
+    font-size: 0.95rem;
+    text-align: center;
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 160px;
+}
+
+
+/* Acciones */
+.circle-card__actions {
+    display: flex;
+    gap: 8px;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.3s ease;
+}
+
+.circle-card:hover .circle-card__actions {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.action-btn {
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+}
+
+.action-btn.edit {
+    background: linear-gradient(135deg, #c9b1ff 0%, #a78bfa 100%);
+    color: white;
+    box-shadow: 0 4px 12px rgba(167, 139, 250, 0.3);
+}
+
+.action-btn.edit:hover {
+    transform: scale(1.15) rotate(15deg);
+    box-shadow: 0 6px 20px rgba(167, 139, 250, 0.4);
+}
+
+.action-btn.delete {
+    background: linear-gradient(135deg, #fca5a5 0%, #f87171 100%);
+    color: white;
+    box-shadow: 0 4px 12px rgba(248, 113, 113, 0.3);
+}
+
+.action-btn.delete:hover {
+    transform: scale(1.15) rotate(-15deg);
+    box-shadow: 0 6px 20px rgba(248, 113, 113, 0.4);
+}
+
+/* ══════════ EMPTY STATE ══════════ */
+.empty-state-circle {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    padding: 60px 40px;
+    background: linear-gradient(135deg, #faf7ff 0%, #fce7f3 100%);
+    border-radius: 24px;
+    border: 3px dashed #d4a5c9;
+    animation: pulse 2s ease infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(212, 165, 201, 0.4); }
+    50% { box-shadow: 0 0 0 12px rgba(212, 165, 201, 0); }
+}
+
+.empty-state-circle i {
+    font-size: 4rem;
+    color: #d4a5c9;
+}
+
+.empty-state-circle p {
+    color: #8b7aa8;
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+/* ══════════ MODAL OVERLAY ══════════ */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    z-index: 1000;
     left: 0;
-    background: var(--color-fondo-h3-izquierda);
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(102, 126, 234, 0.4);
+    backdrop-filter: blur(8px);
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.3s ease;
 }
 
-.catalogo-admin__titulo-tarjeta::after {
-    right: 0;
-    background: var(--color-fondo-h3-derecha);
+.modal-overlay.active {
+    display: flex;
 }
 
-.catalogo-admin__titulo-tarjeta:hover::before {
-    transform: translateX(-100%);
+/* ══════════ MODAL CONTAINER ══════════ */
+.modal-container {
+    background: linear-gradient(135deg, #ffffff 0%, #faf7ff 100%);
+    border-radius: 28px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 20px 60px rgba(102, 126, 234, 0.3);
+    border: 2px solid rgba(201, 177, 255, 0.3);
+    animation: modalSlideUp 0.4s ease;
+    overflow: hidden;
 }
 
-.catalogo-admin__titulo-tarjeta:hover::after {
-    transform: translateX(100%);
+@keyframes modalSlideUp {
+    from { opacity: 0; transform: translateY(40px) scale(0.95); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
-.catalogo-admin__titulo-tarjeta:hover {
-    color: var(--color-texto-hover-cards);
+/* ══════════ MODAL HEADER ══════════ */
+.modal-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 24px 28px;
+    background: linear-gradient(135deg, #f5f3ff 0%, #fce7f3 100%);
+    border-bottom: 2px solid rgba(201, 177, 255, 0.3);
+    position: relative;
 }
 
-/* ============================================================
-   MEDIA QUERIES - DESKTOP FIRST
-   ============================================================ */
+.modal-header__icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #c9b1ff 0%, #d4a5c9 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 6px 20px rgba(201, 177, 255, 0.4);
+}
 
-/* Pantallas extra grandes (>= 1440px) */
-@media (min-width: 1440px) {
-    .catalogo-admin__contenedor {
-        max-width: 1400px;
-        gap: 60px;
+.modal-header__icon i {
+    font-size: 1.8rem;
+    color: white;
+}
+
+.modal-header__icon--blue {
+    background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
+    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+}
+
+.modal-header__icon--red {
+    background: linear-gradient(135deg, #f87171 0%, #ef4444 100%);
+    box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
+}
+
+.modal-header__icon--green {
+    background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+}
+
+.modal-header__title {
+    flex: 1;
+    font-size: 1.4rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #667eea 0%, #d4a5c9 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.modal-close {
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: 50%;
+    background: white;
+    color: #8b7aa8;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(139, 122, 168, 0.2);
+}
+
+.modal-close:hover {
+    background: linear-gradient(135deg, #fca5a5 0%, #f87171 100%);
+    color: white;
+    transform: rotate(90deg);
+    box-shadow: 0 6px 20px rgba(248, 113, 113, 0.4);
+}
+
+/* ══════════ MODAL BODY ══════════ */
+.modal-body {
+    padding: 28px;
+}
+
+.form-group {
+    margin-bottom: 24px;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: 600;
+    color: #5a4a6e;
+    font-size: 0.95rem;
+}
+
+.form-input {
+    width: 100%;
+    padding: 14px 18px;
+    border: 2px solid #e0d7ff;
+    border-radius: 14px;
+    font-size: 1rem;
+    font-family: inherit;
+    transition: all 0.3s ease;
+    background: #faf7ff;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: #c9b1ff;
+    background: white;
+    box-shadow: 0 0 0 6px rgba(201, 177, 255, 0.2);
+    transform: translateY(-2px);
+}
+
+.form-input::placeholder {
+    color: #b8a8d0;
+}
+
+.form-input-file {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px dashed #d4a5c9;
+    border-radius: 14px;
+    background: #faf7ff;
+    color: #8b7aa8;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.form-input-file:hover {
+    border-color: #c9b1ff;
+    background: white;
+}
+
+/* ══════════ MODAL FOOTER ══════════ */
+.modal-footer {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    padding: 20px 28px;
+    background: linear-gradient(135deg, #f5f3ff 0%, #faf7ff 100%);
+    border-top: 2px solid rgba(201, 177, 255, 0.2);
+}
+
+.btn-modal-cancel {
+    padding: 12px 24px;
+    border: 2px solid #d4a5c9;
+    border-radius: 12px;
+    background: white;
+    color: #8b7aa8;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: inherit;
+    font-size: 0.95rem;
+}
+
+.btn-modal-cancel:hover {
+    background: linear-gradient(135deg, #fce7f3 0%, #f5f3ff 100%);
+    border-color: #c9b1ff;
+    transform: translateY(-2px);
+}
+
+.btn-modal-save {
+    padding: 12px 28px;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #667eea 0%, #d4a5c9 50%, #f093b9 100%);
+    color: white;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: inherit;
+    font-size: 0.95rem;
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+}
+
+.btn-modal-save:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+}
+
+.btn-modal-save i {
+    margin-right: 6px;
+}
+
+/* ══════════ TAB PANELS ══════════ */
+.tab-panel {
+    display: none;
+    animation: fadeIn 0.5s ease;
+}
+
+.tab-panel.active {
+    display: block;
+}/* ══════════ RECTANGLE CARDS (con manejo de texto largo) ══════════ */
+.rect-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    animation: fadeIn 0.5s ease;
+    width: 100%;
+    max-width: 220px; /* Un poco más ancho */
+}
+
+.rect-card__wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.rect-card__box {
+    width: 100%;
+    padding: 10px 12px; /* Padding reducido */
+    border-radius: 10px;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px; /* Gap reducido */
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    border: 1px solid rgba(139, 122, 168, 0.15);
+    transition: all 0.3s ease;
+    min-height: 52px; /* Altura mínima consistente */
+}
+
+/* Hover sutil */
+.rect-card__wrapper:hover .rect-card__box {
+    box-shadow: 0 4px 12px rgba(139, 122, 168, 0.15);
+    transform: translateY(-2px);
+}
+
+/* Variantes por tipo */
+.rect-card__box--subcategoria {
+    border-left: 3px solid #60a5fa;
+}
+.rect-card__box--subcategoria:hover {
+    border-left-color: #3b82f6;
+    background: #f0f9ff;
+}
+
+.rect-card__box--material {
+    border-left: 3px solid #f87171;
+}
+.rect-card__box--material:hover {
+    border-left-color: #ef4444;
+    background: #fef2f2;
+}
+
+.rect-card__box--metodopago {
+    border-left: 3px solid #34d399;
+}
+.rect-card__box--metodopago:hover {
+    border-left-color: #10b981;
+    background: #f0fdf4;
+}
+
+/* Contenedor izquierdo: icono + nombre */
+.rect-card__content {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    min-width: 0; /* Permite que el texto se encoja */
+}
+
+/* Icono */
+.rect-card__icon {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    background: rgba(139, 122, 168, 0.1);
+}
+
+.rect-card__icon i {
+    font-size: 0.9rem;
+    color: #8b7aa8;
+}
+
+.rect-card__box--subcategoria .rect-card__icon {
+    background: rgba(2, 132, 199, 0.1);
+}
+.rect-card__box--subcategoria .rect-card__icon i {
+    color: #0284c7;
+}
+
+.rect-card__box--material .rect-card__icon {
+    background: rgba(220, 38, 38, 0.1);
+}
+.rect-card__box--material .rect-card__icon i {
+    color: #dc2626;
+}
+
+.rect-card__box--metodopago .rect-card__icon {
+    background: rgba(22, 163, 74, 0.1);
+}
+.rect-card__box--metodopago .rect-card__icon i {
+    color: #16a34a;
+}
+
+/* Label - MANEJO DE TEXTO LARGO */
+.rect-card__label {
+    font-weight: 500;
+    color: #5a4a6e;
+    font-size: 0.82rem;
+    line-height: 1.2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
+    flex: 1;
+    min-width: 0; /* Importante para flexbox */
+}
+
+/* Botones de acción */
+.rect-card__actions {
+    display: flex;
+    gap: 3px;
+    flex-shrink: 0; /* No se encogen */
+    margin-left: 4px;
+}
+
+.rect-card__actions .action-btn {
+    width: 26px;
+    height: 26px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    font-size: 0.7rem;
+    background: rgba(139, 122, 168, 0.1);
+    color: #8b7aa8;
+    flex-shrink: 0;
+}
+
+.rect-card__actions .action-btn:hover {
+    transform: scale(1.1);
+}
+
+.rect-card__actions .action-btn.edit {
+    background: rgba(102, 126, 234, 0.15);
+    color: #667eea;
+}
+.rect-card__actions .action-btn.edit:hover {
+    background: rgba(102, 126, 234, 0.3);
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+}
+
+.rect-card__actions .action-btn.delete {
+    background: rgba(231, 76, 60, 0.15);
+    color: #e74c3c;
+}
+.rect-card__actions .action-btn.delete:hover {
+    background: rgba(231, 76, 60, 0.3);
+    box-shadow: 0 2px 8px rgba(231, 76, 60, 0.3);
+}
+
+/* Grid */
+.rects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 14px;
+    justify-items: center;
+}
+
+/* Empty state */
+.empty-state-rect {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 30px 20px;
+    background: white;
+    border-radius: 12px;
+    border: 2px dashed rgba(139, 122, 168, 0.2);
+}
+
+.empty-state-rect i {
+    font-size: 2.5rem;
+    color: #c9b1ff;
+    opacity: 0.7;
+}
+
+.empty-state-rect p {
+    color: #8b7aa8;
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .rects-grid {
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 12px;
     }
 }
 
-/* Escritorio – estilos base (>= 1025px) - Sin cambios, estilos base */
+@media (max-width: 480px) {
+    .rects-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+    
+    .rect-card {
+        max-width: 100%;
+    }
+    
+    .rect-card__box {
+        padding: 8px 10px;
+        min-height: 48px;
+    }
+    
+    .rect-card__icon {
+        width: 26px;
+        height: 26px;
+    }
+    
+    .rect-card__icon i {
+        font-size: 0.85rem;
+    }
+    
+    .rect-card__label {
+        font-size: 0.78rem;
+    }
+    
+    .rect-card__actions .action-btn {
+        width: 24px;
+        height: 24px;
+        font-size: 0.65rem;
+    }
+}
+
+/* ══════════ MODAL FOOTER RECARGADO ══════════ */
+.modal-footer {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    padding: 20px 28px;
+    background: #fff5f7; /* Fondo sutilmente rosado */
+    border-top: 1px solid #fce7f3;
+}
+
+/* Botón Cancelar - Estilo minimalista rosa */
+.btn-modal-cancel {
+    padding: 12px 24px;
+    border: 1px solid #f48fb1;
+    border-radius: 12px;
+    background: white;
+    color: #ad1457; /* Texto cereza */
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: inherit;
+}
+
+.btn-modal-cancel:hover {
+    background: #fce4ec;
+    transform: translateY(-2px);
+}
+
+/* Botón Guardar - Degradado Rosado Vibrante */
+.btn-modal-save {
+    padding: 12px 28px;
+    border: none;
+    border-radius: 12px;
+    /* Degradado de rosa fuerte a rosa pastel */
+    background: linear-gradient(135deg, #ec407a 0%, #f48fb1 100%);
+    color: white;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: inherit;
+    box-shadow: 0 4px 15px rgba(236, 64, 122, 0.3);
+}
+
+.btn-modal-save:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(236, 64, 122, 0.5);
+    filter: brightness(1.1);
+}
+
+/* ══════════ RESPONSIVE ══════════ */
 
 /* Tablet (769px a 1024px) */
 @media (min-width: 769px) and (max-width: 1024px) {
     body {
-        padding-top: 120px;
+        padding-top: 100px;
     }
     
-    .catalogo-admin__titulo {
-        font-size: 42px;
-        margin-bottom: 35px;
+    .catalogo-header__title {
+        font-size: 1.8rem;
     }
     
-    .catalogo-admin__contenedor {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 30px;
-        max-width: 900px;
+    .circles-grid {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 28px;
     }
     
-    .catalogo-admin__tarjeta {
-        width: 100%;
+    .circle-card__icon-container {
+        width: 120px;
+        height: 120px;
     }
     
-    .catalogo-admin__icono {
-        width: 150px;
-        height: 150px;
+    .circle-card__icon {
+        width: 60px;
+        height: 60px;
     }
     
-    .catalogo-admin__icono img {
-        width: 90px;
-        height: 90px;
-    }
-    
-    .catalogo-admin__titulo-tarjeta {
-        width: 200px;
-        height: 55px;
-        font-size: 20px;
+    .circle-card__icon-container i {
+        font-size: 3rem;
     }
 }
 
 /* Phablet (481px a 768px) */
 @media (min-width: 481px) and (max-width: 768px) {
     body {
-        padding-top: 100px;
+        padding-top: 90px;
     }
     
-    .catalogo-admin__titulo {
-        font-size: 36px;
-        margin-bottom: 30px;
+    .catalogo-header {
+        flex-direction: column;
+        text-align: center;
     }
     
-    .catalogo-admin__contenedor {
-        grid-template-columns: repeat(1, 2fr);
-        gap: 25px;
-        max-width: 600px;
+    .catalogo-header__title {
+        font-size: 1.6rem;
     }
     
-    .catalogo-admin__tarjeta {
-        width: 100%;
+    .tab-pill {
+        padding: 10px 18px;
+        font-size: 0.85rem;
     }
     
-    .catalogo-admin__icono {
-        width: 130px;
-        height: 130px;
+    .circles-grid {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 24px;
     }
     
-    .catalogo-admin__icono img {
-        width: 80px;
-        height: 80px;
+    .circle-card__icon-container {
+        width: 110px;
+        height: 110px;
     }
     
-    .catalogo-admin__titulo-tarjeta {
-        width: 180px;
-        height: 50px;
-        font-size: 18px;
+    .circle-card__icon {
+        width: 55px;
+        height: 55px;
+    }
+    
+    .circle-card__icon-container i {
+        font-size: 2.5rem;
+    }
+    
+    .circle-card__label {
+        padding: 8px 20px;
+    }
+    
+    .circle-card__label span {
+        font-size: 0.85rem;
     }
 }
 
@@ -247,38 +1039,73 @@ body {
         padding-top: 80px;
     }
     
-    .catalogo-admin__titulo {
-        font-size: 28px;
-        margin-bottom: 25px;
+    .catalogo-header__title {
+        font-size: 1.4rem;
     }
     
-    .catalogo-admin__contenedor {
-        grid-template-columns: repeat(2, 2fr);
+    .tabs-container {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .tab-pill {
+        justify-content: center;
+        padding: 12px 20px;
+    }
+    
+    .btn-floating {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .circles-grid {
+        grid-template-columns: repeat(2, 1fr);
         gap: 20px;
-        max-width: 100%;
-        padding: 0 10px;
     }
     
-    .catalogo-admin__tarjeta {
+    .circle-card__icon-container {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .circle-card__icon {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .circle-card__icon-container i {
+        font-size: 2.2rem;
+    }
+    
+    .circle-card__label {
+        padding: 8px 16px;
+    }
+    
+    .circle-card__label span {
+        font-size: 0.8rem;
+        max-width: 120px;
+    }
+    
+    .modal-container {
+        width: 95%;
+        border-radius: 20px;
+    }
+    
+    .modal-header {
+        padding: 20px;
+    }
+    
+    .modal-body {
+        padding: 20px;
+    }
+    
+    .modal-footer {
+        flex-direction: column-reverse;
+        padding: 16px 20px;
+    }
+    
+    .btn-modal-cancel,
+    .btn-modal-save {
         width: 100%;
-        max-width: 280px;
-        margin: 0 auto;
-    }
-    
-    .catalogo-admin__icono {
-        width: 120px;
-        height: 120px;
-    }
-    
-    .catalogo-admin__icono img {
-        width: 70px;
-        height: 70px;
-    }
-    
-    .catalogo-admin__titulo-tarjeta {
-        width: 100%;
-        max-width: 180px;
-        height: 48px;
-        font-size: 16px;
     }
 }

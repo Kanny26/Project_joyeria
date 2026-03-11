@@ -1,37 +1,39 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java"%>
-<%@ page import="model.Proveedor, java.util.List"%>
-<%-- Esta línea es fundamental para evitar el error 500 con los símbolos $ del JavaScript --%>
-<%@ page isELIgnored="true" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="java.util.List, model.Proveedor, model.Material, model.Administrador" %>
 <%
-    Object admin = session.getAttribute("admin");
+    Administrador admin = (Administrador) session.getAttribute("admin");
     if (admin == null) {
-        response.sendRedirect(request.getContextPath() + "/Administrador/inicio-sesion.jsp");
+        response.sendRedirect(request.getContextPath() + "/inicio-sesion.jsp");
         return;
     }
 
-    List<Proveedor> proveedores = (List<Proveedor>) request.getAttribute("proveedores");
-    if (proveedores == null) proveedores = java.util.Collections.emptyList();
+    List<Proveedor> proveedores  = (List<Proveedor>) request.getAttribute("proveedores");
+    String          termino      = (String)          request.getAttribute("terminoBusqueda");
+    String          filtroActivo = (String)          request.getAttribute("filtroActivo");
 
-    String msg = request.getAttribute("msg") != null
-             ? (String) request.getAttribute("msg")
-             : (String) request.getParameter("msg");
+    if (termino      == null) termino      = "";
+    if (filtroActivo == null) filtroActivo = "todos";
 
-    String busqueda     = (String) request.getAttribute("busqueda");
-    String filtroActivo = request.getAttribute("filtroActivo") != null
-                          ? (String) request.getAttribute("filtroActivo")
-                          : "todos";
+    int totalProveedores = proveedores != null ? proveedores.size() : 0;
+    int totalActivos     = 0;
+    if (proveedores != null) {
+        for (Proveedor p : proveedores) {
+            if (Boolean.TRUE.equals(p.isEstado())) totalActivos++;
+        }
+    }
 
-    if (busqueda == null) busqueda = "";
+    String msg = request.getParameter("msg");
 %>
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestión de Proveedores - AAC27</title>
+    <title>Gestión de Proveedores — AAC27</title>
     <link rel="stylesheet" href="<%=request.getContextPath()%>/assets/css/main.css">
     <link rel="stylesheet" href="<%=request.getContextPath()%>/assets/css/pages/Administrador/proveedores/listar.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
 
@@ -41,205 +43,288 @@
     </div>
     <h1 class="navbar-admin__title">AAC27</h1>
     <a href="<%=request.getContextPath()%>/Administrador/admin-principal.jsp" class="navbar-admin__home-link">
-	    <span class="navbar-admin__home-icon-wrap">
-	        <i class="fa-solid fa-arrow-left"></i>
-		    <span class="navbar-admin__home-text">Volver atrás</span>
-		    <i class="fa-solid fa-house-chimney"></i>
-	    </span>
+        <span class="navbar-admin__home-icon-wrap">
+            <i class="fa-solid fa-arrow-left"></i>
+            <span class="navbar-admin__home-text">Volver atrás</span>
+            <i class="fa-solid fa-house-chimney"></i>
+        </span>
     </a>
 </nav>
 
 <main class="prov-page">
+
     <h2 class="prov-page__titulo">Gestión de Proveedores</h2>
 
-    <div class="contadores">
-        <div class="contador-card">
-            <h2>Total Proveedores</h2>
-            <h3 class="contador-card__numero">
-                <%= request.getAttribute("totalProveedores") != null
-                    ? request.getAttribute("totalProveedores")
-                    : proveedores.size() %>
-            </h3>
+    <%-- ══ CONTADORES ══ --%>
+    <div class="prov-header-stats">
+        <div class="prov-stat-card">
+            <span class="prov-stat-card__label">Total Proveedores</span>
+            <span class="prov-stat-card__num"><%= totalProveedores %></span>
         </div>
-        <div class="contador-card">
-            <h2>Proveedores Activos</h2>
-            <h3 class="contador-card__numero">
-                <%-- Filtro manual para evitar conflictos de streams en versiones antiguas de Java/JSP --%>
-                <% 
-                   long activosCount = 0;
-                   for(Proveedor pCount : proveedores) { if(pCount.isEstado()) activosCount++; }
-                %>
-                <%= request.getAttribute("activos") != null ? request.getAttribute("activos") : activosCount %>
-            </h3>
+        <div class="prov-stat-card">
+            <span class="prov-stat-card__label">Proveedores Activos</span>
+            <span class="prov-stat-card__num"><%= totalActivos %></span>
         </div>
     </div>
 
-    <div class="prov-toolbar">
-        <a href="<%=request.getContextPath()%>/ProveedorServlet?action=nuevo" class="prov-toolbar__btn-nuevo">
-            <i class="fa-solid fa-plus"></i> Agregar Proveedor
-        </a>
-
-        <form action="<%=request.getContextPath()%>/ProveedorServlet" method="get" class="cards__busqueda" id="formBusquedaProveedor">
-            <input type="hidden" name="action" value="buscar">
-           <select name="filtro" id="filtroSelectProveedor" class="cards__busqueda-filtro" onchange="actualizarPlaceholderProveedor(this)">
-			    <option value="todos"      <%= "todos".equals(filtroActivo)      ? "selected" : "" %>>Todos</option>
-			    <option value="nombre"     <%= "nombre".equals(filtroActivo)     ? "selected" : "" %>>Nombre</option>
-			    <option value="materiales" <%= "materiales".equals(filtroActivo) ? "selected" : "" %>>Materiales</option>
-			</select>
-            <span class="cards__busqueda-sep"></span>
-            <input type="text" name="q" id="searchInputProveedor" class="cards__busqueda-input" placeholder="Buscar proveedores..." value="<%= busqueda %>" autocomplete="off">
-            <i class="fa-solid fa-magnifying-glass cards__busqueda-icono"></i>
-            <% if (!busqueda.isEmpty()) { %>
-                <a href="<%=request.getContextPath()%>/ProveedorServlet?action=listar" class="cards__busqueda-clear" title="Limpiar búsqueda">
-                    <i class="fa-solid fa-xmark"></i>
-                </a>
-            <% } %>
-        </form>
-    </div>
-
-    <% if (!busqueda.isEmpty()) { %>
-        <div class="prov-busqueda-info">
-            <i class="fa-solid fa-circle-info"></i>
-            <span>
-                <strong><%= proveedores.size() %></strong> resultado<%= proveedores.size() != 1 ? "s" : "" %> para &ldquo;<em><%= busqueda %></em>&rdquo;
-                <% if (!"todos".equals(filtroActivo)) { %>
-                    &mdash; filtrado por <span class="prov-badge-filtro"><%= "nombre".equals(filtroActivo) ? "nombre" : "material" %></span>
-                <% } %>
-            </span>
-        </div>
+    <%-- ══ ALERTAS ══ --%>
+    <% if ("creado".equals(msg)) { %>
+        <div class="prov-alert prov-alert--success"><i class="fa-solid fa-circle-check"></i> Proveedor creado exitosamente.</div>
+    <% } else if ("actualizado".equals(msg)) { %>
+        <div class="prov-alert prov-alert--success"><i class="fa-solid fa-circle-check"></i> Proveedor actualizado correctamente.</div>
+    <% } else if ("eliminado".equals(msg)) { %>
+        <div class="prov-alert prov-alert--success"><i class="fa-solid fa-circle-check"></i> Proveedor eliminado correctamente.</div>
     <% } %>
 
-    <% if (proveedores.isEmpty()) { %>
-        <div class="prov-empty">
-            <i class="fa-solid fa-box-open prov-empty__icon"></i>
-            <p class="prov-empty__texto">
-                <%= !busqueda.isEmpty() ? "No se encontraron resultados para \"" + busqueda + "\"" : "No hay proveedores registrados aún." %>
-            </p>
-        </div>
-    <% } else { %>
-        <div class="prov-grid">
-            <% for (Proveedor p : proveedores) { %>
-            <article class="prov-card <%= !p.isEstado() ? "prov-card--inactivo" : "" %>">
-                <div class="prov-card__header">
-                    <div class="prov-card__avatar"><i class="fa-solid fa-building"></i></div>
-                    <div class="prov-card__header-info">
-                        <h3 class="prov-card__nombre"><%= p.getNombre() %></h3>
-                        <span class="prov-card__doc">
-						    <i class="fa-solid fa-id-card"></i> 
-						    <%= p.getDocumento() != null ? p.getDocumento() : "Sin documento" %>
-						</span>
-                    </div>
+    <%-- ══ BARRA DE FILTROS — idéntica al diseño de productos ══ --%>
+    <div class="filtros-bar">
 
-                    <form method="post" action="<%=request.getContextPath()%>/ProveedorServlet" class="form-estado" id="form-estado-<%= p.getProveedorId() %>">
-                        <input type="hidden" name="action" value="actualizarEstado">
-                        <input type="hidden" name="id" value="<%= p.getProveedorId() %>">
-                        <input type="hidden" name="estado" id="estado-val-<%= p.getProveedorId() %>" value="<%= p.isEstado() %>">
-                        <button type="button" class="estado-badge <%= p.isEstado() ? "estado-activo" : "estado-inactivo" %>" onclick="toggleEstado('<%= p.getProveedorId() %>', <%= p.isEstado() %>)">
+        <div class="search-wrap" id="searchWrap">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="buscadorTexto"
+                   placeholder="Buscar por nombre o material..."
+                   value="<%= !"material".equals(filtroActivo) ? termino : "" %>">
+        </div>
+
+        <div class="search-wrap search-wrap--select" id="wrapMaterial" style="display:none;">
+            <i class="fa-solid fa-gem"></i>
+            <select id="selectMaterial" class="search-select">
+                <option value="">— Seleccionar material —</option>
+                <%
+                    java.util.Set<String> materialesUnicos = new java.util.LinkedHashSet<>();
+                    if (proveedores != null) {
+                        for (Proveedor pv : proveedores) {
+                            if (pv.getMateriales() != null) {
+                                for (Material mat : pv.getMateriales()) {
+                                    if (mat != null && mat.getNombre() != null && !mat.getNombre().isEmpty()) {
+                                        materialesUnicos.add(mat.getNombre());
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    for (String matNombre : materialesUnicos) {
+                %>
+                    <option value="<%= matNombre %>"
+                        <%= matNombre.equalsIgnoreCase(termino) && "material".equals(filtroActivo) ? "selected" : "" %>>
+                        <%= matNombre %>
+                    </option>
+                <% } %>
+            </select>
+        </div>
+
+        <form id="formBusqueda" action="<%=request.getContextPath()%>/ProveedorServlet" method="get" style="display:none;">
+            <input type="hidden" name="action" value="listar">
+            <input type="hidden" name="filtro" id="hiddenFiltro" value="<%= filtroActivo %>">
+            <input type="hidden" name="q"      id="hiddenQ"      value="<%= termino %>">
+        </form>
+
+        <div class="filter-btns">
+            <a href="<%=request.getContextPath()%>/ProveedorServlet?action=nuevo" class="btn-agregar-prov">
+                <i class="fa-solid fa-plus"></i> Agregar Proveedor
+            </a>
+            <button class="filter-btn <%= "todos".equals(filtroActivo)    ? "active" : "" %>" data-filtro="todos">Todos</button>
+            <button class="filter-btn <%= "nombre".equals(filtroActivo)   ? "active" : "" %>" data-filtro="nombre"><i class="fa-solid fa-user"></i> Nombre</button>
+            <button class="filter-btn <%= "material".equals(filtroActivo) ? "active" : "" %>" data-filtro="material"><i class="fa-solid fa-gem"></i> Material</button>
+        </div>
+    </div>
+
+    <% if (!termino.isEmpty()) { %>
+    <div class="prov-busqueda-info">
+        <i class="fa-solid fa-circle-info"></i>
+        <span>
+            <strong><%= totalProveedores %></strong> resultado<%= totalProveedores != 1 ? "s" : "" %>
+            para &ldquo;<em><%= termino %></em>&rdquo;
+            <% if (!"todos".equals(filtroActivo)) { %>
+                &nbsp;·&nbsp; filtrado por
+                <span class="prov-badge-filtro"><%= "nombre".equals(filtroActivo) ? "nombre" : "material" %></span>
+            <% } %>
+        </span>
+        <a href="<%=request.getContextPath()%>/ProveedorServlet?action=listar" class="resultado-limpiar">
+            <i class="fa-solid fa-xmark"></i> Limpiar
+        </a>
+    </div>
+    <% } %>
+
+    <%-- ══ GRID ══ --%>
+    <% if (proveedores == null || proveedores.isEmpty()) { %>
+    <div class="prov-empty">
+        <div class="prov-empty__icon"><i class="fa-solid fa-store-slash"></i></div>
+        <p class="prov-empty__texto">
+            <% if (!termino.isEmpty()) { %>
+                No se encontraron proveedores para &ldquo;<strong><%= termino %></strong>&rdquo;.
+            <% } else { %>
+                Aún no hay proveedores registrados.
+            <% } %>
+        </p>
+    </div>
+    <% } else { %>
+    <div class="prov-grid">
+        <% for (Proveedor p : proveedores) {
+               boolean activo = Boolean.TRUE.equals(p.isEstado());
+        %>
+        <div class="prov-card <%= activo ? "" : "prov-card--inactivo" %>">
+
+            <%-- ── Cabecera ── --%>
+            <div class="prov-card__header">
+                <div class="prov-card__avatar"><i class="fa-solid fa-store"></i></div>
+                <div class="prov-card__header-info">
+                    <div class="prov-card__nombre"><%= p.getNombre() %></div>
+                    <% if (p.getDocumento() != null && !p.getDocumento().isEmpty()) { %>
+                    <div class="prov-card__doc">
+                        <i class="fa-solid fa-id-card"></i> <%= p.getDocumento() %>
+                    </div>
+                    <% } %>
+                </div>
+                <div class="form-estado">
+                    <form action="<%=request.getContextPath()%>/ProveedorServlet" method="post" style="display:inline;">
+                        <input type="hidden" name="action"       value="toggleEstado">
+                        <input type="hidden" name="id"           value="<%= p.getProveedorId() %>">
+                        <input type="hidden" name="estadoActual" value="<%= activo ? "1" : "0" %>">
+                        <button type="submit" class="estado-badge <%= activo ? "estado-activo" : "estado-inactivo" %>">
                             <span class="estado-badge__dot"></span>
-                            <span class="estado-badge__label"><%= p.isEstado() ? "Activo" : "Inactivo" %></span>
-                            <i class="fa-solid fa-rotate estado-badge__icon"></i>
+                            <%= activo ? "Activo" : "Inactivo" %>
+                            <i class="fa-solid <%= activo ? "fa-toggle-on" : "fa-toggle-off" %> estado-badge__icon"></i>
                         </button>
                     </form>
                 </div>
+            </div>
 
-                <div class="prov-card__body">
-                    <div class="prov-card__fila">
-                        <span class="prov-card__etiqueta"><i class="fa-solid fa-phone"></i> Teléfono(s)</span>
-                        <div class="prov-card__valor">
-                            <% if (p.getTelefonos() != null && !p.getTelefonos().isEmpty()) {
-                                for (String tel : p.getTelefonos()) { %> <span><%= tel %></span> <% }
-                            } else { %><span>—</span><% } %>
-                        </div>
-                    </div>
-                    <div class="prov-card__fila">
-                        <span class="prov-card__etiqueta"><i class="fa-solid fa-envelope"></i> Correo(s)</span>
-                        <div class="prov-card__valor">
-                            <% if (p.getCorreos() != null && !p.getCorreos().isEmpty()) {
-                                for (String mail : p.getCorreos()) { %> <a href="mailto:<%= mail %>" class="prov-link"><%= mail %></a> <% }
-                            } else { %><span>—</span><% } %>
-                        </div>
-                    </div>
-                    <div class="prov-card__fila">
-                        <span class="prov-card__etiqueta"><i class="fa-solid fa-gem"></i> Materiales</span>
-                        <div class="prov-card__valor prov-card__valor--tags">
-                            <% if (p.getMateriales() != null && !p.getMateriales().isEmpty()) {
-                                for (model.Material m : p.getMateriales()) { %> <span><%= m.getNombre() %></span> <% }
-                            } else { %><span class="prov-muted">—</span><% } %>
-                        </div>
-                    </div>
-                    <div class="prov-card__duo">
-                        <div class="prov-card__duo-item">
-                            <span class="prov-card__etiqueta">Fecha inicio</span>
-                            <span class="prov-card__valor--dato"><%= p.getFechaInicio() %></span>
-                        </div>
-                        <div class="prov-card__duo-item">
-                            <span class="prov-card__etiqueta">Mín. compra</span>
-                            <span class="prov-card__valor--dato prov-card__valor--precio">
-                                $<%= String.format("%,.0f", p.getMinimoCompra() != null ? p.getMinimoCompra() : 0) %>
-                            </span>
-                        </div>
+            <%-- ── Cuerpo ── --%>
+            <div class="prov-card__body">
+
+                <%-- Teléfonos --%>
+                <% if (p.getTelefonos() != null && !p.getTelefonos().isEmpty()) { %>
+                <div class="prov-card__fila">
+                    <div class="prov-card__etiqueta"><i class="fa-solid fa-phone"></i> Contacto</div>
+                    <div class="prov-card__valor">
+                        <% for (String tel : p.getTelefonos()) {
+                               if (tel != null && !tel.isEmpty()) { %>
+                            <span class="prov-dato"><%= tel %></span>
+                        <%     } } %>
                     </div>
                 </div>
+                <% } %>
 
-                <div class="prov-card__footer">
-                    <a href="<%=request.getContextPath()%>/ProveedorServlet?action=verCompras&id=<%= p.getProveedorId() %>" class="prov-card__accion prov-card__accion--editar">
-                        <i class="fa-solid fa-cart-shopping"></i>Compras
-                    </a>
-                    <a href="<%=request.getContextPath()%>/ProveedorServlet?action=editar&id=<%= p.getProveedorId() %>" class="prov-card__accion prov-card__accion--compras">
-                        <i class="fa-solid fa-pen-to-square"></i> Editar
-                    </a>
+                <%-- Correos --%>
+                <% if (p.getCorreos() != null && !p.getCorreos().isEmpty()) { %>
+                <div class="prov-card__fila">
+                    <div class="prov-card__etiqueta"><i class="fa-solid fa-envelope"></i> Correo</div>
+                    <div class="prov-card__valor">
+                        <% for (String correo : p.getCorreos()) {
+                               if (correo != null && !correo.isEmpty()) { %>
+                            <a class="prov-link" href="mailto:<%= correo %>"><%= correo %></a>
+                        <%     } } %>
+                    </div>
                 </div>
-            </article>
-            <% } %>
+                <% } %>
+
+                <%-- Materiales — solo texto, sin rectángulos de color --%>
+                <% if (p.getMateriales() != null && !p.getMateriales().isEmpty()) { %>
+                <div class="prov-card__fila">
+                    <div class="prov-card__etiqueta"><i class="fa-solid fa-gem"></i> Materiales</div>
+                    <div class="prov-card__valor">
+                        <%
+                            StringBuilder mats = new StringBuilder();
+                            for (Material mat : p.getMateriales()) {
+                                if (mat != null && mat.getNombre() != null) {
+                                    if (mats.length() > 0) mats.append(", ");
+                                    mats.append(mat.getNombre());
+                                }
+                            }
+                        %>
+                        <span class="prov-dato"><%= mats.toString() %></span>
+                    </div>
+                </div>
+                <% } %>
+
+                <%-- Fecha registro + pedido mínimo --%>
+                <div class="prov-card__duo">
+                    <div class="prov-card__duo-item">
+                        <div class="prov-card__etiqueta"><i class="fa-solid fa-calendar-plus"></i> Registro</div>
+                        <div class="prov-card__valor prov-card__valor--dato">
+                            <%= p.getFechaRegistro() != null ? p.getFechaRegistro() : "—" %>
+                        </div>
+                    </div>
+                    <% if (p.getMinimoCompra() != null) { %>
+                    <div class="prov-card__duo-item">
+                        <div class="prov-card__etiqueta"><i class="fa-solid fa-boxes-stacked"></i> Pedido mín.</div>
+                        <div class="prov-card__valor prov-card__valor--precio">
+                            $<%= String.format("%,.0f", p.getMinimoCompra()) %>
+                        </div>
+                    </div>
+                    <% } %>
+                </div>
+            </div>
+
+            <%-- ── Pie: solo Compras y Editar (sin Eliminar) ── --%>
+            <div class="prov-card__footer">
+                <a href="<%=request.getContextPath()%>/ProveedorServlet?action=verCompras&id=<%= p.getProveedorId() %>"
+                   class="prov-card__accion prov-card__accion--compras">
+                    <i class="fa-solid fa-file-invoice-dollar"></i> Compras
+                </a>
+                <a href="<%=request.getContextPath()%>/ProveedorServlet?action=editar&id=<%= p.getProveedorId() %>"
+                   class="prov-card__accion prov-card__accion--editar">
+                    <i class="fa-solid fa-pen-to-square"></i> Editar
+                </a>
+            </div>
+
         </div>
+        <% } %>
+    </div>
     <% } %>
+
 </main>
 
-<script type="text/javascript">
-var placeholdersProveedor = {
-	    todos:      'Buscar por nombre o materiales...',
-	    nombre:     'Ej: Joyeria strawberry...',
-	    materiales: 'Ej: Oro, Acero, Mostacilla...'
-	};
+<script>
+(function () {
+    var filtroActivo   = '<%= filtroActivo %>';
+    var searchWrap     = document.getElementById('searchWrap');
+    var wrapMaterial   = document.getElementById('wrapMaterial');
+    var buscadorTexto  = document.getElementById('buscadorTexto');
+    var selectMaterial = document.getElementById('selectMaterial');
+    var hiddenFiltro   = document.getElementById('hiddenFiltro');
+    var hiddenQ        = document.getElementById('hiddenQ');
+    var formBusqueda   = document.getElementById('formBusqueda');
 
-function actualizarPlaceholderProveedor(sel) {
-    var input = document.getElementById('searchInputProveedor');
-    if(input) {
-        input.placeholder = placeholdersProveedor[sel.value] || 'Buscar proveedores...';
+    function mostrarInput(filtro) {
+        searchWrap.style.display   = (filtro === 'todos' || filtro === 'nombre') ? '' : 'none';
+        wrapMaterial.style.display = filtro === 'material' ? '' : 'none';
+        setTimeout(function () {
+            if (filtro === 'todos' || filtro === 'nombre') buscadorTexto.focus();
+            else if (filtro === 'material') selectMaterial.focus();
+        }, 60);
     }
-}
 
-document.addEventListener('DOMContentLoaded', function () {
-    var filtroSelect = document.getElementById('filtroSelectProveedor');
-    if (filtroSelect) actualizarPlaceholderProveedor(filtroSelect);
+    function enviar(filtro, valor) {
+        hiddenFiltro.value = filtro;
+        hiddenQ.value      = valor || '';
+        formBusqueda.submit();
+    }
 
-    var searchInput = document.getElementById('searchInputProveedor');
-    if(searchInput) {
-        searchInput.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                document.getElementById('formBusquedaProveedor').submit();
-            }
+    mostrarInput(filtroActivo);
+
+    document.querySelectorAll('.filter-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            document.querySelectorAll('.filter-btn').forEach(function (b) { b.classList.remove('active'); });
+            btn.classList.add('active');
+            filtroActivo = btn.dataset.filtro;
+            mostrarInput(filtroActivo);
+            if (filtroActivo === 'todos') enviar('todos', '');
         });
-    }
+    });
 
-    setTimeout(function() {
-        var alertas = document.querySelectorAll('.prov-alert');
-        for(var i=0; i<alertas.length; i++) {
-            alertas[i].style.display = 'none';
+    buscadorTexto.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            enviar(filtroActivo === 'nombre' ? 'nombre' : 'todos', buscadorTexto.value.trim());
         }
-    }, 4000);
-});
+    });
 
-function toggleEstado(id, estadoActual) {
-    var input = document.getElementById('estado-val-' + id);
-    var form = document.getElementById('form-estado-' + id);
-    
-    if(input && form) {
-        input.value = !estadoActual;
-        form.submit();
-    }
-}
+    selectMaterial.addEventListener('change', function () {
+        if (this.value) enviar('material', this.value);
+    });
+}());
 </script>
 </body>
 </html>

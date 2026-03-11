@@ -1,7 +1,7 @@
 package controller;
 
-import dao.MaterialDAO;
-import model.Material;
+import dao.SubcategoriaDAO;
+import model.Subcategoria;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -10,29 +10,26 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet("/MaterialServlet")
-public class MaterialServlet extends HttpServlet {
+@WebServlet("/SubcategoriaServlet")
+public class SubCategoriaServlet extends HttpServlet {
     
-    private MaterialDAO materialDAO;
+    private SubcategoriaDAO subcategoriaDAO;
     
     @Override
     public void init() {
-        materialDAO = new MaterialDAO();
+        subcategoriaDAO = new SubcategoriaDAO();
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
         try {
-            // ✅ Listar materiales y redirigir al JSP unificado con tab activo
-            request.setAttribute("materiales", materialDAO.listarMateriales());
-            request.getRequestDispatcher("/Administrador/org-categorias.jsp?tab=materiales")
+            request.setAttribute("subcategorias", subcategoriaDAO.listarTodas());
+            request.getRequestDispatcher("/Administrador/org-categorias.jsp?tab=subcategorias")
                     .forward(request, response);
         } catch (Exception e) {
-            e.printStackTrace();
-            request.setAttribute("error", "Error al cargar materiales: " + e.getMessage());
-            request.getRequestDispatcher("/Administrador/org-categorias.jsp")
-                    .forward(request, response);
+            request.setAttribute("error", "Error al cargar subcategorías: " + e.getMessage());
+            request.getRequestDispatcher("/Administrador/org-categorias.jsp").forward(request, response);
         }
     }
 
@@ -46,10 +43,10 @@ public class MaterialServlet extends HttpServlet {
                 if (nombre == null || nombre.trim().isEmpty()) 
                     throw new Exception("Nombre obligatorio");
                 
-                Material m = new Material();
-                m.setNombre(nombre.trim());
-                materialDAO.guardar(m);
-                response.sendRedirect(request.getContextPath() + "/MaterialServlet?msg=creado");
+                Subcategoria s = new Subcategoria();
+                s.setNombre(nombre.trim());
+                subcategoriaDAO.guardar(s);
+                response.sendRedirect(request.getContextPath() + "/SubcategoriaServlet?msg=creado");
                 
             } else if ("actualizar".equals(action)) {
                 String idStr = request.getParameter("id");
@@ -57,29 +54,25 @@ public class MaterialServlet extends HttpServlet {
                 if (idStr == null || nombre == null || nombre.trim().isEmpty()) 
                     throw new Exception("Datos inválidos");
                 
-                Material m = new Material();
-                m.setMaterialId(Integer.parseInt(idStr));
-                m.setNombre(nombre.trim());
-                materialDAO.actualizar(m);
-                response.sendRedirect(request.getContextPath() + "/MaterialServlet?msg=actualizado");
+                Subcategoria s = new Subcategoria();
+                s.setSubcategoriaId(Integer.parseInt(idStr));
+                s.setNombre(nombre.trim());
+                subcategoriaDAO.actualizar(s);
+                response.sendRedirect(request.getContextPath() + "/SubcategoriaServlet?msg=actualizado");
                 
             } else if ("eliminar".equals(action)) {
                 String idStr = request.getParameter("id");
                 if (idStr == null) throw new Exception("ID no proporcionado");
                 
-                materialDAO.eliminar(Integer.parseInt(idStr));
-                response.sendRedirect(request.getContextPath() + "/MaterialServlet?msg=eliminado");
+                subcategoriaDAO.eliminar(Integer.parseInt(idStr));
+                response.sendRedirect(request.getContextPath() + "/SubcategoriaServlet?msg=eliminado");
             } else {
-                response.sendRedirect(request.getContextPath() + "/MaterialServlet");
+                response.sendRedirect(request.getContextPath() + "/SubcategoriaServlet");
             }
         } catch (Exception e) {
             request.setAttribute("error", e.getMessage());
-            try {
-                request.setAttribute("materiales", materialDAO.listarMateriales());
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-            request.getRequestDispatcher("/Administrador/org-categorias.jsp?tab=materiales")
+            request.setAttribute("subcategorias", subcategoriaDAO.listarTodas());
+            request.getRequestDispatcher("/Administrador/org-categorias.jsp?tab=subcategorias")
                     .forward(request, response);
         }
     }

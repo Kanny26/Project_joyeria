@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
-<%@ page import="java.util.List, model.Producto, model.Categoria, model.Administrador" %>
+<%@ page import="java.util.List, model.Producto, model.Categoria, model.Administrador, model.Material, model.Subcategoria" %>
 <%@ page import="java.text.SimpleDateFormat" %>
 
 <%
@@ -9,17 +9,28 @@
         return;
     }
 
-    List<Producto> productos    = (List<Producto>) request.getAttribute("productos");
-    Categoria      categoria    = (Categoria)      request.getAttribute("categoria");
-    String         termino      = (String)         request.getAttribute("terminoBusqueda");
-    String         filtroActivo = (String)         request.getAttribute("filtroActivo");
+    List<Producto>     productos     = (List<Producto>)     request.getAttribute("productos");
+    Categoria          categoria     = (Categoria)          request.getAttribute("categoria");
+    List<Material>     materiales    = (List<Material>)     request.getAttribute("materiales");
+    List<Subcategoria> subcategorias = (List<Subcategoria>) request.getAttribute("subcategorias");
+
+    String termino      = (String) request.getAttribute("terminoBusqueda");
+    String filtroActivo = (String) request.getAttribute("filtroActivo");
 
     if (termino      == null) termino      = "";
     if (filtroActivo == null) filtroActivo = "todos";
 
+    int totalProductos = productos != null ? productos.size() : 0;
+    int stockBajo = 0, sinStock = 0;
+    if (productos != null) {
+        for (Producto p : productos) {
+            if (p.getStock() == 0)      sinStock++;
+            else if (p.getStock() <= 3) stockBajo++;
+        }
+    }
+
     SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
 %>
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -46,205 +57,239 @@
     </a>
 </nav>
 
-<main class="titulo">
-    <h2 class="titulo__encabezado">
-        <%= categoria != null ? categoria.getNombre() : "Resultados de búsqueda" %>
-    </h2>
+<main class="prod-page">
 
-    <div class="cards__barra-superior">
-
-        <% if (categoria != null) { %>
-        <a href="<%=request.getContextPath()%>/ProductoServlet?action=nuevo&categoria=<%= categoria.getCategoriaId() %>"
-           class="cards__boton-agregar">
-            <i class="fa-solid fa-plus"></i> Agregar Producto
-        </a>
-        <% } %>
-
-        <form action="<%=request.getContextPath()%>/CategoriaServlet"
-              method="get"
-              class="cards__busqueda"
-              id="formBusqueda">
-
+    <%-- ══ ENCABEZADO ══ --%>
+    <div class="page-header">
+        <div class="page-header__left">
+            <div class="page-header__icon"><i class="fa-solid fa-gem"></i></div>
+            <div>
+                <h1><%= categoria != null ? categoria.getNombre() : "Búsqueda de productos" %></h1>
+                <p><%= totalProductos %> producto<%= totalProductos != 1 ? "s" : "" %> <%= termino.isEmpty() ? "en esta categoría" : "encontrados" %></p>
+            </div>
+        </div>
+        <div class="page-header__right">
+            <div class="stat-pills">
+                <span class="pill pill--warning">
+                    <i class="fa-solid fa-triangle-exclamation"></i> <%= stockBajo %> stock bajo
+                </span>
+                <span class="pill pill--danger">
+                    <i class="fa-solid fa-circle-xmark"></i> <%= sinStock %> sin stock
+                </span>
+            </div>
             <% if (categoria != null) { %>
-                <input type="hidden" name="id" value="<%= categoria.getCategoriaId() %>">
+            <a href="<%=request.getContextPath()%>/ProductoServlet?action=nuevo&categoria=<%= categoria.getCategoriaId() %>"
+               class="btn-agregar">
+                <i class="fa-solid fa-plus"></i> Agregar Producto
+            </a>
             <% } %>
-
-            <select name="filtro" id="filtroSelect"
-                    class="cards__busqueda-filtro"
-                    onchange="actualizarPlaceholder(this)">
-                <option value="todos"        <%= "todos".equals(filtroActivo)        ? "selected" : "" %>>Todos</option>
-                <option value="nombre"       <%= "nombre".equals(filtroActivo)       ? "selected" : "" %>>Nombre</option>
-                <option value="material"     <%= "material".equals(filtroActivo)     ? "selected" : "" %>>Material</option>
-                <option value="subcategoria" <%= "subcategoria".equals(filtroActivo) ? "selected" : "" %>>Subcategoría</option>
-                <option value="stock"        <%= "stock".equals(filtroActivo)        ? "selected" : "" %>>Stock</option>
-            </select>
-
-            <span class="cards__busqueda-sep"></span>
-
-            <input type="text" name="q" id="searchInput"
-                   class="cards__busqueda-input"
-                   placeholder="Buscar productos..."
-                   value="<%= termino %>"
-                   autocomplete="off">
-
-            <i class="fa-solid fa-magnifying-glass cards__busqueda-icono"></i>
-
-            <% if (!termino.isEmpty()) { %>
-                <a href="<%=request.getContextPath()%>/CategoriaServlet<%= categoria != null ? "?id=" + categoria.getCategoriaId() : "" %>"
-                   class="cards__busqueda-clear" title="Limpiar búsqueda">
-                    <i class="fa-solid fa-xmark"></i>
-                </a>
-            <% } %>
-        </form>
+        </div>
     </div>
 
-    <% if (!termino.isEmpty()) { %>
-        <div class="cards__busqueda-info">
-            <i class="fa-solid fa-circle-info"></i>
-            <span>
-                <strong><%= productos != null ? productos.size() : 0 %></strong>
-                resultado<%= (productos == null || productos.size() != 1) ? "s" : "" %>
-                para &ldquo;<em><%= termino %></em>&rdquo;
-                <% if (!"todos".equals(filtroActivo)) { %>
-                    &nbsp;&mdash;&nbsp; filtrado por
-                    <span class="cards__busqueda-badge">
-                        <%= "nombre".equals(filtroActivo)       ? "nombre"
-                          : "material".equals(filtroActivo)     ? "material"
-                          : "subcategoria".equals(filtroActivo) ? "subcategoría"
-                          : "stock" %>
-                    </span>
-                <% } %>
-            </span>
-        </div>
+    <%-- ══ MENSAJES ══ --%>
+    <%
+        String msg = request.getParameter("msg");
+    %>
+    <% if ("creado".equals(msg)) { %>
+        <div class="alerta alerta--success"><i class="fa-solid fa-circle-check"></i> Producto creado exitosamente.</div>
+    <% } else if ("actualizado".equals(msg)) { %>
+        <div class="alerta alerta--success"><i class="fa-solid fa-circle-check"></i> Producto actualizado correctamente.</div>
+    <% } else if ("eliminado".equals(msg)) { %>
+        <div class="alerta alerta--success"><i class="fa-solid fa-circle-check"></i> Producto eliminado correctamente.</div>
     <% } %>
 
+    <%-- ══ BARRA DE BÚSQUEDA Y FILTROS ══ --%>
+    <div class="filtros-bar">
+
+        <div class="search-wrap" id="searchWrap">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="buscadorTexto"
+                   placeholder="Buscar por nombre, código..."
+                   value="<%= ("nombre".equals(filtroActivo) || "todos".equals(filtroActivo)) ? termino : "" %>">
+        </div>
+
+        <div class="search-wrap search-wrap--select" id="wrapMaterial" style="display:none;">
+            <i class="fa-solid fa-gem"></i>
+            <select id="selectMaterial" class="search-select">
+                <option value="">— Seleccionar material —</option>
+                <% if (materiales != null) { for (Material mat : materiales) { %>
+                    <option value="<%= mat.getNombre() %>"
+                        <%= mat.getNombre().equalsIgnoreCase(termino) && "material".equals(filtroActivo) ? "selected" : "" %>>
+                        <%= mat.getNombre() %>
+                    </option>
+                <% } } %>
+            </select>
+        </div>
+
+        <div class="search-wrap search-wrap--select" id="wrapSubcategoria" style="display:none;">
+            <i class="fa-solid fa-tags"></i>
+            <select id="selectSubcategoria" class="search-select">
+                <option value="">— Seleccionar subcategoría —</option>
+                <% if (subcategorias != null) { for (Subcategoria sub : subcategorias) { %>
+                    <option value="<%= sub.getNombre() %>"
+                        <%= sub.getNombre().equalsIgnoreCase(termino) && "subcategoria".equals(filtroActivo) ? "selected" : "" %>>
+                        <%= sub.getNombre() %>
+                    </option>
+                <% } } %>
+            </select>
+        </div>
+
+        <div class="search-wrap" id="wrapStock" style="display:none;">
+            <i class="fa-solid fa-boxes-stacked"></i>
+            <input type="number" id="inputStock" min="0"
+                   placeholder="Stock máximo (ej: 5)"
+                   value="<%= "stock".equals(filtroActivo) ? termino : "" %>">
+        </div>
+
+        <%-- Form oculto para enviar búsqueda --%>
+        <form id="formBusqueda" action="<%=request.getContextPath()%>/CategoriaServlet" method="get" style="display:none;">
+            <% if (categoria != null) { %>
+            <input type="hidden" name="id" value="<%= categoria.getCategoriaId() %>">
+            <% } %>
+            <input type="hidden" name="filtro" id="hiddenFiltro" value="<%= filtroActivo %>">
+            <input type="hidden" name="q"      id="hiddenQ"      value="<%= termino %>">
+        </form>
+
+        <div class="filter-btns">
+            <button class="filter-btn <%= "todos".equals(filtroActivo) ? "active" : "" %>"         data-filtro="todos">Todos</button>
+            <button class="filter-btn <%= "nombre".equals(filtroActivo) ? "active" : "" %>"        data-filtro="nombre"><i class="fa-solid fa-font"></i> Nombre</button>
+            <button class="filter-btn <%= "material".equals(filtroActivo) ? "active" : "" %>"      data-filtro="material"><i class="fa-solid fa-gem"></i> Material</button>
+            <button class="filter-btn <%= "subcategoria".equals(filtroActivo) ? "active" : "" %>"  data-filtro="subcategoria"><i class="fa-solid fa-tags"></i> Subcategoría</button>
+            <button class="filter-btn <%= "stock".equals(filtroActivo) ? "active" : "" %>"         data-filtro="stock"><i class="fa-solid fa-boxes-stacked"></i> Stock</button>
+        </div>
+    </div>
+
+    <%-- Info de resultado --%>
+    <% if (!termino.isEmpty()) { %>
+    <div class="resultado-info">
+        <i class="fa-solid fa-circle-info"></i>
+        <span>
+            <strong><%= totalProductos %></strong> resultado<%= totalProductos != 1 ? "s" : "" %>
+            para &ldquo;<em><%= termino %></em>&rdquo;
+            <% if (!"todos".equals(filtroActivo)) { %>
+                &nbsp;·&nbsp; filtrado por
+                <span class="resultado-badge">
+                    <%= "nombre".equals(filtroActivo) ? "nombre"
+                      : "material".equals(filtroActivo) ? "material"
+                      : "subcategoria".equals(filtroActivo) ? "subcategoría"
+                      : "stock" %>
+                </span>
+            <% } %>
+        </span>
+        <a href="<%=request.getContextPath()%>/CategoriaServlet<%= categoria != null ? "?id=" + categoria.getCategoriaId() : "" %>"
+           class="resultado-limpiar">
+            <i class="fa-solid fa-xmark"></i> Limpiar
+        </a>
+    </div>
+    <% } %>
+
+    <%-- ══ GRID DE PRODUCTOS ══ --%>
+    <% if (productos == null || productos.isEmpty()) { %>
+    <div class="empty-state">
+        <div class="empty-state__icon"><i class="fa-solid fa-box-open"></i></div>
+        <h3><%= !termino.isEmpty() ? "Sin resultados" : "Sin productos" %></h3>
+        <p>
+            <% if (!termino.isEmpty()) { %>
+                No se encontraron productos para &ldquo;<strong><%= termino %></strong>&rdquo;.
+            <% } else { %>
+                No hay productos en esta categoría todavía.
+            <% } %>
+        </p>
+    </div>
+    <% } else { %>
     <section class="cards__contenedor">
-
-        <% if (productos != null && !productos.isEmpty()) {
-            for (Producto p : productos) { %>
-
+        <% for (Producto p : productos) { %>
         <div class="cards__contenedor-content">
-
             <a href="<%=request.getContextPath()%>/ProductoServlet?action=ver&id=<%= p.getProductoId() %>">
                 <img src="<%=request.getContextPath()%>/imagen-producto/<%= p.getProductoId() %>"
                      alt="<%= p.getNombre() %>"
                      onerror="this.src='<%=request.getContextPath()%>/assets/Imagenes/default.png'">
             </a>
-
-            <h3 class="product__code">
-                <span class="product__label">Código:</span>
-                <span class="product__value"><%= p.getCodigo() %></span>
-            </h3>
-
-            <h3 class="product__name">
-                <span class="product__value"><%= p.getNombre() %></span>
-            </h3>
-
-            <h4 class="product__category">
-                <span class="product__label">Categoría:</span>
-                <span class="product__value">
-                    <%= categoria != null ? categoria.getNombre() :
-                        (p.getCategoriaNombre() != null ? p.getCategoriaNombre() : "Sin categoría") %>
-                </span>
-            </h4>
-
-            <h4 class="product__subcategory">
-                <span class="product__label">Subcategoría:</span>
-                <span class="product__value">
-                    <%= p.getSubcategoriaNombre() != null && !p.getSubcategoriaNombre().isEmpty()
-                        ? p.getSubcategoriaNombre() : "—" %>
-                </span>
-            </h4>
-
-            <h4 class="product__material">
-                <span class="product__label">Material:</span>
-                <span class="product__value">
-                    <%= p.getMaterialNombre() != null ? p.getMaterialNombre() : "Sin material" %>
-                </span>
-            </h4>
-
-            <h4 class="product__cost">
-                <span class="product__label">Precio de costo:</span>
-                <span class="product__value">$<%= String.format("%,.0f", p.getPrecioUnitario()) %></span>
-            </h4>
-
-            <h4 class="product__price">
-                <span class="product__label">Precio venta:</span>
-                <span class="product__value">$<%= String.format("%,.0f", p.getPrecioVenta()) %></span>
-            </h4>
-
+            <h3 class="product__code"><span class="product__label">Código:</span> <span class="product__value"><%= p.getCodigo() %></span></h3>
+            <h3 class="product__name"><span class="product__value"><%= p.getNombre() %></span></h3>
+            <h4 class="product__category"><span class="product__label">Categoría:</span> <span class="product__value"><%= categoria != null ? categoria.getNombre() : (p.getCategoriaNombre() != null ? p.getCategoriaNombre() : "Sin categoría") %></span></h4>
+            <h4 class="product__subcategory"><span class="product__label">Subcategoría:</span> <span class="product__value"><%= p.getSubcategoriaNombre() != null && !p.getSubcategoriaNombre().isEmpty() ? p.getSubcategoriaNombre() : "—" %></span></h4>
+            <h4 class="product__material"><span class="product__label">Material:</span> <span class="product__value"><%= p.getMaterialNombre() != null ? p.getMaterialNombre() : "Sin material" %></span></h4>
+            <h4 class="product__cost"><span class="product__label">Precio de costo:</span> <span class="product__value">$<%= String.format("%,.0f", p.getPrecioUnitario()) %></span></h4>
+            <h4 class="product__price"><span class="product__label">Precio venta:</span> <span class="product__value">$<%= String.format("%,.0f", p.getPrecioVenta()) %></span></h4>
             <h4 class="product__stock">
                 <span class="product__label">Stock:</span>
-                <span class="product__value <%= p.getStock() <= 3 ? "stock-bajo" : "" %>">
+                <span class="product__value <%= p.getStock() == 0 ? "stock-cero" : p.getStock() <= 3 ? "stock-bajo" : "" %>">
                     <%= p.getStock() %>
-                    <% if (p.getStock() <= 3) { %>
-                        <i class="fa-solid fa-triangle-exclamation" title="Stock bajo"></i>
-                    <% } %>
+                    <% if (p.getStock() == 0) { %><i class="fa-solid fa-circle-xmark" title="Sin stock"></i>
+                    <% } else if (p.getStock() <= 3) { %><i class="fa-solid fa-triangle-exclamation" title="Stock bajo"></i><% } %>
                 </span>
             </h4>
-
-            <h4 class="product__date">
-                <span class="product__label">En stock desde:</span>
-                <span class="product__value">
-                    <%= p.getFechaRegistro() != null ? formato.format(p.getFechaRegistro()) : "N/A" %>
-                </span>
-            </h4>
-
+            <h4 class="product__date"><span class="product__label">En stock desde:</span> <span class="product__value"><%= p.getFechaRegistro() != null ? formato.format(p.getFechaRegistro()) : "N/A" %></span></h4>
             <div class="iconos">
-                <a href="<%=request.getContextPath()%>/ProductoServlet?action=ver&id=<%= p.getProductoId() %>"
-                   title="Ver producto">
-                    <i class="fas fa-eye icon-right"></i>
-                </a>
-                <a href="<%=request.getContextPath()%>/ProductoServlet?action=editar&id=<%= p.getProductoId() %>"
-                   title="Editar producto">
-                    <i class="fa-solid fa-pen-to-square"></i>
-                </a>
-                <a href="<%=request.getContextPath()%>/ProductoServlet?action=confirmarEliminar&id=<%= p.getProductoId() %>"
-                   title="Eliminar producto">
-                    <i class="fa-solid fa-trash"></i>
-                </a>
+                <a href="<%=request.getContextPath()%>/ProductoServlet?action=ver&id=<%= p.getProductoId() %>" title="Ver"><i class="fas fa-eye"></i></a>
+                <a href="<%=request.getContextPath()%>/ProductoServlet?action=editar&id=<%= p.getProductoId() %>" title="Editar"><i class="fa-solid fa-pen-to-square"></i></a>
+                <a href="<%=request.getContextPath()%>/ProductoServlet?action=confirmarEliminar&id=<%= p.getProductoId() %>" title="Eliminar"><i class="fa-solid fa-trash"></i></a>
             </div>
         </div>
-
-        <% } } else { %>
-            <div class="cards__vacio">
-                <i class="fa-solid fa-box-open"></i>
-                <p>
-                    <% if (!termino.isEmpty()) { %>
-                        No se encontraron productos para &ldquo;<strong><%= termino %></strong>&rdquo;.
-                    <% } else { %>
-                        No hay productos en esta categoría todavía.
-                    <% } %>
-                </p>
-            </div>
         <% } %>
-
     </section>
+    <% } %>
+
 </main>
 
 <script>
-const placeholders = {
-    todos:        'Buscar por nombre, material, subcategoría, stock...',
-    nombre:       'Ej: anillo, collar, topito...',
-    material:     'Ej: acero inoxidable, plata...',
-    subcategoria: 'Ej: matrimonio, cumpleaños, uso diario...',
-    stock:        'Ej: 5, 10, 0...'
-};
+(function () {
+    var filtroActivo      = '<%= filtroActivo %>';
+    var searchWrap        = document.getElementById('searchWrap');
+    var wrapMaterial      = document.getElementById('wrapMaterial');
+    var wrapSubcategoria  = document.getElementById('wrapSubcategoria');
+    var wrapStock         = document.getElementById('wrapStock');
+    var buscadorTexto     = document.getElementById('buscadorTexto');
+    var selectMaterial    = document.getElementById('selectMaterial');
+    var selectSubcategoria= document.getElementById('selectSubcategoria');
+    var inputStock        = document.getElementById('inputStock');
+    var hiddenFiltro      = document.getElementById('hiddenFiltro');
+    var hiddenQ           = document.getElementById('hiddenQ');
+    var formBusqueda      = document.getElementById('formBusqueda');
 
-function actualizarPlaceholder(sel) {
-    document.getElementById('searchInput').placeholder =
-        placeholders[sel.value] || 'Buscar productos...';
-}
-
-actualizarPlaceholder(document.getElementById('filtroSelect'));
-
-document.getElementById('searchInput').addEventListener('keydown', function(e) {
-    if (e.key === 'Enter') {
-        e.preventDefault();
-        document.getElementById('formBusqueda').submit();
+    function mostrarInput(filtro) {
+        searchWrap.style.display       = (filtro === 'todos' || filtro === 'nombre') ? '' : 'none';
+        wrapMaterial.style.display     = filtro === 'material'     ? '' : 'none';
+        wrapSubcategoria.style.display = filtro === 'subcategoria' ? '' : 'none';
+        wrapStock.style.display        = filtro === 'stock'        ? '' : 'none';
+        setTimeout(function () {
+            if (filtro === 'todos' || filtro === 'nombre') buscadorTexto.focus();
+            else if (filtro === 'material')     selectMaterial.focus();
+            else if (filtro === 'subcategoria') selectSubcategoria.focus();
+            else if (filtro === 'stock')        inputStock.focus();
+        }, 60);
     }
-});
-</script>
 
+    function enviar(filtro, valor) {
+        hiddenFiltro.value = filtro;
+        hiddenQ.value      = valor || '';
+        formBusqueda.submit();
+    }
+
+    mostrarInput(filtroActivo);
+
+    document.querySelectorAll('.filter-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            document.querySelectorAll('.filter-btn').forEach(function (b) { b.classList.remove('active'); });
+            btn.classList.add('active');
+            filtroActivo = btn.dataset.filtro;
+            mostrarInput(filtroActivo);
+            if (filtroActivo === 'todos') enviar('todos', '');
+        });
+    });
+
+    buscadorTexto.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') { e.preventDefault(); enviar(filtroActivo === 'nombre' ? 'nombre' : 'todos', buscadorTexto.value.trim()); }
+    });
+
+    inputStock.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') { e.preventDefault(); enviar('stock', inputStock.value.trim()); }
+    });
+
+    selectMaterial.addEventListener('change', function () { if (this.value) enviar('material', this.value); });
+    selectSubcategoria.addEventListener('change', function () { if (this.value) enviar('subcategoria', this.value); });
+}());
+</script>
 </body>
 </html>

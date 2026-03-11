@@ -1,5 +1,4 @@
 package dao;
-
 import config.ConexionDB;
 import model.CasoPostventa;
 import java.sql.*;
@@ -8,7 +7,7 @@ import java.util.List;
 
 public class PostventaDAO {
 
-    // Subconsulta para obtener el primer producto de la venta sin duplicar filas
+    // ✅ CORREGIDO: Se agrega LEFT JOIN con el historial más reciente para traer la observación
     private static final String SQL_BASE = """
         SELECT 
             cp.caso_id,
@@ -25,22 +24,29 @@ public class PostventaDAO {
             (SELECT dv2.producto_id FROM Detalle_Venta dv2 WHERE dv2.venta_id = v.venta_id LIMIT 1) AS producto_id,
             (SELECT p2.nombre FROM Detalle_Venta dv2 
              LEFT JOIN Producto p2 ON p2.producto_id = dv2.producto_id
-             WHERE dv2.venta_id = v.venta_id LIMIT 1) AS producto_nombre
+             WHERE dv2.venta_id = v.venta_id LIMIT 1) AS producto_nombre,
+            h.observacion AS observacion
         FROM Caso_Postventa cp
         LEFT JOIN Venta v ON v.venta_id = cp.venta_id
         LEFT JOIN Usuario uv ON uv.usuario_id = v.usuario_id
         LEFT JOIN Cliente cl ON cl.cliente_id = v.cliente_id
+        LEFT JOIN Historial_Caso_Postventa h
+            ON h.historial_id = (
+                SELECT MAX(h2.historial_id)
+                FROM Historial_Caso_Postventa h2
+                WHERE h2.caso_id = cp.caso_id
+            )
         """;
 
     public List<CasoPostventa> listarPorVendedor(int vendedorId) throws Exception {
         List<CasoPostventa> lista = new ArrayList<>();
         String sql = SQL_BASE + " WHERE v.usuario_id = ? ORDER BY cp.fecha DESC, cp.caso_id DESC";
-        
+
         try (Connection con = ConexionDB.getConnection()) {
             System.out.println("🔍 PostventaDAO.listarPorVendedor() - Conexión: " + (con != null));
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setInt(1, vendedorId);
-            
+
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     lista.add(mapearCaso(rs));
@@ -55,30 +61,30 @@ public class PostventaDAO {
     public List<CasoPostventa> listarTodos() throws Exception {
         List<CasoPostventa> lista = new ArrayList<>();
         String sql = SQL_BASE + " ORDER BY cp.fecha DESC, cp.caso_id DESC";
-        
+
         System.out.println("\n" + "🔥".repeat(50));
         System.out.println("🔍 PostventaDAO.listarTodos() - INICIADO");
-        
+
         try (Connection con = ConexionDB.getConnection()) {
             System.out.println("✅ Conexión DB: " + (con != null && !con.isClosed()));
-            
-            // 🔍 Debug: Contar registros en tabla
+
             try (Statement stmt = con.createStatement();
                  ResultSet rsCount = stmt.executeQuery("SELECT COUNT(*) FROM Caso_Postventa")) {
                 if (rsCount.next()) {
                     System.out.println("📊 Total registros en 'Caso_Postventa': " + rsCount.getInt(1));
                 }
             }
-            
+
             PreparedStatement ps = con.prepareStatement(sql);
             try (ResultSet rs = ps.executeQuery()) {
                 int contador = 0;
                 while (rs.next()) {
                     contador++;
-                    System.out.println("📦 Caso #" + contador + 
-                        " | ID=" + rs.getInt("caso_id") + 
+                    System.out.println("📦 Caso #" + contador +
+                        " | ID=" + rs.getInt("caso_id") +
                         " | Tipo=" + rs.getString("tipo") +
-                        " | Estado=" + rs.getString("estado"));
+                        " | Estado=" + rs.getString("estado") +
+                        " | Observacion=" + rs.getString("observacion")); // ✅ debug
                     lista.add(mapearCaso(rs));
                 }
                 System.out.println("✅ DAO - Casos recuperados: " + lista.size());
@@ -95,16 +101,17 @@ public class PostventaDAO {
 
     public CasoPostventa obtenerPorId(int casoId) throws Exception {
         String sql = SQL_BASE + " WHERE cp.caso_id = ?";
-        
+
         System.out.println("🔍 DAO - Buscando caso postventa ID: " + casoId);
-        
+
         try (Connection con = ConexionDB.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, casoId);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    System.out.println("✅ Caso encontrado: ID=" + casoId);
-                    return mapearCaso(rs);
+                    CasoPostventa caso = mapearCaso(rs);
+                    System.out.println("✅ Caso encontrado: ID=" + casoId + " | Observacion=" + caso.getObservacion());
+                    return caso;
                 }
             }
         }
@@ -114,17 +121,17 @@ public class PostventaDAO {
 
     public int registrar(CasoPostventa caso) throws Exception {
         String sql = "INSERT INTO Caso_Postventa(venta_id, tipo, cantidad, motivo, fecha, estado) VALUES(?, ?, ?, ?, NOW(), 'en_proceso')";
-        
+
         try (Connection con = ConexionDB.getConnection();
              PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            
+
             ps.setInt(1, caso.getVentaId());
             ps.setString(2, caso.getTipo());
             ps.setInt(3, caso.getCantidad());
             ps.setString(4, caso.getMotivo() != null ? caso.getMotivo() : "");
-            
+
             int filasAfectadas = ps.executeUpdate();
-            
+
             if (filasAfectadas > 0) {
                 try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
                     if (generatedKeys.next()) {
@@ -135,7 +142,7 @@ public class PostventaDAO {
                 }
             }
             return -1;
-            
+
         } catch (SQLException e) {
             System.err.println("❌ ERROR al registrar caso postventa: " + e.getMessage());
             throw e;
@@ -143,9 +150,9 @@ public class PostventaDAO {
     }
 
     public boolean actualizarEstado(int casoId, String nuevoEstado, String observacion, int usuarioId) throws Exception {
-        final String sqlUpdate = "UPDATE Caso_Postventa SET estado = ? WHERE caso_id = ?";
+        final String sqlUpdate   = "UPDATE Caso_Postventa SET estado = ? WHERE caso_id = ?";
         final String sqlHistorial = "INSERT INTO Historial_Caso_Postventa(caso_id, estado, observacion, usuario_id, fecha) VALUES(?,?,?,?,NOW())";
-        
+
         try (Connection con = ConexionDB.getConnection()) {
             con.setAutoCommit(false);
             try {
@@ -154,7 +161,7 @@ public class PostventaDAO {
                     ps.setInt(2, casoId);
                     ps.executeUpdate();
                 }
-                
+
                 try (PreparedStatement ps = con.prepareStatement(sqlHistorial)) {
                     ps.setInt(1, casoId);
                     ps.setString(2, nuevoEstado);
@@ -162,29 +169,34 @@ public class PostventaDAO {
                     ps.setInt(4, usuarioId);
                     ps.executeUpdate();
                 }
-                
+
                 // RF31: Si es devolución aprobada, retornar stock
+                // ✅ IMPORTANTE: obtenerPorId ya usa la misma conexión del contexto
+                //    pero como abre su propia conexión internamente, funciona bien
                 CasoPostventa caso = obtenerPorId(casoId);
                 if (caso != null && "devolucion".equals(caso.getTipo()) && "aprobado".equals(nuevoEstado)) {
-                    System.out.println("🔄 Retornando stock por devolución aprobada - Producto ID: " + caso.getProductoId());
+                    System.out.println("🔄 Retornando stock - Producto ID: " + caso.getProductoId());
                     new VentaDAO().retornarStockDevolucion(
-                        caso.getVentaId(), 
-                        caso.getProductoId(), 
-                        caso.getCantidad(), 
+                        caso.getVentaId(),
+                        caso.getProductoId(),
+                        caso.getCantidad(),
                         usuarioId
                     );
                 }
-                
+
                 con.commit();
                 System.out.println("✅ Estado actualizado para caso #" + casoId + " -> " + nuevoEstado);
                 return true;
+
             } catch (Exception e) {
                 con.rollback();
+                System.err.println("❌ Rollback ejecutado: " + e.getMessage());
                 throw e;
             }
         }
     }
 
+    // ✅ CORREGIDO: se agrega mapeo de observacion
     private CasoPostventa mapearCaso(ResultSet rs) throws SQLException {
         CasoPostventa c = new CasoPostventa();
         c.setCasoId(rs.getInt("caso_id"));
@@ -196,8 +208,8 @@ public class PostventaDAO {
         c.setEstado(rs.getString("estado"));
         c.setVendedorNombre(rs.getString("vendedor_nombre"));
         c.setClienteNombre(rs.getString("cliente_nombre"));
-        
-        // Manejo seguro de valores null para producto
+        c.setObservacion(rs.getString("observacion")); // ✅ LÍNEA AÑADIDA
+
         int productoId = 0;
         if (rs.getObject("producto_id") != null) {
             productoId = rs.getInt("producto_id");

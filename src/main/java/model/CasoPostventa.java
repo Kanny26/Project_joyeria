@@ -14,15 +14,17 @@ public class CasoPostventa {
     
     private String tipo; // cambio | devolucion | reclamo
     private int cantidad;
-    private String motivo;
+    private String motivo; // El motivo inicial del cliente
+    private String observacion; // La respuesta/observación del administrador (NUEVO)
     private Date fecha;
     private String estado; // en_proceso | aprobado | cancelado
     
+    // Si usas una clase para el historial, asegúrate que se llame igual
     private List<EstadoCasoCliente> historialEstados;
 
     public CasoPostventa() {}
 
-    // Getters y Setters
+    // --- GETTERS Y SETTERS ---
     public int getCasoId() { return casoId; }
     public void setCasoId(int casoId) { this.casoId = casoId; }
     
@@ -49,6 +51,10 @@ public class CasoPostventa {
     
     public String getMotivo() { return motivo; }
     public void setMotivo(String motivo) { this.motivo = motivo; }
+
+    // Crucial para el JSP de gestión
+    public String getObservacion() { return observacion; }
+    public void setObservacion(String observacion) { this.observacion = observacion; }
     
     public Date getFecha() { return fecha; }
     public void setFecha(Date fecha) { this.fecha = fecha; }
@@ -59,9 +65,10 @@ public class CasoPostventa {
     public List<EstadoCasoCliente> getHistorialEstados() { return historialEstados; }
     public void setHistorialEstados(List<EstadoCasoCliente> h) { this.historialEstados = h; }
     
-    // Helpers para JSP
+    // --- HELPERS PARA JSP (Lógica de presentación) ---
+    
     public String getTipoLabel() {
-        if (tipo == null) return "";
+        if (tipo == null) return "No definido";
         return switch (tipo) {
             case "cambio" -> "Cambio";
             case "devolucion" -> "Devolución";
@@ -71,12 +78,22 @@ public class CasoPostventa {
     }
     
     public String getEstadoLabel() {
-        if (estado == null) return "";
+        if (estado == null) return "En proceso";
         return switch (estado) {
             case "en_proceso" -> "En proceso";
             case "aprobado" -> "Aprobado";
             case "cancelado" -> "Cancelado";
-            default -> estado;
+            default -> estado.replace("_", " ");
+        };
+    }
+
+    // Helper para CSS en el JSP
+    public String getEstadoClass() {
+        if (estado == null) return "pv-badge--warn";
+        return switch (estado) {
+            case "aprobado" -> "pv-badge--ok";
+            case "cancelado" -> "pv-badge--danger";
+            default -> "pv-badge--warn";
         };
     }
 }
