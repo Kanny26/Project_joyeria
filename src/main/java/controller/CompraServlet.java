@@ -261,7 +261,7 @@ public class CompraServlet extends HttpServlet {
         if (session != null) {
             Object adminObj = session.getAttribute("admin");
             if (adminObj instanceof Administrador)
-                compra.setUsuarioId(((Administrador) adminObj).getId());
+                compra.setProveedorId(((Administrador) adminObj).getId());
         }
 
         // ── Persistir ────────────────────────────────────────────────

@@ -208,29 +208,49 @@ public class ProveedorServlet extends HttpServlet {
             }
         }
 
+        // 🔍 DEBUG: Imprimir datos recibidos
+        System.out.println("📦 Guardando proveedor: " + p.getNombre());
+        System.out.println("   Documento: " + p.getDocumento());
+        System.out.println("   Estado: " + p.isEstado());
+        System.out.println("   Teléfonos: " + telefonos);
+        System.out.println("   Correos: " + correos);
+        System.out.println("   Materiales: " + materialesIds);
+
         String error = validarProveedor(p, true);
         if (error != null) {
-            reenviarFormProveedor(request, response, error, p, "/Administrador/proveedores/agregar.jsp"); return;
+            System.err.println("❌ Validación fallida: " + error);
+            reenviarFormProveedor(request, response, error, p, "/Administrador/proveedores/agregar.jsp"); 
+            return;
         }
 
         // ■■ Validar duplicados de teléfonos ■■
         for (String tel : telefonos) {
             if (tel != null && !tel.trim().isEmpty() && proveedorDAO.existeTelefonoProveedor(tel)) {
-                reenviarFormProveedor(request, response, "El teléfono " + tel + " ya está registrado en otro proveedor.", p, "/Administrador/proveedores/agregar.jsp"); return;
+                reenviarFormProveedor(request, response, "El teléfono " + tel + " ya está registrado en otro proveedor.", p, "/Administrador/proveedores/agregar.jsp"); 
+                return;
             }
         }
 
         // ■■ Validar duplicados de correos ■■
         for (String correo : correos) {
             if (correo != null && !correo.trim().isEmpty() && proveedorDAO.existeCorreoProveedor(correo)) {
-                reenviarFormProveedor(request, response, "El correo " + correo + " ya está registrado en otro proveedor.", p, "/Administrador/proveedores/agregar.jsp"); return;
+                reenviarFormProveedor(request, response, "El correo " + correo + " ya está registrado en otro proveedor.", p, "/Administrador/proveedores/agregar.jsp"); 
+                return;
             }
         }
 
-        if (proveedorDAO.guardar(p, telefonos, correos, materialesIds, admin.getId())) {
-            response.sendRedirect(request.getContextPath() + "/ProveedorServlet?action=listar&msg=creado");
-        } else {
-            reenviarFormProveedor(request, response, "Error: El documento ya existe o hubo un fallo en la base de datos.", p, "/Administrador/proveedores/agregar.jsp");
+        try {
+            if (proveedorDAO.guardar(p, telefonos, correos, materialesIds, admin.getId())) {
+                System.out.println("✅ Proveedor guardado exitosamente");
+                response.sendRedirect(request.getContextPath() + "/ProveedorServlet?action=listar&msg=creado");
+            } else {
+                System.err.println("❌ proveedorDAO.guardar() retornó false");
+                reenviarFormProveedor(request, response, "Error: El documento ya existe o hubo un fallo en la base de datos.", p, "/Administrador/proveedores/agregar.jsp");
+            }
+        } catch (Exception e) {
+            System.err.println("❌ Excepción al guardar proveedor: " + e.getMessage());
+            e.printStackTrace();
+            reenviarFormProveedor(request, response, "Error interno: " + e.getMessage(), p, "/Administrador/proveedores/agregar.jsp");
         }
     }
 
@@ -240,7 +260,8 @@ public class ProveedorServlet extends HttpServlet {
 
         String idStr = request.getParameter("proveedorId");
         if (idStr == null || !idStr.matches("\\d+")) {
-            response.sendRedirect(request.getContextPath() + "/ProveedorServlet?action=listar"); return;
+            response.sendRedirect(request.getContextPath() + "/ProveedorServlet?action=listar"); 
+            return;
         }
 
         int proveedorId = Integer.parseInt(idStr);
@@ -250,7 +271,8 @@ public class ProveedorServlet extends HttpServlet {
         // ■■ Tomar nombre, documento y fechaInicio del original (no del form) ■■
         Proveedor original = proveedorDAO.obtenerPorId(proveedorId);
         if (original == null) {
-            response.sendRedirect(request.getContextPath() + "/ProveedorServlet?action=listar"); return;
+            response.sendRedirect(request.getContextPath() + "/ProveedorServlet?action=listar"); 
+            return;
         }
         p.setNombre(original.getNombre());
         p.setDocumento(original.getDocumento());
@@ -272,14 +294,16 @@ public class ProveedorServlet extends HttpServlet {
         // ■■ Validar duplicados de teléfonos para OTRO proveedor ■■
         for (String tel : telefonos) {
             if (tel != null && !tel.trim().isEmpty() && proveedorDAO.existeTelefonoParaOtro(tel, proveedorId)) {
-                reenviarFormProveedor(request, response, "El teléfono " + tel + " ya está registrado en otro proveedor.", p, "/Administrador/proveedores/editar.jsp"); return;
+                reenviarFormProveedor(request, response, "El teléfono " + tel + " ya está registrado en otro proveedor.", p, "/Administrador/proveedores/editar.jsp"); 
+                return;
             }
         }
 
         // ■■ Validar duplicados de correos para OTRO proveedor ■■
         for (String correo : correos) {
             if (correo != null && !correo.trim().isEmpty() && proveedorDAO.existeCorreoParaOtroProveedor(correo, proveedorId)) {
-                reenviarFormProveedor(request, response, "El correo " + correo + " ya está registrado en otro proveedor.", p, "/Administrador/proveedores/editar.jsp"); return;
+                reenviarFormProveedor(request, response, "El correo " + correo + " ya está registrado en otro proveedor.", p, "/Administrador/proveedores/editar.jsp"); 
+                return;
             }
         }
 
@@ -328,6 +352,7 @@ public class ProveedorServlet extends HttpServlet {
         request.setAttribute("materiales", materialDAO.listarMateriales());
         request.getRequestDispatcher(vista).forward(request, response);
     }
+
     private void eliminarProveedorPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
         Administrador admin = (Administrador) session.getAttribute("admin");
@@ -347,10 +372,18 @@ public class ProveedorServlet extends HttpServlet {
         Proveedor p = new Proveedor();
         p.setNombre(request.getParameter("nombre"));
         p.setDocumento(request.getParameter("documento"));
-        p.setFechaInicio(request.getParameter("fechaInicio"));
+        
+        // ✅ Manejo seguro de fechaInicio
+        String fechaInicio = request.getParameter("fechaInicio");
+        p.setFechaInicio((fechaInicio != null && !fechaInicio.isEmpty()) ? fechaInicio : null);
+        
         String minimoStr = request.getParameter("minimoCompra");
         p.setMinimoCompra(minimoStr != null && !minimoStr.isEmpty() ? Double.parseDouble(minimoStr) : 0.0);
-        p.setEstado("activo".equalsIgnoreCase(request.getParameter("estado")));
+        
+        // ✅ Estado: por defecto activo si no se envía
+        String estadoParam = request.getParameter("estado");
+        p.setEstado(estadoParam == null || "activo".equalsIgnoreCase(estadoParam));
+        
         return p;
     }
 
@@ -399,37 +432,29 @@ public class ProveedorServlet extends HttpServlet {
         request.getRequestDispatcher("/Administrador/proveedores/compras.jsp").forward(request, response);
     }
 
- // ══════════════════════════════════════════════════════════════════
- // REEMPLAZA el método mostrarFormularioCompra en ProveedorServlet.java
- // Añade: import dao.MetodoPagoDAO; y private MetodoPagoDAO metodoPagoDAO;
- // en init(): metodoPagoDAO = new MetodoPagoDAO();
- // ══════════════════════════════════════════════════════════════════
+    private void mostrarFormularioCompra(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        String idStr = request.getParameter("id");
+        if (idStr == null || !idStr.matches("\\d+")) {
+            response.sendRedirect(request.getContextPath() + "/ProveedorServlet?action=listar");
+            return;
+        }
 
-     private void mostrarFormularioCompra(HttpServletRequest request,
-                                           HttpServletResponse response) throws Exception {
-         String idStr = request.getParameter("id");
-         if (idStr == null || !idStr.matches("\\d+")) {
-             response.sendRedirect(request.getContextPath() + "/ProveedorServlet?action=listar");
-             return;
-         }
+        int proveedorId = Integer.parseInt(idStr);
+        Proveedor proveedor = proveedorDAO.obtenerPorId(proveedorId);
+        if (proveedor == null) {
+            response.sendRedirect(request.getContextPath() + "/ProveedorServlet?action=listar");
+            return;
+        }
 
-         int proveedorId = Integer.parseInt(idStr);
-         Proveedor proveedor = proveedorDAO.obtenerPorId(proveedorId);
-         if (proveedor == null) {
-             response.sendRedirect(request.getContextPath() + "/ProveedorServlet?action=listar");
-             return;
-         }
+        List<Categoria>  categorias  = categoriaDAO.listarCategorias();
+        List<MetodoPago> metodosPago = metodoPagoDAO.listarTodos();
 
-         // ── Cargar datos necesarios para el formulario ──
-         List<Categoria>  categorias  = categoriaDAO.listarCategorias();
-         List<MetodoPago> metodosPago = metodoPagoDAO.listarTodos();
+        request.setAttribute("proveedor",   proveedor);
+        request.setAttribute("proveedorId", String.valueOf(proveedorId));
+        request.setAttribute("categorias",  categorias);
+        request.setAttribute("metodosPago", metodosPago);
 
-         request.setAttribute("proveedor",   proveedor);
-         request.setAttribute("proveedorId", String.valueOf(proveedorId)); // String para el JSP
-         request.setAttribute("categorias",  categorias);
-         request.setAttribute("metodosPago", metodosPago);
-
-         request.getRequestDispatcher("/Administrador/proveedores/agregar_compra.jsp")
-                .forward(request, response);
-     }
+        request.getRequestDispatcher("/Administrador/proveedores/agregar_compra.jsp")
+               .forward(request, response);
+    }
 }

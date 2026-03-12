@@ -11,40 +11,11 @@ import java.util.*;
 
 public class UsuarioDAO {
 
-    public boolean existeDocumento(String documento) {
-        String sql = "SELECT COUNT(*) FROM Usuario WHERE documento = ?";
-        try (Connection conn = ConexionDB.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, documento);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) return rs.getInt(1) > 0;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
     public boolean existeCorreo(String correo) {
         String sql = "SELECT COUNT(*) FROM Correo_Usuario WHERE email = ?";
         try (Connection conn = ConexionDB.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, correo.toLowerCase().trim());
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) return rs.getInt(1) > 0;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
-    public boolean existeDocumentoParaOtro(String documento, int usuarioIdActual) {
-        String sql = "SELECT COUNT(*) FROM Usuario WHERE documento = ? AND usuario_id <> ?";
-        try (Connection conn = ConexionDB.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, documento);
-            ps.setInt(2, usuarioIdActual);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) return rs.getInt(1) > 0;
             }
@@ -71,13 +42,7 @@ public class UsuarioDAO {
 
     // ==================== AGREGAR USUARIO (RF06) ====================
     public boolean agregarUsuario(Usuario usuario) {
-        // ■■ VALIDACIÓN RF06: Unicidad de documento y correo ■■
-        if (usuario.getDocumento() != null && !usuario.getDocumento().trim().isEmpty()) {
-            if (existeDocumento(usuario.getDocumento())) {
-                System.err.println("■ ERROR: Documento ya existe: " + usuario.getDocumento());
-                return false;
-            }
-        }
+
         if (usuario.getCorreo() != null && !usuario.getCorreo().trim().isEmpty()) {
             if (existeCorreo(usuario.getCorreo())) {
                 System.err.println("■ ERROR: Correo ya existe: " + usuario.getCorreo());
@@ -90,21 +55,19 @@ public class UsuarioDAO {
             VALUES(?,?,?, NOW())
             """;
         String sqlTelefono = "INSERT INTO Telefono_Usuario(telefono, usuario_id) VALUES(?,?)";
-        String sqlCorreo = "INSERT INTO Correo_Usuario(email, usuario_id) VALUES(?,?)";
+        String sqlCorreo   = "INSERT INTO Correo_Usuario(email, usuario_id) VALUES(?,?)";
 
-        // ■■ 1. Determinar la contraseña a usar ■■
         String contrasenaTextoPlano = PasswordGeneratorService.obtenerContrasena(
-            usuario.getRol(), 
+            usuario.getRol(),
             usuario.getContrasena()
         );
-
         usuario.setContrasena(contrasenaTextoPlano);
 
         try (Connection conn = ConexionDB.getConnection()) {
             conn.setAutoCommit(false);
             int usuarioId;
 
-            // ■■ 2. Insertar en la tabla Usuario ■■
+            // 1. Insertar en Usuario
             try (PreparedStatement ps = conn.prepareStatement(sqlUsuario, Statement.RETURN_GENERATED_KEYS)) {
                 ps.setString(1, usuario.getNombre());
                 ps.setString(2, BCrypt.hashpw(contrasenaTextoPlano, BCrypt.gensalt()));
@@ -116,11 +79,10 @@ public class UsuarioDAO {
                 usuarioId = rs.getInt(1);
             }
 
-            // ■■ 3. Asignar rol ■■
+            // 2. Asignar rol
             String cargo = (usuario.getRol() != null && !usuario.getRol().trim().isEmpty())
                 ? usuario.getRol().trim().toLowerCase() : "vendedor";
-            
-            // Validar que el rol sea uno de los permitidos
+
             if (!cargo.equals("superadministrador") && !cargo.equals("administrador") && !cargo.equals("vendedor")) {
                 throw new SQLException("Rol no válido: " + cargo);
             }
@@ -139,7 +101,7 @@ public class UsuarioDAO {
                 psRol.executeUpdate();
             }
 
-            // ■■ 4. Teléfonos ■■
+            // 3. Teléfono
             if (usuario.getTelefono() != null && !usuario.getTelefono().trim().isEmpty()) {
                 try (PreparedStatement psTel = conn.prepareStatement(sqlTelefono)) {
                     for (String tel : usuario.getTelefono().split(",")) {
@@ -152,7 +114,7 @@ public class UsuarioDAO {
                 }
             }
 
-            // ■■ 5. Correo ■■
+            // 4. Correo
             if (usuario.getCorreo() != null && !usuario.getCorreo().trim().isEmpty()) {
                 try (PreparedStatement psCorreo = conn.prepareStatement(sqlCorreo)) {
                     psCorreo.setString(1, usuario.getCorreo().trim().toLowerCase());
@@ -162,9 +124,9 @@ public class UsuarioDAO {
             }
 
             conn.commit();
-            System.out.println("■ Usuario guardado con ID: " + usuarioId + " | Contraseña generada: " + contrasenaTextoPlano);
+            System.out.println("■ Usuario guardado con ID: " + usuarioId + " | Contraseña: " + contrasenaTextoPlano);
 
-            // ■■ 6. Enviar correo con credenciales ■■
+            // 5. Enviar correo
             if (usuario.getCorreo() != null && !usuario.getCorreo().trim().isEmpty()) {
                 boolean correoEnviado = EmailService.enviarCredenciales(
                     usuario.getCorreo().trim(),
@@ -177,7 +139,7 @@ public class UsuarioDAO {
                 }
             }
 
-            // ■■ RF38: Auditoría ■■
+            // 6. Auditoría
             try {
                 registrarAuditoria(conn, usuarioId, "CREAR", "Usuario", usuarioId, null, usuario.getNombre());
             } catch (Exception eAudit) {
@@ -206,28 +168,28 @@ public class UsuarioDAO {
             LEFT JOIN Correo_Usuario c ON u.usuario_id = c.usuario_id 
             WHERE 1=1
             """);
-        
+
         List<Object> params = new ArrayList<>();
-        
+
         if (filtroRol != null && !filtroRol.isEmpty() && !"todos".equals(filtroRol)) {
             sql.append(" AND r.cargo = ?");
             params.add(filtroRol.toLowerCase());
         }
-        
+
         if (filtroEstado != null && !filtroEstado.isEmpty() && !"todos".equals(filtroEstado)) {
             sql.append(" AND u.estado = ?");
             params.add("Activo".equals(filtroEstado) ? 1 : 0);
         }
-        
+
         sql.append(" GROUP BY u.usuario_id, u.nombre, u.estado, u.fecha_creacion, r.cargo");
 
         try (Connection conn = ConexionDB.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql.toString())) {
-            
+
             for (int i = 0; i < params.size(); i++) {
                 ps.setObject(i + 1, params.get(i));
             }
-            
+
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     Usuario u = new Usuario();
@@ -257,6 +219,7 @@ public class UsuarioDAO {
             Usuario anterior = obtenerUsuarioPorId(usuario.getUsuarioId());
             String nombreAnterior = anterior != null ? anterior.getNombre() : "N/A";
 
+            // Actualizar nombre y estado
             try (PreparedStatement ps = conn.prepareStatement(
                     "UPDATE Usuario SET nombre=?, estado=? WHERE usuario_id=?")) {
                 ps.setString(1, usuario.getNombre());
@@ -283,13 +246,15 @@ public class UsuarioDAO {
                 psCheck.setInt(1, usuario.getUsuarioId());
                 ResultSet rs = psCheck.executeQuery();
                 if (rs.next()) {
-                    try (PreparedStatement psUpdate = conn.prepareStatement("UPDATE Usuario_Rol SET rol_id=? WHERE usuario_id=?")) {
+                    try (PreparedStatement psUpdate = conn.prepareStatement(
+                            "UPDATE Usuario_Rol SET rol_id=? WHERE usuario_id=?")) {
                         psUpdate.setInt(1, rolId);
                         psUpdate.setInt(2, usuario.getUsuarioId());
                         psUpdate.executeUpdate();
                     }
                 } else {
-                    try (PreparedStatement psInsert = conn.prepareStatement("INSERT INTO Usuario_Rol(usuario_id, rol_id) VALUES(?,?)")) {
+                    try (PreparedStatement psInsert = conn.prepareStatement(
+                            "INSERT INTO Usuario_Rol(usuario_id, rol_id) VALUES(?,?)")) {
                         psInsert.setInt(1, usuario.getUsuarioId());
                         psInsert.setInt(2, rolId);
                         psInsert.executeUpdate();
@@ -298,12 +263,14 @@ public class UsuarioDAO {
             }
 
             // Reemplazar teléfono
-            try (PreparedStatement ps = conn.prepareStatement("DELETE FROM Telefono_Usuario WHERE usuario_id=?")) {
+            try (PreparedStatement ps = conn.prepareStatement(
+                    "DELETE FROM Telefono_Usuario WHERE usuario_id=?")) {
                 ps.setInt(1, usuario.getUsuarioId());
                 ps.executeUpdate();
             }
             if (usuario.getTelefono() != null && !usuario.getTelefono().trim().isEmpty()) {
-                try (PreparedStatement ps = conn.prepareStatement("INSERT INTO Telefono_Usuario(telefono, usuario_id) VALUES(?,?)")) {
+                try (PreparedStatement ps = conn.prepareStatement(
+                        "INSERT INTO Telefono_Usuario(telefono, usuario_id) VALUES(?,?)")) {
                     ps.setString(1, usuario.getTelefono().trim());
                     ps.setInt(2, usuario.getUsuarioId());
                     ps.executeUpdate();
@@ -311,12 +278,14 @@ public class UsuarioDAO {
             }
 
             // Reemplazar correo
-            try (PreparedStatement ps = conn.prepareStatement("DELETE FROM Correo_Usuario WHERE usuario_id=?")) {
+            try (PreparedStatement ps = conn.prepareStatement(
+                    "DELETE FROM Correo_Usuario WHERE usuario_id=?")) {
                 ps.setInt(1, usuario.getUsuarioId());
                 ps.executeUpdate();
             }
             if (usuario.getCorreo() != null && !usuario.getCorreo().trim().isEmpty()) {
-                try (PreparedStatement ps = conn.prepareStatement("INSERT INTO Correo_Usuario(email, usuario_id) VALUES(?,?)")) {
+                try (PreparedStatement ps = conn.prepareStatement(
+                        "INSERT INTO Correo_Usuario(email, usuario_id) VALUES(?,?)")) {
                     ps.setString(1, usuario.getCorreo().trim().toLowerCase());
                     ps.setInt(2, usuario.getUsuarioId());
                     ps.executeUpdate();
@@ -325,8 +294,10 @@ public class UsuarioDAO {
 
             conn.commit();
 
+            // Auditoría
             try {
-                registrarAuditoria(conn, usuarioQueEditaId, "EDITAR", "Usuario", usuario.getUsuarioId(), nombreAnterior, usuario.getNombre());
+                registrarAuditoria(conn, usuarioQueEditaId, "EDITAR", "Usuario",
+                        usuario.getUsuarioId(), nombreAnterior, usuario.getNombre());
             } catch (Exception eAudit) {
                 System.err.println("⚠️ Auditoría no registrada (no crítico): " + eAudit.getMessage());
             }
@@ -350,15 +321,18 @@ public class UsuarioDAO {
     // ==================== AUXILIARES ====================
     public Usuario obtenerUsuarioPorId(int id) {
         String sql = """
-            SELECT u.usuario_id, u.nombre, u.estado, 
-                   GROUP_CONCAT(t.telefono) AS telefonos, 
-                   GROUP_CONCAT(c.email) AS correos 
-            FROM Usuario u 
-            LEFT JOIN Telefono_Usuario t ON u.usuario_id = t.usuario_id 
-            LEFT JOIN Correo_Usuario c ON u.usuario_id = c.usuario_id 
-            WHERE u.usuario_id = ? 
-            GROUP BY u.usuario_id
-            """;
+                SELECT u.usuario_id, u.nombre, u.estado,
+                       GROUP_CONCAT(DISTINCT t.telefono) AS telefonos,
+                       GROUP_CONCAT(DISTINCT c.email)    AS correos,
+                       r.cargo
+                FROM Usuario u
+                LEFT JOIN Telefono_Usuario t  ON u.usuario_id = t.usuario_id
+                LEFT JOIN Correo_Usuario   c  ON u.usuario_id = c.usuario_id
+                LEFT JOIN Usuario_Rol      ur ON u.usuario_id = ur.usuario_id
+                LEFT JOIN Rol              r  ON ur.rol_id    = r.rol_id
+                WHERE u.usuario_id = ?
+                GROUP BY u.usuario_id, u.nombre, u.estado, r.cargo
+                """;
         try (Connection conn = ConexionDB.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, id);
@@ -368,6 +342,7 @@ public class UsuarioDAO {
                 u.setUsuarioId(id);
                 u.setNombre(rs.getString("nombre"));
                 u.setEstado(rs.getBoolean("estado"));
+                u.setRol(rs.getString("cargo"));
                 u.setTelefono(rs.getString("telefonos"));
                 u.setCorreo(rs.getString("correos"));
                 return u;
@@ -400,7 +375,7 @@ public class UsuarioDAO {
         }
     }
 
-    private void registrarAuditoria(Connection conn, int usuarioId, String accion, String entidad, 
+    private void registrarAuditoria(Connection conn, int usuarioId, String accion, String entidad,
                                     int entidadId, String datosAnteriores, String datosNuevos) throws SQLException {
         String sql = """
             INSERT INTO Auditoria_Log(usuario_id, accion, entidad, entidad_id, datos_anteriores, datos_nuevos, fecha_hora)

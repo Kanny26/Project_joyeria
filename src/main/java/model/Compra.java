@@ -17,7 +17,6 @@ public class Compra {
     // ── Tabla Compra ──────────────────────────────────────────────────
     private int    compraId;
     private int    proveedorId;
-    private int    usuarioId;
     private Date   fechaCompra;
     private Date   fechaEntrega;
 
@@ -47,9 +46,6 @@ public class Compra {
 
     public int getProveedorId()                     { return proveedorId; }
     public void setProveedorId(int proveedorId)     { this.proveedorId = proveedorId; }
-
-    public int getUsuarioId()                       { return usuarioId; }
-    public void setUsuarioId(int usuarioId)         { this.usuarioId = usuarioId; }
 
     public Date getFechaCompra()                    { return fechaCompra; }
     public void setFechaCompra(Date fechaCompra)    { this.fechaCompra = fechaCompra; }

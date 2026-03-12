@@ -9,12 +9,11 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.IOException;
 import java.sql.*;
-import java.util.UUID;
 
 /**
  * Servlet que maneja el flujo completo de recuperación de contraseña:
- *   POST /recuperar?paso=1  → valida correo, genera token, envía email
- *   POST /recuperar?paso=2  → valida el código de 6 dígitos
+ *   POST /recuperar?paso=1  → valida correo, genera código INT, envía email
+ *   POST /recuperar?paso=2  → valida el código de 6 dígitos (INT)
  *   POST /recuperar?paso=3  → guarda la nueva contraseña
  */
 @WebServlet("/recuperar")
@@ -28,9 +27,9 @@ public class RecuperarPasswordServlet extends HttpServlet {
         if ("2".equals(paso)) {
             req.getRequestDispatcher("/Recuperar_pass/ing-codigo.jsp").forward(req, resp);
         } else if ("3".equals(paso)) {
-            // Solo puede llegar aquí si el código fue validado (token en sesión)
+            // Solo puede llegar aquí si el código fue validado (usuario_id en sesión)
             HttpSession session = req.getSession(false);
-            if (session == null || session.getAttribute("recuperar_token") == null) {
+            if (session == null || session.getAttribute("recuperar_usuario_id") == null) {
                 resp.sendRedirect(req.getContextPath() + "/Recuperar_pass/ing-correo.jsp");
                 return;
             }
@@ -54,7 +53,7 @@ public class RecuperarPasswordServlet extends HttpServlet {
     }
 
     // ════════════════════════════════════════════════════════════════════════
-    // PASO 1 — Validar correo y enviar código
+    // PASO 1 — Validar correo y enviar código (INT de 6 dígitos)
     // ════════════════════════════════════════════════════════════════════════
     private void paso1_enviarCodigo(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
@@ -85,35 +84,35 @@ public class RecuperarPasswordServlet extends HttpServlet {
             e.printStackTrace();
         }
 
-        // Siempre mostrar el mismo mensaje (no revelar si el correo existe)
+        // Siempre redirigir al paso 2 (no revelar si el correo existe)
+        HttpSession session = req.getSession();
+        session.setAttribute("recuperar_correo", correo);
+
         if (usuarioId == -1) {
-            // Guardar en sesión el correo para mostrarlo en paso 2
-            HttpSession session = req.getSession();
-            session.setAttribute("recuperar_correo", correo);
+            // Usuario no encontrado: redirigir igual para no exponer información
             resp.sendRedirect(req.getContextPath() + "/recuperar?paso=2");
             return;
         }
 
-        // Generar código de 6 dígitos
-        String codigo = String.format("%06d", (int)(Math.random() * 1_000_000));
-        String token  = UUID.randomUUID().toString(); // token interno para seguridad
+        // Generar código de 6 dígitos como INT (100000 a 999999)
+        int codigo = 100000 + (int)(Math.random() * 900000);
 
-        // Invalidar tokens anteriores del usuario
+        // Invalidar códigos anteriores del usuario
         try (Connection conn = ConexionDB.getConnection();
              PreparedStatement ps = conn.prepareStatement(
-                "UPDATE recuperacion_contrasena SET estado = 0 WHERE usuario_id = ?")) {
+                "UPDATE Recuperacion_Contrasena SET estado = 0 WHERE usuario_id = ?")) {
             ps.setInt(1, usuarioId);
             ps.executeUpdate();
         } catch (Exception e) { e.printStackTrace(); }
 
-        // Guardar token + código en BD (expira en 15 minutos)
+        // Guardar código en BD (expira en 15 minutos)
         try (Connection conn = ConexionDB.getConnection();
              PreparedStatement ps = conn.prepareStatement(
-                "INSERT INTO recuperacion_contrasena (usuario_id, token, fecha_solicitud, fecha_expiracion, estado) " +
+                "INSERT INTO Recuperacion_Contrasena " +
+                "(usuario_id, codigo_verificacion, fecha_solicitud, fecha_expiracion, estado) " +
                 "VALUES (?, ?, NOW(), DATE_ADD(NOW(), INTERVAL 15 MINUTE), 1)")) {
             ps.setInt(1, usuarioId);
-            // Guardamos "codigo:token" como token compuesto
-            ps.setString(2, codigo + ":" + token);
+            ps.setInt(2, codigo);  // ← Guardamos como INT, no como String
             ps.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
@@ -121,22 +120,21 @@ public class RecuperarPasswordServlet extends HttpServlet {
             return;
         }
 
-        // Enviar correo con el código
-        boolean enviado = EmailService.enviarCodigoRecuperacion(correo, nombreUsuario, codigo);
+        // Enviar correo con el código (formateado para visualización)
+        String codigoStr = String.format("%06d", codigo);
+        boolean enviado = EmailService.enviarCodigoRecuperacion(correo, nombreUsuario, codigoStr);
         if (!enviado) {
-            System.err.println("⚠ Código generado pero correo no enviado. Código: " + codigo);
+            System.err.println("⚠ Código generado pero correo no enviado. Código: " + codigoStr);
         }
 
-        // Guardar en sesión para el paso 2
-        HttpSession session = req.getSession();
-        session.setAttribute("recuperar_correo", correo);
+        // Guardar en sesión para los siguientes pasos
         session.setAttribute("recuperar_usuario_id", usuarioId);
 
         resp.sendRedirect(req.getContextPath() + "/recuperar?paso=2");
     }
 
     // ════════════════════════════════════════════════════════════════════════
-    // PASO 2 — Validar el código de 6 dígitos
+    // PASO 2 — Validar el código de 6 dígitos (comparación directa como INT)
     // ════════════════════════════════════════════════════════════════════════
     private void paso2_validarCodigo(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
@@ -148,46 +146,52 @@ public class RecuperarPasswordServlet extends HttpServlet {
         }
 
         int usuarioId = (int) session.getAttribute("recuperar_usuario_id");
-        String codigoIngresado = req.getParameter("codigo");
+        String codigoIngresadoStr = req.getParameter("codigo");
 
-        if (codigoIngresado == null || codigoIngresado.trim().isEmpty()) {
+        if (codigoIngresadoStr == null || codigoIngresadoStr.trim().isEmpty()) {
             req.setAttribute("error", "Debes ingresar el código.");
             req.getRequestDispatcher("/Recuperar_pass/ing-codigo.jsp").forward(req, resp);
             return;
         }
-        codigoIngresado = codigoIngresado.trim();
 
-        // Buscar token vigente en BD
-        String tokenBD = null;
+        // Convertir a entero para comparar con la BD
+        int codigoIngresado;
+        try {
+            codigoIngresado = Integer.parseInt(codigoIngresadoStr.trim());
+        } catch (NumberFormatException e) {
+            req.setAttribute("error", "Código inválido. Debe ser un número de 6 dígitos.");
+            req.getRequestDispatcher("/Recuperar_pass/ing-codigo.jsp").forward(req, resp);
+            return;
+        }
+
+        // Buscar código vigente en BD (como INT)
+        boolean codigoValido = false;
         try (Connection conn = ConexionDB.getConnection();
              PreparedStatement ps = conn.prepareStatement(
-                "SELECT token FROM recuperacion_contrasena " +
-                "WHERE usuario_id = ? AND estado = 1 AND fecha_expiracion > NOW() " +
+                "SELECT recuperacion_id FROM Recuperacion_Contrasena " +
+                "WHERE usuario_id = ? AND codigo_verificacion = ? " +
+                "AND estado = 1 AND fecha_expiracion > NOW() " +
                 "ORDER BY fecha_solicitud DESC LIMIT 1")) {
             ps.setInt(1, usuarioId);
+            ps.setInt(2, codigoIngresado);  // ← Comparación directa como INT
             try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) tokenBD = rs.getString("token");
+                codigoValido = rs.next();
             }
-        } catch (Exception e) { e.printStackTrace(); }
-
-        if (tokenBD == null) {
-            req.setAttribute("error", "El código ha expirado. Solicita uno nuevo.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            req.setAttribute("error", "Error de validación. Intenta de nuevo.");
             req.getRequestDispatcher("/Recuperar_pass/ing-codigo.jsp").forward(req, resp);
             return;
         }
 
-        // El token tiene formato "codigo:uuid"
-        String codigoBD = tokenBD.split(":")[0];
-        String tokenUUID = tokenBD.split(":")[1];
-
-        if (!codigoBD.equals(codigoIngresado)) {
-            req.setAttribute("error", "Código incorrecto. Revisa tu correo e intenta de nuevo.");
+        if (!codigoValido) {
+            req.setAttribute("error", "Código incorrecto o expirado. Solicita uno nuevo.");
             req.getRequestDispatcher("/Recuperar_pass/ing-codigo.jsp").forward(req, resp);
             return;
         }
 
-        // Código correcto → guardar token en sesión para paso 3
-        session.setAttribute("recuperar_token", tokenUUID);
+        // Código correcto → avanzar al paso 3
+        // (No necesitamos guardar token, el usuario_id en sesión es suficiente)
         resp.sendRedirect(req.getContextPath() + "/recuperar?paso=3");
     }
 
@@ -198,17 +202,17 @@ public class RecuperarPasswordServlet extends HttpServlet {
             throws ServletException, IOException {
 
         HttpSession session = req.getSession(false);
-        if (session == null || session.getAttribute("recuperar_token") == null) {
+        if (session == null || session.getAttribute("recuperar_usuario_id") == null) {
             resp.sendRedirect(req.getContextPath() + "/Recuperar_pass/ing-correo.jsp");
             return;
         }
 
         int usuarioId = (int) session.getAttribute("recuperar_usuario_id");
-        String tokenSesion = (String) session.getAttribute("recuperar_token");
 
         String passNueva   = req.getParameter("passNueva");
         String passConfirm = req.getParameter("passConfirm");
 
+        // Validaciones de contraseña
         if (passNueva == null || passNueva.trim().length() < 6) {
             req.setAttribute("error", "La contraseña debe tener al menos 6 caracteres.");
             req.getRequestDispatcher("/Recuperar_pass/nueva-pass.jsp").forward(req, resp);
@@ -220,26 +224,7 @@ public class RecuperarPasswordServlet extends HttpServlet {
             return;
         }
 
-        // Verificar que el token en sesión coincide con BD y sigue vigente
-        boolean tokenValido = false;
-        try (Connection conn = ConexionDB.getConnection();
-             PreparedStatement ps = conn.prepareStatement(
-                "SELECT 1 FROM recuperacion_contrasena " +
-                "WHERE usuario_id = ? AND token LIKE ? AND estado = 1 AND fecha_expiracion > NOW()")) {
-            ps.setInt(1, usuarioId);
-            ps.setString(2, "%:" + tokenSesion);
-            try (ResultSet rs = ps.executeQuery()) {
-                tokenValido = rs.next();
-            }
-        } catch (Exception e) { e.printStackTrace(); }
-
-        if (!tokenValido) {
-            req.setAttribute("error", "El enlace expiró. Solicita un nuevo código.");
-            req.getRequestDispatcher("/Recuperar_pass/nueva-pass.jsp").forward(req, resp);
-            return;
-        }
-
-        // Actualizar contraseña
+        // Hashear y actualizar contraseña
         String nuevoHash = BCrypt.hashpw(passNueva.trim(), BCrypt.gensalt());
         try (Connection conn = ConexionDB.getConnection();
              PreparedStatement ps = conn.prepareStatement(
@@ -254,10 +239,10 @@ public class RecuperarPasswordServlet extends HttpServlet {
             return;
         }
 
-        // Invalidar todos los tokens del usuario
+        // Invalidar todos los códigos de recuperación del usuario
         try (Connection conn = ConexionDB.getConnection();
              PreparedStatement ps = conn.prepareStatement(
-                "UPDATE recuperacion_contrasena SET estado = 0 WHERE usuario_id = ?")) {
+                "UPDATE Recuperacion_Contrasena SET estado = 0 WHERE usuario_id = ?")) {
             ps.setInt(1, usuarioId);
             ps.executeUpdate();
         } catch (Exception e) { e.printStackTrace(); }
@@ -265,12 +250,12 @@ public class RecuperarPasswordServlet extends HttpServlet {
         // Limpiar sesión de recuperación
         session.removeAttribute("recuperar_correo");
         session.removeAttribute("recuperar_usuario_id");
-        session.removeAttribute("recuperar_token");
 
         // Redirigir al login con mensaje de éxito
         resp.sendRedirect(req.getContextPath() + "/inicio-sesion.jsp?msg=password_actualizado");
     }
 
+    // ─── Helper para reenvío con error ───────────────────────────────────────
     private void reenviar(HttpServletRequest req, HttpServletResponse resp, String vista, String error)
             throws ServletException, IOException {
         req.setAttribute("error", error);

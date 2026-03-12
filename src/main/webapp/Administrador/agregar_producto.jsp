@@ -106,25 +106,28 @@
                     </div>
                 </div>
 
-                <!-- Subcategoría -->
+                <!-- Subcategoría — SELECCIONABLE -->
                 <div class="fs-group">
                     <label class="fs-label" for="subcategoriaId">
-                        <i class="fa-solid fa-layer-group"></i> Subcategoría
-                        <span style="color:#9ca3af; font-size:0.8rem;">(opcional)</span>
+                        <i class="fa-solid fa-layer-group"></i> Subcategoría *
                     </label>
                     <div class="fs-input-wrap">
                         <select id="subcategoriaId" name="subcategoriaId" class="fs-input">
-                            <option value="">Sin subcategoría</option>
+                            <option value="">Seleccione subcategoría</option>
                             <% if (subcategorias != null) {
-                                for (Subcategoria s : subcategorias) {
-                                    boolean sel = pRec != null && pRec.getSubcategoriaId() == s.getSubcategoriaId(); %>
-                            <option value="<%= s.getSubcategoriaId() %>" <%= sel ? "selected" : "" %>><%= s.getNombre() %></option>
+                                for (Subcategoria sc : subcategorias) {
+                                    boolean sel = pRec != null && pRec.getSubcategoriaId() == sc.getSubcategoriaId(); %>
+                            <option value="<%= sc.getSubcategoriaId() %>" <%= sel ? "selected" : "" %>><%= sc.getNombre() %></option>
                             <% } } %>
                         </select>
+                        <div class="fs-bubble" id="err-subcategoriaId">
+                            <span class="fs-bubble-icon"><i class="fa-solid fa-circle-exclamation"></i></span>
+                            <span>Selecciona una subcategoría.</span>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Proveedor — OBLIGATORIO porque proveedor_id es NOT NULL en BD -->
+                <!-- Proveedor — OBLIGATORIO -->
                 <div class="fs-group">
                     <label class="fs-label" for="proveedorId">
                         <i class="fa-solid fa-truck"></i> Proveedor *
@@ -256,10 +259,8 @@
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-// Todos los campos obligatorios — se añade proveedorId
-const campos = ['nombre', 'precioUnitario', 'precioVenta', 'materialId', 'proveedorId', 'imagen', 'descripcion'];
+const campos = ['nombre', 'precioUnitario', 'precioVenta', 'materialId', 'subcategoriaId', 'proveedorId', 'imagen', 'descripcion'];
 
-// ── Sugerencia Automática de Precio ──────────────────────
 const inputCosto = document.getElementById('precioUnitario');
 const inputVenta = document.getElementById('precioVenta');
 
@@ -274,7 +275,6 @@ inputCosto.addEventListener('input', () => {
     }
 });
 
-// ── Contador de caracteres ────────────────────────────────
 const textareaDesc = document.getElementById('descripcion');
 const charCounter  = document.getElementById('charCounter');
 
@@ -285,12 +285,10 @@ function actualizarContador() {
 textareaDesc.addEventListener('input', actualizarContador);
 actualizarContador();
 
-// ── Validaciones ─────────────────────────────────────────
 function esValido(id) {
     const el = document.getElementById(id);
     if (!el) return true;
     const valor = el.value.trim();
-
     switch (id) {
         case 'nombre': {
             const regex = /^[a-zA-Z0-9\sñÑáéíóúÁÉÍÓÚ]+$/;
@@ -307,6 +305,7 @@ function esValido(id) {
             return !isNaN(venta) && venta >= minimo;
         }
         case 'materialId':
+        case 'subcategoriaId':
         case 'proveedorId':
             return valor !== '';
         case 'imagen':
@@ -354,7 +353,6 @@ function previsualizarImagen(input) {
 document.getElementById('formProducto').addEventListener('submit', function (e) {
     e.preventDefault();
     let errores = 0;
-
     campos.forEach(id => {
         if (!esValido(id)) { mostrarErr(id); errores++; }
         else                ocultarErr(id);
@@ -364,7 +362,7 @@ document.getElementById('formProducto').addEventListener('submit', function (e) 
         Swal.fire({
             icon: 'warning',
             title: 'Revisa el formulario',
-            text: 'Hay campos con errores. Asegúrate de seleccionar un proveedor, completar todos los campos y que el precio de venta sea al menos el doble del costo más $5,000.',
+            text: 'Hay campos con errores. Asegúrate de seleccionar una subcategoría, un proveedor, completar todos los campos y que el precio de venta sea al menos el doble del costo más $5,000.',
             confirmButtonColor: '#9177a8'
         });
         return;

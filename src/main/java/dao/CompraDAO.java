@@ -35,8 +35,7 @@ public class CompraDAO {
             insertarDetalles(con, compraId, compra.getDetalles());
 
             // 3. Actualizar stock e inventario (entrada)
-            registrarEntradaInventario(con, compra.getDetalles(),
-                    compra.getUsuarioId(), "Compra #" + compraId);
+            registrarEntradaInventario(con, compra.getDetalles(), "Compra #" + compraId);
 
             // 4. Pago
             BigDecimal montoPago  = compra.isEsCredito() ? compra.getAnticipo() : compra.getTotal();
@@ -77,15 +76,16 @@ public class CompraDAO {
 
     // ════════════════════════════════════════════════════════════════════
     // Entrada de inventario: suma stock en Producto + registra movimiento
+    // NOTA: usuario_id debe ser NULL en la BD:
+    //   ALTER TABLE Inventario_Movimiento MODIFY COLUMN usuario_id INT UNSIGNED NULL;
     // ════════════════════════════════════════════════════════════════════
     private void registrarEntradaInventario(Connection con,
                                              List<DetalleCompra> detalles,
-                                             int usuarioId,
                                              String referencia) throws SQLException {
         String sqlMovimiento = """
             INSERT INTO Inventario_Movimiento
-                (producto_id, usuario_id, tipo, cantidad, fecha, referencia)
-            VALUES (?, ?, 'entrada', ?, NOW(), ?)
+                (producto_id, tipo, cantidad, fecha, referencia)
+            VALUES (?, 'entrada', ?, NOW(), ?)
             """;
         String sqlStock = """
             UPDATE Producto SET stock = stock + ? WHERE producto_id = ? AND estado = 1
@@ -96,9 +96,8 @@ public class CompraDAO {
 
             for (DetalleCompra d : detalles) {
                 psM.setInt(1, d.getProductoId());
-                psM.setInt(2, usuarioId);
-                psM.setInt(3, d.getCantidad());
-                psM.setString(4, referencia);
+                psM.setInt(2, d.getCantidad());
+                psM.setString(3, referencia);
                 psM.addBatch();
 
                 psS.setInt(1, d.getCantidad());
@@ -115,14 +114,13 @@ public class CompraDAO {
     // ════════════════════════════════════════════════════════════════════
     private int insertarCompra(Connection con, Compra c) throws SQLException {
         String sql = """
-            INSERT INTO Compra (proveedor_id, usuario_id, fecha_compra, fecha_entrega)
-            VALUES (?, ?, ?, ?)
+            INSERT INTO Compra (proveedor_id, fecha_compra, fecha_entrega)
+            VALUES (?, ?, ?)
             """;
         try (PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setInt(1, c.getProveedorId());
-            ps.setInt(2, c.getUsuarioId());
-            ps.setDate(3, new java.sql.Date(c.getFechaCompra().getTime()));
-            ps.setDate(4, new java.sql.Date(c.getFechaEntrega().getTime()));
+            ps.setDate(2, new java.sql.Date(c.getFechaCompra().getTime()));
+            ps.setDate(3, new java.sql.Date(c.getFechaEntrega().getTime()));
             ps.executeUpdate();
             try (ResultSet rs = ps.getGeneratedKeys()) {
                 if (rs.next()) return rs.getInt(1);
@@ -222,7 +220,7 @@ public class CompraDAO {
     // ════════════════════════════════════════════════════════════════════
     public Compra obtenerPorId(int compraId) throws Exception {
         String sql = """
-            SELECT c.compra_id, c.proveedor_id, c.usuario_id,
+            SELECT c.compra_id, c.proveedor_id,
                    c.fecha_compra, c.fecha_entrega,
                    pc.metodo_pago_id, pc.monto AS monto_pago, pc.estado AS estado_pago,
                    cc.credito_id, cc.monto_total, cc.saldo_pendiente,
@@ -242,7 +240,6 @@ public class CompraDAO {
                 Compra compra = new Compra();
                 compra.setCompraId(rs.getInt("compra_id"));
                 compra.setProveedorId(rs.getInt("proveedor_id"));
-                compra.setUsuarioId(rs.getInt("usuario_id"));
                 compra.setFechaCompra(rs.getDate("fecha_compra"));
                 compra.setFechaEntrega(rs.getDate("fecha_entrega"));
                 compra.setMetodoPagoId(rs.getInt("metodo_pago_id"));
@@ -299,7 +296,7 @@ public class CompraDAO {
     // ════════════════════════════════════════════════════════════════════
     public List<Compra> listarPorProveedor(int proveedorId) throws Exception {
         String sql = """
-            SELECT c.compra_id, c.proveedor_id, c.usuario_id,
+            SELECT c.compra_id, c.proveedor_id,
                    c.fecha_compra, c.fecha_entrega,
                    COALESCE(cc.monto_total, pc.monto, 0) AS total_real
             FROM Compra c
@@ -317,7 +314,6 @@ public class CompraDAO {
                     Compra c = new Compra();
                     c.setCompraId(rs.getInt("compra_id"));
                     c.setProveedorId(rs.getInt("proveedor_id"));
-                    c.setUsuarioId(rs.getInt("usuario_id"));
                     c.setFechaCompra(rs.getDate("fecha_compra"));
                     c.setFechaEntrega(rs.getDate("fecha_entrega"));
                     BigDecimal total = rs.getBigDecimal("total_real");
@@ -331,7 +327,7 @@ public class CompraDAO {
     }
 
     // ════════════════════════════════════════════════════════════════════
-    // Eliminar compra (simple, sin reversar stock — ajuste manual si se requiere)
+    // Eliminar compra
     // ════════════════════════════════════════════════════════════════════
     public boolean eliminarConTransaccion(int compraId) throws Exception {
         String sql = "DELETE FROM Compra WHERE compra_id = ?";

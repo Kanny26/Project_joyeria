@@ -7,12 +7,8 @@ DROP DATABASE IF EXISTS gestor_abbyac27;
 CREATE DATABASE gestor_abbyac27 CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE gestor_abbyac27;
 
--- 3. Inicio de Transacción (Para velocidad y seguridad)
-START TRANSACTION;
 
--- ==========================================
 -- MÓDULO 1: USUARIOS DEL SISTEMA
--- ==========================================
 CREATE TABLE Usuario (
     usuario_id     INT UNSIGNED  AUTO_INCREMENT PRIMARY KEY,
     nombre         VARCHAR(255)  NOT NULL,
@@ -36,9 +32,7 @@ CREATE TABLE Correo_Usuario (
     FOREIGN KEY (usuario_id) REFERENCES Usuario(usuario_id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- ==========================================
--- MÓDULO 2: ROLES Y PERMISOS (CORREGIDO)
--- ==========================================
+-- MÓDULO 2: ROLES Y PERMISOS 
 CREATE TABLE Rol (
     rol_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     cargo  ENUM('superadministrador','administrador','vendedor') NOT NULL
@@ -76,9 +70,7 @@ CREATE TABLE Recuperacion_Contrasena (
     FOREIGN KEY (usuario_id) REFERENCES Usuario(usuario_id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- ==========================================
 -- MÓDULO 3: PROVEEDORES
--- ==========================================
 CREATE TABLE Proveedor (
     proveedor_id   INT UNSIGNED  AUTO_INCREMENT PRIMARY KEY,
     nombre         VARCHAR(255)  NOT NULL,
@@ -103,9 +95,7 @@ CREATE TABLE Correo_Proveedor (
     FOREIGN KEY (proveedor_id) REFERENCES Proveedor(proveedor_id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- ==========================================
 -- MÓDULO 4: CLIENTES
--- ==========================================
 CREATE TABLE Cliente (
     cliente_id     INT UNSIGNED  AUTO_INCREMENT PRIMARY KEY,
     nombre         VARCHAR(255)  NOT NULL,
@@ -129,9 +119,7 @@ CREATE TABLE Correo_Cliente (
     FOREIGN KEY (cliente_id) REFERENCES Cliente(cliente_id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- ==========================================
 -- MÓDULO 5: CATEGORÍAS Y MATERIALES
--- ==========================================
 CREATE TABLE Subcategoria (
     subcategoria_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     nombre          VARCHAR(255) NOT NULL
@@ -158,9 +146,7 @@ CREATE TABLE Proveedor_Material (
     FOREIGN KEY (material_id)  REFERENCES Material(material_id)   ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- ==========================================
 -- MÓDULO 6: PRODUCTOS
--- ==========================================
 CREATE TABLE Producto (
     producto_id     INT UNSIGNED  AUTO_INCREMENT PRIMARY KEY,
     codigo          VARCHAR(10)   NOT NULL UNIQUE,
@@ -184,13 +170,12 @@ CREATE TABLE Producto (
     FOREIGN KEY (proveedor_id)    REFERENCES Proveedor(proveedor_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- ==========================================
 -- MÓDULO 7: INVENTARIO
--- ==========================================
+
 CREATE TABLE Inventario_Movimiento (
     movimiento_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     producto_id   INT UNSIGNED NOT NULL,
-    usuario_id    INT UNSIGNED NOT NULL,
+    usuario_id    INT UNSIGNED NULL,
     tipo          ENUM('entrada','salida','ajuste') NOT NULL,
     cantidad      INT          NOT NULL,
     fecha         DATETIME     NOT NULL DEFAULT NOW(),
@@ -199,17 +184,13 @@ CREATE TABLE Inventario_Movimiento (
     FOREIGN KEY (usuario_id)  REFERENCES Usuario(usuario_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- ==========================================
 -- MÓDULO 8: COMPRAS
--- ==========================================
 CREATE TABLE Compra (
     compra_id     INT UNSIGNED  AUTO_INCREMENT PRIMARY KEY,
     proveedor_id  INT UNSIGNED  NOT NULL,
-    usuario_id    INT UNSIGNED  NOT NULL,
     fecha_compra  DATE          NOT NULL,
     fecha_entrega DATE          NOT NULL,
-    FOREIGN KEY (proveedor_id) REFERENCES Proveedor(proveedor_id),
-    FOREIGN KEY (usuario_id)   REFERENCES Usuario(usuario_id)
+    FOREIGN KEY (proveedor_id) REFERENCES Proveedor(proveedor_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE Detalle_Compra (
@@ -222,9 +203,7 @@ CREATE TABLE Detalle_Compra (
     FOREIGN KEY (producto_id) REFERENCES Producto(producto_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- ==========================================
 -- MÓDULO 9: VENTAS
--- ==========================================
 CREATE TABLE Venta (
     venta_id      INT UNSIGNED  AUTO_INCREMENT PRIMARY KEY,
     usuario_id    INT UNSIGNED  NOT NULL,
@@ -244,9 +223,7 @@ CREATE TABLE Detalle_Venta (
     FOREIGN KEY (producto_id) REFERENCES Producto(producto_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- ==========================================
 -- MÓDULO 10: MÉTODOS DE PAGO
--- ==========================================
 CREATE TABLE Metodo_Pago (
     metodo_pago_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     nombre         VARCHAR(50) NOT NULL
@@ -258,7 +235,7 @@ CREATE TABLE Pago_Venta (
     metodo_pago_id INT UNSIGNED  NOT NULL,
     monto          DECIMAL(12,2) NOT NULL,
     fecha          DATETIME      NOT NULL DEFAULT NOW(),
-    estado         ENUM('pendiente','confirmado','rechazado') NOT NULL DEFAULT 'pendiente',
+    estado         ENUM('pendiente','confirmado') NOT NULL DEFAULT 'pendiente',
     FOREIGN KEY (venta_id)       REFERENCES Venta(venta_id)             ON DELETE CASCADE,
     FOREIGN KEY (metodo_pago_id) REFERENCES Metodo_Pago(metodo_pago_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -274,9 +251,7 @@ CREATE TABLE Pago_Compra (
     FOREIGN KEY (metodo_pago_id) REFERENCES Metodo_Pago(metodo_pago_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- ==========================================
 -- MÓDULO 11: CRÉDITOS
--- ==========================================
 CREATE TABLE Credito_Compra (
     credito_id        INT UNSIGNED  AUTO_INCREMENT PRIMARY KEY,
     compra_id         INT UNSIGNED  NOT NULL UNIQUE,
@@ -299,9 +274,7 @@ CREATE TABLE Abono_Credito (
     FOREIGN KEY (metodo_pago_id) REFERENCES Metodo_Pago(metodo_pago_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- ==========================================
 -- MÓDULO 12: POSTVENTA / POSTCOMPRA
--- ==========================================
 CREATE TABLE Caso_Postventa (
     caso_id    INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     venta_id   INT UNSIGNED NOT NULL,
@@ -313,17 +286,6 @@ CREATE TABLE Caso_Postventa (
     FOREIGN KEY (venta_id) REFERENCES Venta(venta_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE Caso_Postcompra (
-    caso_id   INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    compra_id INT UNSIGNED NOT NULL,
-    tipo      ENUM('cambio','devolucion','reclamo') NOT NULL,
-    cantidad  INT  NOT NULL,
-    motivo    TEXT,
-    fecha     DATE NOT NULL DEFAULT (CURDATE()),
-    estado    ENUM('en_proceso','aprobado','cancelado') NOT NULL DEFAULT 'en_proceso',
-    FOREIGN KEY (compra_id) REFERENCES Compra(compra_id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
 CREATE TABLE Historial_Caso_Postventa (
     historial_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     caso_id      INT UNSIGNED NOT NULL,
@@ -332,17 +294,6 @@ CREATE TABLE Historial_Caso_Postventa (
     observacion  TEXT,
     usuario_id   INT UNSIGNED NOT NULL,
     FOREIGN KEY (caso_id)    REFERENCES Caso_Postventa(caso_id),
-    FOREIGN KEY (usuario_id) REFERENCES Usuario(usuario_id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-CREATE TABLE Historial_Caso_Postcompra (
-    historial_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    caso_id      INT UNSIGNED NOT NULL,
-    estado       ENUM('en_proceso','aprobado','cancelado') NOT NULL,
-    fecha        DATETIME     NOT NULL DEFAULT NOW(),
-    observacion  TEXT,
-    usuario_id   INT UNSIGNED NOT NULL,
-    FOREIGN KEY (caso_id)    REFERENCES Caso_Postcompra(caso_id),
     FOREIGN KEY (usuario_id) REFERENCES Usuario(usuario_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -363,32 +314,8 @@ CREATE TABLE Auditoria_Log (
     INDEX idx_fecha (fecha_hora)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci;
 
--- Crear la vista
-CREATE OR REPLACE VIEW Vista_Auditoria_Admin AS
-SELECT
-    al.log_id,
-    u.nombre AS usuario_nombre,
-    al.accion,
-    al.entidad,
-    al.entidad_id,
-    al.datos_anteriores,
-    al.datos_nuevos,
-    al.direccion_ip,
-    al.fecha_hora
-FROM Auditoria_Log al
-LEFT JOIN Usuario u ON al.usuario_id = u.usuario_id;
 
--- ==========================================
--- ÍNDICES PARA OPTIMIZACIÓN
--- ==========================================
-CREATE INDEX idx_producto_busqueda ON Producto(nombre, codigo, categoria_id);
-CREATE INDEX idx_inventario_fecha ON Inventario_Movimiento(fecha, producto_id);
-CREATE INDEX idx_venta_cliente ON Venta(cliente_id, fecha_emision);
-CREATE INDEX idx_compra_proveedor ON Compra(proveedor_id, fecha_compra);
-
--- ==========================================
 -- INSERCIÓN DE DATOS
--- ==========================================
 
 -- Métodos de Pago
 INSERT INTO Metodo_Pago (nombre) VALUES
@@ -409,9 +336,8 @@ INSERT INTO Subcategoria (nombre) VALUES
 ('Cumpleaños'), ('Día de la Madre'), ('Amor y Amistad'), ('Navidad'), ('Personalizados'),
 ('Uso Diario'), ('Parejas'), ('Protección / Amuletos'), ('Infantil / Bebés');
 
--- ==========================================
--- PERMISOS (CORREGIDO - AGREGADOS 2 NUEVOS)
--- ==========================================
+-- PERMISOS 
+
 INSERT INTO Permiso (nombre, descripcion) VALUES
 ('usuarios_crear', 'Crear nuevos usuarios del sistema'),
 ('usuarios_editar', 'Modificar datos de usuarios'),
@@ -579,22 +505,22 @@ INSERT INTO Proveedor_Material (proveedor_id, material_id) VALUES
 -- ==========================================
 -- COMPRAS
 -- ==========================================
-INSERT INTO Compra (proveedor_id, usuario_id, fecha_compra, fecha_entrega) VALUES
-(1, 1, CURDATE(), DATE_ADD(CURDATE(), INTERVAL 3 DAY)),
-(2, 2, CURDATE(), DATE_ADD(CURDATE(), INTERVAL 5 DAY)),
-(3, 3, CURDATE(), DATE_ADD(CURDATE(), INTERVAL 2 DAY)),
-(4, 4, CURDATE(), DATE_ADD(CURDATE(), INTERVAL 4 DAY)),
-(5, 5, CURDATE(), DATE_ADD(CURDATE(), INTERVAL 3 DAY)),
-(6, 6, CURDATE(), DATE_ADD(CURDATE(), INTERVAL 6 DAY)),
-(7, 7, CURDATE(), DATE_ADD(CURDATE(), INTERVAL 2 DAY)),
-(8, 8, CURDATE(), DATE_ADD(CURDATE(), INTERVAL 5 DAY)),
-(9, 9, CURDATE(), DATE_ADD(CURDATE(), INTERVAL 3 DAY)),
-(10, 10, CURDATE(), DATE_ADD(CURDATE(), INTERVAL 4 DAY)),
-(11, 11, CURDATE(), DATE_ADD(CURDATE(), INTERVAL 2 DAY)),
-(12, 12, CURDATE(), DATE_ADD(CURDATE(), INTERVAL 5 DAY)),
-(13, 13, CURDATE(), DATE_ADD(CURDATE(), INTERVAL 3 DAY)),
-(14, 14, CURDATE(), DATE_ADD(CURDATE(), INTERVAL 4 DAY)),
-(15, 15, CURDATE(), DATE_ADD(CURDATE(), INTERVAL 2 DAY));
+INSERT INTO Compra (proveedor_id, fecha_compra, fecha_entrega) VALUES
+(1, CURDATE(), DATE_ADD(CURDATE(), INTERVAL 3 DAY)),
+(2, CURDATE(), DATE_ADD(CURDATE(), INTERVAL 5 DAY)),
+(3, CURDATE(), DATE_ADD(CURDATE(), INTERVAL 2 DAY)),
+(4,  CURDATE(), DATE_ADD(CURDATE(), INTERVAL 4 DAY)),
+(5, CURDATE(), DATE_ADD(CURDATE(), INTERVAL 3 DAY)),
+(6, CURDATE(), DATE_ADD(CURDATE(), INTERVAL 6 DAY)),
+(7, CURDATE(), DATE_ADD(CURDATE(), INTERVAL 2 DAY)),
+(8, CURDATE(), DATE_ADD(CURDATE(), INTERVAL 5 DAY)),
+(9, CURDATE(), DATE_ADD(CURDATE(), INTERVAL 3 DAY)),
+(10, CURDATE(), DATE_ADD(CURDATE(), INTERVAL 4 DAY)),
+(11, CURDATE(), DATE_ADD(CURDATE(), INTERVAL 2 DAY)),
+(12,  CURDATE(), DATE_ADD(CURDATE(), INTERVAL 5 DAY)),
+(13,  CURDATE(), DATE_ADD(CURDATE(), INTERVAL 3 DAY)),
+(14, CURDATE(), DATE_ADD(CURDATE(), INTERVAL 4 DAY)),
+(15, CURDATE(), DATE_ADD(CURDATE(), INTERVAL 2 DAY));
 
 INSERT INTO Detalle_Compra (compra_id, producto_id, precio_unitario, cantidad) VALUES
 (1, 1, 150000.00, 20), (2, 2, 300000.00, 10), (3, 3, 280000.00, 5), (4, 4, 90000.00, 15),
@@ -684,23 +610,6 @@ INSERT INTO Caso_Postventa (venta_id, tipo, cantidad, motivo, fecha, estado) VAL
 (14, 'devolucion', 1, 'Cancelación de evento', CURDATE(), 'en_proceso'),
 (15, 'reclamo', 1, 'Detalle en el broche', CURDATE(), 'aprobado');
 
-INSERT INTO Caso_Postcompra (compra_id, tipo, cantidad, motivo, fecha, estado) VALUES
-(1, 'reclamo', 5, 'Entrega parcial del pedido', CURDATE(), 'aprobado'),
-(2, 'cambio', 3, 'Producto diferente al solicitado', CURDATE(), 'en_proceso'),
-(3, 'devolucion', 2, 'Material no cumple especificaciones', CURDATE(), 'aprobado'),
-(4, 'reclamo', 1, 'Demora en la entrega', CURDATE(), 'cancelado'),
-(5, 'cambio', 4, 'Cambio de referencia de producto', CURDATE(), 'aprobado'),
-(6, 'devolucion', 6, 'Defectos de fabricación', CURDATE(), 'en_proceso'),
-(7, 'reclamo', 10, 'Facturación incorrecta', CURDATE(), 'aprobado'),
-(8, 'cambio', 2, 'Empaque dañado en transporte', CURDATE(), 'aprobado'),
-(9, 'devolucion', 3, 'Producto fuera de stock confirmado', CURDATE(), 'cancelado'),
-(10, 'reclamo', 1, 'Error en precios acordados', CURDATE(), 'en_proceso'),
-(11, 'cambio', 5, 'Solicitud de variante de color', CURDATE(), 'aprobado'),
-(12, 'devolucion', 4, 'Calidad no esperada', CURDATE(), 'en_proceso'),
-(13, 'reclamo', 15, 'Falta de documentos de importación', CURDATE(), 'aprobado'),
-(14, 'cambio', 1, 'Cambio de fecha de entrega', CURDATE(), 'aprobado'),
-(15, 'devolucion', 8, 'Producto no corresponde a muestra', CURDATE(), 'en_proceso');
-
 INSERT INTO Historial_Caso_Postventa (caso_id, estado, observacion, usuario_id) VALUES
 (1, 'en_proceso', 'Caso recibido para revisión', 2), (1, 'aprobado', 'Autorizado cambio de talla', 2),
 (2, 'en_proceso', 'Solicitud de devolución recibida', 3), (2, 'aprobado', 'Devolución aprobada, reembolso procesado', 3),
@@ -710,16 +619,6 @@ INSERT INTO Historial_Caso_Postventa (caso_id, estado, observacion, usuario_id) 
 (7, 'en_proceso', 'Solicitud de cambio de color', 8), (7, 'aprobado', 'Cambio aprobado, nuevo producto enviado', 8),
 (8, 'en_proceso', 'Error de pedido confirmado', 9), (8, 'aprobado', 'Producto correcto enviado', 9),
 (9, 'en_proceso', 'Reclamo por empaque dañado', 10);
-
-INSERT INTO Historial_Caso_Postcompra (caso_id, estado, observacion, usuario_id) VALUES
-(1, 'en_proceso', 'Reclamo por entrega parcial', 1), (1, 'aprobado', 'Proveedor envió resto del pedido', 1),
-(2, 'en_proceso', 'Solicitud de cambio de producto', 2), (3, 'en_proceso', 'Devolución por calidad', 3),
-(3, 'aprobado', 'Devolución aceptada, crédito aplicado', 3), (4, 'en_proceso', 'Reclamo por demora', 4),
-(4, 'cancelado', 'Proveedor compensó con descuento', 4), (5, 'en_proceso', 'Cambio de referencia solicitado', 5),
-(5, 'aprobado', 'Cambio procesado con proveedor', 5), (6, 'en_proceso', 'Devolución por defectos', 6),
-(7, 'en_proceso', 'Reclamo administrativo', 7), (7, 'aprobado', 'Factura corregida y enviada', 7),
-(8, 'en_proceso', 'Daño en transporte reportado', 8), (8, 'aprobado', 'Proveedor reemplazó productos', 8),
-(9, 'en_proceso', 'Cancelación por falta de stock', 9);
 
 -- ==========================================
 -- ROL_PERMISO (CORREGIDO - JERARQUÍA DE PERMISOS)
@@ -746,19 +645,13 @@ INSERT INTO Rol_Permiso (rol_id, permiso_id) VALUES
 INSERT INTO Recuperacion_Contrasena (usuario_id, codigo_verificacion, fecha_solicitud, fecha_expiracion, estado)
 VALUES (2, '452810', NOW(), DATE_ADD(NOW(), INTERVAL 15 MINUTE), 1);
 
--- ==========================================
 -- 4. Confirmar Transacción
--- ==========================================
 COMMIT;
 
--- ==========================================
 -- 5. Reactivar validación de llaves foráneas
--- ==========================================
 SET FOREIGN_KEY_CHECKS=1;
 
--- ==========================================
 -- CONSULTAS DE VERIFICACIÓN
--- ==========================================
 -- Ver roles asignados
 SELECT u.nombre, r.cargo 
 FROM Usuario u 
@@ -773,4 +666,4 @@ INNER JOIN Permiso p ON rp.permiso_id = p.permiso_id
 ORDER BY r.rol_id, p.permiso_id;
 
 
-select * from Historial_Caso_Postventa ;
+select * from gestor_abbyac27.Compra;

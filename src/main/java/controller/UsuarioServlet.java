@@ -50,19 +50,6 @@ public class UsuarioServlet extends HttpServlet {
                 req.getRequestDispatcher("/Administrador/usuarios/historial.jsp").forward(req, resp);
             }
 
-            case "verificarDocumento" -> {
-                String doc = req.getParameter("documento");
-                String idActualStr = req.getParameter("idActual");
-                boolean existe;
-                if (idActualStr != null && idActualStr.matches("\\d+")) {
-                    existe = usuarioDAO.existeDocumentoParaOtro(doc, Integer.parseInt(idActualStr));
-                } else {
-                    existe = usuarioDAO.existeDocumento(doc);
-                }
-                resp.setContentType("application/json");
-                resp.getWriter().write("{\"existe\": " + existe + "}");
-            }
-
             case "verificarCorreo" -> {
                 String correo = req.getParameter("correo");
                 String idActualStr = req.getParameter("idActual");
@@ -123,7 +110,6 @@ public class UsuarioServlet extends HttpServlet {
             String nombre     = req.getParameter("nombre");
             String correo     = req.getParameter("correo");
             String telefono   = req.getParameter("telefono");
-            String documento  = req.getParameter("documento");
             String contrasena = req.getParameter("contrasena");
             String rol        = req.getParameter("rol");
 
@@ -141,10 +127,6 @@ public class UsuarioServlet extends HttpServlet {
             }
             if (telefono == null || telefono.trim().isEmpty()) {
                 reenviarConError(req, resp, "El teléfono es obligatorio.", "/Administrador/usuarios/agregar_usuario.jsp");
-                return;
-            }
-            if (documento != null && !documento.trim().isEmpty() && usuarioDAO.existeDocumento(documento)) {
-                reenviarConError(req, resp, "Ya existe un usuario con ese documento.", "/Administrador/usuarios/agregar_usuario.jsp");
                 return;
             }
             if (usuarioDAO.existeCorreo(correo)) {
@@ -170,7 +152,6 @@ public class UsuarioServlet extends HttpServlet {
             u.setNombre(nombre.trim());
             u.setCorreo(correo.trim());
             u.setTelefono(telefono.trim());
-            u.setDocumento(documento);
             u.setContrasena(contrasena);
             u.setRol(rolNormalizado);
             u.setEstado("Activo".equals(req.getParameter("estado")));
@@ -180,7 +161,7 @@ public class UsuarioServlet extends HttpServlet {
                 resp.sendRedirect(req.getContextPath() + "/UsuarioServlet?msg=creado&correoDestino="
                         + java.net.URLEncoder.encode(correo.trim(), "UTF-8"));
             } else {
-                reenviarConError(req, resp, "No se pudo crear el usuario. Verifica que el nombre, documento o correo no estén repetidos.",
+                reenviarConError(req, resp, "No se pudo crear el usuario. Verifica que el nombre, o correo no estén repetidos.",
                         "/Administrador/usuarios/agregar_usuario.jsp");
             }
 

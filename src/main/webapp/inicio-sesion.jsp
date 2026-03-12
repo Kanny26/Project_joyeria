@@ -16,11 +16,16 @@
     <link rel="stylesheet" href="<%=request.getContextPath()%>/assets/css/main.css" />
     <link rel="stylesheet" href="<%=request.getContextPath()%>/assets/css/pages/Administrador/inicio-sesion.css" />
 
-    <!-- Font Awesome -->
+    <!-- Font Awesome (URL corregida sin espacios) -->
     <link
         rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
     />
+    
+    <!-- ✅ Solo esto para que el ojo tenga cursor de mano -->
+    <style>
+        #togglePassword { cursor: pointer; }
+    </style>
 </head>
 <body>
 <div class="inicio-sesion">
@@ -41,7 +46,6 @@
                     <h1>Iniciar Sesión</h1> 
                 </header> 
 
-                <!-- Formulario apunta al servlet /login -->
                 <form action="<%=request.getContextPath()%>/loginUnificado" method="post"> 
                     <% if (error != null && !error.isEmpty()) { %>
                         <p class="login__error">
@@ -78,7 +82,8 @@
                             placeholder="Contraseña" 
                             required 
                         /> 
-                        <i class="fas fa-eye icon-right"></i>
+                        <!-- ✅ Solo agregué el id para seleccionar con JS -->
+                        <i class="fas fa-eye icon-right" id="togglePassword"></i>
                     </div> 
 
                     <a 
@@ -102,7 +107,21 @@
         </section>
     </main>
 </div>
+
+<!-- ✅ Solo esto: el script para el toggle -->
+<script>
+document.getElementById('togglePassword').addEventListener('click', function() {
+    const input = document.getElementById('password');
+    const icon = this;
+    if (input.type === 'password') {
+        input.type = 'text';
+        icon.classList.replace('fa-eye', 'fa-eye-slash');
+    } else {
+        input.type = 'password';
+        icon.classList.replace('fa-eye-slash', 'fa-eye');
+    }
+});
+</script>
+
 </body>
 </html>
-
-

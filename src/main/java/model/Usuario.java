@@ -14,7 +14,6 @@ public class Usuario {
     private String rol;
     private boolean estado; // true= activo, false= inactivo
     private Date fechaCreacion; // fecha del registro del usuario
-    private String documento; // ■■ CAMPO AGREGADO PARA RF06 ■■
     private Date fechaRegistro; // fecha de cliente
     private Date fechaInicio; // fecha de proveedor
     private double minimoCompra; // mínimo de compra
@@ -26,7 +25,7 @@ public class Usuario {
     public Usuario() {}
 
     public Usuario(int usuarioId, String nombre, String correo, String telefono, String contrasena, 
-                   String rol, boolean estado, Date fechaCreacion, String documento, Date fechaRegistro, 
+                   String rol, boolean estado, Date fechaCreacion,Date fechaRegistro, 
                    Date fechaInicio, double minimoCompra, String observaciones) {
         this.usuarioId = usuarioId;
         this.nombre = nombre;
@@ -36,7 +35,6 @@ public class Usuario {
         this.rol = rol;
         this.estado = estado;
         this.fechaCreacion = fechaCreacion;
-        this.documento = documento;
         this.fechaRegistro = fechaRegistro;
         this.fechaInicio = fechaInicio;
         this.minimoCompra = minimoCompra;
@@ -69,10 +67,6 @@ public class Usuario {
 
     public Date getFechaCreacion() { return fechaCreacion; }
     public void setFechaCreacion(Date fechaCreacion) { this.fechaCreacion = fechaCreacion; }
-
-    // ■■ GETTER Y SETTER PARA DOCUMENTO ■■
-    public String getDocumento() { return documento; }
-    public void setDocumento(String documento) { this.documento = documento; }
 
     public Date getFechaRegistro() { return fechaRegistro; }
     public void setFechaRegistro(Date fechaRegistro) { this.fechaRegistro = fechaRegistro; }

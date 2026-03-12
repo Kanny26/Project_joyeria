@@ -1,11 +1,12 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="java.util.*, model.Usuario, java.text.SimpleDateFormat" %>
 <%
-    Object adminSesion = session.getAttribute("admin");
-    if (adminSesion == null) {
-        response.sendRedirect(request.getContextPath() + "/inicio-sesion.jsp");
-        return;
-    }
+	Object adminSesion = session.getAttribute("admin");
+	Object superAdminSesion = session.getAttribute("superadmin");
+	if (adminSesion == null && superAdminSesion == null) {
+	    response.sendRedirect(request.getContextPath() + "/inicio-sesion.jsp");
+	    return;
+	}
 
     List<Usuario> usuarios = (List<Usuario>) request.getAttribute("usuarios");
 
