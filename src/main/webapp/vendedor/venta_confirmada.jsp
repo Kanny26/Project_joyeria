@@ -4,16 +4,24 @@
 <%@ page import="java.util.Locale" %>
 <%@ page import="model.Venta" %>
 <%
+    /*
+     * Control de sesión.
+     */
     Object vendedorSesion = session.getAttribute("vendedor");
     if (vendedorSesion == null) {
         response.sendRedirect(request.getContextPath() + "/vendedor/inicio-sesion.jsp");
         return;
     }
-    Venta venta = (Venta) request.getAttribute("venta");
-    String mensaje = (String) request.getAttribute("mensaje");
+
+    /*
+     * El servlet pone el objeto Venta y el mensaje en el request antes del forward.
+     * Si por alguna razón no llega el mensaje, se usa un texto por defecto.
+     */
+    Venta venta         = (Venta) request.getAttribute("venta");
+    String mensaje      = (String) request.getAttribute("mensaje");
     NumberFormat moneda = NumberFormat.getCurrencyInstance(new Locale("es", "CO"));
     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-    if (mensaje == null) mensaje = "¡Venta registrada con éxito!";
+    if (mensaje == null) mensaje = "¡Venta registrada correctamente!";
 %>
 <!DOCTYPE html>
 <html lang="es">
@@ -36,11 +44,16 @@
 
 <main class="prov-page">
     <div class="form-card confirmacion-card" style="text-align:center;">
+        <%-- Ícono de éxito --%>
         <div style="font-size:72px;color:#22c55e;margin-bottom:1rem;">
             <i class="fa-solid fa-circle-check"></i>
         </div>
-        <h2 style="font-size:1.4rem;font-weight:800;color:#1e1b4b;margin-bottom:1.5rem;"><%= mensaje %></h2>
+        <h2 style="font-size:1.4rem;font-weight:800;color:#1e1b4b;margin-bottom:.5rem;"><%= mensaje %></h2>
+        <p style="color:#6b7280;font-size:14px;margin-bottom:1.5rem;">
+            La venta fue guardada correctamente en el sistema.
+        </p>
 
+        <%-- Resumen de la venta (solo si el objeto está disponible) --%>
         <% if (venta != null) { %>
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;margin-bottom:1.5rem;">
             <div style="background:#f5f3ff;border-radius:12px;padding:1rem;">
@@ -57,9 +70,10 @@
                 <div style="font-size:11px;font-weight:700;color:#16a34a;text-transform:uppercase;margin-bottom:4px;">Total</div>
                 <div style="font-weight:800;font-size:1.2rem;color:#059669;"><%= moneda.format(venta.getTotal()) %></div>
             </div>
+            <%-- Información extra para ventas a crédito (anticipo) --%>
             <% if ("anticipo".equals(venta.getModalidad())) { %>
             <div style="background:#fef9c3;border-radius:12px;padding:1rem;">
-                <div style="font-size:11px;font-weight:700;color:#ca8a04;text-transform:uppercase;margin-bottom:4px;">Anticipo</div>
+                <div style="font-size:11px;font-weight:700;color:#ca8a04;text-transform:uppercase;margin-bottom:4px;">Anticipo cobrado</div>
                 <div style="font-weight:800;color:#92400e;"><%= moneda.format(venta.getMontoAnticipo()) %></div>
             </div>
             <div style="background:#fee2e2;border-radius:12px;padding:1rem;">
@@ -68,11 +82,19 @@
             </div>
             <% } %>
         </div>
+
+        <%-- Botón para descargar la factura en PDF --%>
+        <div style="margin-bottom:1.5rem;">
+            <a href="<%= request.getContextPath() %>/VentaVendedorServlet?action=descargarFactura&id=<%= venta.getVentaId() %>"
+               class="btn-save" style="background-color:#7c3aed;">
+                <i class="fa-solid fa-file-pdf"></i> Descargar Factura PDF
+            </a>
+        </div>
         <% } %>
 
         <div class="form-actions" style="justify-content:center;gap:1rem;">
             <a href="<%= request.getContextPath() %>/VentaVendedorServlet?action=nueva" class="btn-save">
-                <i class="fa-solid fa-plus"></i> Nueva Venta
+                <i class="fa-solid fa-plus"></i> Nueva venta
             </a>
             <a href="<%= request.getContextPath() %>/VentaVendedorServlet?action=misVentas" class="btn-cancel">
                 <i class="fa-solid fa-list"></i> Ver mis ventas
@@ -80,5 +102,21 @@
         </div>
     </div>
 </main>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+// Muestra un toast de éxito al cargar la página para confirmar la operación
+window.addEventListener('load', function() {
+    Swal.fire({
+        toast: true,
+        position: 'top-end',
+        icon: 'success',
+        title: 'Venta registrada exitosamente',
+        showConfirmButton: false,
+        timer: 3500,
+        timerProgressBar: true
+    });
+});
+</script>
 </body>
 </html>

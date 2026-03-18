@@ -7,6 +7,11 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.*;
 
+/**
+ * Sirve las imágenes de productos directamente desde la base de datos.
+ * Se accede mediante la URL /imagen-producto/{id}, donde {id} es el ID del producto.
+ * Esta URL se usa en categoria.jsp dentro de las tarjetas de cada producto.
+ */
 @WebServlet("/imagen-producto/*")
 public class ImagenServlet extends HttpServlet {
 
@@ -21,6 +26,8 @@ public class ImagenServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
+        // getPathInfo() retorna la parte de la URL después del patrón del servlet.
+        // Ejemplo: si la URL es /imagen-producto/42, pathInfo = "/42"
         String pathInfo = request.getPathInfo();
 
         if (pathInfo == null || pathInfo.equals("/")) {
@@ -28,9 +35,11 @@ public class ImagenServlet extends HttpServlet {
             return;
         }
 
-        // Limpia el path por si viene con espacios o caracteres raros
+        // Se extrae el ID eliminando la barra inicial. trim() limpia espacios o caracteres raros.
         String idStr = pathInfo.substring(1).trim();
 
+        // matches("\\d+") verifica que el ID sea solo dígitos antes de convertirlo.
+        // Esto evita un NumberFormatException y también previene peticiones malformadas.
         if (!idStr.matches("\\d+")) {
             servirImagenDefault(response);
             return;
@@ -44,16 +53,19 @@ public class ImagenServlet extends HttpServlet {
                     && producto.getImagenData() != null
                     && producto.getImagenData().length > 0) {
 
-                // Valida que el tipo MIME sea seguro, evita headers maliciosos
+                // Seguridad: resolverTipoMime valida el tipo de imagen antes de enviarlo
+                // en la cabecera HTTP. Evita que un tipo inválido o malicioso llegue al navegador.
                 String tipo = resolverTipoMime(producto.getImagenTipo());
 
                 response.setContentType(tipo);
                 response.setContentLengthLong(producto.getImagenData().length);
 
-                // Cache de 1 año para imágenes que no cambian seguido
+                // Cache de 1 año para imágenes que raramente cambian,
+                // reduciendo peticiones innecesarias al servidor.
                 response.setHeader("Cache-Control", "public, max-age=31536000");
 
-                // ✅ Mejora: usa BufferedOutputStream para escribir más rápido
+                // BufferedOutputStream mejora el rendimiento escribiendo en bloques de 8KB
+                // en lugar de byte por byte.
                 try (BufferedOutputStream out =
                              new BufferedOutputStream(response.getOutputStream(), 8192)) {
                     out.write(producto.getImagenData());
@@ -65,18 +77,20 @@ public class ImagenServlet extends HttpServlet {
             }
 
         } catch (NumberFormatException e) {
-            // ID demasiado grande para int, igual lo manejamos
+            // El ID era demasiado grande para un int; se sirve la imagen por defecto.
             servirImagenDefault(response);
         } catch (Exception e) {
-            // Log del error real para debugging, no lo silencies completamente
+            // Se registra el error en el log del servidor para facilitar el diagnóstico,
+            // sin exponer detalles técnicos al navegador.
             log("Error al servir imagen para id=" + pathInfo, e);
             servirImagenDefault(response);
         }
     }
 
     /**
-     * Valida y normaliza el tipo MIME para evitar valores inesperados en el header.
-     * Solo permite tipos de imagen conocidos.
+     * Valida y normaliza el tipo MIME recibido de la BD.
+     * Solo permite tipos de imagen conocidos para evitar valores inesperados en la cabecera HTTP.
+     * Si el tipo no es reconocido, retorna image/jpeg como valor seguro por defecto.
      */
     private String resolverTipoMime(String tipoGuardado) {
         if (tipoGuardado == null) return "image/jpeg";
@@ -87,17 +101,26 @@ public class ImagenServlet extends HttpServlet {
             case "image/png":  return "image/png";
             case "image/webp": return "image/webp";
             case "image/gif":  return "image/gif";
-            default:           return "image/jpeg"; // fallback seguro
+            default:           return "image/jpeg";
         }
     }
 
+    /**
+     * Sirve la imagen por defecto (default.png) cuando no hay imagen del producto.
+     * Si tampoco existe el archivo default.png, retorna un GIF transparente de 1x1 pixel
+     * como último recurso para que la etiqueta <img> del HTML no quede rota.
+     *
+     * isCommitted() verifica si los headers HTTP ya fueron enviados; si es así,
+     * no se puede modificar la respuesta y se sale sin hacer nada.
+     */
     private void servirImagenDefault(HttpServletResponse response) throws IOException {
         if (response.isCommitted()) return;
         String path = getServletContext().getRealPath("/assets/Imagenes/default.png");
         File f = new File(path);
 
         if (!f.exists()) {
-            // fallback gif 1x1 si tampoco encuentra el default
+            // GIF mínimo de 1x1 píxel transparente codificado en bytes.
+            // Es el fallback más pequeño posible para no mostrar imagen rota.
             response.setContentType("image/gif");
             byte[] gif1x1 = {
                 0x47,0x49,0x46,0x38,0x39,0x61,0x01,0x00,
@@ -112,8 +135,9 @@ public class ImagenServlet extends HttpServlet {
             return;
         }
 
-        response.setContentType("image/png"); // ← png, no jpeg
+        response.setContentType("image/png");
         response.setContentLengthLong(f.length());
+        // Se usan streams con buffer para leer y escribir el archivo en bloques eficientes.
         try (InputStream  in  = new BufferedInputStream(new FileInputStream(f), 8192);
              OutputStream out = new BufferedOutputStream(response.getOutputStream(), 8192)) {
             byte[] buf = new byte[8192];

@@ -4,18 +4,12 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
-/**
- * Modelo de Venta - representa una venta_factura en BD
- * Soporta modalidades: contado, anticipo (dos cuotas)
- * Métodos de pago: efectivo, tarjeta
- */
 public class Venta {
 
     private int ventaId;
-    private int usuarioId;           // FK vendedor
-    private int usuarioClienteId;    // FK cliente
+    private int usuarioId;
+    private int usuarioClienteId;
 
-    // Campos enriquecidos (JOINs en consultas)
     private String vendedorNombre;
     private String clienteNombre;
     private String telefonoCliente;
@@ -23,32 +17,27 @@ public class Venta {
 
     private Date fechaEmision;
     private BigDecimal total;
-
-    // Pago
-    private String metodoPago;       // efectivo | tarjeta
-    private String estado;           // pendiente | confirmado | rechazado
-
-    // Modalidad calculada a partir de Pago_Venta
-    private String modalidad;        // contado | anticipo
+    private String metodoPago;
+    private String estado;
+    private String modalidad;
     private BigDecimal montoAnticipo;
     private BigDecimal saldoPendiente;
 
     private List<DetalleVenta> detalles;
+    private List<CasoPostventa> casosPostventa; // NUEVO
 
-    // ── Constructores ──────────────────────────────────────────
     public Venta() {}
 
     public Venta(int usuarioId, int usuarioClienteId, Date fechaEmision,
                  BigDecimal total, String metodoPago) {
-        this.usuarioId = usuarioId;
+        this.usuarioId        = usuarioId;
         this.usuarioClienteId = usuarioClienteId;
-        this.fechaEmision = fechaEmision;
-        this.total = total;
-        this.metodoPago = metodoPago;
-        this.estado = "pendiente";
+        this.fechaEmision     = fechaEmision;
+        this.total            = total;
+        this.metodoPago       = metodoPago;
+        this.estado           = "pendiente";
     }
 
-    // ── Getters / Setters ──────────────────────────────────────
     public int getVentaId()                            { return ventaId; }
     public void setVentaId(int ventaId)                { this.ventaId = ventaId; }
 
@@ -94,7 +83,9 @@ public class Venta {
     public List<DetalleVenta> getDetalles()            { return detalles; }
     public void setDetalles(List<DetalleVenta> d)      { this.detalles = d; }
 
-    // ── Helpers útiles en JSP ──────────────────────────────────
+    public List<CasoPostventa> getCasosPostventa()              { return casosPostventa; }
+    public void setCasosPostventa(List<CasoPostventa> casos)    { this.casosPostventa = casos; }
+
     public boolean isAnticipo() {
         return "anticipo".equals(modalidad);
     }
@@ -105,7 +96,7 @@ public class Venta {
 
     public String getEstadoPago() {
         if (isAnticipo() && !isPagadoCompleto()) return "Con saldo pendiente";
-        if ("confirmado".equals(estado)) return "Pagado";
+        if ("confirmado".equals(estado))          return "Pagado";
         return "Pendiente";
     }
 }

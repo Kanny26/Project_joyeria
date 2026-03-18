@@ -3,7 +3,9 @@ package model;
 import java.math.BigDecimal;
 
 /**
- * Detalle de una línea de venta (Detalle_Venta en BD)
+ * Representa una línea dentro de una venta: qué producto se vendió,
+ * en qué cantidad y a qué precio.
+ * Corresponde a la tabla Detalle_Venta en la base de datos.
  */
 public class DetalleVenta {
 
@@ -14,25 +16,29 @@ public class DetalleVenta {
     private int cantidad;
     private BigDecimal precioUnitario;
     private BigDecimal subtotal;
-    private int stockDisponible;   // stock actual del producto (para validaciones en vista)
 
-    // ── Constructores ──────────────────────────────────────────
+    // Se guarda el stock actual del producto para poder mostrar disponibilidad en la vista
+    // y validar que no se pida más de lo que hay.
+    private int stockDisponible;
+
     public DetalleVenta() {}
 
     /**
-     * Constructor de conveniencia usado al armar la venta antes de persistir.
+     * Constructor de conveniencia que se usa al armar el detalle antes de guardar la venta.
+     * Calcula el subtotal automáticamente multiplicando precio × cantidad.
      */
     public DetalleVenta(int productoId, String productoNombre,
                         int cantidad, BigDecimal precioUnitario, int stockDisponible) {
-        this.productoId = productoId;
-        this.productoNombre = productoNombre;
-        this.cantidad = cantidad;
-        this.precioUnitario = precioUnitario;
+        this.productoId      = productoId;
+        this.productoNombre  = productoNombre;
+        this.cantidad        = cantidad;
+        this.precioUnitario  = precioUnitario;
         this.stockDisponible = stockDisponible;
-        this.subtotal = precioUnitario.multiply(BigDecimal.valueOf(cantidad));
+        // El subtotal se precalcula aquí para no tener que recalcularlo después
+        this.subtotal        = precioUnitario.multiply(BigDecimal.valueOf(cantidad));
     }
 
-    // ── Getters / Setters ──────────────────────────────────────
+    // ── Getters y Setters ──────────────────────────────────────────────────────
     public int getDetalleVentaId()                     { return detalleVentaId; }
     public void setDetalleVentaId(int id)              { this.detalleVentaId = id; }
 

@@ -1,12 +1,17 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <%@ page import="model.Proveedor, model.Material, java.util.List"%>
 <%
+    /* Seguridad: si no hay sesión activa de admin, redirige al login */
     Object admin = session.getAttribute("admin");
     if (admin == null) {
         response.sendRedirect(request.getContextPath() + "/inicio-sesion.jsp");
         return;
     }
 
+    /*
+     * El proveedor llega como atributo del request via forward del servlet.
+     * Si no existe (alguien accede directo a esta URL), se redirige al listado.
+     */
     Proveedor p = (Proveedor) request.getAttribute("proveedor");
     if (p == null) {
         response.sendRedirect(request.getContextPath() + "/ProveedorServlet?action=listar");
@@ -16,8 +21,14 @@
     List<Material> materiales = (List<Material>) request.getAttribute("materiales");
     if (materiales == null) materiales = new java.util.ArrayList<>();
 
+    /*
+     * errorServidor contiene el mensaje cuando el servlet rechazó el formulario.
+     * Ejemplos: teléfono ya registrado, correo ya en uso en otro proveedor.
+     * Se muestra en la parte superior y también con SweetAlert al cargar la página.
+     */
     String errorServidor = (String) request.getAttribute("error");
 
+    /* Listas de contacto pre-cargadas para llenar los campos del formulario */
     List<String> telefonos = p.getTelefonos() != null ? p.getTelefonos() : new java.util.ArrayList<>();
     List<String> correos   = p.getCorreos()   != null ? p.getCorreos()   : new java.util.ArrayList<>();
 %>
@@ -31,138 +42,7 @@
     <link rel="stylesheet" href="<%=request.getContextPath()%>/assets/css/forms-global.css">
     <link rel="stylesheet" href="<%=request.getContextPath()%>/assets/css/pages/Administrador/producto.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <style>
-        .form-product-container { max-width: 960px; margin: 40px auto; padding: 0 32px 80px; }
-        .form-product {
-            background: #fff; border-radius: 20px; padding: 40px 44px;
-            box-shadow: 0 8px 32px rgba(124,58,237,0.08); border: 1px solid #ede9fe;
-            display: flex; flex-direction: column;
-        }
-        .form-section {
-            background: #faf8ff; border: 1px solid #ede9fe;
-            border-radius: 14px; padding: 28px 30px 24px; margin-bottom: 28px;
-        }
-        .section-sep {
-            font-size: 0.73rem; font-weight: 700; text-transform: uppercase;
-            letter-spacing: 0.09em; color: #7c3aed; border-bottom: 2px solid #ede9fe;
-            padding-bottom: 10px; margin-bottom: 22px; display: flex; align-items: center; gap: 8px;
-        }
-        .section-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px 28px; }
-        .form-group   { display: flex; flex-direction: column; gap: 6px; }
-        .form-label   {
-            font-size: 0.78rem; font-weight: 700; color: #7c3aed;
-            text-transform: uppercase; letter-spacing: 0.6px;
-            display: flex; align-items: center; gap: 6px;
-        }
-
-        /* ── Campo editable ── */
-        .form-input {
-            padding: 11px 14px; border-radius: 10px; border: 1.5px solid #e2d9f3;
-            font-size: 0.93rem; transition: all 0.2s; width: 100%;
-            box-sizing: border-box; font-family: inherit; color: #1e1b4b;
-        }
-        .form-input:focus  { border-color: #7c3aed; box-shadow: 0 0 0 3px rgba(124,58,237,0.12); outline: none; }
-        .form-input.is-invalid { border-color: #ef4444 !important; background: #fef2f2; }
-        .form-input.is-valid   { border-color: #22c55e !important; background: #f0fdf4; }
-
-        /* ── Campo readonly ── */
-        .input-readonly {
-            padding: 11px 14px; border-radius: 10px; border: 1.5px solid #e5e7eb;
-            background: #f3f4f6; color: #6b7280; font-size: 0.93rem;
-            display: flex; align-items: center; gap: 8px;
-            width: 100%; box-sizing: border-box;
-        }
-        .readonly-badge {
-            display: inline-flex; align-items: center; gap: 4px; font-size: 0.70rem;
-            color: #9ca3af; background: #f9fafb; border: 1px solid #e5e7eb;
-            border-radius: 20px; padding: 3px 10px; margin-top: 2px; width: fit-content;
-        }
-
-        /* ── Mensajes de error / éxito ── */
-        .field-msg {
-            font-size: 0.72rem; display: none;
-            align-items: center; gap: 4px; margin-top: 2px;
-        }
-        .field-msg.error   { color: #dc2626; }
-        .field-msg.success { color: #16a34a; }
-        .field-msg.visible { display: flex; }
-
-        /* ── Filas dinámicas ── */
-        .dynamic-row { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
-        .btn-remove-dyn {
-            width: 36px; height: 36px; border-radius: 9px; border: none;
-            background: #fee2e2; color: #dc2626; cursor: pointer; flex-shrink: 0;
-            display: flex; align-items: center; justify-content: center; transition: background 0.2s;
-        }
-        .btn-remove-dyn:hover { background: #fca5a5; }
-        .btn-add-dyn {
-            display: inline-flex; align-items: center; gap: 6px; padding: 7px 16px;
-            border-radius: 9px; border: 1.5px dashed #7c3aed; background: transparent;
-            color: #7c3aed; font-size: 0.82rem; font-weight: 600;
-            cursor: pointer; margin-top: 6px; transition: all 0.2s; font-family: inherit;
-        }
-        .btn-add-dyn:hover { background: #f5f3ff; border-style: solid; }
-
-        /* ── Materiales ── */
-        .materiales-grid {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 10px; background: #fff; padding: 18px;
-            border-radius: 10px; border: 1.5px solid #e2d9f3;
-        }
-        .material-label {
-            display: flex; align-items: center; gap: 8px; cursor: pointer;
-            font-size: 0.88rem; color: #374151; padding: 8px 12px;
-            border-radius: 8px; border: 1px solid #e5e7eb; background: #faf8ff;
-            transition: all 0.15s; user-select: none;
-        }
-        .material-label:hover { background: #ede9fe; border-color: #c4b5fd; }
-        .material-label input[type="checkbox"] { accent-color: #7c3aed; }
-        .materiales-bloque-error {
-            display: none; align-items: center; gap: 6px; font-size: 0.78rem;
-            color: #dc2626; margin-top: 10px; padding: 8px 12px;
-            background: #fef2f2; border-radius: 8px; border: 1px solid #fecaca;
-        }
-        .materiales-bloque-error.visible { display: flex; }
-
-        /* ── Estado ── */
-        .estado-group { display: flex; gap: 14px; flex-wrap: wrap; }
-        .estado-option {
-            display: flex; align-items: center; gap: 8px; cursor: pointer;
-            font-size: 0.9rem; padding: 10px 20px; border-radius: 10px;
-            border: 1.5px solid #e5e7eb; background: #fff; transition: all 0.2s;
-        }
-        .estado-option:has(input:checked) { border-color: #7c3aed; background: #f5f3ff; color: #5b21b6; font-weight: 600; }
-        .estado-hint { font-size: 0.78rem; color: #6b7280; margin-top: 10px; display: flex; align-items: flex-start; gap: 6px; }
-
-        /* ── Acciones ── */
-        .form-actions {
-            display: flex; gap: 14px; margin-top: 36px; padding-top: 28px;
-            border-top: 1.5px solid #ede9fe; justify-content: flex-end;
-        }
-        .btn-guardar {
-            display: inline-flex; align-items: center; gap: 8px; padding: 12px 28px;
-            border-radius: 12px; border: none;
-            background: linear-gradient(135deg, #7c3aed, #a78bfa);
-            color: #fff; font-weight: 700; font-size: 0.95rem;
-            cursor: pointer; font-family: inherit;
-            box-shadow: 0 4px 14px rgba(124,58,237,0.3); transition: transform 0.15s, box-shadow 0.15s;
-        }
-        .btn-guardar:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(124,58,237,0.4); }
-        .btn-cancelar {
-            display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px;
-            border-radius: 12px; border: none; background: #f3f4f6; color: #374151;
-            font-weight: 700; font-size: 0.95rem; cursor: pointer; font-family: inherit;
-            transition: background 0.15s;
-        }
-        .btn-cancelar:hover { background: #e5e7eb; }
-
-        /* ── Error servidor ── */
-        .server-error {
-            background: #fef2f2; border: 1px solid #fecaca; border-left: 4px solid #ef4444;
-            border-radius: 10px; padding: 14px 18px; margin-bottom: 24px;
-            color: #991b1b; font-size: 0.9rem; display: flex; align-items: center; gap: 10px;
-        }
-    </style>
+    
 </head>
 <body>
 
@@ -187,6 +67,7 @@
         Editar Proveedor
     </h2>
 
+    <%-- Mensaje de error del backend visible en la parte superior del formulario --%>
     <% if (errorServidor != null && !errorServidor.isEmpty()) { %>
     <div class="server-error">
         <i class="fa-solid fa-circle-exclamation"></i> <%= errorServidor %>
@@ -750,6 +631,22 @@ document.getElementById('formEditar').addEventListener('submit', async function(
         this.submit();
     }
 });
+
+/*
+ * Si el servlet rechazó el formulario con un error, se muestra como alerta de SweetAlert
+ * al cargar la página para que el usuario no pase por alto el mensaje.
+ * La condición JSP evalúa el error en el servidor; si existe, emite el bloque JS.
+ */
+<% if (errorServidor != null && !errorServidor.isEmpty()) { %>
+window.addEventListener('DOMContentLoaded', function() {
+    Swal.fire({
+        title: 'No se pudo actualizar',
+        text: '<%=errorServidor.replace("'", "\'")%>',
+        icon: 'error',
+        confirmButtonColor: '#7c3aed'
+    });
+});
+<% } %>
 </script>
 </body>
 </html>

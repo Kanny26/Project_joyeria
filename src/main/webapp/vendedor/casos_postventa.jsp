@@ -3,12 +3,34 @@
 <%@ page import="java.text.SimpleDateFormat" %>
 <%@ page import="model.CasoPostventa" %>
 <%
+    /*
+     * Control de sesión: si el vendedor no está logueado, redirige al login.
+     * Se hace antes de cualquier otra operación para proteger la página.
+     */
     Object vendedorSesion = session.getAttribute("vendedor");
     if (vendedorSesion == null) {
         response.sendRedirect(request.getContextPath() + "/inicio-sesion.jsp");
         return;
     }
+
+    /*
+     * El servlet VentaVendedorServlet pone la lista de casos en el request
+     * con el nombre "casos" al procesar la acción "misCasos".
+     * Si el atributo no llega (por ejemplo, si se accede directamente al JSP),
+     * se usa una lista vacía para evitar NullPointerException.
+     */
     List<CasoPostventa> casos = (List<CasoPostventa>) request.getAttribute("casos");
+
+    /*
+     * El mensaje de éxito puede llegar de dos formas:
+     *   1. Como atributo del request (cuando viene de un forward tras guardar)
+     *   2. Como parámetro en la URL (cuando viene de un sendRedirect con ?exito=1)
+     */
+    String mensajeExito = (String) request.getAttribute("mensajeExito");
+    if (mensajeExito == null) mensajeExito = request.getParameter("exito");
+
+    String mensajeError = (String) request.getAttribute("error");
+
     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 %>
 <!DOCTYPE html>
@@ -28,19 +50,36 @@
         <img src="<%= request.getContextPath() %>/assets/Imagenes/iconos/Seller.png" alt="Vendedor">
     </div>
     <h1 class="navbar-admin__title">AAC27</h1>
-     <a href="<%=request.getContextPath()%>/vendedor/vendedor_principal.jsp" class="navbar-admin__home-link">
-	    <span class="navbar-admin__home-icon-wrap">
-	        <i class="fa-solid fa-arrow-left"></i>
-		    <span class="navbar-admin__home-text">Volver atrás</span>
-		    <i class="fa-solid fa-house-chimney"></i>
-	    </span>
+    <a href="<%=request.getContextPath()%>/vendedor/vendedor_principal.jsp" class="navbar-admin__home-link">
+        <span class="navbar-admin__home-icon-wrap">
+            <i class="fa-solid fa-arrow-left"></i>
+            <span class="navbar-admin__home-text">Volver atrás</span>
+            <i class="fa-solid fa-house-chimney"></i>
+        </span>
     </a>
 </nav>
 
 <main class="prov-page">
     <h1 class="prov-page__titulo">Mis Casos Postventa</h1>
 
-    <%-- Contadores --%>
+    <%-- Mensajes de retroalimentación al usuario --%>
+    <% if (mensajeError != null && !mensajeError.isEmpty()) { %>
+        <div class="prov-alert prov-alert--error" id="alertaMensaje">
+            <i class="fa-solid fa-circle-exclamation"></i> <%= mensajeError %>
+        </div>
+    <% } %>
+    <% if (mensajeExito != null && !mensajeExito.isEmpty()) { %>
+        <div class="prov-alert prov-alert--success" id="alertaMensaje">
+            <i class="fa-solid fa-circle-check"></i>
+            <% if ("1".equals(mensajeExito)) { %>
+                Caso registrado correctamente.
+            <% } else { %>
+                <%= mensajeExito %>
+            <% } %>
+        </div>
+    <% } %>
+
+    <%-- Contadores de resumen --%>
     <%
         int totalCasos = casos != null ? casos.size() : 0;
         int enProceso = 0, aprobados = 0, cancelados = 0;
@@ -71,7 +110,7 @@
         </div>
     </div>
 
-    <%-- Filtros --%>
+    <%-- Filtros de búsqueda --%>
     <div class="prov-toolbar">
         <div class="cards__busqueda">
             <select class="cards__busqueda-filtro" id="filtroTipo" onchange="filtrar()">
@@ -94,10 +133,14 @@
         </select>
     </div>
 
+    <%-- Lista de casos o mensaje de vacío --%>
     <% if (casos == null || casos.isEmpty()) { %>
         <div class="prov-empty">
             <div class="prov-empty__icon"><i class="fa-solid fa-inbox"></i></div>
             <p class="prov-empty__texto">Aún no tienes casos postventa registrados.</p>
+            <p style="color:#9ca3af;font-size:13px;margin-top:4px;">
+                Para registrar un caso, ve a una venta y presiona "Registrar Postventa".
+            </p>
         </div>
     <% } else { %>
         <div class="prov-grid" id="gridCasos">
@@ -160,6 +203,19 @@
                     </div>
                     <% } %>
 
+                    <%--
+                        La observación es la respuesta del administrador al revisar el caso.
+                        Solo se muestra si existe (es decir, si el admin ya la registró).
+                    --%>
+                    <% if (c.getObservacion() != null && !c.getObservacion().isBlank()) { %>
+                    <div class="prov-card__fila">
+                        <div class="prov-card__etiqueta"><i class="fa-solid fa-comment-dots"></i> Respuesta del admin</div>
+                        <div class="prov-card__valor" style="font-size:13px;color:#1e1b4b;background:#f0fdf4;padding:6px 10px;border-radius:8px;border-left:3px solid #22c55e;">
+                            <%= c.getObservacion() %>
+                        </div>
+                    </div>
+                    <% } %>
+
                     <div class="prov-card__duo">
                         <div class="prov-card__duo-item">
                             <div class="prov-card__etiqueta"><i class="fa-regular fa-calendar"></i> Fecha</div>
@@ -172,6 +228,14 @@
                             <div class="prov-card__valor prov-card__valor--dato">#<%= c.getVentaId() %></div>
                         </div>
                     </div>
+
+                    <%-- Producto relacionado (si está disponible en los datos del caso) --%>
+                    <% if (c.getProductoNombre() != null && !c.getProductoNombre().isBlank()) { %>
+                    <div class="prov-card__fila">
+                        <div class="prov-card__etiqueta"><i class="fa-solid fa-box-open"></i> Producto</div>
+                        <div class="prov-card__valor prov-card__valor--dato"><%= c.getProductoNombre() %></div>
+                    </div>
+                    <% } %>
                 </div>
 
                 <div class="prov-card__footer">
@@ -186,7 +250,21 @@
     <% } %>
 </main>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+// Oculta automáticamente las alertas luego de 5 segundos
+(function() {
+    var alerta = document.getElementById('alertaMensaje');
+    if (alerta) {
+        setTimeout(function() {
+            alerta.style.transition = 'opacity 0.5s';
+            alerta.style.opacity = '0';
+            setTimeout(function() { alerta.style.display = 'none'; }, 500);
+        }, 5000);
+    }
+})();
+
+// Filtra las tarjetas según los valores actuales de los selectores y el buscador
 function filtrar() {
     const q      = document.getElementById('buscador').value.toLowerCase();
     const tipo   = document.getElementById('filtroTipo').value;

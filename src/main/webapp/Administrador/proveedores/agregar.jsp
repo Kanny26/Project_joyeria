@@ -1,12 +1,19 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <%@ page import="model.Material, java.util.List"%>
 <%
+    /* Seguridad: si no hay sesión de admin, redirige al login */
     if (session.getAttribute("admin") == null) {
         response.sendRedirect(request.getContextPath() + "/inicio-sesion.jsp");
         return;
     }
     List<Material> materiales = (List<Material>) request.getAttribute("materiales");
     if (materiales == null) materiales = java.util.Collections.emptyList();
+
+    /*
+     * errorServidor contiene el mensaje de error enviado desde el servlet con request.setAttribute("error", ...).
+     * Se muestra cuando el backend rechaza el formulario (ej: documento duplicado, teléfono ya registrado).
+     * Se usa forward (no redirect), por lo que los atributos del request están disponibles aquí.
+     */
     String errorServidor = (String) request.getAttribute("error");
 %>
 <!DOCTYPE html>
@@ -19,18 +26,7 @@
     <link rel="stylesheet" href="<%=request.getContextPath()%>/assets/css/forms-global.css">
     <link rel="stylesheet" href="<%=request.getContextPath()%>/assets/css/pages/Administrador/producto.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <style>
-        .fs-input.is-invalid { border-color: #ef4444 !important; background: #fef2f2 !important; }
-        .field-error { font-size: 0.72rem; color: #dc2626; display: none; align-items: center; gap: 4px; margin-top: 3px; font-weight: 500; }
-        .field-error.visible { display: flex; }
-        .fs-check-grid.invalid-border { border-color: #ef4444 !important; background: #fef2f2; }
-        .materiales-error { font-size: 0.78rem; color: #dc2626; display: none; align-items: center; gap: 5px; margin-top: 8px; padding: 8px 12px; background: #fef2f2; border-radius: 8px; border: 1px solid #fecaca; }
-        .materiales-error.visible { display: flex; }
-        .fs-dyn-row { display: flex; gap: 8px; align-items: center; margin-bottom: 10px; }
-        .fs-btn-remove { width: 36px; height: 36px; border-radius: 9px; border: none; background: #fee2e2; color: #dc2626; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-        .fs-btn-add { display: inline-flex; align-items: center; gap: 6px; padding: 7px 16px; border-radius: 9px; border: 1.5px dashed #7c3aed; background: transparent; color: #7c3aed; font-size: 0.82rem; font-weight: 600; cursor: pointer; margin-top: 6px; }
-        .server-error { background:#fef2f2; color:#dc2626; padding:12px 16px; border:1px solid #fecaca; border-radius:8px; margin-bottom:20px; display:flex; align-items:center; gap:8px; font-weight:500; }
-    </style>
+
 </head>
 <body>
 
@@ -45,23 +41,28 @@
 <main class="fs-container">
     <h2 class="fs-page-title"><i class="fa-solid fa-truck-ramp-box" style="color: #7c3aed;"></i> Registrar Nuevo Proveedor</h2>
 
+    <%--
+        Este bloque solo se muestra si el servlet rechazó el formulario y envió un error.
+        Ejemplos: "El documento ya existe", "El teléfono ya está registrado en otro proveedor".
+    --%>
     <% if (errorServidor != null && !errorServidor.isEmpty()) { %>
-        <div class="server-error">
+        <div class="server-error" id="server-error-box">
             <i class="fa-solid fa-circle-exclamation"></i>
             <%= errorServidor %>
         </div>
     <% } %>
 
-    <!-- ✅ FORMULARIO CORREGIDO -->
     <form id="formProveedor" class="fs-form" method="post" action="<%=request.getContextPath()%>/ProveedorServlet">
         <input type="hidden" name="action" value="guardar">
-        <input type="hidden" name="estado" value="activo"> <!-- ✅ CAMPO ESENCIAL AGREGADO -->
+        <%-- El estado se envía siempre como "activo" al registrar un nuevo proveedor --%>
+        <input type="hidden" name="estado" value="activo">
 
         <div class="fs-section">
             <div class="fs-section-title"><i class="fa-solid fa-building"></i> Identificación Comercial</div>
             <div class="fs-grid">
                 <div class="fs-group">
                     <label class="fs-label" for="nombre">Nombre *</label>
+                    <%-- Si hubo error y se recargó el form, se restaura el valor ingresado --%>
                     <input id="nombre" type="text" name="nombre" class="fs-input" placeholder="Ej: Joyeria Aurora" required 
                            value="<%= request.getAttribute("proveedor") != null ? ((model.Proveedor)request.getAttribute("proveedor")).getNombre() : "" %>">
                     <div class="field-error" id="err-nombre"><i class="fa-solid fa-circle-exclamation"></i> Solo letras y números (mín. 3).</div>
@@ -69,6 +70,7 @@
 
                 <div class="fs-group">
                     <label class="fs-label" for="documento">Documento / NIT (Solo números) *</label>
+                    <%-- oninput reemplaza cualquier carácter no numérico en tiempo real --%>
                     <input id="documento" type="text" name="documento" class="fs-input" maxlength="20" required 
                            oninput="this.value = this.value.replace(/[^0-9]/g, '')"
                            value="<%= request.getAttribute("proveedor") != null ? ((model.Proveedor)request.getAttribute("proveedor")).getDocumento() : "" %>">
@@ -98,6 +100,7 @@
                     <label class="fs-label">Teléfonos (Solo números) *</label>
                     <div id="telefonos-container">
                         <% 
+                            /* Si el form se recargó por error, se restauran los teléfonos ingresados */
                             model.Proveedor provEdit = (model.Proveedor) request.getAttribute("proveedor");
                             List<String> telefonos = (provEdit != null && provEdit.getTelefonos() != null) ? provEdit.getTelefonos() : java.util.Arrays.asList("");
                             for (int i = 0; i < telefonos.size(); i++) { 
@@ -148,6 +151,7 @@
             <div class="fs-section-title"><i class="fa-solid fa-cubes"></i> Materiales Suministrados *</div>
             <div class="fs-check-grid" id="container-materiales">
                 <% 
+                    /* Se marcan los checkboxes que ya estaban seleccionados si el form se recargó */
                     List<Integer> materialesSeleccionados = new java.util.ArrayList<>();
                     if (provEdit != null && provEdit.getMateriales() != null) {
                         for (model.Material mSel : provEdit.getMateriales()) {
@@ -168,13 +172,14 @@
         </div>
 
         <div class="fs-actions">
-            <button type="submit" class="fs-btn-save">Registrar Proveedor</button>
+            <button type="submit" class="fs-btn-save" id="btnRegistrar">
+                <i class="fa-solid fa-floppy-disk"></i> Registrar Proveedor
+            </button>
             <button type="button" class="fs-btn-cancel" onclick="history.back()">Cancelar</button>
         </div>
     </form>
 </main>
 
-<!-- ✅ CDN CORREGIDO: sin espacios al final -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -185,7 +190,8 @@ const toggleError = (id, show) => {
     if(el) el.style.display = show ? 'flex' : 'none';
 };
 
-// --- VALIDACIONES INDIVIDUALES ---
+/* Validaciones individuales: cada una marca el campo como inválido si no cumple */
+
 function validarNombre() {
     const nom = document.getElementById('nombre');
     const ok = nom.value.trim().length >= 3 && NAME_REGEX.test(nom.value) && !/^\d+$/.test(nom.value);
@@ -202,6 +208,7 @@ function validarDocumento() {
     return ok;
 }
 
+/* La fecha no puede ser futura: se compara con la fecha de hoy en formato ISO */
 function validarFecha() {
     const fec = document.getElementById('fechaInicio');
     const hoy = new Date().toISOString().split('T')[0];
@@ -219,6 +226,7 @@ function validarMinimo() {
     return ok;
 }
 
+/* Se valida que haya al menos un teléfono con formato correcto (7 a 15 dígitos) */
 function validarTelefonos() {
     const tels = document.querySelectorAll('.tel-input');
     let allOk = true;
@@ -236,6 +244,7 @@ function validarTelefonos() {
     return finalOk;
 }
 
+/* Se valida que haya al menos un correo con formato válido (contiene @ y dominio) */
 function validarCorreos() {
     const mails = document.querySelectorAll('.email-input');
     let allOk = true;
@@ -253,6 +262,7 @@ function validarCorreos() {
     return finalOk;
 }
 
+/* Se valida que al menos un material esté seleccionado */
 function validarMateriales() {
     const matOk = document.querySelectorAll('.material-check:checked').length > 0;
     document.getElementById('container-materiales').classList.toggle('invalid-border', !matOk);
@@ -260,7 +270,7 @@ function validarMateriales() {
     return matOk;
 }
 
-// --- EVENTOS EN TIEMPO REAL ---
+/* Validación en tiempo real al escribir o cambiar cada campo */
 document.getElementById('nombre').addEventListener('input', validarNombre);
 document.getElementById('documento').addEventListener('input', validarDocumento);
 document.getElementById('fechaInicio').addEventListener('change', validarFecha);
@@ -273,7 +283,7 @@ document.getElementById('correos-container').addEventListener('input', (e) => {
 });
 document.querySelectorAll('.material-check').forEach(check => check.addEventListener('change', validarMateriales));
 
-// --- DINÁMICOS ---
+/* Agregar campos adicionales de teléfono y correo dinámicamente */
 function agregarTelefono() {
     const div = document.createElement('div');
     div.className = 'fs-dyn-row';
@@ -295,7 +305,13 @@ function agregarCorreo() {
     document.getElementById('correos-container').appendChild(div);
 }
 
-// --- SUBMIT ---
+/*
+ * Al enviar el formulario:
+ * 1. Se ejecutan todas las validaciones.
+ * 2. Si hay errores, se muestra una alerta y se hace scroll al primer campo inválido.
+ * 3. Si todo está bien, se muestra una confirmación antes de enviar.
+ * 4. Si el usuario confirma, el formulario se envía normalmente al servidor.
+ */
 document.getElementById('formProveedor').addEventListener('submit', function(e) {
     e.preventDefault();
     
@@ -312,31 +328,49 @@ document.getElementById('formProveedor').addEventListener('submit', function(e) 
     if (checks.every(res => res === true)) {
         Swal.fire({
             title: '¿Confirmar registro?',
-            text: 'Verifica que todos los datos sean correctos',
+            text: 'Verifica que todos los datos sean correctos antes de guardar.',
             icon: 'question',
             showCancelButton: true,
             confirmButtonColor: '#7c3aed',
             cancelButtonColor: '#6b7280',
             confirmButtonText: 'Sí, registrar',
             cancelButtonText: 'Cancelar'
-        }).then((r) => { 
+        }).then(function(r) { 
             if (r.isConfirmed) {
-                e.target.submit(); // ✅ Submit real
+                /* Deshabilitar el botón para evitar doble envío */
+                document.getElementById('btnRegistrar').disabled = true;
+                document.getElementById('btnRegistrar').innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Guardando...';
+                e.target.submit();
             } 
         });
     } else {
         const err = document.querySelector('.is-invalid, .invalid-border');
         if(err) err.scrollIntoView({ behavior: 'smooth', block: 'center' });
         Swal.fire({
-            title: 'Campos inválidos', 
-            text: 'Revisa los datos marcados en rojo.', 
+            title: 'Datos incompletos', 
+            text: 'Revisa los campos marcados en rojo antes de continuar.', 
             icon: 'error',
             confirmButtonColor: '#7c3aed'
         });
     }
 });
 
-// ✅ Validar al cargar
+/*
+ * Si el servidor rechazó el formulario y envió un error, se muestra como alerta de SweetAlert.
+ * Esto evita que el usuario pase por alto el mensaje de error en la parte superior de la página.
+ */
+<% if (errorServidor != null && !errorServidor.isEmpty()) { %>
+window.addEventListener('DOMContentLoaded', function() {
+    Swal.fire({
+        title: 'No se pudo registrar',
+        text: '<%= errorServidor.replace("'", "\\'") %>',
+        icon: 'error',
+        confirmButtonColor: '#7c3aed'
+    });
+});
+<% } %>
+
+/* Validar estado inicial del formulario al cargar la página */
 document.addEventListener('DOMContentLoaded', function() {
     validarNombre();
     validarDocumento();

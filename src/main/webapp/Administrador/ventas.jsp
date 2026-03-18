@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="java.util.*, model.Venta, java.text.SimpleDateFormat, java.text.NumberFormat" %>
+<%@ page import="java.util.*, model.Venta, model.CasoPostventa, java.text.SimpleDateFormat, java.text.NumberFormat" %>
 <%
     Object adminSesion = session.getAttribute("admin");
     if (adminSesion == null) {
@@ -32,8 +32,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        /* ✅ CORREGIDO: font-family añadida */
         body {
             font-family: var(--fuente-titulos);
             background: var(--color-fondo-admin);
@@ -41,7 +39,6 @@
             padding-top: 130px;
             padding-bottom: 80px;
         }
-
         .prov-page { width: 95%; max-width: 1300px; margin: 0 auto; padding: 28px 0; }
 
         /* ENCABEZADO */
@@ -158,7 +155,27 @@
         .total-lbl { font-size: 0.72rem; color: #9ca3af; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; }
         .total-val { font-size: 1.1rem; font-weight: 800; color: #059669; }
 
-        .venta-card__footer { display: flex; justify-content: flex-end; }
+        /* POSTVENTA BAR */
+        .postventa-bar {
+            display: flex; justify-content: space-between; align-items: center;
+            background: #fff7ed; border: 1px solid #fed7aa;
+            border-radius: 10px; padding: 7px 12px; gap: 8px;
+        }
+        .pv-badge {
+            display: inline-flex; align-items: center; gap: 5px;
+            font-size: 0.75rem; font-weight: 700;
+        }
+        .pv-badge--warn { color: #92400e; }
+        .pv-badge--ok   { color: #166534; }
+        .btn-postventa {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 28px; height: 28px; border-radius: 8px;
+            background: #fb923c; color: white; font-size: 0.75rem;
+            text-decoration: none; transition: all 0.2s; flex-shrink: 0;
+        }
+        .btn-postventa:hover { background: #ea580c; transform: translateX(2px); }
+
+        .venta-card__footer { display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wrap; }
         .btn-ver {
             display: inline-flex; align-items: center; gap: 5px; padding: 8px 18px;
             border-radius: 10px; background-color: #ab79cf; color: white;
@@ -167,6 +184,14 @@
             box-shadow: 0 2px 8px rgba(145,119,168,0.3);
         }
         .btn-ver:hover { transform: translateY(-2px); box-shadow: 0 5px 14px rgba(145,119,168,0.45); background: linear-gradient(135deg, #7d63a0, #b0acd6); }
+        .btn-ver--postventa {
+            background: linear-gradient(135deg, #fb923c, #f97316) !important;
+            box-shadow: 0 2px 8px rgba(249,115,22,0.35) !important;
+        }
+        .btn-ver--postventa:hover {
+            background: linear-gradient(135deg, #ea580c, #fb923c) !important;
+            box-shadow: 0 5px 14px rgba(249,115,22,0.45) !important;
+        }
 
         /* VACÍO */
         .empty-state { text-align: center; padding: 80px 20px; background: rgba(255,255,255,0.65); border-radius: 20px; border: 1px solid rgba(197,194,223,0.4); display: flex; flex-direction: column; align-items: center; gap: 10px; }
@@ -205,7 +230,6 @@
 
 <main class="prov-page">
 
-    <%-- ENCABEZADO --%>
     <div class="page-header">
         <div class="page-header__left">
             <div class="page-header__icon"><i class="fa-solid fa-receipt"></i></div>
@@ -224,14 +248,12 @@
         </div>
     </div>
 
-    <%-- ALERTAS --%>
     <% if ("creada".equals(msg)) { %>
         <div class="alerta alerta--success"><i class="fa-solid fa-circle-check"></i> Venta registrada exitosamente.</div>
     <% } else if ("error".equals(msg)) { %>
         <div class="alerta alerta--error"><i class="fa-solid fa-circle-xmark"></i> Ocurrió un error al procesar la venta.</div>
     <% } %>
 
-    <%-- FILTROS --%>
     <div class="filtros-bar">
         <div class="search-wrap">
             <i class="fa-solid fa-magnifying-glass"></i>
@@ -244,10 +266,10 @@
             <button class="filter-btn" data-filtro="efectivo">Efectivo</button>
             <button class="filter-btn" data-filtro="tarjeta">Tarjeta</button>
             <button class="filter-btn" data-filtro="anticipo">Anticipo</button>
+            <button class="filter-btn" data-filtro="con_postventa">Con postventa</button>
         </div>
     </div>
 
-    <%-- CARDS --%>
     <% if (ventas.isEmpty()) { %>
         <div class="empty-state">
             <div class="empty-state__icon"><i class="fa-solid fa-receipt"></i></div>
@@ -268,30 +290,65 @@
             String estadoIcon  = "confirmado".equals(estado) ? "fa-circle-check"   : "rechazado".equals(estado) ? "fa-ban"           : "fa-clock";
             String estadoLabel = "confirmado".equals(estado) ? "Pagado"            : "rechazado".equals(estado) ? "Rechazado"        : "Pendiente";
             boolean tieneSaldo = v.getSaldoPendiente() != null && v.getSaldoPendiente().compareTo(java.math.BigDecimal.ZERO) > 0;
+
+            // Datos postventa
+            List<CasoPostventa> casosV = v.getCasosPostventa();
+            int totalCasosV = casosV != null ? casosV.size() : 0;
+            int enProcesoV  = 0;
+            if (casosV != null) {
+                for (CasoPostventa cv : casosV) {
+                    if ("en_proceso".equals(cv.getEstado())) enProcesoV++;
+                }
+            }
+            // ID del caso más reciente (índice 0 porque la lista viene ordenada DESC)
+            int primerCasoId = (casosV != null && !casosV.isEmpty()) ? casosV.get(0).getCasoId() : -1;
+            String tienePostventa = totalCasosV > 0 ? "si" : "no";
     %>
         <div class="venta-card"
              data-estado="<%= estado %>" data-metodo="<%= metodo %>"
              data-modalidad="<%= modalidad %>" data-cliente="<%= cliente.toLowerCase() %>"
-             data-vendedor="<%= vendedor.toLowerCase() %>" data-id="<%= v.getVentaId() %>">
+             data-vendedor="<%= vendedor.toLowerCase() %>" data-id="<%= v.getVentaId() %>"
+             data-postventa="<%= tienePostventa %>">
 
             <div class="venta-card__head">
                 <span class="venta-card__id">Venta #<%= v.getVentaId() %></span>
-                <span class="venta-card__fecha"><i class="fa-regular fa-calendar"></i> <%= v.getFechaEmision() != null ? sdf.format(v.getFechaEmision()) : "—" %></span>
+                <span class="venta-card__fecha">
+                    <i class="fa-regular fa-calendar"></i>
+                    <%= v.getFechaEmision() != null ? sdf.format(v.getFechaEmision()) : "—" %>
+                </span>
             </div>
 
             <div class="badge-row">
-                <span class="badge <%= "tarjeta".equals(metodo) ? "badge--tarjeta" : "badge--efectivo" %>"><%= "tarjeta".equals(metodo) ? "💳 Tarjeta" : "💵 Efectivo" %></span>
-                <span class="badge <%= "anticipo".equals(modalidad) ? "badge--anticipo" : "badge--contado" %>"><i class="fa-solid <%= "anticipo".equals(modalidad) ? "fa-hourglass-half" : "fa-money-bill-wave" %>"></i> <%= modalidad.substring(0,1).toUpperCase() + modalidad.substring(1) %></span>
-                <span class="badge <%= estadoBadge %>"><i class="fa-solid <%= estadoIcon %>"></i> <%= estadoLabel %></span>
+                <span class="badge <%= "tarjeta".equals(metodo) ? "badge--tarjeta" : "badge--efectivo" %>">
+                    <%= "tarjeta".equals(metodo) ? "💳 Tarjeta" : "💵 Efectivo" %>
+                </span>
+                <span class="badge <%= "anticipo".equals(modalidad) ? "badge--anticipo" : "badge--contado" %>">
+                    <i class="fa-solid <%= "anticipo".equals(modalidad) ? "fa-hourglass-half" : "fa-money-bill-wave" %>"></i>
+                    <%= modalidad.substring(0,1).toUpperCase() + modalidad.substring(1) %>
+                </span>
+                <span class="badge <%= estadoBadge %>">
+                    <i class="fa-solid <%= estadoIcon %>"></i> <%= estadoLabel %>
+                </span>
             </div>
 
             <div class="venta-card__info">
-                <div class="info-row"><i class="fa-solid fa-user"></i><span class="lbl">Cliente</span><span class="val"><%= cliente %></span></div>
-                <div class="info-row"><i class="fa-solid fa-user-tie"></i><span class="lbl">Vendedor</span><span class="val"><%= vendedor %></span></div>
+                <div class="info-row">
+                    <i class="fa-solid fa-user"></i>
+                    <span class="lbl">Cliente</span>
+                    <span class="val"><%= cliente %></span>
+                </div>
+                <div class="info-row">
+                    <i class="fa-solid fa-user-tie"></i>
+                    <span class="lbl">Vendedor</span>
+                    <span class="val"><%= vendedor %></span>
+                </div>
             </div>
 
             <% if (tieneSaldo) { %>
-            <div class="saldo-chip"><i class="fa-solid fa-triangle-exclamation"></i> Saldo pendiente: <%= moneda.format(v.getSaldoPendiente()) %></div>
+            <div class="saldo-chip">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                Saldo pendiente: <%= moneda.format(v.getSaldoPendiente()) %>
+            </div>
             <% } %>
 
             <div class="venta-card__total">
@@ -299,10 +356,32 @@
                 <span class="total-val"><%= moneda.format(v.getTotal() != null ? v.getTotal() : 0) %></span>
             </div>
 
+            <%-- BARRA POSTVENTA: solo aparece si la venta tiene casos --%>
+            <% if (totalCasosV > 0) { %>
+            <div class="postventa-bar">
+                <span class="pv-badge <%= enProcesoV > 0 ? "pv-badge--warn" : "pv-badge--ok" %>">
+                    <i class="fa-solid fa-rotate-left"></i>
+                    <%= totalCasosV %> caso<%= totalCasosV != 1 ? "s" : "" %> postventa
+                    <% if (enProcesoV > 0) { %>&nbsp;· <strong><%= enProcesoV %> en proceso</strong><% } %>
+                </span>
+                <a href="<%= request.getContextPath() %>/Administrador/postventa/ver?id=<%= primerCasoId %>"
+                   class="btn-postventa" title="Ver caso postventa">
+                    <i class="fa-solid fa-arrow-right"></i>
+                </a>
+            </div>
+            <% } %>
+
             <div class="venta-card__footer">
-                <a href="<%= request.getContextPath() %>/Administrador/ventas/ver?id=<%= v.getVentaId() %>" class="btn-ver">
+                <a href="<%= request.getContextPath() %>/Administrador/ventas/ver?id=<%= v.getVentaId() %>"
+                   class="btn-ver">
                     <i class="fa-solid fa-eye"></i> Ver detalle
                 </a>
+                <% if (totalCasosV > 0) { %>
+                <a href="<%= request.getContextPath() %>/Administrador/postventa/ver?id=<%= primerCasoId %>"
+                   class="btn-ver btn-ver--postventa">
+                    <i class="fa-solid fa-rotate-left"></i> Postventa
+                </a>
+                <% } %>
             </div>
         </div>
     <% } %>
@@ -329,11 +408,12 @@
         grid.querySelectorAll('.venta-card').forEach(function (c) {
             var okQ = !q || c.dataset.cliente.includes(q) || c.dataset.vendedor.includes(q) || String(c.dataset.id).includes(q);
             var okF = filtro === 'todos'
-                || (filtro === 'confirmado' && c.dataset.estado    === 'confirmado')
-                || (filtro === 'pendiente'  && c.dataset.estado    === 'pendiente')
-                || (filtro === 'efectivo'   && c.dataset.metodo    === 'efectivo')
-                || (filtro === 'tarjeta'    && c.dataset.metodo    === 'tarjeta')
-                || (filtro === 'anticipo'   && c.dataset.modalidad === 'anticipo');
+                || (filtro === 'confirmado'    && c.dataset.estado    === 'confirmado')
+                || (filtro === 'pendiente'     && c.dataset.estado    === 'pendiente')
+                || (filtro === 'efectivo'      && c.dataset.metodo    === 'efectivo')
+                || (filtro === 'tarjeta'       && c.dataset.metodo    === 'tarjeta')
+                || (filtro === 'anticipo'      && c.dataset.modalidad === 'anticipo')
+                || (filtro === 'con_postventa' && c.dataset.postventa === 'si');
             c.style.display = (okQ && okF) ? '' : 'none';
             if (okQ && okF) n++;
         });

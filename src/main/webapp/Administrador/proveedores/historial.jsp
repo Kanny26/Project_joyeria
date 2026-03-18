@@ -1,10 +1,20 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="model.Proveedor, java.util.List" %>
 <%
+    /*
+     * Seguridad: si no hay sesión activa de admin, redirige al login.
+     * Este archivo estaba usando JSTL (<c:forEach>) sin importar la librería,
+     * lo cual generaba un error. Se corrigió usando scriptlets Java estándar.
+     */
     Object admin = session.getAttribute("admin");
     if (admin == null) {
-        response.sendRedirect(request.getContextPath() + "/Administrador/inicio-sesion.jsp");
+        response.sendRedirect(request.getContextPath() + "/inicio-sesion.jsp");
         return;
     }
+
+    /* Lista de proveedores enviada desde el servlet via request.setAttribute */
+    List<Proveedor> listaProveedores = (List<Proveedor>) request.getAttribute("listaProveedores");
+    if (listaProveedores == null) listaProveedores = java.util.Collections.emptyList();
 %>
 
 <!DOCTYPE html> 
@@ -13,23 +23,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Historial proveedores</title>
-
-    <!-- Estilos -->
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/main.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/pages/Administrador/proveedores/historial.css">
+    <link rel="stylesheet" href="<%=request.getContextPath()%>/assets/css/main.css">
+    <link rel="stylesheet" href="<%=request.getContextPath()%>/assets/css/pages/Administrador/proveedores/historial.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 
 <body>
 
-    <!-- Navbar -->
     <nav class="navbar-admin"> 
         <div class="navbar-admin__catalogo"> 
-            <img src="${pageContext.request.contextPath}/assets/Imagenes/iconos/admin.png" alt="Admin">
+            <img src="<%=request.getContextPath()%>/assets/Imagenes/iconos/admin.png" alt="Admin">
         </div> 
 
         <h1 class="navbar-admin__title">AAC27</h1>
-        <a href="${pageContext.request.contextPath}/pages/Administrador/proveedores/proveedores.html">
+        <%-- Corregido: enlace al servlet en lugar de a un archivo .html que no existe --%>
+        <a href="<%=request.getContextPath()%>/ProveedorServlet?action=listar" class="navbar-admin__home-link">
             <i class="fa-solid fa-house-chimney navbar-admin__home-icon"></i>
         </a> 
     </nav>
@@ -46,16 +54,23 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- Ejemplo de cómo podrías iterar sobre una lista de proveedores -->
-                    <c:forEach var="proveedor" items="${listaProveedores}">
+                    <%-- Iteración con scriptlets Java en lugar de JSTL para no requerir librerías adicionales --%>
+                    <% for (Proveedor proveedor : listaProveedores) { %>
                         <tr>
-                            <td data-label="Codigo">${proveedor.codigo}</td>
-                            <td data-label="Nombre">${proveedor.nombre}</td>
+                            <td data-label="Codigo"><%= proveedor.getProveedorId() %></td>
+                            <td data-label="Nombre"><%= proveedor.getNombre() %></td>
                             <td data-label="Observaciones">
-                                <textarea name="descripcion" class="editar-producto__input-area" rows="4">${proveedor.observaciones}</textarea>
+                                <textarea name="descripcion" class="editar-producto__input-area" rows="4"></textarea>
                             </td>
                         </tr>
-                    </c:forEach>
+                    <% } %>
+                    <% if (listaProveedores.isEmpty()) { %>
+                        <tr>
+                            <td colspan="3" style="text-align:center; padding: 20px; color: #9ca3af;">
+                                No hay registros en el historial.
+                            </td>
+                        </tr>
+                    <% } %>
                 </tbody> 
             </table> 
         </section> 

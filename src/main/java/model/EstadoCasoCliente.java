@@ -3,14 +3,19 @@ package model;
 import java.util.Date;
 
 /**
- * Historial de cambios de estado de un caso postventa.
- * Mapea a Estado_Caso_Cliente en BD.
+ * Representa un registro en el historial de cambios de estado de un caso postventa.
+ * Cada vez que el administrador cambia el estado de un caso (por ejemplo,
+ * de "en_proceso" a "aprobado"), se guarda una entrada en la tabla
+ * Estado_Caso_Cliente con la fecha, el estado nuevo y una observación.
  */
 public class EstadoCasoCliente {
 
     private int estadoId;
     private int casoId;
-    private String estado;       // en_proceso | aprobado | cancelado
+
+    // Valores posibles: "en_proceso", "aprobado", "cancelado"
+    private String estado;
+
     private Date fecha;
     private String observacion;
 

@@ -2,17 +2,31 @@ package dao;
 
 import config.ConexionDB;
 import model.Categoria;
+import model.Subcategoria;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Gestiona toda la comunicación entre la aplicación y la tabla Categoria.
+ * CAMBIO: se eliminó subcategoria_id de Categoria en la BD.
+ * Ahora listarCategorias() y obtenerPorId() ya NO leen subcategoria_id,
+ * y guardar()/actualizar() tampoco lo escriben.
+ * Se agrega obtenerSubcategoriasDisponibles() para cargar el catálogo
+ * de combos válidos desde Categoria_Subcategoria.
+ */
 public class CategoriaDAO {
 
+    /**
+     * Retorna todas las categorías ordenadas alfabéticamente.
+     * CAMBIO: el SELECT ya no incluye subcategoria_id (no existe en la BD nueva).
+     */
     public List<Categoria> listarCategorias() {
         List<Categoria> lista = new ArrayList<>();
-        String sql = "SELECT categoria_id, nombre, icono, subcategoria_id FROM Categoria ORDER BY nombre ASC";
+        String sql = "SELECT categoria_id, nombre, icono FROM Categoria ORDER BY nombre ASC";
         try (Connection con = ConexionDB.getConnection();
              PreparedStatement ps = con.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
@@ -21,10 +35,6 @@ public class CategoriaDAO {
                 c.setCategoriaId(rs.getInt("categoria_id"));
                 c.setNombre(rs.getString("nombre"));
                 c.setIcono(rs.getString("icono"));
-                // Manejo seguro de subcategoria_id nullable
-                if (rs.getObject("subcategoria_id") != null) {
-                    c.setSubcategoriaId(rs.getInt("subcategoria_id"));
-                }
                 lista.add(c);
             }
         } catch (Exception e) {
@@ -33,9 +43,13 @@ public class CategoriaDAO {
         return lista;
     }
 
+    /**
+     * Busca una categoría por ID.
+     * CAMBIO: igual que listarCategorias(), sin subcategoria_id.
+     */
     public Categoria obtenerPorId(int id) {
         Categoria c = null;
-        String sql = "SELECT categoria_id, nombre, icono, subcategoria_id FROM Categoria WHERE categoria_id = ?";
+        String sql = "SELECT categoria_id, nombre, icono FROM Categoria WHERE categoria_id = ?";
         try (Connection con = ConexionDB.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, id);
@@ -45,9 +59,6 @@ public class CategoriaDAO {
                     c.setCategoriaId(rs.getInt("categoria_id"));
                     c.setNombre(rs.getString("nombre"));
                     c.setIcono(rs.getString("icono"));
-                    if (rs.getObject("subcategoria_id") != null) {
-                        c.setSubcategoriaId(rs.getInt("subcategoria_id"));
-                    }
                 }
             }
         } catch (Exception e) {
@@ -56,7 +67,41 @@ public class CategoriaDAO {
         return c;
     }
 
-    // ■■ RF14: Validar si hay productos activos antes de eliminar ■■
+    /**
+     * NUEVO: retorna las subcategorías disponibles para una categoría específica,
+     * consultando la tabla Categoria_Subcategoria.
+     * Se usa en el servlet para poblar el select de subcategorías al registrar
+     * o editar un producto, filtrando solo las opciones válidas para esa categoría.
+     */
+    public List<Subcategoria> obtenerSubcategoriasDisponibles(int categoriaId) {
+        List<Subcategoria> lista = new ArrayList<>();
+        String sql = """
+            SELECT s.subcategoria_id, s.nombre
+            FROM Subcategoria s
+            INNER JOIN Categoria_Subcategoria cs ON cs.subcategoria_id = s.subcategoria_id
+            WHERE cs.categoria_id = ?
+            ORDER BY s.nombre ASC
+            """;
+        try (Connection con = ConexionDB.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, categoriaId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Subcategoria s = new Subcategoria();
+                    s.setSubcategoriaId(rs.getInt("subcategoria_id"));
+                    s.setNombre(rs.getString("nombre"));
+                    lista.add(s);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return lista;
+    }
+
+    /**
+     * Verifica si una categoría tiene productos activos antes de eliminarla.
+     */
     public boolean tieneProductosActivos(int categoriaId) throws Exception {
         String sql = "SELECT COUNT(*) FROM Producto WHERE categoria_id = ? AND estado = 1";
         try (Connection con = ConexionDB.getConnection();
@@ -69,24 +114,18 @@ public class CategoriaDAO {
         return false;
     }
 
-    // ■■ RF14: Validar si hay subcategorías dependientes (si aplica lógica inversa) ■■
-    // En este schema, Categoria tiene subcategoria_id, así que validamos si esta categoría es padre de otras
-    // Nota: Según BD.pdf, Subcategoria es tabla independiente y Categoria tiene FK a Subcategoria.
-    // La validación crítica es productos activos.
-
+    /**
+     * Inserta una nueva categoría.
+     * CAMBIO: el INSERT ya no incluye subcategoria_id.
+     */
     public boolean guardar(Categoria c) throws Exception {
-        String sql = "INSERT INTO Categoria (nombre, icono, subcategoria_id) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO Categoria (nombre, icono) VALUES (?, ?)";
         try (Connection con = ConexionDB.getConnection()) {
             con.setAutoCommit(false);
             try {
                 try (PreparedStatement ps = con.prepareStatement(sql)) {
                     ps.setString(1, c.getNombre());
                     ps.setString(2, c.getIcono());
-                    if (c.getSubcategoriaId() > 0) {
-                        ps.setInt(3, c.getSubcategoriaId());
-                    } else {
-                        ps.setNull(3, java.sql.Types.INTEGER);
-                    }
                     ps.executeUpdate();
                 }
                 con.commit();
@@ -100,20 +139,19 @@ public class CategoriaDAO {
         }
     }
 
+    /**
+     * Actualiza nombre e icono de una categoría existente.
+     * CAMBIO: el UPDATE ya no incluye subcategoria_id.
+     */
     public boolean actualizar(Categoria c) throws Exception {
-        String sql = "UPDATE Categoria SET nombre = ?, icono = ?, subcategoria_id = ? WHERE categoria_id = ?";
+        String sql = "UPDATE Categoria SET nombre = ?, icono = ? WHERE categoria_id = ?";
         try (Connection con = ConexionDB.getConnection()) {
             con.setAutoCommit(false);
             try {
                 try (PreparedStatement ps = con.prepareStatement(sql)) {
                     ps.setString(1, c.getNombre());
                     ps.setString(2, c.getIcono());
-                    if (c.getSubcategoriaId() > 0) {
-                        ps.setInt(3, c.getSubcategoriaId());
-                    } else {
-                        ps.setNull(3, java.sql.Types.INTEGER);
-                    }
-                    ps.setInt(4, c.getCategoriaId());
+                    ps.setInt(3, c.getCategoriaId());
                     ps.executeUpdate();
                 }
                 con.commit();
@@ -127,7 +165,9 @@ public class CategoriaDAO {
         }
     }
 
-    // ■■ RF14: Eliminación lógica o validación estricta ■■
+    /**
+     * Elimina una categoría si no tiene productos activos.
+     */
     public boolean eliminar(int id) throws Exception {
         if (tieneProductosActivos(id)) {
             throw new Exception("No se puede eliminar: hay productos activos en esta categoría.");

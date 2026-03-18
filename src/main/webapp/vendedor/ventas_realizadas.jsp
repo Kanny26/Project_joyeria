@@ -6,15 +6,25 @@
 <%@ page import="model.Venta" %>
 <%@ page import="model.Usuario" %>
 <%
+    /*
+     * Control de sesión.
+     */
     Object vendedorSesion = session.getAttribute("vendedor");
     if (vendedorSesion == null) {
         response.sendRedirect(request.getContextPath() + "/vendedor/inicio-sesion.jsp");
         return;
     }
     Usuario usuario = (Usuario) vendedorSesion;
-    List<Venta> ventas = (List<Venta>) request.getAttribute("ventas");
-    String exito = request.getParameter("exito");
-    NumberFormat moneda = NumberFormat.getCurrencyInstance(new Locale("es", "CO"));
+
+    /*
+     * El servlet pone la lista de ventas en el request con el nombre "ventas".
+     * El parámetro "exito" viene en la URL cuando se redirige tras un abono exitoso.
+     */
+    List<Venta> ventas  = (List<Venta>) request.getAttribute("ventas");
+    String exito        = request.getParameter("exito");
+    String mensajeError = (String) request.getAttribute("error");
+
+    NumberFormat moneda  = NumberFormat.getCurrencyInstance(new Locale("es", "CO"));
     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 %>
 <!DOCTYPE html>
@@ -34,19 +44,40 @@
         <img src="<%= request.getContextPath() %>/assets/Imagenes/iconos/Seller.png" alt="Vendedor">
     </div>
     <h1 class="navbar-admin__title">AAC27</h1>
-     <a href="<%=request.getContextPath()%>/vendedor/vendedor_principal.jsp" class="navbar-admin__home-link">
-	    <span class="navbar-admin__home-icon-wrap">
-	        <i class="fa-solid fa-arrow-left"></i>
-		    <span class="navbar-admin__home-text">Volver atrás</span>
-		    <i class="fa-solid fa-house-chimney"></i>
-	    </span>
+    <a href="<%=request.getContextPath()%>/vendedor/vendedor_principal.jsp" class="navbar-admin__home-link">
+        <span class="navbar-admin__home-icon-wrap">
+            <i class="fa-solid fa-arrow-left"></i>
+            <span class="navbar-admin__home-text">Volver atrás</span>
+            <i class="fa-solid fa-house-chimney"></i>
+        </span>
     </a>
 </nav>
 
 <main class="prov-page">
     <h1 class="prov-page__titulo">Mis Ventas</h1>
 
-    <%-- Estadísticas rápidas --%>
+    <%-- Mensajes de retroalimentación --%>
+    <% if (mensajeError != null && !mensajeError.isEmpty()) { %>
+        <div class="prov-alert prov-alert--error" id="alertaMensaje">
+            <i class="fa-solid fa-circle-exclamation"></i> <%= mensajeError %>
+        </div>
+    <% } %>
+
+    <%--
+        El parámetro "exito" viene en la URL cuando se redirige tras una operación exitosa
+        (como un abono). Se detecta aquí para mostrar el mensaje apropiado.
+    --%>
+    <% if ("abono".equals(exito)) { %>
+        <div class="prov-alert prov-alert--success" id="alertaMensaje">
+            <i class="fa-solid fa-circle-check"></i> El abono fue registrado correctamente.
+        </div>
+    <% } else if (exito != null && !exito.isEmpty()) { %>
+        <div class="prov-alert prov-alert--success" id="alertaMensaje">
+            <i class="fa-solid fa-circle-check"></i> Operación realizada con éxito.
+        </div>
+    <% } %>
+
+    <%-- Estadísticas rápidas del vendedor --%>
     <%
         int totalVentas = ventas != null ? ventas.size() : 0;
         int conSaldo = 0;
@@ -74,7 +105,7 @@
         </div>
     </div>
 
-    <%-- Toolbar --%>
+    <%-- Barra de herramientas: buscador y acceso a casos postventa --%>
     <div class="prov-toolbar">
         <div class="cards__busqueda">
             <input type="text" class="cards__busqueda-input" id="buscador"
@@ -88,17 +119,12 @@
         </a>
     </div>
 
-    <% if (exito != null) { %>
-        <div class="prov-alert prov-alert--success">
-            <i class="fa-solid fa-circle-check"></i> Operación realizada con éxito.
-        </div>
-    <% } %>
-
     <% if (ventas == null || ventas.isEmpty()) { %>
         <div class="prov-empty">
             <div class="prov-empty__icon"><i class="fa-solid fa-inbox"></i></div>
-            <p class="prov-empty__texto">Aún no has registrado ventas.</p>
-            <a href="<%= request.getContextPath() %>/VentaVendedorServlet?action=nueva" class="btn-save" style="margin-top:1rem;">
+            <p class="prov-empty__texto">Aún no has registrado ninguna venta.</p>
+            <a href="<%= request.getContextPath() %>/VentaVendedorServlet?action=nueva"
+               class="btn-save" style="margin-top:1rem;">
                 Registrar primera venta
             </a>
         </div>
@@ -154,10 +180,11 @@
                                class="btn-save" style="padding:.4rem .8rem;font-size:.78rem;" title="Ver detalle">
                                 <i class="fa-solid fa-eye"></i>
                             </a>
-                            <a href="<%= request.getContextPath() %>/VentaVendedorServlet?action=registrarPostventa&ventaId=<%= v.getVentaId() %>"
+                            <%-- Botón de postventa con confirmación de JS antes de navegar --%>
+                            <button onclick="irAPostventa(<%= v.getVentaId() %>)"
                                class="btn-cancel" style="padding:.4rem .8rem;font-size:.78rem;" title="Registrar postventa">
                                 <i class="fa-solid fa-rotate-left"></i>
-                            </a>
+                            </button>
                         </td>
                     </tr>
                     <% } %>
@@ -167,11 +194,43 @@
     <% } %>
 </main>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+// Oculta alertas automáticamente después de 5 segundos
+(function() {
+    var alerta = document.getElementById('alertaMensaje');
+    if (alerta) {
+        setTimeout(function() {
+            alerta.style.transition = 'opacity 0.5s';
+            alerta.style.opacity = '0';
+            setTimeout(function() { alerta.style.display = 'none'; }, 500);
+        }, 5000);
+    }
+})();
+
+// Filtra las filas de la tabla según lo que se escribe en el buscador
 function filtrar() {
-    const q = document.getElementById('buscador').value.toLowerCase();
-    document.querySelectorAll('#tablaVentas tbody tr.fila-tabla').forEach(row => {
+    var q = document.getElementById('buscador').value.toLowerCase();
+    document.querySelectorAll('#tablaVentas tbody tr.fila-tabla').forEach(function(row) {
         row.style.display = row.textContent.toLowerCase().includes(q) ? '' : 'none';
+    });
+}
+
+// Muestra una confirmación antes de ir al formulario de postventa
+function irAPostventa(ventaId) {
+    Swal.fire({
+        title: '¿Registrar caso postventa?',
+        text: 'Vas a crear un caso de postventa para la venta #' + ventaId + '.',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Continuar',
+        cancelButtonText: 'Cancelar',
+        confirmButtonColor: '#7c3aed',
+        cancelButtonColor: '#6b7280'
+    }).then(function(result) {
+        if (result.isConfirmed) {
+            window.location.href = '<%= request.getContextPath() %>/VentaVendedorServlet?action=registrarPostventa&ventaId=' + ventaId;
+        }
     });
 }
 </script>

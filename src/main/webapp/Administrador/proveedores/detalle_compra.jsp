@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="model.Compra, model.DetalleCompra, java.util.List, java.text.SimpleDateFormat, java.math.BigDecimal" %>
 <%
+    /* Seguridad: si no hay sesión activa de admin, redirige al login */
     Object admin = session.getAttribute("admin");
     if (admin == null) {
         response.sendRedirect(request.getContextPath() + "/Administrador/inicio-sesion.jsp");
@@ -9,8 +10,10 @@
 
     Compra compra      = (Compra) request.getAttribute("compra");
     String proveedorId = (String) request.getAttribute("proveedorId");
+    /* Si proveedorId no llegó como atributo de request, se intenta recuperar del parámetro URL */
     if (proveedorId == null) proveedorId = request.getParameter("proveedorId");
 
+    /* Si no hay compra, redirigir al listado de forma segura */
     if (compra == null) {
         response.sendRedirect(request.getContextPath() + "/ProveedorServlet?action=listar");
         return;
@@ -19,7 +22,7 @@
     List<DetalleCompra> detalles = compra.getDetalles();
     if (detalles == null) detalles = java.util.Collections.emptyList();
 
-    // Total unidades — protegido contra nulos
+    /* Calcular el total de unidades sumando las cantidades de cada producto del detalle */
     int totalUnidades = 0;
     for (DetalleCompra d : detalles) {
         if (d != null) totalUnidades += d.getCantidad();
@@ -44,6 +47,7 @@
         <img src="<%=request.getContextPath()%>/assets/Imagenes/iconos/admin.png" alt="Admin">
     </div>
     <h1 class="navbar-admin__title">AAC27</h1>
+    <%-- El botón de volver usa el proveedorId para regresar al historial correcto --%>
     <a href="<%=request.getContextPath()%>/ProveedorServlet?action=verCompras&id=<%= proveedorId %>"
        class="navbar-admin__home-link">
         <span class="navbar-admin__home-icon-wrap">
@@ -57,7 +61,7 @@
 <main class="prov-page">
     <div class="detalle-wrapper">
 
-        <!-- META -->
+        <!-- Encabezado con ID y fechas de la compra -->
         <div class="compra-meta">
             <div class="compra-meta__top">
                 <div class="compra-meta__id">
@@ -81,6 +85,7 @@
                 </div>
             </div>
 
+            <!-- Resumen estadístico de la compra -->
             <div class="compra-meta__grid">
                 <div class="meta-item">
                     <div class="meta-item__label"><i class="fa-solid fa-hashtag"></i> ID</div>
@@ -103,7 +108,7 @@
             </div>
         </div>
 
-        <!-- TABLA DETALLES -->
+        <!-- Tabla con el detalle de productos de la compra -->
         <div class="detalles-card">
             <div class="detalles-card__header">
                 <i class="fa-solid fa-list"></i>
@@ -134,6 +139,7 @@
                         <tr>
                             <td style="color:#9ca3af;font-weight:600;width:3rem;"><%= rowNum++ %></td>
                             <td>
+                                <%-- Si el producto fue eliminado del sistema, se muestra un texto de respaldo --%>
                                 <div class="prod-name"><%= d.getProductoNombre() != null ? d.getProductoNombre() : "Producto eliminado" %></div>
                                 <div class="prod-id">ID #<%= d.getProductoId() %></div>
                             </td>
@@ -164,7 +170,7 @@
             <% } %>
         </div>
 
-        <!-- ACCIONES -->
+        <!-- Barra de acciones: volver y descargar PDF -->
         <div class="acciones-bar">
             <a href="<%=request.getContextPath()%>/ProveedorServlet?action=verCompras&id=<%= proveedorId %>"
                class="btn-volver">
@@ -180,31 +186,33 @@
 
     </div>
 </main>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 <script>
+/**
+ * Genera y descarga un PDF del detalle de la compra usando la librería html2pdf.js.
+ * Se ocultan temporalmente los botones de acción para que no aparezcan en el PDF.
+ * scale: 2 produce una imagen de alta resolución para el PDF.
+ * useCORS: true permite cargar imágenes externas en el canvas.
+ */
 function descargarPDF() {
-    // 1. Seleccionamos el contenedor que queremos convertir (la clase detalle-wrapper envuelve todo el contenido)
     const elemento = document.querySelector('.detalle-wrapper');
-    
-    // 2. Configuramos el nombre del archivo con el ID de la compra
     const numCompra = "<%= compra.getCompraId() %>";
     
     const opciones = {
-        margin:       [10, 10, 10, 10], // márgenes en mm
+        margin:       [10, 10, 10, 10],
         filename:     `Compra_${numCompra}.pdf`,
         image:        { type: 'jpeg', quality: 0.98 },
-        html2canvas:  { scale: 2, useCORS: true }, // Mayor escala = mejor calidad
+        html2canvas:  { scale: 2, useCORS: true },
         jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
     };
 
-    // 3. Ejecutar la descarga
-    // Ocultamos temporalmente los botones de acción para que no salgan en el PDF
+    /* Ocultar botones antes de generar el PDF para que no aparezcan en el documento */
     const acciones = document.querySelector('.acciones-bar');
     acciones.style.display = 'none';
 
     html2pdf().set(opciones).from(elemento).save().then(() => {
-        // Volvemos a mostrar los botones tras la descarga
         acciones.style.display = 'flex';
     });
 }

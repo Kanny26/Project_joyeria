@@ -662,6 +662,26 @@ body {
 
 .sin-resultados { text-align: center; padding: 2rem; color: #9ca3af; }
 .sin-resultados i { font-size: 2.5rem; color: #d1d5db; display: block; margin-bottom: .5rem; }
+.info-reception { background: #fff9db; border-left: 4px solid #fcc419; padding: 1rem; margin-bottom: 1.5rem; border-radius: 4px; font-size: .9rem; color: #856404; }
+.input-precio, .input-cantidad { border: 1.5px solid #dee2e6; padding: 8px; border-radius: 4px; width: 90%; transition: border-color .2s; }
+.input-precio:focus, .input-cantidad:focus { border-color: #6b48a0; outline: none; }
+.producto-card { border: 1.5px solid #e5e7eb; border-radius: 10px; padding: .8rem; cursor: pointer; transition: border-color .2s, box-shadow .2s; }
+.producto-card:hover { border-color: #9177a8; box-shadow: 0 4px 12px rgba(107,72,160,.15); }
+.producto-card__img { width: 100%; height: 90px; display: flex; align-items: center; justify-content: center; background: #f8f9fa; border-radius: 6px; overflow: hidden; margin-bottom: 8px; }
+.producto-card__img img { width: 100%; height: 100%; object-fit: cover; }
+.producto-card__img i { font-size: 2.2rem; color: #ced4da; }
+.producto-card__nombre { font-size: .82rem; font-weight: 700; color: #1f2937; margin-bottom: 3px; }
+.producto-card__precio { font-size: .8rem; color: #6b48a0; font-weight: 700; }
+.producto-card__stock-badge { display: inline-flex; align-items: center; gap: 4px; font-size: .72rem; font-weight: 700; padding: 2px 7px; border-radius: 20px; margin-top: 4px; }
+.stock-badge--ok { background: #dcfce7; color: #16a34a; }
+.stock-badge--bajo { background: #fef9c3; color: #854d0e; }
+.stock-badge--cero { background: #fee2e2; color: #dc2626; }
+.categoria-card__icon img { width: 45px; height: 45px; object-fit: contain; }
+.sin-resultados { text-align: center; padding: 2rem; color: #9ca3af; }
+.stock-info-cell { font-size: .75rem; color: #6b7280; margin-top: 3px; }
+.stock-info-cell.stock-ok { color: #16a34a; }
+.stock-info-cell.stock-bajo { color: #d97706; }
+.stock-info-cell.stock-cero { color: #dc2626; }
 
 /* ==============================
    PRINT / RESPONSIVE

@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="model.Proveedor, model.Compra, model.DetalleCompra, java.util.List, java.text.SimpleDateFormat, java.math.BigDecimal" %>
 <%
+    /* Seguridad: si no hay sesión activa de admin, redirige al login */
     Object admin = session.getAttribute("admin");
     if (admin == null) {
         response.sendRedirect(request.getContextPath() + "/Administrador/inicio-sesion.jsp");
@@ -11,6 +12,7 @@
     List<Compra> compras  = (List<Compra>) request.getAttribute("listaCompras");
     if (compras == null) compras = java.util.Collections.emptyList();
 
+    /* Estadísticas calculadas en el servlet y enviadas como atributos */
     Integer totalCompras   = (Integer)    request.getAttribute("totalCompras");
     Integer totalProductos = (Integer)    request.getAttribute("totalProductos");
     BigDecimal totalGasto  = (BigDecimal) request.getAttribute("totalGasto");
@@ -18,6 +20,10 @@
     if (totalProductos == null) totalProductos = 0;
     if (totalGasto     == null) totalGasto     = BigDecimal.ZERO;
 
+    /*
+     * El parámetro "msg" llega desde sendRedirect después de una operación.
+     * Valores esperados: "creado" (nueva compra), "eliminado" (compra eliminada).
+     */
     String msg = request.getParameter("msg");
 
     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
@@ -31,6 +37,7 @@
     <link rel="stylesheet" href="<%=request.getContextPath()%>/assets/css/main.css">
     <link rel="stylesheet" href="<%=request.getContextPath()%>/assets/css/pages/Administrador/proveedores/listar.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
 
@@ -50,7 +57,7 @@
 
 <main class="prov-page">
 
-    <!-- ENCABEZADO -->
+    <!-- Encabezado con el nombre del proveedor -->
     <div class="compras-header">
         <div class="compras-header__avatar">
             <i class="fa-solid fa-building"></i>
@@ -61,7 +68,7 @@
         </div>
     </div>
 
-    <!-- STATS -->
+    <!-- Estadísticas de compras calculadas en el servidor -->
     <div class="stat-grid">
         <div class="stat-card">
             <span class="stat-card__label"><i class="fa-solid fa-receipt"></i> Total compras</span>
@@ -79,15 +86,15 @@
         </div>
     </div>
 
-    <!-- TOOLBAR -->
+    <!-- Botón para registrar una nueva compra a este proveedor -->
     <div class="toolbar">
-        <a href="<%=request.getContextPath()%>/ProveedorServlet?action=nuevaCompra&id=<%= proveedor.getProveedorId()%>"
+        <a href="<%=request.getContextPath()%>/CompraServlet?action=nueva&proveedorId=<%= proveedor.getProveedorId()%>"
            class="btn-nueva-compra">
             <i class="fa-solid fa-plus"></i> Nueva compra
         </a>
     </div>
 
-    <!-- GRID -->
+    <!-- Grid de tarjetas de compras -->
     <% if (compras.isEmpty()) { %>
         <div class="prov-empty">
             <i class="fa-solid fa-box-open prov-empty__icon"></i>
@@ -122,6 +129,10 @@
                         <div class="compra-card__row">
                             <span class="compra-card__key"><i class="fa-solid fa-box"></i> Productos</span>
                             <div class="compra-card__tags">
+                                <%--
+                                    Se muestran máximo 3 productos para no sobrecargar la tarjeta.
+                                    Si hay más de 3, se muestra un badge con la cantidad restante.
+                                --%>
                                 <% if (compra.getDetalles() != null) {
                                     int idx = 0;
                                     for (DetalleCompra d : compra.getDetalles()) {
@@ -149,7 +160,6 @@
                            class="btn-detalle">
                             <i class="fa-solid fa-eye"></i> Ver detalle
                         </a>
-                        
                     </div>
 
                 </div>
@@ -159,12 +169,35 @@
 
 </main>
 
-<% if ("creado".equals(msg)) { %>
-    <div class="toast" id="toast">
-        <i class="fa-solid fa-circle-check"></i> Compra registrada correctamente
-    </div>
-    <script>setTimeout(()=>document.getElementById('toast').remove(), 3500);</script>
-<% } %>
+<script>
+/*
+ * Alertas de resultado según el parámetro "msg" recibido del servidor.
+ * "creado"    → se muestra después de registrar una nueva compra exitosamente.
+ * "eliminado" → se muestra después de eliminar una compra desde el detalle.
+ */
+(function() {
+    var msg = '<%= msg != null ? msg : "" %>';
+    if (msg === 'creado') {
+        Swal.fire({
+            icon: 'success',
+            title: '¡Compra registrada!',
+            text: 'La orden de compra fue guardada correctamente.',
+            confirmButtonColor: '#7c3aed',
+            timer: 3000,
+            timerProgressBar: true
+        });
+    } else if (msg === 'eliminado') {
+        Swal.fire({
+            icon: 'success',
+            title: 'Compra eliminada',
+            text: 'La orden de compra fue eliminada del historial.',
+            confirmButtonColor: '#7c3aed',
+            timer: 3000,
+            timerProgressBar: true
+        });
+    }
+})();
+</script>
 
 </body>
 </html>

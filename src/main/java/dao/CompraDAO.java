@@ -11,38 +11,38 @@ import java.util.List;
 
 public class CompraDAO {
 
-    // ════════════════════════════════════════════════════════════════════
-    // INSERT principal con transacción completa
-    // Flujo:
-    //   1. Compra
-    //   2. Detalle_Compra
-    //   3. Inventario_Movimiento + UPDATE stock producto
-    //   4. Pago_Compra
-    //   5. (si crédito) Credito_Compra
-    //   6. (si crédito + anticipo > 0) Abono_Credito
-    // ════════════════════════════════════════════════════════════════════
+    /*
+     * Guarda una compra completa usando una transacción.
+     * Si cualquier paso falla, se hace rollback y no queda nada guardado a medias.
+     *
+     * Flujo:
+     *   1. Insertar cabecera en Compra
+     *   2. Insertar filas en Detalle_Compra
+     *   3. Actualizar stock en Producto + registrar en Inventario_Movimiento
+     *   4. Insertar pago en Pago_Compra
+     *   5. (si crédito) Insertar en Credito_Compra
+     *   6. (si crédito y anticipo > 0) Insertar abono inicial en Abono_Credito
+     */
     public boolean insertarConTransaccion(Compra compra) throws Exception {
         Connection con = null;
         try {
             con = ConexionDB.getConnection();
             con.setAutoCommit(false);
 
-            // 1. Insertar cabecera de compra
             int compraId = insertarCompra(con, compra);
             compra.setCompraId(compraId);
 
-            // 2. Insertar detalles
             insertarDetalles(con, compraId, compra.getDetalles());
 
-            // 3. Actualizar stock e inventario (entrada)
-            registrarEntradaInventario(con, compra.getDetalles(), "Compra #" + compraId);
+            // CORRECCIÓN 1: se pasa el adminId desde la compra para registrarlo
+            // en Inventario_Movimiento. Si no hay usuario disponible, se puede pasar null.
+            registrarEntradaInventario(con, compra.getDetalles(),
+                    "Compra #" + compraId, compra.getUsuarioId());
 
-            // 4. Pago
             BigDecimal montoPago  = compra.isEsCredito() ? compra.getAnticipo() : compra.getTotal();
             String     estadoPago = compra.isEsCredito() ? "pendiente" : "confirmado";
             insertarPagoCompra(con, compraId, compra.getMetodoPagoId(), montoPago, estadoPago);
 
-            // 5 & 6. Crédito + abono inicial
             if (compra.isEsCredito()) {
                 BigDecimal saldoPendiente = "pagado".equals(compra.getEstadoCredito())
                         ? BigDecimal.ZERO
@@ -74,44 +74,83 @@ public class CompraDAO {
         }
     }
 
-    // ════════════════════════════════════════════════════════════════════
-    // Entrada de inventario: suma stock en Producto + registra movimiento
-    // NOTA: usuario_id debe ser NULL en la BD:
-    //   ALTER TABLE Inventario_Movimiento MODIFY COLUMN usuario_id INT UNSIGNED NULL;
-    // ════════════════════════════════════════════════════════════════════
+    /*
+     * CORRECCIÓN PRINCIPAL: actualiza el stock e inserta el movimiento de inventario.
+     *
+     * Bug 1 (causa principal): el UPDATE tenía "AND estado = 1" en el WHERE.
+     * Si el producto estaba marcado como inactivo (estado = 0), el UPDATE no afectaba
+     * ninguna fila y el stock nunca se actualizaba. Se eliminó esa condición porque
+     * al registrar una compra se debe actualizar el stock independientemente del estado.
+     *
+     * Bug 2: executeBatch() no verifica si algún UPDATE afectó 0 filas.
+     * Ahora se valida el resultado de cada UPDATE y se lanza excepción si falla,
+     * lo que fuerza el rollback y evita que la compra quede guardada sin stock actualizado.
+     *
+     * Bug 3: el INSERT de inventario usaba addBatch() pero si fallaba silenciosamente
+     * el UPDATE de stock nunca se ejecutaba. Ahora ambas operaciones se hacen fila por fila
+     * con executeUpdate() para detectar errores de inmediato.
+     *
+     * usuarioId puede ser null si no hay usuario de sistema disponible (la columna lo permite).
+     */
     private void registrarEntradaInventario(Connection con,
                                              List<DetalleCompra> detalles,
-                                             String referencia) throws SQLException {
+                                             String referencia,
+                                             Integer usuarioId) throws SQLException {
+        // UPDATE sin "AND estado = 1" para que funcione con cualquier producto
+        String sqlStock = """
+            UPDATE Producto SET stock = stock + ? WHERE producto_id = ?
+            """;
+
         String sqlMovimiento = """
             INSERT INTO Inventario_Movimiento
-                (producto_id, tipo, cantidad, fecha, referencia)
-            VALUES (?, 'entrada', ?, NOW(), ?)
-            """;
-        String sqlStock = """
-            UPDATE Producto SET stock = stock + ? WHERE producto_id = ? AND estado = 1
+                (producto_id, usuario_id, tipo, cantidad, fecha, referencia)
+            VALUES (?, ?, 'entrada', ?, NOW(), ?)
             """;
 
-        try (PreparedStatement psM = con.prepareStatement(sqlMovimiento);
-             PreparedStatement psS = con.prepareStatement(sqlStock)) {
+        // UPDATE de precio de costo: sobreescribe con el precio de la compra nueva
+        String sqlPrecio = """
+            UPDATE Producto SET precio_unitario = ? WHERE producto_id = ?
+            """;
+
+        try (PreparedStatement psS = con.prepareStatement(sqlStock);
+             PreparedStatement psM = con.prepareStatement(sqlMovimiento);
+             PreparedStatement psP = con.prepareStatement(sqlPrecio)) {
 
             for (DetalleCompra d : detalles) {
-                psM.setInt(1, d.getProductoId());
-                psM.setInt(2, d.getCantidad());
-                psM.setString(3, referencia);
-                psM.addBatch();
 
+                // Paso 1: actualizar stock
                 psS.setInt(1, d.getCantidad());
                 psS.setInt(2, d.getProductoId());
-                psS.addBatch();
+                int filasActualizadas = psS.executeUpdate();
+
+                if (filasActualizadas == 0) {
+                    throw new SQLException(
+                        "No se pudo actualizar el stock del producto con ID "
+                        + d.getProductoId() + ". Verifica que el producto exista en el sistema."
+                    );
+                }
+
+                // Paso 2: actualizar precio de costo con el precio de esta compra
+                psP.setBigDecimal(1, d.getPrecioUnitario());
+                psP.setInt(2, d.getProductoId());
+                psP.executeUpdate();
+
+                // Paso 3: registrar movimiento de inventario
+                psM.setInt(1, d.getProductoId());
+                if (usuarioId != null) {
+                    psM.setInt(2, usuarioId);
+                } else {
+                    psM.setNull(2, Types.INTEGER);
+                }
+                psM.setInt(3, d.getCantidad());
+                psM.setString(4, referencia);
+                psM.executeUpdate();
             }
-            psM.executeBatch();
-            psS.executeBatch();
         }
     }
 
-    // ════════════════════════════════════════════════════════════════════
-    // Paso 1: Insertar cabecera en tabla Compra
-    // ════════════════════════════════════════════════════════════════════
+    // ── Paso 1: cabecera de compra ─────────────────────────────────────────────
+
     private int insertarCompra(Connection con, Compra c) throws SQLException {
         String sql = """
             INSERT INTO Compra (proveedor_id, fecha_compra, fecha_entrega)
@@ -129,9 +168,8 @@ public class CompraDAO {
         }
     }
 
-    // ════════════════════════════════════════════════════════════════════
-    // Paso 2: Insertar filas en Detalle_Compra
-    // ════════════════════════════════════════════════════════════════════
+    // ── Paso 2: líneas de detalle ──────────────────────────────────────────────
+
     private void insertarDetalles(Connection con, int compraId,
                                    List<DetalleCompra> detalles) throws SQLException {
         String sql = """
@@ -150,9 +188,8 @@ public class CompraDAO {
         }
     }
 
-    // ════════════════════════════════════════════════════════════════════
-    // Paso 4: Insertar pago
-    // ════════════════════════════════════════════════════════════════════
+    // ── Paso 4: registro de pago ───────────────────────────────────────────────
+
     private void insertarPagoCompra(Connection con, int compraId,
                                      int metodoPagoId, BigDecimal monto,
                                      String estado) throws SQLException {
@@ -169,9 +206,8 @@ public class CompraDAO {
         }
     }
 
-    // ════════════════════════════════════════════════════════════════════
-    // Paso 5: Insertar crédito
-    // ════════════════════════════════════════════════════════════════════
+    // ── Paso 5: crédito asociado ───────────────────────────────────────────────
+
     private int insertarCreditoCompra(Connection con, int compraId,
                                        BigDecimal montoTotal, BigDecimal saldoPendiente,
                                        java.util.Date fechaInicio, java.util.Date fechaVencimiento,
@@ -196,9 +232,8 @@ public class CompraDAO {
         }
     }
 
-    // ════════════════════════════════════════════════════════════════════
-    // Paso 6: Insertar abono inicial
-    // ════════════════════════════════════════════════════════════════════
+    // ── Paso 6: abono inicial del crédito ──────────────────────────────────────
+
     private void insertarAbonoCredito(Connection con, int creditoId,
                                        int metodoPagoId, BigDecimal montoAbono,
                                        String estado) throws SQLException {
@@ -215,9 +250,9 @@ public class CompraDAO {
         }
     }
 
-    // ════════════════════════════════════════════════════════════════════
-    // Obtener compra por ID (con detalles)
-    // ════════════════════════════════════════════════════════════════════
+    // ── Consultas ──────────────────────────────────────────────────────────────
+
+    /** Busca una compra por su ID incluyendo detalles, pago y crédito si aplica. */
     public Compra obtenerPorId(int compraId) throws Exception {
         String sql = """
             SELECT c.compra_id, c.proveedor_id,
@@ -260,9 +295,7 @@ public class CompraDAO {
         }
     }
 
-    // ════════════════════════════════════════════════════════════════════
-    // Detalles de una compra
-    // ════════════════════════════════════════════════════════════════════
+    /** Retorna los productos detallados de una compra. */
     private List<DetalleCompra> obtenerDetalles(Connection con, int compraId) throws SQLException {
         String sql = """
             SELECT dc.detalle_compra_id, dc.producto_id, dc.precio_unitario, dc.cantidad,
@@ -291,9 +324,7 @@ public class CompraDAO {
         return lista;
     }
 
-    // ════════════════════════════════════════════════════════════════════
-    // Listar compras por proveedor (con detalles)
-    // ════════════════════════════════════════════════════════════════════
+    /** Retorna todas las compras de un proveedor ordenadas por fecha descendente. */
     public List<Compra> listarPorProveedor(int proveedorId) throws Exception {
         String sql = """
             SELECT c.compra_id, c.proveedor_id,
@@ -326,9 +357,7 @@ public class CompraDAO {
         return lista;
     }
 
-    // ════════════════════════════════════════════════════════════════════
-    // Eliminar compra
-    // ════════════════════════════════════════════════════════════════════
+    /** Elimina una compra. Los detalles y pagos se eliminan por CASCADE en la BD. */
     public boolean eliminarConTransaccion(int compraId) throws Exception {
         String sql = "DELETE FROM Compra WHERE compra_id = ?";
         try (Connection con = ConexionDB.getConnection();

@@ -7,9 +7,21 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * ProveedorDAO maneja todas las operaciones de base de datos relacionadas con proveedores.
+ * Incluye consultas, inserciones, actualizaciones y eliminación lógica.
+ * Cada operación que modifica datos usa transacciones para garantizar la integridad.
+ */
 public class ProveedorDAO {
 
     // ==================== CONSULTAS ====================
+
+    /**
+     * Devuelve todos los proveedores ordenados por fecha de registro (más recientes primero).
+     * Para cada proveedor, también carga sus teléfonos, correos y materiales asociados.
+     * Si alguna de estas cargas secundarias falla, se asigna una lista vacía en lugar de
+     * detener toda la consulta.
+     */
     public List<Proveedor> listarProveedores() {
         List<Proveedor> lista = new ArrayList<>();
         String sql = """
@@ -28,12 +40,16 @@ public class ProveedorDAO {
                 lista.add(p);
             }
         } catch (Exception e) {
-            System.err.println("■ ERROR CRÍTICO al listar proveedores: " + e.getMessage());
+            System.err.println("ERROR CRÍTICO al listar proveedores: " + e.getMessage());
             e.printStackTrace();
         }
         return lista;
     }
 
+    /**
+     * Busca un proveedor por su ID único.
+     * Devuelve null si no se encuentra, lo que el servlet usa para redirigir al listado.
+     */
     public Proveedor obtenerPorId(Integer id) {
         String sql = """
             SELECT p.proveedor_id, p.nombre, p.documento, p.fecha_registro, p.fecha_inicio, p.estado, p.minimo_compra 
@@ -57,6 +73,17 @@ public class ProveedorDAO {
         }
         return null;
     }
+
+    /**
+     * Busca proveedores según un término de búsqueda y un tipo de filtro.
+     * El parámetro "filtro" determina en qué campo buscar:
+     *   - "nombre"    → busca solo en el nombre del proveedor
+     *   - "materiales"→ busca en el nombre de los materiales que provee
+     *   - "todos"     → busca en nombre O materiales al mismo tiempo
+     *
+     * El símbolo % alrededor del término permite buscar coincidencias parciales (LIKE).
+     * Si el filtro es "todos", se pasa el mismo parámetro dos veces a la consulta SQL.
+     */
     public List<Proveedor> buscar(String q, String filtro) throws Exception {
         String sql;
         switch (filtro) {
@@ -98,6 +125,7 @@ public class ProveedorDAO {
              PreparedStatement ps = con.prepareStatement(sql)) {
             String param = "%" + q + "%";
             ps.setString(1, param);
+            // Solo cuando el filtro es "todos" se necesita un segundo parámetro (para el OR del SQL)
             if ("todos".equals(filtro)) ps.setString(2, param);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
@@ -115,6 +143,10 @@ public class ProveedorDAO {
         return lista;
     }
 
+    /**
+     * Verifica si ya existe un proveedor con ese documento en la base de datos.
+     * Se usa al registrar un nuevo proveedor para evitar duplicados.
+     */
     public boolean existeDocumento(String documento) {
         String sql = "SELECT COUNT(*) FROM Proveedor WHERE documento = ?";
         try (Connection conn = ConexionDB.getConnection();
@@ -129,6 +161,11 @@ public class ProveedorDAO {
         return false;
     }
 
+    /**
+     * Verifica si el documento ya está usado por OTRO proveedor diferente al que se está editando.
+     * La condición "proveedor_id <> ?" excluye al proveedor actual de la validación,
+     * permitiendo que conserve su propio documento sin error de duplicado.
+     */
     public boolean existeDocumentoParaOtro(String documento, int proveedorIdActual) {
         String sql = "SELECT COUNT(*) FROM Proveedor WHERE documento = ? AND proveedor_id <> ?";
         try (Connection conn = ConexionDB.getConnection();
@@ -145,6 +182,20 @@ public class ProveedorDAO {
     }
 
     // ==================== GUARDAR (INSERT) ====================
+
+    /**
+     * Guarda un nuevo proveedor junto con todos sus datos relacionados:
+     * teléfonos, correos, materiales y un registro de auditoría.
+     *
+     * Usa una transacción (setAutoCommit false) para que, si alguna inserción falla,
+     * se revierta todo y no queden datos incompletos en la base de datos.
+     *
+     * RETURN_GENERATED_KEYS permite obtener el ID autoincremental que MySQL asigna
+     * al nuevo proveedor, necesario para insertar los registros relacionados.
+     *
+     * Las listas se insertan en lote (addBatch/executeBatch) para mayor eficiencia.
+     * Los correos se convierten a minúsculas para evitar duplicados por capitalización.
+     */
     public boolean guardar(Proveedor p, List<String> telefonos, List<String> correos, List<Integer> materialesIds, int usuarioId) {
         Connection conn = null;
         try {
@@ -176,7 +227,7 @@ public class ProveedorDAO {
                 }
             }
 
-            // Teléfonos
+            // Insertar teléfonos — se ignoran los vacíos para no guardar entradas en blanco
             if (telefonos != null && !telefonos.isEmpty()) {
                 String sqlTel = "INSERT INTO Telefono_Proveedor(telefono, proveedor_id) VALUES(?, ?)";
                 try (PreparedStatement stmt = conn.prepareStatement(sqlTel)) {
@@ -191,7 +242,7 @@ public class ProveedorDAO {
                 }
             }
 
-            // Correos
+            // Insertar correos — se normalizan a minúsculas antes de guardar
             if (correos != null && !correos.isEmpty()) {
                 String sqlCorreo = "INSERT INTO Correo_Proveedor(email, proveedor_id) VALUES(?, ?)";
                 try (PreparedStatement stmt = conn.prepareStatement(sqlCorreo)) {
@@ -206,7 +257,7 @@ public class ProveedorDAO {
                 }
             }
 
-            // Materiales
+            // Insertar materiales que suministra este proveedor
             if (materialesIds != null && !materialesIds.isEmpty()) {
                 String sqlMat = "INSERT INTO Proveedor_Material(proveedor_id, material_id) VALUES(?, ?)";
                 try (PreparedStatement stmt = conn.prepareStatement(sqlMat)) {
@@ -221,15 +272,16 @@ public class ProveedorDAO {
                 }
             }
 
-            // ■■ RF38: Registro de auditoría ■■
+            // ■■ RF38: Registro de auditoría — deja constancia de quién creó el proveedor ■■
             registrarAuditoria(conn, usuarioId, "CREAR", "Proveedor", idGenerado, null, p.getNombre());
 
             conn.commit();
-            System.out.println("■ Proveedor guardado con éxito. ID: " + idGenerado);
+            System.out.println("Proveedor guardado con éxito. ID: " + idGenerado);
             return true;
         } catch (Exception e) {
-            System.err.println("■ ERROR AL GUARDAR PROVEEDOR: " + e.getMessage());
+            System.err.println("ERROR AL GUARDAR PROVEEDOR: " + e.getMessage());
             e.printStackTrace();
+            // Si algo falló, se deshacen todos los cambios para no dejar datos a medias
             if (conn != null) {
                 try { conn.rollback(); } catch (SQLException ex) { ex.printStackTrace(); }
             }
@@ -242,14 +294,25 @@ public class ProveedorDAO {
     }
 
     // ==================== ACTUALIZAR (UPDATE) ====================
- // ==================== ACTUALIZAR (UPDATE) ====================
+
+    /**
+     * Actualiza los datos editables de un proveedor: estado, mínimo de compra,
+     * teléfonos, correos y materiales.
+     *
+     * IMPORTANTE: nombre, documento y fechaInicio NO se actualizan desde aquí
+     * porque son campos inmutables según las reglas del negocio (RF11).
+     *
+     * La estrategia para teléfonos, correos y materiales es "eliminar todo e insertar de nuevo"
+     * (DELETE + INSERT), lo que simplifica el manejo de cambios en las listas.
+     * Esto funciona correctamente dentro de la transacción.
+     */
     public boolean actualizar(Proveedor p, List<String> telefonos, List<String> correos, List<Integer> materialesIds, int usuarioId) {
         Connection conn = null;
         try {
             conn = ConexionDB.getConnection();
             conn.setAutoCommit(false);
 
-            // ■■ Capturar nombre anterior para auditoría (con la misma conexión) ■■
+            // Capturar nombre anterior para dejarlo registrado en la auditoría
             String nombreAnterior = "N/A";
             try (PreparedStatement ps = conn.prepareStatement(
                     "SELECT nombre FROM Proveedor WHERE proveedor_id = ?")) {
@@ -271,7 +334,7 @@ public class ProveedorDAO {
                 stmt.executeUpdate();
             }
 
-            // Reemplazar teléfonos
+            // Reemplazar teléfonos: se borran todos y se vuelven a insertar los nuevos
             try (PreparedStatement stmt = conn.prepareStatement(
                     "DELETE FROM Telefono_Proveedor WHERE proveedor_id = ?")) {
                 stmt.setInt(1, p.getProveedorId()); stmt.executeUpdate();
@@ -290,7 +353,7 @@ public class ProveedorDAO {
                 }
             }
 
-            // Reemplazar correos
+            // Reemplazar correos de la misma forma
             try (PreparedStatement stmt = conn.prepareStatement(
                     "DELETE FROM Correo_Proveedor WHERE proveedor_id = ?")) {
                 stmt.setInt(1, p.getProveedorId()); stmt.executeUpdate();
@@ -309,7 +372,7 @@ public class ProveedorDAO {
                 }
             }
 
-            // Reemplazar materiales
+            // Reemplazar materiales de la misma forma
             try (PreparedStatement stmt = conn.prepareStatement(
                     "DELETE FROM Proveedor_Material WHERE proveedor_id = ?")) {
                 stmt.setInt(1, p.getProveedorId()); stmt.executeUpdate();
@@ -330,10 +393,10 @@ public class ProveedorDAO {
 
             registrarAuditoria(conn, usuarioId, "EDITAR", "Proveedor", p.getProveedorId(), nombreAnterior, p.getNombre());
             conn.commit();
-            System.out.println("■ Proveedor actualizado con éxito. ID: " + p.getProveedorId());
+            System.out.println("Proveedor actualizado con éxito. ID: " + p.getProveedorId());
             return true;
         } catch (Exception e) {
-            System.err.println("■ Error al actualizar proveedor: " + e.getMessage());
+            System.err.println("Error al actualizar proveedor: " + e.getMessage());
             e.printStackTrace();
             if (conn != null) { try { conn.rollback(); } catch (SQLException ex) { ex.printStackTrace(); } }
             return false;
@@ -342,7 +405,10 @@ public class ProveedorDAO {
         }
     }
 
-    // ■■ Verificar teléfono duplicado en cualquier proveedor ■■
+    /**
+     * Verifica si un número de teléfono ya está registrado en CUALQUIER proveedor.
+     * Se usa al crear un nuevo proveedor para evitar duplicados globales.
+     */
     public boolean existeTelefonoProveedor(String telefono) {
         String sql = "SELECT COUNT(*) FROM Telefono_Proveedor WHERE telefono = ?";
         try (Connection conn = ConexionDB.getConnection();
@@ -355,6 +421,10 @@ public class ProveedorDAO {
         return false;
     }
 
+    /**
+     * Verifica si un teléfono ya lo usa OTRO proveedor distinto al que se está editando.
+     * Así el proveedor actual puede conservar su propio teléfono sin error de duplicado.
+     */
     public boolean existeTelefonoParaOtro(String telefono, int proveedorId) {
         String sql = "SELECT COUNT(*) FROM Telefono_Proveedor WHERE telefono = ? AND proveedor_id != ?";
         try (Connection conn = ConexionDB.getConnection();
@@ -368,7 +438,10 @@ public class ProveedorDAO {
         return false;
     }
 
-    // ■■ Verificar correo duplicado en cualquier proveedor ■■
+    /**
+     * Verifica si un correo ya está registrado en CUALQUIER proveedor.
+     * El correo se normaliza a minúsculas antes de comparar para evitar falsos negativos.
+     */
     public boolean existeCorreoProveedor(String correo) {
         String sql = "SELECT COUNT(*) FROM Correo_Proveedor WHERE email = ?";
         try (Connection conn = ConexionDB.getConnection();
@@ -381,6 +454,9 @@ public class ProveedorDAO {
         return false;
     }
 
+    /**
+     * Verifica si un correo ya lo usa OTRO proveedor diferente al que se está editando.
+     */
     public boolean existeCorreoParaOtroProveedor(String correo, int proveedorId) {
         String sql = "SELECT COUNT(*) FROM Correo_Proveedor WHERE email = ? AND proveedor_id != ?";
         try (Connection conn = ConexionDB.getConnection();
@@ -395,6 +471,11 @@ public class ProveedorDAO {
     }
 
     // ==================== ESTADO Y ELIMINACIÓN ====================
+
+    /**
+     * Cambia el estado activo/inactivo de un proveedor sin eliminarlo físicamente.
+     * Se usa desde el botón toggle de la lista de proveedores.
+     */
     public boolean actualizarEstado(Integer id, Boolean estado) {
         String sql = "UPDATE Proveedor SET estado = ? WHERE proveedor_id = ?";
         try (Connection conn = ConexionDB.getConnection();
@@ -408,14 +489,19 @@ public class ProveedorDAO {
         }
     }
 
-    // ■■ RF13: Eliminación lógica (estado = false) ■■
+    /**
+     * ■■ RF13: Eliminación lógica — marca el proveedor como inactivo (estado = 0).
+     * El registro no se borra físicamente de la base de datos, solo se desactiva.
+     * Esto permite mantener el historial y reactivar el proveedor si es necesario.
+     * Registra la operación en auditoría con la acción "ELIMINAR".
+     */
     public boolean eliminar(Integer id, int usuarioId) {
         Connection conn = null;
         try {
             conn = ConexionDB.getConnection();
             conn.setAutoCommit(false);
             
-            // Obtener nombre para auditoría
+            // Obtener nombre para dejarlo en el registro de auditoría
             String nombre = "ID:" + id;
             try {
                 Proveedor p = obtenerPorId(id);
@@ -428,7 +514,6 @@ public class ProveedorDAO {
                 stmt.executeUpdate();
             }
 
-            // ■■ RF38: Registro de auditoría ■■
             registrarAuditoria(conn, usuarioId, "ELIMINAR", "Proveedor", id, nombre, "ELIMINADO_LOGICO");
 
             conn.commit();
@@ -442,6 +527,12 @@ public class ProveedorDAO {
     }
 
     // ==================== MÉTODOS AUXILIARES PRIVADOS ====================
+
+    /**
+     * Convierte una fila del ResultSet en un objeto Proveedor.
+     * El campo minimo_compra se lee como String primero para controlar el caso
+     * en que el valor no sea un número válido (NumberFormatException).
+     */
     private Proveedor mapearProveedor(ResultSet rs) throws SQLException {
         Proveedor p = new Proveedor();
         p.setProveedorId(rs.getInt("proveedor_id"));
@@ -451,6 +542,7 @@ public class ProveedorDAO {
         p.setFechaInicio(rs.getString("fecha_inicio"));
         p.setEstado(rs.getBoolean("estado"));
         String minStr = rs.getString("minimo_compra");
+        // Si el valor no es un número válido, se asigna 0.0 como valor seguro
         try { p.setMinimoCompra(minStr != null ? Double.parseDouble(minStr) : 0.0); } 
         catch (NumberFormatException e) { p.setMinimoCompra(0.0); }
         return p;
@@ -524,6 +616,14 @@ public class ProveedorDAO {
             stmt.executeUpdate();
         }
     }
+
+    /**
+     * Registra una acción en la tabla de auditoría para trazabilidad.
+     * Los datos anteriores y nuevos se guardan en formato JSON simple.
+     * Las comillas en los valores se escapan para evitar JSON inválido.
+     * Esta función recibe la conexión activa para que el registro quede
+     * dentro de la misma transacción que la operación principal.
+     */
     private void registrarAuditoria(Connection conn, int usuarioId, String accion, String entidad, 
             int entidadId, String datosAnteriores, String datosNuevos) throws SQLException {
 			String sql = """
@@ -535,7 +635,6 @@ public class ProveedorDAO {
 			stmt.setString(2, accion);
 			stmt.setString(3, entidad);
 			stmt.setInt(4, entidadId);
-			// ■■ Envolver en JSON válido ■■
 			stmt.setString(5, datosAnteriores != null 
 			? "{\"valor\": \"" + datosAnteriores.replace("\"", "\\\"") + "\"}" 
 			: null);

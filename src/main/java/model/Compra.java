@@ -15,12 +15,13 @@ import java.util.List;
 public class Compra {
 
     // ── Tabla Compra ──────────────────────────────────────────────────
-    private int    compraId;
-    private int    proveedorId;
-    private Date   fechaCompra;
-    private Date   fechaEntrega;
+    private int  compraId;
+    private int  proveedorId;
+    private Date fechaCompra;
+    private Date fechaEntrega;
 
     // ── Tabla Pago_Compra ─────────────────────────────────────────────
+
     /** FK a Metodo_Pago */
     private int        metodoPagoId;
     /** Monto total de la compra (suma de subtotales) */
@@ -29,50 +30,64 @@ public class Compra {
     private boolean    esCredito;
 
     // ── Tabla Credito_Compra (solo si esCredito = true) ───────────────
+
     /** Monto pagado por adelantado al registrar la compra */
-    private BigDecimal anticipo       = BigDecimal.ZERO;
+    private BigDecimal anticipo      = BigDecimal.ZERO;
     /** Fecha límite para saldar la deuda */
     private Date       fechaVencimiento;
     /** "activo" | "pagado" | "vencido" */
-    private String     estadoCredito  = "activo";
+    private String     estadoCredito = "activo";
 
     // ── Detalles (Detalle_Compra) ─────────────────────────────────────
     private List<DetalleCompra> detalles;
 
+    /*
+     * ID del administrador o usuario que registró la compra.
+     * No se guarda en la tabla Compra; se usa para registrar quién hizo
+     * el movimiento de inventario en Inventario_Movimiento.
+     * Es Integer (objeto) y no int (primitivo) para poder ser null cuando
+     * no hay usuario disponible, ya que la columna usuario_id en la BD
+     * acepta NULL.
+     */
+    private Integer usuarioId;
+
     // ── Getters / Setters ─────────────────────────────────────────────
 
-    public int getCompraId()                        { return compraId; }
-    public void setCompraId(int compraId)           { this.compraId = compraId; }
+    public int getCompraId()                       { return compraId; }
+    public void setCompraId(int compraId)          { this.compraId = compraId; }
 
-    public int getProveedorId()                     { return proveedorId; }
-    public void setProveedorId(int proveedorId)     { this.proveedorId = proveedorId; }
+    public int getProveedorId()                    { return proveedorId; }
+    public void setProveedorId(int proveedorId)    { this.proveedorId = proveedorId; }
 
-    public Date getFechaCompra()                    { return fechaCompra; }
-    public void setFechaCompra(Date fechaCompra)    { this.fechaCompra = fechaCompra; }
+    public Date getFechaCompra()                   { return fechaCompra; }
+    public void setFechaCompra(Date fechaCompra)   { this.fechaCompra = fechaCompra; }
 
-    public Date getFechaEntrega()                   { return fechaEntrega; }
-    public void setFechaEntrega(Date fechaEntrega)  { this.fechaEntrega = fechaEntrega; }
+    public Date getFechaEntrega()                  { return fechaEntrega; }
+    public void setFechaEntrega(Date fechaEntrega) { this.fechaEntrega = fechaEntrega; }
 
-    public int getMetodoPagoId()                    { return metodoPagoId; }
-    public void setMetodoPagoId(int metodoPagoId)   { this.metodoPagoId = metodoPagoId; }
+    public int getMetodoPagoId()                   { return metodoPagoId; }
+    public void setMetodoPagoId(int metodoPagoId)  { this.metodoPagoId = metodoPagoId; }
 
-    public BigDecimal getTotal()                    { return total; }
-    public void setTotal(BigDecimal total)          { this.total = total; }
+    public BigDecimal getTotal()                   { return total; }
+    public void setTotal(BigDecimal total)         { this.total = total; }
 
-    public boolean isEsCredito()                    { return esCredito; }
-    public void setEsCredito(boolean esCredito)     { this.esCredito = esCredito; }
+    public boolean isEsCredito()                   { return esCredito; }
+    public void setEsCredito(boolean esCredito)    { this.esCredito = esCredito; }
 
-    public BigDecimal getAnticipo()                 { return anticipo; }
-    public void setAnticipo(BigDecimal anticipo)    { this.anticipo = anticipo; }
+    public BigDecimal getAnticipo()                { return anticipo; }
+    public void setAnticipo(BigDecimal anticipo)   { this.anticipo = anticipo; }
 
-    public Date getFechaVencimiento()               { return fechaVencimiento; }
-    public void setFechaVencimiento(Date d)         { this.fechaVencimiento = d; }
+    public Date getFechaVencimiento()              { return fechaVencimiento; }
+    public void setFechaVencimiento(Date d)        { this.fechaVencimiento = d; }
 
-    public String getEstadoCredito()                { return estadoCredito; }
-    public void setEstadoCredito(String e)          { this.estadoCredito = e; }
+    public String getEstadoCredito()               { return estadoCredito; }
+    public void setEstadoCredito(String e)         { this.estadoCredito = e; }
 
-    public List<DetalleCompra> getDetalles()                    { return detalles; }
-    public void setDetalles(List<DetalleCompra> detalles)       { this.detalles = detalles; }
+    public List<DetalleCompra> getDetalles()                  { return detalles; }
+    public void setDetalles(List<DetalleCompra> detalles)     { this.detalles = detalles; }
+
+    public Integer getUsuarioId()                  { return usuarioId; }
+    public void setUsuarioId(Integer usuarioId)    { this.usuarioId = usuarioId; }
 
     // ── Campos calculados (útiles en JSP/vistas) ──────────────────────
 

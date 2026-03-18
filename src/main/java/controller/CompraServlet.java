@@ -31,6 +31,7 @@ public class CompraServlet extends HttpServlet {
     private CategoriaDAO  categoriaDAO;
     private MetodoPagoDAO metodoPagoDAO;
 
+    // Se instancian los DAOs una sola vez al iniciar el servlet
     @Override
     public void init() throws ServletException {
         compraDAO     = new CompraDAO();
@@ -39,9 +40,13 @@ public class CompraServlet extends HttpServlet {
         metodoPagoDAO = new MetodoPagoDAO();
     }
 
-    // ════════════════════════════════════════════════════════════════════
-    // GET
-    // ════════════════════════════════════════════════════════════════════
+    // ==================== GET ====================
+
+    /**
+     * Maneja las peticiones GET del módulo de compras.
+     * Incluye mostrar el formulario, ver detalles, eliminar una compra
+     * y dos endpoints que responden en JSON para el selector dinámico de productos.
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -67,9 +72,13 @@ public class CompraServlet extends HttpServlet {
         }
     }
 
-    // ════════════════════════════════════════════════════════════════════
-    // POST
-    // ════════════════════════════════════════════════════════════════════
+    // ==================== POST ====================
+
+    /**
+     * Procesa el guardado de una nueva compra.
+     * Responde siempre en JSON porque el formulario lo envía via fetch (AJAX),
+     * lo que permite mostrar el resultado con SweetAlert sin recargar la página.
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -88,21 +97,28 @@ public class CompraServlet extends HttpServlet {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            // Devolver error en JSON para que SweetAlert lo muestre en el JSP
             response.setContentType("application/json;charset=UTF-8");
             response.getWriter().write("{\"ok\":false,\"error\":\"" + esc(e.getMessage()) + "\"}");
         }
     }
 
-    // ════════════════════════════════════════════════════════════════════
-    // Formulario nueva compra
-    // ════════════════════════════════════════════════════════════════════
+    /**
+     * Prepara el formulario de nueva compra cargando los métodos de pago disponibles.
+     * Valida que el ID de proveedor sea numérico antes de continuar.
+     */
     private void mostrarFormularioNueva(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        String proveedorIdStr = request.getParameter("id");
-        
-        // Validación de ID
+        /*
+         * El botón "Nueva compra" en la vista del proveedor puede enviar el ID
+         * como "id" o como "proveedorId" según cómo esté construido el enlace.
+         * Se intenta con ambos nombres para no depender de uno solo.
+         */
+        String proveedorIdStr = request.getParameter("proveedorId");
+        if (proveedorIdStr == null || proveedorIdStr.isBlank()) {
+            proveedorIdStr = request.getParameter("id");
+        }
+
         if (proveedorIdStr == null || !proveedorIdStr.matches("\\d+")) {
             response.sendRedirect(request.getContextPath() + "/ProveedorServlet?action=listar");
             return;
@@ -110,37 +126,51 @@ public class CompraServlet extends HttpServlet {
 
         try {
             List<MetodoPago> metodos = metodoPagoDAO.listarTodos();
-            // Asegúrate de que la lista no sea nula para evitar errores en el JSP
-            if (metodos == null) metodos = new ArrayList<>(); 
+            if (metodos == null) metodos = new ArrayList<>();
             request.setAttribute("metodosPago", metodos);
         } catch (Exception e) {
             System.err.println("Error al cargar métodos de pago: " + e.getMessage());
-            e.printStackTrace();
         }
 
         request.setAttribute("proveedorId", proveedorIdStr);
-        
-        // VERIFICA ESTA RUTA: Debe coincidir exactamente con la ubicación de tu archivo
         request.getRequestDispatcher("/Administrador/proveedores/agregar_compra.jsp")
                .forward(request, response);
     }
 
-    // ════════════════════════════════════════════════════════════════════
-    // Guardar compra — responde JSON para que el JSP maneje el resultado
-    // con SweetAlert2 sin recargas bruscas
-    // ════════════════════════════════════════════════════════════════════
+    /**
+     * Procesa y guarda una nueva compra con todos sus detalles.
+     * Responde en JSON: {"ok":true, "proveedorId":X} si tuvo éxito.
+     *
+     * CORRECCIÓN: ahora se obtiene el ID del administrador en sesión y se lo pasa
+     * al objeto Compra para que el DAO pueda registrarlo en Inventario_Movimiento.
+     * Antes el usuarioId nunca llegaba al DAO y se insertaba NULL en esa columna,
+     * lo que podía causar fallo si la columna no era nullable en la instalación del cliente.
+     *
+     * Validaciones:
+     *   - ID de proveedor presente y numérico
+     *   - Fechas en formato yyyy-MM-dd (parse lanza ParseException si el formato es incorrecto)
+     *   - Fecha de entrega no puede ser anterior a la de compra
+     *   - Método de pago seleccionado
+     *   - Si es crédito: fecha de vencimiento obligatoria y posterior a la de compra,
+     *     anticipo no puede superar el total
+     *   - Al menos un producto válido con precio y cantidad mayores a 0
+     *
+     * isBlank() es equivalente a isEmpty() pero también detecta strings con solo espacios.
+     */
     private void guardarCompra(HttpServletRequest request, HttpServletResponse response)
             throws Exception {
 
         response.setContentType("application/json;charset=UTF-8");
 
-        // ── Proveedor ────────────────────────────────────────────────
+        // Obtener el ID del administrador desde la sesión para registrarlo en el inventario
+        Administrador admin = (Administrador) request.getSession(false).getAttribute("admin");
+        Integer usuarioId = (admin != null) ? admin.getId() : null;
+
         String proveedorIdStr = request.getParameter("proveedorId");
         if (proveedorIdStr == null || !proveedorIdStr.matches("\\d+"))
             throw new IllegalArgumentException("ID de proveedor inválido.");
         int proveedorId = Integer.parseInt(proveedorIdStr);
 
-        // ── Fechas ───────────────────────────────────────────────────
         SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
 
         String fcStr = request.getParameter("fechaCompra");
@@ -153,25 +183,24 @@ public class CompraServlet extends HttpServlet {
         Date fechaCompra  = fmt.parse(fcStr.trim());
         Date fechaEntrega = fmt.parse(feStr.trim());
 
+        // before() compara si una fecha es estrictamente anterior a otra
         if (fechaEntrega.before(fechaCompra))
             throw new IllegalArgumentException(
                     "La fecha de entrega no puede ser anterior a la fecha de compra.");
 
-        // ── Método de pago ───────────────────────────────────────────
         String mpStr = request.getParameter("metodoPagoId");
         if (mpStr == null || mpStr.isBlank() || mpStr.equals("0"))
             throw new IllegalArgumentException("Debes seleccionar un método de pago.");
         int metodoPagoId = Integer.parseInt(mpStr);
 
-        // ── Tipo de pago ─────────────────────────────────────────────
         String  tipoPago  = request.getParameter("tipoPago");
         boolean esCredito = "CREDITO".equals(tipoPago);
 
-        // ── Campos de crédito ────────────────────────────────────────
         Date       fechaVencimiento = null;
         BigDecimal anticipo         = BigDecimal.ZERO;
         String     estadoCredito    = "pagado";
 
+        // Los campos de crédito solo se validan si el tipo de pago es CREDITO
         if (esCredito) {
             String fvStr = request.getParameter("fechaVencimiento");
             if (fvStr == null || fvStr.isBlank())
@@ -191,7 +220,7 @@ public class CompraServlet extends HttpServlet {
             estadoCredito = "pagado".equals(ecStr) ? "pagado" : "activo";
         }
 
-        // ── Productos ────────────────────────────────────────────────
+        // getParameterValues devuelve arrays paralelos: productoId[0] con precio[0] y cantidad[0]
         String[] productosIds = request.getParameterValues("productoId");
         String[] precios      = request.getParameterValues("precioUnitario");
         String[] cantidades   = request.getParameterValues("cantidad");
@@ -243,7 +272,6 @@ public class CompraServlet extends HttpServlet {
                     "El anticipo ($" + anticipo.toPlainString()
                     + ") no puede ser mayor al total de la compra ($" + total.toPlainString() + ").");
 
-        // ── Construir objeto Compra ───────────────────────────────────
         Compra compra = new Compra();
         compra.setProveedorId(proveedorId);
         compra.setFechaCompra(fechaCompra);
@@ -255,16 +283,9 @@ public class CompraServlet extends HttpServlet {
         compra.setAnticipo(anticipo);
         compra.setFechaVencimiento(fechaVencimiento);
         compra.setEstadoCredito(estadoCredito);
+        // CORRECCIÓN: se pasa el ID del admin para registrarlo en Inventario_Movimiento
+        compra.setUsuarioId(usuarioId);
 
-        // ── Admin en sesión ───────────────────────────────────────────
-        HttpSession session = request.getSession(false);
-        if (session != null) {
-            Object adminObj = session.getAttribute("admin");
-            if (adminObj instanceof Administrador)
-                compra.setProveedorId(((Administrador) adminObj).getId());
-        }
-
-        // ── Persistir ────────────────────────────────────────────────
         boolean exito = compraDAO.insertarConTransaccion(compra);
         if (exito) {
             response.getWriter().write("{\"ok\":true,\"proveedorId\":" + proveedorId + "}");
@@ -273,9 +294,9 @@ public class CompraServlet extends HttpServlet {
         }
     }
 
-    // ════════════════════════════════════════════════════════════════════
-    // Ver detalle
-    // ════════════════════════════════════════════════════════════════════
+    /**
+     * Carga y muestra el detalle completo de una compra específica.
+     */
     private void verDetalle(HttpServletRequest request, HttpServletResponse response)
             throws Exception {
 
@@ -297,9 +318,9 @@ public class CompraServlet extends HttpServlet {
                .forward(request, response);
     }
 
-    // ════════════════════════════════════════════════════════════════════
-    // Eliminar compra
-    // ════════════════════════════════════════════════════════════════════
+    /**
+     * Elimina una compra y redirige al historial del proveedor con msg=eliminado.
+     */
     private void eliminarCompra(HttpServletRequest request, HttpServletResponse response)
             throws Exception {
 
@@ -313,9 +334,10 @@ public class CompraServlet extends HttpServlet {
                 + "/ProveedorServlet?action=verCompras&id=" + proveedorIdStr + "&msg=eliminado");
     }
 
-    // ════════════════════════════════════════════════════════════════════
-    // JSON: categorías activas
-    // ════════════════════════════════════════════════════════════════════
+    /**
+     * Retorna la lista de categorías en JSON para el selector dinámico del formulario.
+     * Si falla, devuelve "[]" para no romper el flujo del JavaScript.
+     */
     private void obtenerCategoriasJSON(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
 
@@ -339,25 +361,25 @@ public class CompraServlet extends HttpServlet {
         }
     }
 
-    // ════════════════════════════════════════════════════════════════════
-    // JSON: productos de una categoría FILTRADOS por proveedor
-    // ── Solo muestra los productos cuyo proveedor_id == proveedorId
-    // ════════════════════════════════════════════════════════════════════
+    /**
+     * Retorna los productos de una categoría filtrados por proveedor, en JSON.
+     * Solo muestra productos cuyo proveedor_id coincida con el proveedor activo.
+     * Si proveedorId es 0 o no viene, muestra todos los de la categoría sin filtrar.
+     */
     private void obtenerProductosPorCategoriaJSON(HttpServletRequest request,
                                                    HttpServletResponse response)
             throws IOException {
 
         response.setContentType("application/json;charset=UTF-8");
 
-        String categoriaIdStr  = request.getParameter("categoriaId");
-        String proveedorIdStr  = request.getParameter("proveedorId");
+        String categoriaIdStr = request.getParameter("categoriaId");
+        String proveedorIdStr = request.getParameter("proveedorId");
 
         if (categoriaIdStr == null || !categoriaIdStr.matches("\\d+")) {
             response.getWriter().write("[]");
             return;
         }
 
-        // proveedorId para filtrar (si no viene, no filtra y muestra todos)
         int proveedorId = 0;
         if (proveedorIdStr != null && proveedorIdStr.matches("\\d+"))
             proveedorId = Integer.parseInt(proveedorIdStr);
@@ -366,7 +388,6 @@ public class CompraServlet extends HttpServlet {
             List<Producto> todos = productoDAO.listarPorCategoria(
                     Integer.parseInt(categoriaIdStr));
 
-            // ── Filtrar: solo los productos asignados a este proveedor ──
             List<Producto> filtrados = new ArrayList<>();
             for (Producto p : todos) {
                 if (proveedorId == 0 || p.getProveedorId() == proveedorId) {
@@ -403,9 +424,10 @@ public class CompraServlet extends HttpServlet {
         }
     }
 
-    // ════════════════════════════════════════════════════════════════════
-    // Helpers
-    // ════════════════════════════════════════════════════════════════════
+    /**
+     * Verifica que haya una sesión de administrador activa.
+     * Si la petición espera JSON, responde con error 401 en JSON en lugar de redirigir.
+     */
     private boolean estaAutenticado(HttpServletRequest req, HttpServletResponse res)
             throws IOException {
         HttpSession s = req.getSession(false);
@@ -423,6 +445,10 @@ public class CompraServlet extends HttpServlet {
         return true;
     }
 
+    /**
+     * Escapa caracteres especiales para incluir texto de forma segura dentro de un JSON.
+     * Sin esto, una comilla o salto de línea en el nombre de un producto rompería el JSON.
+     */
     private String esc(String t) {
         if (t == null) return "";
         return t.replace("\\", "\\\\")

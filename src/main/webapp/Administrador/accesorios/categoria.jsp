@@ -3,12 +3,22 @@
 <%@ page import="java.text.SimpleDateFormat" %>
 
 <%
+    /*
+     * Seguridad: se verifica sesión activa antes de mostrar cualquier dato.
+     * Si no hay admin en sesión, sendRedirect lleva al login y el return
+     * detiene completamente la ejecución del resto del JSP.
+     */
     Administrador admin = (Administrador) session.getAttribute("admin");
     if (admin == null) {
         response.sendRedirect(request.getContextPath() + "/inicio-sesion.jsp");
         return;
     }
 
+    /*
+     * Estos atributos los puso el CategoriaServlet con request.setAttribute() antes de hacer forward.
+     * Con forward la petición es la misma, por eso los atributos están disponibles aquí.
+     * "categoria" puede ser null cuando la búsqueda es global (sin categoría específica).
+     */
     List<Producto>     productos     = (List<Producto>)     request.getAttribute("productos");
     Categoria          categoria     = (Categoria)          request.getAttribute("categoria");
     List<Material>     materiales    = (List<Material>)     request.getAttribute("materiales");
@@ -20,6 +30,7 @@
     if (termino      == null) termino      = "";
     if (filtroActivo == null) filtroActivo = "todos";
 
+    // Estadísticas rápidas calculadas en el servidor para mostrar en los indicadores de la cabecera
     int totalProductos = productos != null ? productos.size() : 0;
     int stockBajo = 0, sinStock = 0;
     if (productos != null) {
@@ -29,6 +40,7 @@
         }
     }
 
+    // SimpleDateFormat da formato legible a las fechas (dd/MM/yyyy en lugar de timestamp)
     SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
 %>
 <!DOCTYPE html>
@@ -40,6 +52,8 @@
     <link rel="stylesheet" href="<%=request.getContextPath()%>/assets/css/main.css">
     <link rel="stylesheet" href="<%=request.getContextPath()%>/assets/css/pages/Administrador/gest-productos.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <%-- SweetAlert2 para mensajes amigables de productos --%>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
 
@@ -59,7 +73,6 @@
 
 <main class="prod-page">
 
-    <%-- ══ ENCABEZADO ══ --%>
     <div class="page-header">
         <div class="page-header__left">
             <div class="page-header__icon"><i class="fa-solid fa-gem"></i></div>
@@ -86,21 +99,49 @@
         </div>
     </div>
 
-    <%-- ══ MENSAJES ══ --%>
+    <%--
+        MENSAJES DE OPERACIONES SOBRE PRODUCTOS
+        Estos valores llegan como parámetros en la URL porque ProductoServlet usa sendRedirect.
+        Con sendRedirect el servlet redirige al navegador con la URL nueva; el atributo del request
+        se perdería, por eso el mensaje viaja como ?msg=creado en la URL.
+        Aquí se muestran como alertas SweetAlert2 para mayor claridad visual.
+    --%>
     <%
-        String msg = request.getParameter("msg");
+        String msgProducto = request.getParameter("msg");
+        String tituloMsg = null, textoMsg = null;
+        if ("creado".equals(msgProducto)) {
+            tituloMsg = "Producto agregado";
+            textoMsg  = "El producto fue registrado correctamente en el catálogo.";
+        } else if ("actualizado".equals(msgProducto)) {
+            tituloMsg = "Producto actualizado";
+            textoMsg  = "Los cambios del producto fueron guardados correctamente.";
+        } else if ("eliminado".equals(msgProducto)) {
+            tituloMsg = "Producto eliminado";
+            textoMsg  = "El producto fue eliminado del catálogo.";
+        }
     %>
-    <% if ("creado".equals(msg)) { %>
-        <div class="alerta alerta--success"><i class="fa-solid fa-circle-check"></i> Producto creado exitosamente.</div>
-    <% } else if ("actualizado".equals(msg)) { %>
-        <div class="alerta alerta--success"><i class="fa-solid fa-circle-check"></i> Producto actualizado correctamente.</div>
-    <% } else if ("eliminado".equals(msg)) { %>
-        <div class="alerta alerta--success"><i class="fa-solid fa-circle-check"></i> Producto eliminado correctamente.</div>
+    <% if (tituloMsg != null) { %>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                title: '<%= tituloMsg %>',
+                text: '<%= textoMsg %>',
+                icon: 'success',
+                confirmButtonColor: '#ff85a2',
+                confirmButtonText: 'Aceptar',
+                timer: 4000,
+                timerProgressBar: true,
+                background: '#fff5f7',
+                iconColor: '#ff85a2'
+            });
+        });
+    </script>
     <% } %>
 
-    <%-- ══ BARRA DE BÚSQUEDA Y FILTROS ══ --%>
+    <%-- BARRA DE BÚSQUEDA Y FILTROS --%>
     <div class="filtros-bar">
 
+        <%-- Cada bloque de input se muestra u oculta con JavaScript según el filtro activo --%>
         <div class="search-wrap" id="searchWrap">
             <i class="fa-solid fa-magnifying-glass"></i>
             <input type="text" id="buscadorTexto"
@@ -141,7 +182,11 @@
                    value="<%= "stock".equals(filtroActivo) ? termino : "" %>">
         </div>
 
-        <%-- Form oculto para enviar búsqueda --%>
+        <%--
+            Formulario oculto que se envía por JavaScript cuando el usuario busca.
+            Se usa GET para que los parámetros de búsqueda queden en la URL
+            y el usuario pueda copiarla o recargar la página con los mismos resultados.
+        --%>
         <form id="formBusqueda" action="<%=request.getContextPath()%>/CategoriaServlet" method="get" style="display:none;">
             <% if (categoria != null) { %>
             <input type="hidden" name="id" value="<%= categoria.getCategoriaId() %>">
@@ -151,15 +196,15 @@
         </form>
 
         <div class="filter-btns">
-            <button class="filter-btn <%= "todos".equals(filtroActivo) ? "active" : "" %>"         data-filtro="todos">Todos</button>
-            <button class="filter-btn <%= "nombre".equals(filtroActivo) ? "active" : "" %>"        data-filtro="nombre"><i class="fa-solid fa-font"></i> Nombre</button>
-            <button class="filter-btn <%= "material".equals(filtroActivo) ? "active" : "" %>"      data-filtro="material"><i class="fa-solid fa-gem"></i> Material</button>
-            <button class="filter-btn <%= "subcategoria".equals(filtroActivo) ? "active" : "" %>"  data-filtro="subcategoria"><i class="fa-solid fa-tags"></i> Subcategoría</button>
-            <button class="filter-btn <%= "stock".equals(filtroActivo) ? "active" : "" %>"         data-filtro="stock"><i class="fa-solid fa-boxes-stacked"></i> Stock</button>
+            <button class="filter-btn <%= "todos".equals(filtroActivo) ? "active" : "" %>"        data-filtro="todos">Todos</button>
+            <button class="filter-btn <%= "nombre".equals(filtroActivo) ? "active" : "" %>"       data-filtro="nombre"><i class="fa-solid fa-font"></i> Nombre</button>
+            <button class="filter-btn <%= "material".equals(filtroActivo) ? "active" : "" %>"     data-filtro="material"><i class="fa-solid fa-gem"></i> Material</button>
+            <button class="filter-btn <%= "subcategoria".equals(filtroActivo) ? "active" : "" %>" data-filtro="subcategoria"><i class="fa-solid fa-tags"></i> Subcategoría</button>
+            <button class="filter-btn <%= "stock".equals(filtroActivo) ? "active" : "" %>"        data-filtro="stock"><i class="fa-solid fa-boxes-stacked"></i> Stock</button>
         </div>
     </div>
 
-    <%-- Info de resultado --%>
+    <%-- Información del resultado de búsqueda: solo se muestra cuando hay un término activo --%>
     <% if (!termino.isEmpty()) { %>
     <div class="resultado-info">
         <i class="fa-solid fa-circle-info"></i>
@@ -183,7 +228,7 @@
     </div>
     <% } %>
 
-    <%-- ══ GRID DE PRODUCTOS ══ --%>
+    <%-- GRID DE PRODUCTOS --%>
     <% if (productos == null || productos.isEmpty()) { %>
     <div class="empty-state">
         <div class="empty-state__icon"><i class="fa-solid fa-box-open"></i></div>
@@ -201,6 +246,11 @@
         <% for (Producto p : productos) { %>
         <div class="cards__contenedor-content">
             <a href="<%=request.getContextPath()%>/ProductoServlet?action=ver&id=<%= p.getProductoId() %>">
+                <%--
+                    La imagen se carga desde ImagenServlet usando el ID del producto.
+                    onerror es un fallback: si el servlet falla o no hay imagen,
+                    muestra automáticamente la imagen por defecto sin romper el diseño.
+                --%>
                 <img src="<%=request.getContextPath()%>/imagen-producto/<%= p.getProductoId() %>"
                      alt="<%= p.getNombre() %>"
                      onerror="this.src='<%=request.getContextPath()%>/assets/Imagenes/default.png'">
@@ -214,6 +264,7 @@
             <h4 class="product__price"><span class="product__label">Precio venta:</span> <span class="product__value">$<%= String.format("%,.0f", p.getPrecioVenta()) %></span></h4>
             <h4 class="product__stock">
                 <span class="product__label">Stock:</span>
+                <%-- Las clases CSS stock-cero y stock-bajo aplican colores de alerta visual --%>
                 <span class="product__value <%= p.getStock() == 0 ? "stock-cero" : p.getStock() <= 3 ? "stock-bajo" : "" %>">
                     <%= p.getStock() %>
                     <% if (p.getStock() == 0) { %><i class="fa-solid fa-circle-xmark" title="Sin stock"></i>
@@ -222,9 +273,10 @@
             </h4>
             <h4 class="product__date"><span class="product__label">En stock desde:</span> <span class="product__value"><%= p.getFechaRegistro() != null ? formato.format(p.getFechaRegistro()) : "N/A" %></span></h4>
             <div class="iconos">
-                <a href="<%=request.getContextPath()%>/ProductoServlet?action=ver&id=<%= p.getProductoId() %>" title="Ver"><i class="fas fa-eye"></i></a>
-                <a href="<%=request.getContextPath()%>/ProductoServlet?action=editar&id=<%= p.getProductoId() %>" title="Editar"><i class="fa-solid fa-pen-to-square"></i></a>
-                <a href="<%=request.getContextPath()%>/ProductoServlet?action=confirmarEliminar&id=<%= p.getProductoId() %>" title="Eliminar"><i class="fa-solid fa-trash"></i></a>
+                <a href="<%=request.getContextPath()%>/ProductoServlet?action=ver&id=<%= p.getProductoId() %>"            title="Ver detalle"><i class="fas fa-eye"></i></a>
+                <a href="<%=request.getContextPath()%>/ProductoServlet?action=editar&id=<%= p.getProductoId() %>"         title="Editar producto"><i class="fa-solid fa-pen-to-square"></i></a>
+                <%-- El enlace eliminar pasa por ProductoServlet que muestra la confirmación --%>
+                <a href="<%=request.getContextPath()%>/ProductoServlet?action=confirmarEliminar&id=<%= p.getProductoId() %>" title="Eliminar producto"><i class="fa-solid fa-trash"></i></a>
             </div>
         </div>
         <% } %>
@@ -248,11 +300,14 @@
     var hiddenQ           = document.getElementById('hiddenQ');
     var formBusqueda      = document.getElementById('formBusqueda');
 
+    // Muestra solo el input correspondiente al filtro activo y oculta los demás.
+    // Esto evita mostrar controles irrelevantes al usuario.
     function mostrarInput(filtro) {
         searchWrap.style.display       = (filtro === 'todos' || filtro === 'nombre') ? '' : 'none';
         wrapMaterial.style.display     = filtro === 'material'     ? '' : 'none';
         wrapSubcategoria.style.display = filtro === 'subcategoria' ? '' : 'none';
         wrapStock.style.display        = filtro === 'stock'        ? '' : 'none';
+        // Pequeño delay para enfocar el input después de que el DOM lo hace visible
         setTimeout(function () {
             if (filtro === 'todos' || filtro === 'nombre') buscadorTexto.focus();
             else if (filtro === 'material')     selectMaterial.focus();
@@ -261,14 +316,17 @@
         }, 60);
     }
 
+    // Rellena el formulario oculto y lo envía. El servidor procesará la búsqueda y hará forward a este JSP.
     function enviar(filtro, valor) {
         hiddenFiltro.value = filtro;
         hiddenQ.value      = valor || '';
         formBusqueda.submit();
     }
 
+    // Al cargar la página se muestra el input correcto según el filtro que venía en la URL
     mostrarInput(filtroActivo);
 
+    // Al cambiar de filtro, se actualiza la vista y si es "todos" se limpia la búsqueda
     document.querySelectorAll('.filter-btn').forEach(function (btn) {
         btn.addEventListener('click', function () {
             document.querySelectorAll('.filter-btn').forEach(function (b) { b.classList.remove('active'); });
@@ -279,14 +337,17 @@
         });
     });
 
+    // Enviar búsqueda de texto al presionar Enter
     buscadorTexto.addEventListener('keydown', function (e) {
         if (e.key === 'Enter') { e.preventDefault(); enviar(filtroActivo === 'nombre' ? 'nombre' : 'todos', buscadorTexto.value.trim()); }
     });
 
+    // Enviar búsqueda por stock al presionar Enter
     inputStock.addEventListener('keydown', function (e) {
         if (e.key === 'Enter') { e.preventDefault(); enviar('stock', inputStock.value.trim()); }
     });
 
+    // Los selects envían automáticamente al cambiar el valor seleccionado
     selectMaterial.addEventListener('change', function () { if (this.value) enviar('material', this.value); });
     selectSubcategoria.addEventListener('change', function () { if (this.value) enviar('subcategoria', this.value); });
 }());

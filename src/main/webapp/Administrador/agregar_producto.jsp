@@ -16,6 +16,11 @@
     }
 
     String error = (String) request.getAttribute("error");
+
+    // IDs de subcategorías preseleccionadas (cuando hay error y se reenvía el formulario)
+    java.util.List<Integer> subcatSeleccionadas = (pRec != null && pRec.getSubcategoriaIds() != null)
+        ? pRec.getSubcategoriaIds()
+        : new java.util.ArrayList<>();
 %>
 <!DOCTYPE html>
 <html lang="es">
@@ -27,6 +32,45 @@
     <link rel="stylesheet" href="<%=request.getContextPath()%>/assets/css/forms-global.css">
     <link rel="stylesheet" href="<%=request.getContextPath()%>/assets/css/pages/Administrador/producto.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        /* ── Checkboxes de subcategoría ── */
+        .subcat-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 10px 0 4px;
+        }
+        .subcat-chip {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: #f3f0f9;
+            border: 1.5px solid #d1c4e9;
+            border-radius: 20px;
+            padding: 5px 14px;
+            cursor: pointer;
+            font-size: 0.82rem;
+            color: #4b3f72;
+            transition: background 0.15s, border-color 0.15s;
+            user-select: none;
+        }
+        .subcat-chip input[type="checkbox"] {
+            accent-color: #9177a8;
+            width: 15px;
+            height: 15px;
+            cursor: pointer;
+        }
+        .subcat-chip:has(input:checked) {
+            background: #e8e0f5;
+            border-color: #9177a8;
+            font-weight: 600;
+        }
+        .subcat-hint {
+            font-size: 0.75rem;
+            color: #6b7280;
+            margin-top: 4px;
+        }
+    </style>
 </head>
 <body>
 
@@ -96,7 +140,9 @@
                             <option value="">Seleccione material</option>
                             <% for (Material m : materiales) {
                                 boolean sel = pRec != null && pRec.getMaterialId() == m.getMaterialId(); %>
-                            <option value="<%= m.getMaterialId() %>" <%= sel ? "selected" : "" %>><%= m.getNombre() %></option>
+                            <option value="<%= m.getMaterialId() %>" <%= sel ? "selected" : "" %>>
+                                <%= m.getNombre() %>
+                            </option>
                             <% } %>
                         </select>
                         <div class="fs-bubble" id="err-materialId">
@@ -106,28 +152,7 @@
                     </div>
                 </div>
 
-                <!-- Subcategoría — SELECCIONABLE -->
-                <div class="fs-group">
-                    <label class="fs-label" for="subcategoriaId">
-                        <i class="fa-solid fa-layer-group"></i> Subcategoría *
-                    </label>
-                    <div class="fs-input-wrap">
-                        <select id="subcategoriaId" name="subcategoriaId" class="fs-input">
-                            <option value="">Seleccione subcategoría</option>
-                            <% if (subcategorias != null) {
-                                for (Subcategoria sc : subcategorias) {
-                                    boolean sel = pRec != null && pRec.getSubcategoriaId() == sc.getSubcategoriaId(); %>
-                            <option value="<%= sc.getSubcategoriaId() %>" <%= sel ? "selected" : "" %>><%= sc.getNombre() %></option>
-                            <% } } %>
-                        </select>
-                        <div class="fs-bubble" id="err-subcategoriaId">
-                            <span class="fs-bubble-icon"><i class="fa-solid fa-circle-exclamation"></i></span>
-                            <span>Selecciona una subcategoría.</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Proveedor — OBLIGATORIO -->
+                <!-- Proveedor -->
                 <div class="fs-group">
                     <label class="fs-label" for="proveedorId">
                         <i class="fa-solid fa-truck"></i> Proveedor *
@@ -138,7 +163,9 @@
                             <% if (proveedores != null) {
                                 for (Proveedor prov : proveedores) {
                                     boolean sel = pRec != null && pRec.getProveedorId() == prov.getProveedorId(); %>
-                            <option value="<%= prov.getProveedorId() %>" <%= sel ? "selected" : "" %>><%= prov.getNombre() %></option>
+                            <option value="<%= prov.getProveedorId() %>" <%= sel ? "selected" : "" %>>
+                                <%= prov.getNombre() %>
+                            </option>
                             <% } } %>
                         </select>
                         <div class="fs-bubble" id="err-proveedorId">
@@ -178,12 +205,41 @@
                             <span>Mínimo esperado: (Costo x 2) + $5,000.</span>
                         </div>
                     </div>
-                    <small style="color: #6b7280; font-size: 0.8rem; margin-top: 4px; display: block;">
+                    <small style="color:#6b7280; font-size:0.8rem; margin-top:4px; display:block;">
                         Margen sugerido: Doble del costo + $5,000.
                     </small>
                 </div>
 
             </div>
+
+            <!-- ── SUBCATEGORÍAS: checkboxes tipo chip ── -->
+            <% if (subcategorias != null && !subcategorias.isEmpty()) { %>
+            <div class="fs-group" style="margin-top: 16px;">
+                <label class="fs-label">
+                    <i class="fa-solid fa-layer-group"></i> Subcategorías
+                    <span style="font-weight:400; color:#6b7280;">(opcional — selecciona una o varias)</span>
+                </label>
+                <div class="subcat-grid" id="subcatGrid">
+                    <% for (Subcategoria sc : subcategorias) {
+                        boolean checked = subcatSeleccionadas.contains(sc.getSubcategoriaId()); %>
+                    <label class="subcat-chip">
+                        <%-- CAMBIO CLAVE: name="subcategoriaIds" (plural) permite enviar múltiples valores --%>
+                        <input type="checkbox"
+                               name="subcategoriaIds"
+                               value="<%= sc.getSubcategoriaId() %>"
+                               <%= checked ? "checked" : "" %>>
+                        <%= sc.getNombre() %>
+                    </label>
+                    <% } %>
+                </div>
+                <p class="subcat-hint">
+                    <i class="fa-solid fa-circle-info"></i>
+                    Solo se muestran las subcategorías válidas para la categoría
+                    <strong><%= categoria.getNombre() %></strong>.
+                </p>
+            </div>
+            <% } %>
+
         </div>
 
         <!-- ── SECCIÓN 2: Descripción e Imagen ── -->
@@ -233,15 +289,14 @@
         </div>
 
         <!-- ── INFO: Stock ── -->
-        <div class="fs-section" style="background:#f0fdf4; border-left: 4px solid #22c55e;">
+        <div class="fs-section" style="background:#f0fdf4; border-left:4px solid #22c55e;">
             <div class="fs-section-title" style="color:#15803d;">
                 <i class="fa-solid fa-boxes-stacked"></i> Stock
             </div>
             <p style="color:#166534; font-size:0.9rem; margin:0;">
                 <i class="fa-solid fa-circle-info"></i>
                 El stock inicial es <strong>0</strong>. Se incrementará automáticamente
-                cuando registres una compra a este proveedor y se incluya este producto.
-                Disminuirá al registrar ventas.
+                cuando registres una compra que incluya este producto.
             </p>
         </div>
 
@@ -259,7 +314,8 @@
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-const campos = ['nombre', 'precioUnitario', 'precioVenta', 'materialId', 'subcategoriaId', 'proveedorId', 'imagen', 'descripcion'];
+// subcategoriaId ya no está en la lista de campos obligatorios
+const campos = ['nombre', 'precioUnitario', 'precioVenta', 'materialId', 'proveedorId', 'imagen', 'descripcion'];
 
 const inputCosto = document.getElementById('precioUnitario');
 const inputVenta = document.getElementById('precioVenta');
@@ -277,10 +333,8 @@ inputCosto.addEventListener('input', () => {
 
 const textareaDesc = document.getElementById('descripcion');
 const charCounter  = document.getElementById('charCounter');
-
 function actualizarContador() {
-    const len = textareaDesc.value.length;
-    charCounter.textContent = len + ' / 500';
+    charCounter.textContent = textareaDesc.value.length + ' / 500';
 }
 textareaDesc.addEventListener('input', actualizarContador);
 actualizarContador();
@@ -291,8 +345,7 @@ function esValido(id) {
     const valor = el.value.trim();
     switch (id) {
         case 'nombre': {
-            const regex = /^[a-zA-Z0-9\sñÑáéíóúÁÉÍÓÚ]+$/;
-            return valor !== '' && regex.test(valor);
+            return valor !== '' && /^[a-zA-Z0-9\sñÑáéíóúÁÉÍÓÚ]+$/.test(valor);
         }
         case 'precioUnitario': {
             const v = parseFloat(valor);
@@ -301,11 +354,9 @@ function esValido(id) {
         case 'precioVenta': {
             const venta = parseFloat(valor);
             const costo = parseFloat(inputCosto.value) || 0;
-            const minimo = (costo * 2) + 5000;
-            return !isNaN(venta) && venta >= minimo;
+            return !isNaN(venta) && venta >= (costo * 2) + 5000;
         }
         case 'materialId':
-        case 'subcategoriaId':
         case 'proveedorId':
             return valor !== '';
         case 'imagen':
@@ -322,7 +373,6 @@ function mostrarErr(id) {
     el.classList.add('invalid');
     const b = document.getElementById('err-' + id); if (b) b.classList.add('visible');
 }
-
 function ocultarErr(id) {
     const el = document.getElementById(id); if (!el) return;
     el.classList.remove('invalid');
@@ -350,7 +400,7 @@ function previsualizarImagen(input) {
     }
 }
 
-document.getElementById('formProducto').addEventListener('submit', function (e) {
+document.getElementById('formProducto').addEventListener('submit', function(e) {
     e.preventDefault();
     let errores = 0;
     campos.forEach(id => {
@@ -362,7 +412,7 @@ document.getElementById('formProducto').addEventListener('submit', function (e) 
         Swal.fire({
             icon: 'warning',
             title: 'Revisa el formulario',
-            text: 'Hay campos con errores. Asegúrate de seleccionar una subcategoría, un proveedor, completar todos los campos y que el precio de venta sea al menos el doble del costo más $5,000.',
+            text: 'Hay campos con errores. Completa todos los campos obligatorios y verifica que el precio de venta sea al menos el doble del costo más $5,000.',
             confirmButtonColor: '#9177a8'
         });
         return;

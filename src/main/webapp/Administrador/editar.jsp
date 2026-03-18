@@ -13,7 +13,13 @@
         response.sendRedirect(request.getContextPath() + "/CategoriaServlet");
         return;
     }
+
     String error = (String) request.getAttribute("error");
+
+    // IDs de subcategorías actualmente asignadas a este producto
+    java.util.List<Integer> subcatAsignadas = producto.getSubcategoriaIds() != null
+        ? producto.getSubcategoriaIds()
+        : new java.util.ArrayList<>();
 %>
 <!DOCTYPE html>
 <html lang="es">
@@ -41,6 +47,44 @@
             gap: 5px;
         }
         .campo-protegido-info i { color: #9177a8; }
+
+        /* ── Checkboxes de subcategoría ── */
+        .subcat-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 10px 0 4px;
+        }
+        .subcat-chip {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: #f3f0f9;
+            border: 1.5px solid #d1c4e9;
+            border-radius: 20px;
+            padding: 5px 14px;
+            cursor: pointer;
+            font-size: 0.82rem;
+            color: #4b3f72;
+            transition: background 0.15s, border-color 0.15s;
+            user-select: none;
+        }
+        .subcat-chip input[type="checkbox"] {
+            accent-color: #9177a8;
+            width: 15px;
+            height: 15px;
+            cursor: pointer;
+        }
+        .subcat-chip:has(input:checked) {
+            background: #e8e0f5;
+            border-color: #9177a8;
+            font-weight: 600;
+        }
+        .subcat-hint {
+            font-size: 0.75rem;
+            color: #6b7280;
+            margin-top: 4px;
+        }
     </style>
 </head>
 <body>
@@ -82,12 +126,11 @@
           action="<%= request.getContextPath() %>/ProductoServlet"
           enctype="multipart/form-data">
 
-        <input type="hidden" name="action"        value="actualizar">
-        <input type="hidden" name="productoId"    value="<%= producto.getProductoId() %>">
-        <input type="hidden" name="imagenActual"  value="<%= producto.getImagen() != null ? producto.getImagen() : "" %>">
-        <input type="hidden" name="categoriaId"   value="<%= producto.getCategoriaId() %>">
-        <%-- Enviamos precio costo real como hidden para que el servlet lo reciba aunque el visible sea readonly --%>
-        <input type="hidden" name="precioUnitario" id="precioUnitarioHidden" value="<%= producto.getPrecioUnitario() %>">
+        <input type="hidden" name="action"           value="actualizar">
+        <input type="hidden" name="productoId"       value="<%= producto.getProductoId() %>">
+        <input type="hidden" name="imagenActual"     value="<%= producto.getImagen() != null ? producto.getImagen() : "" %>">
+        <input type="hidden" name="categoriaId"      value="<%= producto.getCategoriaId() %>">
+        <input type="hidden" name="precioUnitario"   id="precioUnitarioHidden" value="<%= producto.getPrecioUnitario() %>">
 
         <div class="fs-product-layout">
 
@@ -126,7 +169,7 @@
                                    title="Solo se permiten letras y números" required>
                         </div>
 
-                        <!-- Precio Costo — PROTEGIDO (actualizado vía Compras) -->
+                        <!-- Precio Costo — PROTEGIDO -->
                         <div class="fs-group">
                             <label class="fs-label">
                                 <i class="fa-solid fa-dollar-sign"></i> Precio de Costo
@@ -150,7 +193,7 @@
                                    value="<%= producto.getPrecioVenta() %>" required>
                         </div>
 
-                        <!-- Stock — PROTEGIDO (actualizado vía Ventas o Compras) -->
+                        <!-- Stock — PROTEGIDO -->
                         <div class="fs-group">
                             <label class="fs-label">
                                 <i class="fa-solid fa-boxes-stacked"></i> Stock actual
@@ -179,26 +222,8 @@
                             </select>
                         </div>
 
-                        <!-- Subcategoría -->
-                        <div class="fs-group">
-                            <label class="fs-label">
-                                <i class="fa-solid fa-layer-group"></i> Subcategoría
-                            </label>
-                            <select name="subcategoriaId" class="fs-input">
-                                <option value="">— Sin subcategoría —</option>
-                                <% if (subcategorias != null) {
-                                    for (Subcategoria s : subcategorias) { %>
-                                <option value="<%= s.getSubcategoriaId() %>"
-                                    <%= producto.getSubcategoriaId() == s.getSubcategoriaId() ? "selected" : "" %>>
-                                    <%= s.getNombre() %>
-                                </option>
-                                <%  }
-                                   } %>
-                            </select>
-                        </div>
-
                         <!-- Proveedor -->
-                        <div class="fs-group fs-group--full">
+                        <div class="fs-group">
                             <label class="fs-label">
                                 <i class="fa-solid fa-truck" style="color:#7c3aed;"></i> Proveedor *
                             </label>
@@ -206,15 +231,13 @@
                                 <option value="">— Selecciona un proveedor —</option>
                                 <% if (proveedores != null) {
                                     for (Proveedor prov : proveedores) {
-                                        boolean seleccionado = producto.getProveedorId() == prov.getProveedorId();
-                                %>
+                                        boolean seleccionado = producto.getProveedorId() == prov.getProveedorId(); %>
                                 <option value="<%= prov.getProveedorId() %>"
                                     <%= seleccionado ? "selected" : "" %>
                                     <%= !prov.isEstado() ? "style=\"color:#9ca3af;\"" : "" %>>
                                     <%= prov.getNombre() %><%= !prov.isEstado() ? " (Inactivo)" : "" %>
                                 </option>
-                                <%  }
-                                   } %>
+                                <% } } %>
                             </select>
                             <span class="campo-protegido-info">
                                 <i class="fa-solid fa-circle-info"></i>
@@ -236,6 +259,35 @@
                         </div>
 
                     </div>
+
+                    <!-- ── SUBCATEGORÍAS: checkboxes tipo chip ── -->
+                    <% if (subcategorias != null && !subcategorias.isEmpty()) { %>
+                    <div class="fs-group" style="margin-top: 16px;">
+                        <label class="fs-label">
+                            <i class="fa-solid fa-layer-group"></i> Subcategorías
+                            <span style="font-weight:400; color:#6b7280;">(selecciona una o varias)</span>
+                        </label>
+                        <div class="subcat-grid">
+                            <% for (Subcategoria s : subcategorias) {
+                                boolean checked = subcatAsignadas.contains(s.getSubcategoriaId()); %>
+                            <label class="subcat-chip">
+                                <%-- CAMBIO CLAVE: name="subcategoriaIds" (plural) --%>
+                                <input type="checkbox"
+                                       name="subcategoriaIds"
+                                       value="<%= s.getSubcategoriaId() %>"
+                                       <%= checked ? "checked" : "" %>>
+                                <%= s.getNombre() %>
+                            </label>
+                            <% } %>
+                        </div>
+                        <p class="subcat-hint">
+                            <i class="fa-solid fa-circle-info"></i>
+                            Solo se muestran las subcategorías válidas para la categoría de este producto.
+                            Si desmarcar todas, el producto quedará sin subcategoría.
+                        </p>
+                    </div>
+                    <% } %>
+
                 </div>
 
                 <div class="fs-actions" style="margin-top:20px; padding-top:20px;">
@@ -287,25 +339,17 @@ document.getElementById('formEditar').addEventListener('submit', function(e) {
         Swal.fire('Nombre inválido', 'El nombre solo debe contener letras y números.', 'error');
         return;
     }
-
-    if (!proveedor || proveedor === '') {
+    if (!proveedor) {
         Swal.fire({ icon: 'warning', title: 'Proveedor requerido', text: 'Debes seleccionar un proveedor.', confirmButtonColor: '#7c3aed' });
         document.getElementById('proveedorId').focus();
         return;
     }
-
-    if (costo >= venta) {
+    if (isNaN(venta) || venta <= costo) {
         Swal.fire({ icon: 'warning', title: 'Error en Precios', text: 'El precio de venta debe ser mayor al precio de costo.', confirmButtonColor: '#7c3aed' });
         return;
     }
-
     if (desc.length < 10) {
         Swal.fire({ icon: 'info', title: 'Descripción breve', text: 'Brinde una descripción más detallada (mín. 10 caracteres).', confirmButtonColor: '#7c3aed' });
-        return;
-    }
-
-    if (/(.)\1{4,}/.test(desc.replace(/\s/g, ''))) {
-        Swal.fire({ icon: 'error', title: 'Contenido inválido', text: 'La descripción parece contener texto repetitivo.', confirmButtonColor: '#7c3aed' });
         return;
     }
 
@@ -313,11 +357,11 @@ document.getElementById('formEditar').addEventListener('submit', function(e) {
         title: '¿Confirmar cambios?',
         text: 'Se actualizará la información del producto.',
         icon: 'question',
-        showCancelButton: true,
+        showCancelButton:   true,
         confirmButtonColor: '#7c3aed',
-        cancelButtonColor: '#6b7280',
-        confirmButtonText: 'Sí, guardar',
-        cancelButtonText: 'Revisar'
+        cancelButtonColor:  '#6b7280',
+        confirmButtonText:  'Sí, guardar',
+        cancelButtonText:   'Revisar'
     }).then(result => {
         if (result.isConfirmed) {
             Swal.fire({ title: 'Procesando...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });

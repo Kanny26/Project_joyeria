@@ -15,6 +15,8 @@ import javax.servlet.http.*;
 import java.io.*;
 import java.math.BigDecimal;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 @WebServlet("/ProductoServlet")
 @MultipartConfig(
@@ -45,15 +47,12 @@ public class ProductoServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
         if (!estaAutenticado(request, response)) return;
-
         String action = request.getParameter("action");
         if (action == null || action.isBlank()) {
             response.sendRedirect(request.getContextPath() + "/CategoriaServlet");
             return;
         }
-
         try {
             switch (action) {
                 case "nuevo"             -> mostrarFormularioNuevo(request, response);
@@ -74,16 +73,13 @@ public class ProductoServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
         if (!estaAutenticado(request, response)) return;
         request.setCharacterEncoding("UTF-8");
-
         String action = request.getParameter("action");
         if (action == null || action.isBlank()) {
             response.sendRedirect(request.getContextPath() + "/CategoriaServlet");
             return;
         }
-
         try {
             switch (action) {
                 case "guardar"      -> guardarProducto(request, response);
@@ -103,22 +99,18 @@ public class ProductoServlet extends HttpServlet {
     // ══════════════════════════════════════════════════════════
     private void guardarProducto(HttpServletRequest request, HttpServletResponse response)
             throws Exception {
-
         Administrador admin = (Administrador) request.getSession().getAttribute("admin");
         Producto p = construirProductoDesdeRequest(request);
 
-        // Validar imagen obligatoria en creación
         if (p.getImagenData() == null || p.getImagenData().length == 0) {
             reenviarFormularioNuevo(request, response, p, "Selecciona una imagen para el producto.");
             return;
         }
-
         String error = validarProducto(p);
         if (error != null) {
             reenviarFormularioNuevo(request, response, p, error);
             return;
         }
-
         try {
             productoDAO.guardar(p, admin.getId());
             response.sendRedirect(request.getContextPath()
@@ -135,29 +127,22 @@ public class ProductoServlet extends HttpServlet {
     // ══════════════════════════════════════════════════════════
     private void actualizarProducto(HttpServletRequest request, HttpServletResponse response)
             throws Exception {
-
         String idStr = request.getParameter("productoId");
         if (idStr == null || !idStr.matches("\\d+")) {
             response.sendRedirect(request.getContextPath() + "/CategoriaServlet");
             return;
         }
-
         Producto p = construirProductoDesdeRequest(request);
         p.setProductoId(Integer.parseInt(idStr));
 
         String error = validarProducto(p);
         if (error != null) {
             request.setAttribute("error", error);
-            request.setAttribute("producto", p);
-            request.setAttribute("materiales",    materialDAO.listarMateriales());
-            request.setAttribute("subcategorias", subcategoriaDAO.listarTodas());
-            request.setAttribute("proveedores",   proveedorDAO.listarProveedores());
+            cargarAtributosFormulario(request, p);
             request.getRequestDispatcher("/Administrador/editar.jsp").forward(request, response);
             return;
         }
-
         Administrador admin = (Administrador) request.getSession().getAttribute("admin");
-
         try {
             productoDAO.actualizar(p, admin.getId());
             response.sendRedirect(request.getContextPath()
@@ -165,20 +150,19 @@ public class ProductoServlet extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("error", "Error al actualizar: " + e.getMessage());
-            request.setAttribute("producto", p);
-            request.setAttribute("materiales",    materialDAO.listarMateriales());
-            request.setAttribute("subcategorias", subcategoriaDAO.listarTodas());
-            request.setAttribute("proveedores",   proveedorDAO.listarProveedores());
+            cargarAtributosFormulario(request, p);
             request.getRequestDispatcher("/Administrador/editar.jsp").forward(request, response);
         }
     }
 
     // ══════════════════════════════════════════════════════════
     // CONSTRUIR Producto desde request
+    // CAMBIO: se leen los IDs de subcategoría como array de parámetros
+    // (getParameterValues), porque el formulario envía múltiples checkboxes
+    // o un select múltiple con el mismo nombre "subcategoriaIds".
     // ══════════════════════════════════════════════════════════
     private Producto construirProductoDesdeRequest(HttpServletRequest request)
             throws IOException, ServletException {
-
         Producto p = new Producto();
         p.setNombre(request.getParameter("nombre"));
         p.setDescripcion(request.getParameter("descripcion"));
@@ -187,10 +171,19 @@ public class ProductoServlet extends HttpServlet {
         p.setPrecioVenta(parsearBigDecimal(request.getParameter("precioVenta"), BigDecimal.ZERO));
         p.setCategoriaId(parsearInt(request.getParameter("categoriaId"), 0));
         p.setMaterialId(parsearInt(request.getParameter("materialId"), 0));
-        p.setSubcategoriaId(parsearInt(request.getParameter("subcategoriaId"), 0));
-
-        // CORRECCIÓN CLAVE: proveedorId es OBLIGATORIO — viene del select del formulario
         p.setProveedorId(parsearInt(request.getParameter("proveedorId"), 0));
+
+        // CAMBIO: subcategorías como lista de IDs desde checkboxes o select múltiple
+        // En el JSP los inputs deben llamarse "subcategoriaIds" (puede venir varios)
+        String[] subcatParams = request.getParameterValues("subcategoriaIds");
+        List<Integer> subcatIds = new ArrayList<>();
+        if (subcatParams != null) {
+            for (String s : subcatParams) {
+                int id = parsearInt(s, 0);
+                if (id > 0) subcatIds.add(id);
+            }
+        }
+        p.setSubcategoriaIds(subcatIds);
 
         Part filePart = request.getPart("imagen");
         if (filePart != null && filePart.getSize() > 0) {
@@ -201,7 +194,6 @@ public class ProductoServlet extends HttpServlet {
         } else {
             p.setImagen(request.getParameter("imagenActual"));
         }
-
         return p;
     }
 
@@ -221,20 +213,17 @@ public class ProductoServlet extends HttpServlet {
             return "El precio de costo debe ser mayor a 0.";
         if (p.getPrecioVenta() == null || p.getPrecioVenta().compareTo(p.getPrecioUnitario()) < 0)
             return "El precio de venta no puede ser menor al precio de costo.";
-
-        // Validar margen mínimo: (costo * 2) + 5000
         BigDecimal minimo = p.getPrecioUnitario()
                              .multiply(new BigDecimal("2"))
                              .add(new BigDecimal("5000"));
         if (p.getPrecioVenta().compareTo(minimo) < 0)
             return "El precio de venta debe ser al menos el doble del costo + $5,000 "
                    + "(mínimo esperado: $" + minimo.toPlainString() + ").";
-
         return null;
     }
 
     // ══════════════════════════════════════════════════════════
-    // AJUSTE MANUAL DE STOCK (AJAX desde ver-producto.jsp)
+    // AJUSTE MANUAL DE STOCK (AJAX)
     // ══════════════════════════════════════════════════════════
     private void ajustarStock(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
@@ -248,18 +237,15 @@ public class ProductoServlet extends HttpServlet {
                 out.write("{\"ok\":false,\"error\":\"Sesión expirada.\"}");
                 return;
             }
-            int productoId = Integer.parseInt(request.getParameter("productoId"));
-            int nuevoStock = Integer.parseInt(request.getParameter("nuevoStock"));
-            int cantidad   = Integer.parseInt(request.getParameter("cantidad"));
-            String tipo    = request.getParameter("tipo");
-            String motivo  = request.getParameter("motivo");
-
+            int    productoId = Integer.parseInt(request.getParameter("productoId"));
+            int    nuevoStock = Integer.parseInt(request.getParameter("nuevoStock"));
+            int    cantidad   = Integer.parseInt(request.getParameter("cantidad"));
+            String tipo       = request.getParameter("tipo");
+            String motivo     = request.getParameter("motivo");
             if (nuevoStock < 0) throw new IllegalArgumentException("El stock no puede ser negativo.");
-
             productoDAO.actualizarStock(productoId, nuevoStock);
             productoDAO.registrarMovimiento(
                 productoId, admin.getId(), tipo, cantidad, "Ajuste manual: " + motivo.trim());
-
             out.write("{\"ok\":true}");
         } catch (Exception e) {
             out.write("{\"ok\":false,\"error\":\"" + e.getMessage() + "\"}");
@@ -284,6 +270,9 @@ public class ProductoServlet extends HttpServlet {
 
     // ══════════════════════════════════════════════════════════
     // HELPERS DE NAVEGACIÓN
+    // CAMBIO: mostrarFormularioNuevo y mostrarFormularioEditar ahora cargan
+    // las subcategorías disponibles FILTRADAS por la categoría del producto,
+    // usando categoriaDAO.obtenerSubcategoriasDisponibles(categoriaId).
     // ══════════════════════════════════════════════════════════
     private void mostrarFormularioNuevo(HttpServletRequest request, HttpServletResponse response)
             throws Exception {
@@ -292,11 +281,15 @@ public class ProductoServlet extends HttpServlet {
             response.sendRedirect(request.getContextPath() + "/CategoriaServlet");
             return;
         }
-        request.setAttribute("categoria",     categoriaDAO.obtenerPorId(Integer.parseInt(catIdStr)));
-        request.setAttribute("materiales",    materialDAO.listarMateriales());
-        request.setAttribute("subcategorias", subcategoriaDAO.listarTodas());
-        request.setAttribute("proveedores",   proveedorDAO.listarProveedores());
-        request.getRequestDispatcher("/Administrador/agregar_producto.jsp").forward(request, response);
+        int catId = Integer.parseInt(catIdStr);
+        request.setAttribute("categoria",    categoriaDAO.obtenerPorId(catId));
+        request.setAttribute("materiales",   materialDAO.listarMateriales());
+        request.setAttribute("proveedores",  proveedorDAO.listarProveedores());
+        // CAMBIO: solo las subcategorías válidas para esta categoría
+        request.setAttribute("subcategorias",
+            categoriaDAO.obtenerSubcategoriasDisponibles(catId));
+        request.getRequestDispatcher("/Administrador/agregar_producto.jsp")
+               .forward(request, response);
     }
 
     private void verProducto(HttpServletRequest request, HttpServletResponse response)
@@ -304,7 +297,8 @@ public class ProductoServlet extends HttpServlet {
         Producto p = obtenerProductoPorParam(request, response);
         if (p != null) {
             request.setAttribute("producto", p);
-            request.getRequestDispatcher("/Administrador/ver-producto.jsp").forward(request, response);
+            request.getRequestDispatcher("/Administrador/ver-producto.jsp")
+                   .forward(request, response);
         }
     }
 
@@ -312,10 +306,12 @@ public class ProductoServlet extends HttpServlet {
             throws Exception {
         Producto p = obtenerProductoPorParam(request, response);
         if (p != null) {
-            request.setAttribute("producto",      p);
-            request.setAttribute("materiales",    materialDAO.listarMateriales());
-            request.setAttribute("subcategorias", subcategoriaDAO.listarTodas());
-            request.setAttribute("proveedores",   proveedorDAO.listarProveedores());
+            request.setAttribute("producto",     p);
+            request.setAttribute("materiales",   materialDAO.listarMateriales());
+            request.setAttribute("proveedores",  proveedorDAO.listarProveedores());
+            // CAMBIO: subcategorías filtradas por la categoría actual del producto
+            request.setAttribute("subcategorias",
+                categoriaDAO.obtenerSubcategoriasDisponibles(p.getCategoriaId()));
             request.getRequestDispatcher("/Administrador/editar.jsp").forward(request, response);
         }
     }
@@ -330,14 +326,26 @@ public class ProductoServlet extends HttpServlet {
     }
 
     private void reenviarFormularioNuevo(HttpServletRequest request, HttpServletResponse response,
-                                         Producto p, String error) throws Exception {
-        request.setAttribute("error",         error);
-        request.setAttribute("producto",      p);
-        request.setAttribute("categoria",     categoriaDAO.obtenerPorId(p.getCategoriaId()));
-        request.setAttribute("materiales",    materialDAO.listarMateriales());
-        request.setAttribute("subcategorias", subcategoriaDAO.listarTodas());
-        request.setAttribute("proveedores",   proveedorDAO.listarProveedores());
-        request.getRequestDispatcher("/Administrador/agregar_producto.jsp").forward(request, response);
+                                          Producto p, String error) throws Exception {
+        request.setAttribute("error",        error);
+        request.setAttribute("producto",     p);
+        request.setAttribute("categoria",    categoriaDAO.obtenerPorId(p.getCategoriaId()));
+        request.setAttribute("materiales",   materialDAO.listarMateriales());
+        request.setAttribute("proveedores",  proveedorDAO.listarProveedores());
+        request.setAttribute("subcategorias",
+            categoriaDAO.obtenerSubcategoriasDisponibles(p.getCategoriaId()));
+        request.getRequestDispatcher("/Administrador/agregar_producto.jsp")
+               .forward(request, response);
+    }
+
+    /** Helper: carga atributos comunes para los formularios de edición con error. */
+    private void cargarAtributosFormulario(HttpServletRequest request, Producto p)
+            throws Exception {
+        request.setAttribute("producto",     p);
+        request.setAttribute("materiales",   materialDAO.listarMateriales());
+        request.setAttribute("proveedores",  proveedorDAO.listarProveedores());
+        request.setAttribute("subcategorias",
+            categoriaDAO.obtenerSubcategoriasDisponibles(p.getCategoriaId()));
     }
 
     // ══════════════════════════════════════════════════════════
@@ -353,8 +361,8 @@ public class ProductoServlet extends HttpServlet {
         return true;
     }
 
-    private Producto obtenerProductoPorParam(HttpServletRequest request, HttpServletResponse response)
-            throws Exception {
+    private Producto obtenerProductoPorParam(HttpServletRequest request,
+                                              HttpServletResponse response) throws Exception {
         String idStr = request.getParameter("id");
         if (idStr == null || !idStr.matches("\\d+")) {
             response.sendRedirect(request.getContextPath() + "/CategoriaServlet");

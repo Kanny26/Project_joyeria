@@ -6,6 +6,10 @@ import java.util.List;
 /**
  * Modelo Proveedor — mapea la tabla Proveedor del SQL.
  * Tabla: Proveedor(proveedor_id, nombre, documento, fecha_registro, fecha_inicio, estado)
+ *
+ * Esta clase representa un proveedor del sistema. Además de los campos
+ * básicos, incluye listas de contacto (teléfonos, correos) y relaciones
+ * con materiales y productos que este proveedor suministra.
  */
 public class Proveedor {
     private Integer proveedorId; // PK real de la tabla Proveedor
@@ -13,8 +17,8 @@ public class Proveedor {
     private Boolean estado;
     private String documento;
     private String fechaRegistro;
-    private String fechaInicio; // ■■ RF11: Campo inmutable
-    private Double minimoCompra; // ■■ RF12
+    private String fechaInicio; // 
+    private Double minimoCompra; // 
 
     // Relaciones (cargadas con JOINs o consultas adicionales)
     private List<String> telefonos;
@@ -22,6 +26,8 @@ public class Proveedor {
     private List<Material> materiales;
     private List<Producto> productos;
 
+    // Se inicializan las listas al crear un proveedor para evitar NullPointerException
+    // al intentar agregar elementos antes de asignar valores
     public Proveedor() {
         this.telefonos = new ArrayList<>();
         this.correos = new ArrayList<>();
@@ -29,7 +35,6 @@ public class Proveedor {
         this.productos = new ArrayList<>();
     }
 
-    // ■■ Getters y Setters Principales ■■
     public Integer getProveedorId() { return proveedorId; }
     public void setProveedorId(Integer proveedorId) { this.proveedorId = proveedorId; }
 
@@ -39,6 +44,7 @@ public class Proveedor {
     public String getNombre() { return nombre; }
     public void setNombre(String nombre) { this.nombre = nombre; }
 
+    // Si estado es null (dato incompleto en BD), se asume activo por defecto
     public Boolean isEstado() { return estado != null ? estado : true; }
     public void setEstado(Boolean estado) { this.estado = estado; }
 
