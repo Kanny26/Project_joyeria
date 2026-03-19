@@ -286,18 +286,18 @@ public class ProveedorServlet extends HttpServlet {
             }
         }
 
-        // 🔍 DEBUG: Imprimir datos recibidos
-        System.out.println("📦 Guardando proveedor: " + p.getNombre());
-        System.out.println("   Documento: " + p.getDocumento());
-        System.out.println("   Estado: " + p.isEstado());
-        System.out.println("   Teléfonos: " + telefonos);
-        System.out.println("   Correos: " + correos);
-        System.out.println("   Materiales: " + materialesIds);
+        
+
+
+
+
+
+
 
         // Validar campos obligatorios y unicidad del documento
         String error = validarProveedor(p, true);
         if (error != null) {
-            System.err.println("❌ Validación fallida: " + error);
+
             reenviarFormProveedor(request, response, error, p, "/Administrador/proveedores/agregar.jsp"); 
             return;
         }
@@ -320,16 +320,16 @@ public class ProveedorServlet extends HttpServlet {
 
         try {
             if (proveedorDAO.guardar(p, telefonos, correos, materialesIds, admin.getId())) {
-                System.out.println("✅ Proveedor guardado exitosamente");
+
                 // sendRedirect evita que al refrescar el navegador se reenvíe el formulario (patrón POST-Redirect-GET)
                 // El parámetro msg=creado es recibido por el listado para mostrar la alerta de éxito
                 response.sendRedirect(request.getContextPath() + "/ProveedorServlet?action=listar&msg=creado");
             } else {
-                System.err.println("❌ proveedorDAO.guardar() retornó false");
+
                 reenviarFormProveedor(request, response, "Error: El documento ya existe o hubo un fallo en la base de datos.", p, "/Administrador/proveedores/agregar.jsp");
             }
         } catch (Exception e) {
-            System.err.println("❌ Excepción al guardar proveedor: " + e.getMessage());
+
             e.printStackTrace();
             reenviarFormProveedor(request, response, "Error interno: " + e.getMessage(), p, "/Administrador/proveedores/agregar.jsp");
         }

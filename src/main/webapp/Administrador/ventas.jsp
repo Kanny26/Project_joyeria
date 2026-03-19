@@ -243,6 +243,7 @@
                 <span class="pill pill--total"><i class="fa-solid fa-file-invoice-dollar"></i> Total ventas: <%= totalVentas %></span>
                 <% if (conSaldoPendiente > 0) { %>
                 <span class="pill pill--danger"><i class="fa-solid fa-clock"></i> Con saldo pendiente: <%= conSaldoPendiente %></span>
+                
                 <% } %>
             </div>
         </div>
@@ -266,7 +267,9 @@
             <button class="filter-btn" data-filtro="efectivo">Efectivo</button>
             <button class="filter-btn" data-filtro="tarjeta">Tarjeta</button>
             <button class="filter-btn" data-filtro="anticipo">Anticipo</button>
-            <button class="filter-btn" data-filtro="con_postventa">Con postventa</button>
+            <a href="<%= request.getContextPath() %>/Administrador/postventa/listar" >
+		            <span class="filter-btn">Casos postventa</span>
+    		</a>
         </div>
     </div>
 
@@ -377,10 +380,7 @@
                     <i class="fa-solid fa-eye"></i> Ver detalle
                 </a>
                 <% if (totalCasosV > 0) { %>
-                <a href="<%= request.getContextPath() %>/Administrador/postventa/ver?id=<%= primerCasoId %>"
-                   class="btn-ver btn-ver--postventa">
-                    <i class="fa-solid fa-rotate-left"></i> Postventa
-                </a>
+                
                 <% } %>
             </div>
         </div>

@@ -8,22 +8,33 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import services.EmailService;
 
+/**
+ * Servlet del módulo de ayuda y soporte técnico.
+ *
+ * Recibe el formulario de contacto desde ayuda.jsp y envía un correo
+ * al equipo de soporte con la consulta del administrador.
+ * Redirige de vuelta a ayuda.jsp con ?status=success o ?status=error
+ * para que el JSP muestre la alerta correspondiente.
+ */
 @WebServlet("/AyudaServlet")
 public class AyudaServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) 
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
-        // 1. Obtener los parámetros del formulario
-        String nombreAdmin = request.getParameter("nombreAdmin");
-        String asunto = request.getParameter("asunto");
-        String mensaje = request.getParameter("mensaje");
 
-        // 2. Llamar al método que agregamos en EmailService
+        // Leer los campos del formulario de ayuda
+        String nombreAdmin = request.getParameter("nombreAdmin");
+        String asunto      = request.getParameter("asunto");
+        String mensaje     = request.getParameter("mensaje");
+
+        // enviarConsultaSoporte() usa EmailService para enviar el correo al equipo de soporte.
+        // Retorna true si el envío fue exitoso, false si ocurrió algún error de conexión SMTP.
         boolean enviado = EmailService.enviarConsultaSoporte(nombreAdmin, asunto, mensaje);
 
-        // 3. Redirigir con una respuesta
+        // Se usa sendRedirect para evitar que al refrescar la página se reenvíe el formulario.
+        // El parámetro ?status indica al JSP si mostrar mensaje de éxito o error.
         if (enviado) {
             response.sendRedirect(request.getContextPath() + "/Administrador/ayuda.jsp?status=success");
         } else {

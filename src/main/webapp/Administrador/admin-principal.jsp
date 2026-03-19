@@ -34,6 +34,10 @@
     // ── NOTIFICACIONES REALES ──
     List<Map<String, String>> notificaciones = dashDAO.getNotificacionesAdmin();
 
+    // Rol de la sesión (para mostrar/ocultar enlace de auditoría)
+    String rolSesion = (String) session.getAttribute("rol");
+    boolean verAuditoria = "superadministrador".equals(rolSesion) || "administrador".equals(rolSesion);
+
     // Formatear moneda colombiana
     java.text.NumberFormat nf = java.text.NumberFormat.getInstance(new java.util.Locale("es","CO"));
     String ingresosFmt  = "$" + nf.format(ingresosMes.setScale(0, java.math.RoundingMode.HALF_UP));
@@ -52,14 +56,13 @@
 </head>
 <body>
 
-<!-- ══════════ NAVBAR ORIGINAL ══════════ -->
+<!-- ══════════ NAVBAR ══════════ -->
 <nav class="navbar-admin">
     <div class="navbar-admin__catalogo">
         <img src="<%=request.getContextPath()%>/assets/Imagenes/iconos/admin.png" alt="Admin">
         <h2>Volver al inicio</h2>
     </div>
     <h1 class="navbar-admin__title">AAC27</h1>
-    </div>
     <a href="<%=request.getContextPath()%>/CerrarSesionServlet" class="navbar-admin__home-link">
         <span class="navbar-admin__home-icon-wrap">
             <i class="fa-solid fa-right-from-bracket"></i>
@@ -105,23 +108,42 @@
                         <span class="icono-boton__titulo">Usuarios</span>
                     </a>
                     <a href="<%=request.getContextPath()%>/Administrador/ayuda.jsp" class="hero-icon-item">
-					    <div class="icono-boton__circulo">
-					        <img class="icono-boton__img" src="<%=request.getContextPath()%>/assets/Imagenes/iconos/preguntas.png" alt="Ayuda">
-					    </div>
-					    <span class="icono-boton__titulo">Preguntas</span>
-					</a>
+                        <div class="icono-boton__circulo">
+                            <img class="icono-boton__img" src="<%=request.getContextPath()%>/assets/Imagenes/iconos/preguntas.png" alt="Ayuda">
+                        </div>
+                        <span class="icono-boton__titulo">Preguntas</span>
+                    </a>
                 </div>
             </div>
             <!-- fecha flotante -->
             <span class="hero-card__date"><i class="far fa-calendar-alt"></i> <%= fechaHoy %></span>
         </div>
 
-        <!-- NOTIFICACIONES -->
+        <!-- ══ NOTIFICACIONES ══ -->
         <div class="notif-card">
             <div class="notif-card__header">
                 <span class="notif-card__title"><i class="far fa-bell"></i> Notificaciones</span>
+                <% if (verAuditoria) { %>
+                <a href="<%=request.getContextPath()%>/AuditoriaServlet" class="notif-card__all">
+                    <i class="fas fa-shield-alt"></i> Ver auditoría
+                </a>
+                <% } else { %>
                 <a href="#" class="notif-card__all">Ver todo</a>
+                <% } %>
             </div>
+
+            <%-- Acceso directo al log de auditoría (solo superadmin y admin) --%>
+            <% if (verAuditoria) { %>
+            <a href="<%=request.getContextPath()%>/AuditoriaServlet" style="text-decoration:none; color:inherit;">
+                <div class="notif-item notif-item--lavender" style="cursor:pointer;">
+                    <div class="notif-item__ico"><i class="fas fa-shield-alt"></i></div>
+                    <p class="notif-item__txt">Log de auditoría — revisa todos los movimientos del sistema.</p>
+                    <button class="notif-item__btn"><i class="fas fa-chevron-right"></i></button>
+                </div>
+            </a>
+            <% } %>
+
+            <%-- Notificaciones dinámicas del dashboard --%>
             <%
             if (notificaciones.isEmpty()) {
             %>
@@ -144,6 +166,8 @@
             }
             %>
         </div>
+        <!-- ══ FIN NOTIFICACIONES ══ -->
+
     </div>
 
     <!-- FILA 2: stats -->
@@ -173,7 +197,6 @@
             <p class="stat-card__val"><%= totalUsuarios %></p>
         </div>
     </div>
-
 
 </main>
 

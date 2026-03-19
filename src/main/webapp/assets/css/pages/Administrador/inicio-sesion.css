@@ -266,3 +266,19 @@ h1 {
         font-size: 0.85rem;
     }
 }
+
+/* Mensaje de éxito al actualizar contraseña */
+.login__exito {
+    color: #16a34a;
+    font-size: 13px;
+    background: #e8f8f0;
+    padding: 10px 14px;
+    border-radius: 8px;
+    border-left: 4px solid #16a34a;
+    margin-bottom: 12px;
+}
+
+/* Cursor de mano en el ícono del ojo para mostrar/ocultar contraseña */
+#togglePassword {
+    cursor: pointer;
+}

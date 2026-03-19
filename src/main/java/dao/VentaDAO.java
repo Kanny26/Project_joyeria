@@ -9,18 +9,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-/**
- * Maneja todas las operaciones de base de datos relacionadas con ventas:
- * insertar, listar, buscar, calcular pagos y manejar devoluciones de stock.
- */
 public class VentaDAO {
 
-    /*
-     * Consulta base que se reutiliza en varios métodos.
-     * Usa subconsultas en lugar de JOINs directos para evitar que aparezcan
-     * registros duplicados cuando una venta tiene múltiples detalles o pagos.
-     * Cada subconsulta trae solo el primer registro relevante (LIMIT 1).
-     */
+    // ✅ QUERY OPTIMIZADO: Subconsultas para evitar duplicados por JOINs 1:N
     private static final String SQL_BASE = """
         SELECT 
             v.venta_id, 
@@ -50,58 +41,98 @@ public class VentaDAO {
         LEFT JOIN Cliente cl ON cl.cliente_id = v.cliente_id
         """;
 
-    /** Retorna todas las ventas del sistema, ordenadas de la más reciente a la más antigua. */
     public List<Venta> listarVentas() throws Exception {
         List<Venta> lista = new ArrayList<>();
+        // ✅ Sin GROUP BY: cada fila es una venta única
         String sql = SQL_BASE + " ORDER BY v.fecha_emision DESC, v.venta_id DESC";
-
+        
+        System.out.println("\n" + "🔥".repeat(70));
+        System.out.println("🔍 VentaDAO.listarVentas() - INICIADO");
+        System.out.println("📝 SQL: " + sql.replace("\n", " ").substring(0, Math.min(400, sql.length())) + "...");
+        
         Connection con = null;
         try {
             con = ConexionDB.getConnection();
+            System.out.println("✅ Conexión DB: " + (con != null && !con.isClosed()));
+            
+            // 🔍 DEBUG: Verificar datos crudos
+            try (Statement stmt = con.createStatement()) {
+                ResultSet rsCount = stmt.executeQuery("SELECT COUNT(*) FROM Venta");
+                if (rsCount.next()) {
+                    System.out.println("📊 Total registros en tabla 'Venta': " + rsCount.getInt(1));
+                }
+                rsCount.close();
+                
+                // Prueba directa sin JOINs complejos
+                ResultSet rsSimple = stmt.executeQuery("SELECT venta_id, cliente_id FROM Venta LIMIT 5");
+                System.out.println("🧪 Prueba simple de ventas:");
+                while(rsSimple.next()) {
+                    System.out.println("   • Venta #" + rsSimple.getInt("venta_id") + 
+                                     " | cliente_id=" + rsSimple.getInt("cliente_id"));
+                }
+                rsSimple.close();
+            }
+            
             try (PreparedStatement ps = con.prepareStatement(sql);
                  ResultSet rs = ps.executeQuery()) {
+                
+                int contador = 0;
                 while (rs.next()) {
+                    contador++;
+                    System.out.println("📦 Venta #" + contador + 
+                        " | ID=" + rs.getInt("venta_id") + 
+                        " | Cliente='" + rs.getString("cliente") + "'" +
+                        " | Total=" + rs.getBigDecimal("total"));
+                    
                     Venta v = mapearVenta(rs);
-                    // Para cada venta, se cargan sus líneas de producto usando la misma conexión
                     v.setDetalles(listarDetalles(v.getVentaId(), con));
-                    // Se determina si la venta fue de contado o anticipo consultando Pago_Venta
                     calcularAnticipoSaldo(v, con);
                     lista.add(v);
                 }
+                
+                System.out.println("✅ DAO - Ventas recuperadas: " + lista.size());
+                System.out.println("🔥".repeat(70) + "\n");
+                
             }
         } catch (SQLException e) {
-            System.err.println("Error SQL en listarVentas: " + e.getMessage());
+            System.err.println("❌ ERROR SQL en listarVentas:");
+            System.err.println("   Mensaje: " + e.getMessage());
+            System.err.println("   SQLState: " + e.getSQLState());
+            System.err.println("   ErrorCode: " + e.getErrorCode());
+            e.printStackTrace();
             throw e;
         } finally {
-            // La conexión se cierra en el finally para garantizar que siempre se cierre,
-            // incluso si ocurre un error dentro del try.
             if (con != null && !con.isClosed()) con.close();
         }
         return lista;
     }
 
-    /** Busca una venta por su ID. Retorna null si no existe. */
     public Venta obtenerPorId(int ventaId) throws Exception {
         String sql = SQL_BASE + " WHERE v.venta_id = ? ORDER BY v.venta_id DESC";
+        
+        System.out.println("🔍 DAO - Buscando venta ID: " + ventaId);
+        
         try (Connection con = ConexionDB.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, ventaId);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
+                    System.out.println("✅ Venta encontrada: ID=" + ventaId);
                     Venta v = mapearVenta(rs);
                     v.setDetalles(listarDetalles(ventaId, con));
                     calcularAnticipoSaldo(v, con);
                     return v;
                 }
             }
+            System.out.println("⚠️ Venta NO encontrada: ID=" + ventaId);
         }
         return null;
     }
 
-    /** Retorna todas las ventas registradas por un vendedor específico. */
     public List<Venta> listarPorVendedor(int usuarioId) throws Exception {
         List<Venta> lista = new ArrayList<>();
         String sql = SQL_BASE + " WHERE v.usuario_id = ? ORDER BY v.fecha_emision DESC";
+        
         try (Connection con = ConexionDB.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, usuarioId);
@@ -117,10 +148,6 @@ public class VentaDAO {
         return lista;
     }
 
-    /**
-     * Cuenta cuántas ventas tienen pagos en estado "pendiente" o no tienen ningún pago.
-     * Se usa para mostrar el total de ventas pendientes en el dashboard del administrador.
-     */
     public int contarPendientes() throws Exception {
         String sql = """
             SELECT COUNT(DISTINCT v.venta_id)
@@ -132,31 +159,25 @@ public class VentaDAO {
                 SELECT 1 FROM Pago_Venta pv WHERE pv.venta_id = v.venta_id
             )
             """;
+        
         try (Connection con = ConexionDB.getConnection();
              PreparedStatement ps = con.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
-            return rs.next() ? rs.getInt(1) : 0;
+            int count = rs.next() ? rs.getInt(1) : 0;
+            System.out.println("📊 Pendientes: " + count);
+            return count;
         }
     }
 
-    /**
-     * Busca ventas filtrando por criterio de texto, tipo de búsqueda y/o rango de fechas.
-     * Se construye la consulta dinámicamente según los parámetros que lleguen con valor.
-     *
-     * isBlank() retorna true si el String es null, vacío o contiene solo espacios.
-     */
     public List<Venta> buscarVentas(String criterio, String tipoBusqueda, Date fechaInicio, Date fechaFin, int vendedorId) throws Exception {
         List<Venta> lista = new ArrayList<>();
         StringBuilder sql = new StringBuilder(SQL_BASE + " WHERE 1=1");
         List<Object> params = new ArrayList<>();
 
-        // Si se pasa un vendedorId mayor a 0, se filtra solo sus ventas
         if (vendedorId > 0) {
             sql.append(" AND v.usuario_id = ?");
             params.add(vendedorId);
         }
-
-        // Solo se aplica el filtro de texto si hay criterio Y tipo de búsqueda definidos
         if (criterio != null && !criterio.isBlank() && tipoBusqueda != null) {
             switch (tipoBusqueda) {
                 case "id" -> {
@@ -164,7 +185,6 @@ public class VentaDAO {
                     params.add(Integer.parseInt(criterio));
                 }
                 case "cliente" -> {
-                    // LIKE con % permite buscar texto parcial en el nombre del cliente
                     sql.append(" AND cl.nombre LIKE ?");
                     params.add("%" + criterio + "%");
                 }
@@ -178,8 +198,6 @@ public class VentaDAO {
                 }
             }
         }
-
-        // Filtros de rango de fechas: se aplican solo si se proporcionaron fechas válidas
         if (fechaInicio != null) {
             sql.append(" AND v.fecha_emision >= ?");
             params.add(new java.sql.Date(fechaInicio.getTime()));
@@ -192,7 +210,6 @@ public class VentaDAO {
 
         try (Connection con = ConexionDB.getConnection();
              PreparedStatement ps = con.prepareStatement(sql.toString())) {
-            // Se asignan los parámetros en el orden en que fueron añadidos a la lista
             for (int i = 0; i < params.size(); i++) ps.setObject(i + 1, params.get(i));
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
@@ -206,7 +223,6 @@ public class VentaDAO {
         return lista;
     }
 
-    /** Convierte una fila del ResultSet en un objeto Venta. */
     private Venta mapearVenta(ResultSet rs) throws SQLException {
         Venta v = new Venta();
         v.setVentaId(rs.getInt("venta_id"));
@@ -222,10 +238,6 @@ public class VentaDAO {
         return v;
     }
 
-    /**
-     * Obtiene los productos (detalles) de una venta específica.
-     * Recibe la conexión como parámetro para reutilizarla y evitar abrir una nueva.
-     */
     private List<DetalleVenta> listarDetalles(int ventaId, Connection con) throws SQLException {
         List<DetalleVenta> lista = new ArrayList<>();
         String sql = """
@@ -255,11 +267,6 @@ public class VentaDAO {
         return lista;
     }
 
-    /**
-     * Consulta los registros de Pago_Venta para determinar si la venta fue de contado
-     * o anticipo, y cuánto saldo queda pendiente.
-     * Si hay un pago pendiente mayor a 0, la venta es de tipo "anticipo".
-     */
     private void calcularAnticipoSaldo(Venta venta, Connection con) throws SQLException {
         String sql = """
             SELECT 
@@ -285,11 +292,7 @@ public class VentaDAO {
         }
     }
 
-    /**
-     * Guarda una venta completa en la base de datos, incluyendo sus detalles,
-     * el registro de pago y el movimiento de inventario.
-     * Usa una transacción para que todo se guarde junto o nada se guarde si falla algo.
-     */
+    // ========== INSERTAR (sin cambios) ==========
     public int insertar(Venta venta, List<DetalleVenta> detalles, String modalidad,
                         BigDecimal montoAnticipo, BigDecimal saldoPendiente,
                         int usuarioIdAuditoria) throws Exception {
@@ -303,14 +306,12 @@ public class VentaDAO {
             con.setAutoCommit(false);
             int ventaId = -1;
             try {
-                // Validación previa: verifica stock de cada producto antes de registrar nada
                 for (DetalleVenta d : detalles) {
                     if (!validarStock(con, d.getProductoId(), d.getCantidad())) {
                         throw new SQLException("Stock insuficiente para: " + d.getProductoNombre());
                     }
                 }
 
-                // Insertar el registro principal de la venta y obtener el ID generado
                 try (PreparedStatement ps = con.prepareStatement(sqlVenta, Statement.RETURN_GENERATED_KEYS)) {
                     ps.setInt(1, venta.getUsuarioId());
                     ps.setInt(2, venta.getUsuarioClienteId());
@@ -322,27 +323,24 @@ public class VentaDAO {
                 }
                 if (ventaId == -1) throw new SQLException("No se generó el ID de venta");
 
-                // Insertar todos los detalles en lote (batch) para mayor eficiencia
                 try (PreparedStatement ps = con.prepareStatement(sqlDetalle)) {
                     for (DetalleVenta d : detalles) {
                         ps.setInt(1, ventaId);
                         ps.setInt(2, d.getProductoId());
                         ps.setInt(3, d.getCantidad());
                         ps.setBigDecimal(4, d.getPrecioUnitario());
-                        ps.addBatch(); // Acumula los inserts
+                        ps.addBatch();
                     }
-                    ps.executeBatch(); // Ejecuta todos de una vez
+                    ps.executeBatch();
                 }
 
-                /*
-                 * El formulario envía el ID del método de pago (un número).
-                 * Se intenta convertir directamente. Si por alguna razón llega
-                 * el nombre en texto, se busca en la base de datos como respaldo.
-                 */
+                // CORRECCIÓN BUG 1: El formulario envía el metodo_pago_id (número),
+                // no el nombre. Se parsea directamente en lugar de buscarlo por nombre.
                 int metodoPagoId;
                 try {
                     metodoPagoId = Integer.parseInt(venta.getMetodoPago());
                 } catch (NumberFormatException e) {
+                    // Fallback: si por alguna razón llega el nombre, buscarlo en BD
                     try (PreparedStatement ps = con.prepareStatement(sqlGetMetodo)) {
                         ps.setString(1, venta.getMetodoPago());
                         try (ResultSet rs = ps.executeQuery()) {
@@ -352,25 +350,25 @@ public class VentaDAO {
                     }
                 }
 
-                // Registrar el pago según la modalidad
                 try (PreparedStatement ps = con.prepareStatement(sqlPagoVenta)) {
                     if ("anticipo".equals(modalidad) && montoAnticipo != null) {
-                        // Para anticipo: dos registros — el anticipo (confirmado) y el saldo (pendiente)
-                        ps.setInt(1, ventaId); ps.setInt(2, metodoPagoId);
+                        ps.setInt(1, ventaId);
+                        ps.setInt(2, metodoPagoId);
                         ps.setBigDecimal(3, montoAnticipo);
                         ps.setTimestamp(4, new Timestamp(venta.getFechaEmision().getTime()));
                         ps.setString(5, "confirmado");
                         ps.executeUpdate();
                         if (saldoPendiente != null && saldoPendiente.compareTo(BigDecimal.ZERO) > 0) {
-                            ps.setInt(1, ventaId); ps.setInt(2, metodoPagoId);
+                            ps.setInt(1, ventaId);
+                            ps.setInt(2, metodoPagoId);
                             ps.setBigDecimal(3, saldoPendiente);
                             ps.setTimestamp(4, new Timestamp(venta.getFechaEmision().getTime()));
                             ps.setString(5, "pendiente");
                             ps.executeUpdate();
                         }
                     } else {
-                        // Para contado: un solo registro marcado como confirmado
-                        ps.setInt(1, ventaId); ps.setInt(2, metodoPagoId);
+                        ps.setInt(1, ventaId);
+                        ps.setInt(2, metodoPagoId);
                         ps.setBigDecimal(3, venta.getTotal());
                         ps.setTimestamp(4, new Timestamp(venta.getFechaEmision().getTime()));
                         ps.setString(5, "confirmado");
@@ -378,48 +376,42 @@ public class VentaDAO {
                     }
                 }
 
-                // Registrar el movimiento de inventario y descontar stock para cada producto
                 try (PreparedStatement ps = con.prepareStatement(sqlInventario)) {
                     for (DetalleVenta d : detalles) {
                         ps.setInt(1, d.getProductoId());
                         ps.setInt(2, venta.getUsuarioId());
-                        ps.setString(3, "salida"); // tipo "salida" porque los productos salen del inventario
+                        ps.setString(3, "salida");
                         ps.setInt(4, d.getCantidad());
                         ps.setTimestamp(5, new Timestamp(System.currentTimeMillis()));
-                        ps.setString(6, "VENTA-" + ventaId); // referencia para trazabilidad
+                        ps.setString(6, "VENTA-" + ventaId);
                         ps.addBatch();
-                        actualizarStock(con, d.getProductoId(), -d.getCantidad()); // descuenta el stock
+                        actualizarStock(con, d.getProductoId(), -d.getCantidad());
                     }
                     ps.executeBatch();
                 }
 
                 registrarAuditoria(con, usuarioIdAuditoria, "CREAR", "Venta", ventaId, null,
                         "{\"descripcion\": \"Venta #" + ventaId + " Total: " + venta.getTotal() + "\"}");
-
                 con.commit();
                 return ventaId;
 
             } catch (Exception e) {
-                con.rollback(); // Si algo falla, revierte todos los cambios de esta transacción
+                con.rollback();
                 throw e;
             }
         }
     }
 
-    /**
-     * Devuelve el stock de un producto al inventario cuando se aprueba una devolución.
-     * También registra el movimiento en Inventario_Movimiento para auditoría.
-     */
     public boolean retornarStockDevolucion(int ventaId, int productoId, int cantidad, int usuarioIdAuditoria) throws Exception {
         String sqlInventario = "INSERT INTO Inventario_Movimiento(producto_id, usuario_id, tipo, cantidad, fecha, referencia) VALUES(?,?,?,?,?,?)";
         try (Connection con = ConexionDB.getConnection()) {
             con.setAutoCommit(false);
             try {
-                actualizarStock(con, productoId, cantidad); // suma el stock de vuelta
+                actualizarStock(con, productoId, cantidad);
                 try (PreparedStatement ps = con.prepareStatement(sqlInventario)) {
                     ps.setInt(1, productoId);
                     ps.setInt(2, usuarioIdAuditoria);
-                    ps.setString(3, "entrada"); // tipo "entrada" porque el producto vuelve al inventario
+                    ps.setString(3, "entrada");
                     ps.setInt(4, cantidad);
                     ps.setTimestamp(5, new Timestamp(System.currentTimeMillis()));
                     ps.setString(6, "DEVOLUCION-VENTA-" + ventaId);
@@ -436,10 +428,6 @@ public class VentaDAO {
         }
     }
 
-    /**
-     * Aplica un abono al saldo pendiente de una venta a crédito.
-     * Marca el registro de Pago_Venta pendiente como confirmado con el nuevo monto.
-     */
     public boolean abonarSaldo(int ventaId, BigDecimal montoAbono) throws Exception {
         final String sqlAbono = "UPDATE Pago_Venta SET monto = ?, estado = 'confirmado' WHERE venta_id = ? AND estado = 'pendiente' LIMIT 1";
         try (Connection con = ConexionDB.getConnection()) {
@@ -457,7 +445,6 @@ public class VentaDAO {
         }
     }
 
-    /** Verifica si un producto tiene suficiente stock para la cantidad solicitada. */
     private boolean validarStock(Connection con, int productoId, int cantidad) throws SQLException {
         try (PreparedStatement ps = con.prepareStatement("SELECT stock FROM Producto WHERE producto_id = ?")) {
             ps.setInt(1, productoId);
@@ -467,10 +454,6 @@ public class VentaDAO {
         }
     }
 
-    /**
-     * Suma o resta unidades del stock de un producto.
-     * Se usa delta positivo para entradas (devoluciones) y negativo para salidas (ventas).
-     */
     private void actualizarStock(Connection con, int productoId, int delta) throws SQLException {
         try (PreparedStatement ps = con.prepareStatement("UPDATE Producto SET stock = stock + ? WHERE producto_id = ?")) {
             ps.setInt(1, delta);
@@ -479,7 +462,6 @@ public class VentaDAO {
         }
     }
 
-    /** Registra una entrada en la tabla de auditoría con los datos del cambio realizado. */
     private void registrarAuditoria(Connection conn, int usuarioId, String accion, String entidad,
                                     int entidadId, String datosAnteriores, String datosNuevos) throws SQLException {
         String sql = """
@@ -491,9 +473,38 @@ public class VentaDAO {
             stmt.setString(2, accion);
             stmt.setString(3, entidad);
             stmt.setInt(4, entidadId);
-            stmt.setString(5, datosAnteriores);
-            stmt.setString(6, datosNuevos);
+
+            // Las columnas son JSON: validar antes de insertar
+            if (datosAnteriores != null && !datosAnteriores.trim().isEmpty()) {
+                String ja = esJsonValido(datosAnteriores)
+                        ? datosAnteriores
+                        : "{\"valor\": " + org.json.JSONObject.quote(datosAnteriores) + "}";
+                stmt.setString(5, ja);
+            } else {
+                stmt.setNull(5, java.sql.Types.NULL);
+            }
+
+            if (datosNuevos != null && !datosNuevos.trim().isEmpty()) {
+                String jn = esJsonValido(datosNuevos)
+                        ? datosNuevos
+                        : "{\"valor\": " + org.json.JSONObject.quote(datosNuevos) + "}";
+                stmt.setString(6, jn);
+            } else {
+                stmt.setNull(6, java.sql.Types.NULL);
+            }
+
             stmt.executeUpdate();
         }
+    }
+
+    /** Verifica si un String es JSON válido (objeto o array). */
+    private boolean esJsonValido(String texto) {
+        if (texto == null) return false;
+        String t = texto.trim();
+        try {
+            if (t.startsWith("{")) { new org.json.JSONObject(t); return true; }
+            if (t.startsWith("[")) { new org.json.JSONArray(t);  return true; }
+        } catch (Exception ignored) {}
+        return false;
     }
 }

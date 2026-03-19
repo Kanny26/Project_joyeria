@@ -574,6 +574,29 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .btn-save:hover { opacity:.88; }
 .btn-save:disabled { opacity:.55; cursor:not-allowed; }
 
+/* ── Notificación tipo enlace (auditoría) ──────────────────────────
+   Agrega esto al final de tu admin-principal.css
+   ----------------------------------------------------------------- */
+
+/* Convierte el notif-item en un <a> sin romper el diseño existente */
+a.notif-item--link {
+    display: flex;           /* igual que el div original */
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+    transition: filter 0.15s ease, transform 0.15s ease;
+}
+
+a.notif-item--link:hover {
+    filter: brightness(0.95);
+    transform: translateX(3px);
+}
+
+/* El botón de flecha dentro del enlace no necesita cursor propio */
+a.notif-item--link .notif-item__btn {
+    pointer-events: none;
+}
+
 /* ══════════════════════════════════════════
    RESPONSIVE
    ══════════════════════════════════════════ */

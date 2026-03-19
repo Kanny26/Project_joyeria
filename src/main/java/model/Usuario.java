@@ -2,30 +2,33 @@ package model;
 
 import java.util.Date;
 
+/**
+ * Representa a un usuario del sistema.
+ * Esta clase se usa para transportar los datos del usuario entre
+ * la base de datos, los servlets y las vistas JSP.
+ */
 public class Usuario {
-    //-------------------------//
-    // Campos de la base de datos
-    //-------------------------//
+
+    // Campos que corresponden directamente a columnas de la base de datos
     private int usuarioId;
     private String nombre;
-    private String correo; // email
+    private String correo;
     private String telefono;
-    private String contrasena; // pass
+    private String contrasena;
     private String rol;
-    private boolean estado; // true= activo, false= inactivo
-    private Date fechaCreacion; // fecha del registro del usuario
-    private Date fechaRegistro; // fecha de cliente
-    private Date fechaInicio; // fecha de proveedor
-    private double minimoCompra; // mínimo de compra
-    private String observaciones; // opcional, para historial o desempeño
+    private boolean estado; // true = activo, false = inactivo
+    private Date fechaCreacion;  // Fecha en que se registró el usuario en el sistema
+    private Date fechaRegistro;  // Fecha de registro como cliente
+    private Date fechaInicio;    // Fecha de inicio como proveedor
+    private double minimoCompra;
+    private String observaciones; // Campo opcional para notas internas del usuario
 
-    //-------------------------//
-    // Constructores
-    //-------------------------//
+    // Constructor vacío necesario para crear objetos sin datos iniciales
     public Usuario() {}
 
-    public Usuario(int usuarioId, String nombre, String correo, String telefono, String contrasena, 
-                   String rol, boolean estado, Date fechaCreacion,Date fechaRegistro, 
+    // Constructor completo para cuando se necesita inicializar el objeto con todos los datos de una vez
+    public Usuario(int usuarioId, String nombre, String correo, String telefono, String contrasena,
+                   String rol, boolean estado, Date fechaCreacion, Date fechaRegistro,
                    Date fechaInicio, double minimoCompra, String observaciones) {
         this.usuarioId = usuarioId;
         this.nombre = nombre;
@@ -41,9 +44,7 @@ public class Usuario {
         this.observaciones = observaciones;
     }
 
-    //-------------------------//
-    // Getters y Setters
-    //-------------------------//
+    // Getters y Setters: permiten acceder y modificar los campos privados desde otras clases
     public int getUsuarioId() { return usuarioId; }
     public void setUsuarioId(int usuarioId) { this.usuarioId = usuarioId; }
 

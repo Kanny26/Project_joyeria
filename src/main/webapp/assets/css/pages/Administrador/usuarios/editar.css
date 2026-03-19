@@ -264,3 +264,40 @@ label {
         justify-content: center;
     }
 }
+/* ====================================================
+   Mensajes de validación debajo de los campos
+   ==================================================== */
+
+.field-msg {
+    font-size: 0.72rem;
+    display: none;
+    align-items: center;
+    gap: 5px;
+    margin-top: 4px;
+    padding: 2px 0;
+}
+
+.field-msg.visible {
+    display: flex;
+}
+
+.field-msg--error {
+    color: #dc2626;
+}
+
+.field-msg--ok {
+    color: #16a34a;
+}
+
+.fs-input.is-invalid {
+    border-color: #ef4444 !important;
+    background-color: #fef2f2;
+}
+
+.fs-input.is-valid {
+    border-color: #22c55e !important;
+    background-color: #f0fdf4;
+}
+
+.fs-icon--success { color: #16a34a; }
+.fs-icon--danger  { color: #dc2626; }

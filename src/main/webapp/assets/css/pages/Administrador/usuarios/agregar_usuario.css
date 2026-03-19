@@ -271,3 +271,49 @@ body {
     }
 }
 
+
+/* ====================================================
+   Mensajes de validación debajo de los campos
+   Controlados por JavaScript: se muestran/ocultan
+   añadiendo/quitando la clase "visible"
+   ==================================================== */
+
+.field-msg {
+    font-size: 0.72rem;
+    display: none;
+    align-items: center;
+    gap: 5px;
+    margin-top: 4px;
+    padding: 2px 0;
+}
+
+/* El mensaje es visible solo cuando JavaScript añade esta clase */
+.field-msg.visible {
+    display: flex;
+}
+
+/* Mensaje de error: texto e ícono en rojo */
+.field-msg--error {
+    color: #dc2626;
+}
+
+/* Mensaje de éxito: texto e ícono en verde */
+.field-msg--ok {
+    color: #16a34a;
+}
+
+/* Campo con error: borde rojo y fondo rosado suave */
+.fs-input.is-invalid {
+    border-color: #ef4444 !important;
+    background-color: #fef2f2;
+}
+
+/* Campo válido: borde verde y fondo verde suave */
+.fs-input.is-valid {
+    border-color: #22c55e !important;
+    background-color: #f0fdf4;
+}
+
+/* Colores de los íconos de estado dentro de los radio chips */
+.fs-icon--success { color: #16a34a; }
+.fs-icon--danger  { color: #dc2626; }
