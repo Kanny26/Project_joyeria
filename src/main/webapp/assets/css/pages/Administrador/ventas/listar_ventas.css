@@ -184,6 +184,10 @@ body {
     white-space: nowrap;
 }
 
+ span.filter-btn{
+	color: pink;
+}
+
 .filter-btn:hover  { border-color: #9177a8; color: #9177a8; }
 
 .filter-btn.active {

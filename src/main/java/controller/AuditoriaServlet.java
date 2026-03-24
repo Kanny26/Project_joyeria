@@ -60,6 +60,6 @@ public class AuditoriaServlet extends HttpServlet {
 
         // Los logs se pasan como atributo del request para que el JSP los itere con JSTL.
         req.setAttribute("logs", logs);
-        req.getRequestDispatcher("/Administrador/auditoria/auditoria_log.jsp").forward(req, resp);
+        req.getRequestDispatcher("/Administrador/auditoria_log.jsp").forward(req, resp);
     }
 }

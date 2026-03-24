@@ -11,7 +11,6 @@ import java.util.List;
 
 public class VentaDAO {
 
-    // ✅ QUERY OPTIMIZADO: Subconsultas para evitar duplicados por JOINs 1:N
     private static final String SQL_BASE = """
         SELECT 
             v.venta_id, 
@@ -63,7 +62,6 @@ public class VentaDAO {
                 }
                 rsCount.close();
                 
-                // Prueba directa sin JOINs complejos
                 ResultSet rsSimple = stmt.executeQuery("SELECT venta_id, cliente_id FROM Venta LIMIT 5");
                 System.out.println("🧪 Prueba simple de ventas:");
                 while(rsSimple.next()) {
@@ -428,16 +426,73 @@ public class VentaDAO {
         }
     }
 
+    /**
+     * Registra un abono sobre el saldo pendiente de una venta con anticipo.
+     *
+     * Comportamiento según el monto:
+     *   - Abono PARCIAL (montoAbono < saldoActual): descuenta el monto del registro
+     *     pendiente sin cambiar su estado, dejando el saldo restante en 'pendiente'.
+     *   - Abono TOTAL  (montoAbono == saldoActual): marca el registro como 'confirmado'
+     *     con el monto exacto, cerrando la deuda.
+     *
+     * La operación se hace en transacción: primero se lee el saldo actual para
+     * calcular el nuevo valor, luego se actualiza. Si entre la lectura y la escritura
+     * el saldo cambia (concurrencia), la validación del servlet ya lo habrá prevenido.
+     */
     public boolean abonarSaldo(int ventaId, BigDecimal montoAbono) throws Exception {
-        final String sqlAbono = "UPDATE Pago_Venta SET monto = ?, estado = 'confirmado' WHERE venta_id = ? AND estado = 'pendiente' LIMIT 1";
+        final String sqlLeer = """
+            SELECT monto FROM Pago_Venta
+            WHERE venta_id = ? AND estado = 'pendiente'
+            LIMIT 1
+            """;
+        // Abono parcial: reduce el saldo sin cerrar el pago
+        final String sqlParcial = """
+            UPDATE Pago_Venta
+            SET monto = ?
+            WHERE venta_id = ? AND estado = 'pendiente'
+            LIMIT 1
+            """;
+        // Abono total: cierra el pago marcándolo como confirmado
+        final String sqlTotal = """
+            UPDATE Pago_Venta
+            SET monto = ?, estado = 'confirmado'
+            WHERE venta_id = ? AND estado = 'pendiente'
+            LIMIT 1
+            """;
+
         try (Connection con = ConexionDB.getConnection()) {
             con.setAutoCommit(false);
-            try (PreparedStatement ps = con.prepareStatement(sqlAbono)) {
-                ps.setBigDecimal(1, montoAbono);
-                ps.setInt(2, ventaId);
-                ps.executeUpdate();
+            try {
+                // 1. Leer el saldo pendiente actual
+                BigDecimal saldoActual;
+                try (PreparedStatement ps = con.prepareStatement(sqlLeer)) {
+                    ps.setInt(1, ventaId);
+                    try (ResultSet rs = ps.executeQuery()) {
+                        if (!rs.next()) throw new Exception("No se encontró saldo pendiente para la venta #" + ventaId);
+                        saldoActual = rs.getBigDecimal("monto");
+                    }
+                }
+
+                // 2. Elegir la sentencia según si el abono cubre el total o es parcial
+                boolean esAbonoParcial = montoAbono.compareTo(saldoActual) < 0;
+                String sql = esAbonoParcial ? sqlParcial : sqlTotal;
+
+                // 3. Calcular el nuevo monto:
+                //    - Parcial: saldo - abono  (queda deuda)
+                //    - Total:   monto exacto del saldo actual (cierra con el valor real, no el enviado)
+                BigDecimal nuevoMonto = esAbonoParcial
+                    ? saldoActual.subtract(montoAbono)
+                    : saldoActual;  // Usar el valor real de la BD, no el del formulario
+
+                try (PreparedStatement ps = con.prepareStatement(sql)) {
+                    ps.setBigDecimal(1, nuevoMonto);
+                    ps.setInt(2, ventaId);
+                    ps.executeUpdate();
+                }
+
                 con.commit();
                 return true;
+
             } catch (Exception e) {
                 con.rollback();
                 throw e;

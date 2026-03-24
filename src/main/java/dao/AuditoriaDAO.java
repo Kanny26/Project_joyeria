@@ -33,7 +33,6 @@ public class AuditoriaDAO {
             JSONObject datosNuevos,
             String direccionIp) throws Exception {
 
-        // usuarioId == 0 es válido para acciones anónimas (ej: LOGIN_FALLIDO)
         if (usuarioId < 0 || accion == null || accion.isEmpty()) {
             System.err.println("Parámetros inválidos en auditoria");
             return false;
@@ -46,7 +45,6 @@ public class AuditoriaDAO {
         try (Connection con = ConexionDB.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
 
-            // usuarioId == 0 → NULL en la FK (usuario anónimo)
             if (usuarioId == 0) {
                 ps.setNull(1, java.sql.Types.INTEGER);
             } else {
@@ -86,16 +84,6 @@ public class AuditoriaDAO {
 
     // ==================== CONSULTA PRINCIPAL ====================
 
-    /**
-     * Retorna todos los registros de auditoría ordenados del más reciente al más antiguo.
-     * Incluye el nombre del usuario que realizó la acción (o "Anónimo" si no aplica).
-     * Solo debe llamarse desde roles: superadministrador y administrador.
-     *
-     * Cada mapa contiene:
-     *   log_id, usuario_nombre, accion, entidad, entidad_id,
-     *   datos_anteriores, datos_nuevos, direccion_ip, fecha_hora
-     * @throws Exception 
-     */
     public List<Map<String, Object>> listarLogs() throws Exception {
         List<Map<String, Object>> lista = new ArrayList<>();
 
@@ -125,9 +113,9 @@ public class AuditoriaDAO {
                 fila.put("usuario_nombre",   rs.getString("usuario_nombre"));
                 fila.put("accion",           rs.getString("accion"));
                 fila.put("entidad",          rs.getString("entidad"));
-                fila.put("entidad_id",       rs.getObject("entidad_id"));       // puede ser null
-                fila.put("datos_anteriores", rs.getString("datos_anteriores")); // JSON string o null
-                fila.put("datos_nuevos",     rs.getString("datos_nuevos"));     // JSON string o null
+                fila.put("entidad_id",       rs.getObject("entidad_id"));
+                fila.put("datos_anteriores", rs.getString("datos_anteriores"));
+                fila.put("datos_nuevos",     rs.getString("datos_nuevos"));
                 fila.put("direccion_ip",     rs.getString("direccion_ip"));
                 fila.put("fecha_hora",       rs.getTimestamp("fecha_hora"));
                 lista.add(fila);
@@ -140,7 +128,7 @@ public class AuditoriaDAO {
         return lista;
     }
 
-    // ==================== ACCIONES ESPECÍFICAS ====================
+    // ==================== ACCIONES DE AUTENTICACIÓN ====================
 
     public static boolean registrarLoginExitoso(int usuarioId, String usuario, String ip) throws Exception {
         JSONObject datos = new JSONObject();
@@ -156,11 +144,42 @@ public class AuditoriaDAO {
         return registrarAccion(0, "LOGIN_FALLIDO", "Usuario", null, null, datos, ip);
     }
 
+    public static boolean registrarCambioPassword(int usuarioId, String ip) throws Exception {
+        return registrarAccion(usuarioId, "PASSWORD_CAMBIADA", "Usuario", usuarioId, null, null, ip);
+    }
+
+    // ==================== ACCIONES DE USUARIOS ====================
+
+    public static boolean registrarUsuarioCreado(int usuarioId, String nombreUsuario, String rol, String ip) throws Exception {
+        JSONObject datos = new JSONObject();
+        datos.put("usuario_id", usuarioId);
+        datos.put("nombre", nombreUsuario);
+        datos.put("rol", rol);
+        return registrarAccion(usuarioId, "USUARIO_CREADO", "Usuario", usuarioId, null, datos, ip);
+    }
+
+    public static boolean registrarUsuarioEditado(int usuarioId, int usuarioEditadoId, String nombreUsuario,
+                                                   JSONObject datosAnteriores, JSONObject datosNuevos, String ip) throws Exception {
+        return registrarAccion(usuarioId, "USUARIO_EDITADO", "Usuario", usuarioEditadoId,
+                            datosAnteriores, datosNuevos, ip);
+    }
+
+    public static boolean registrarUsuarioEliminado(int usuarioId, int usuarioEliminadoId, String nombreUsuario, String ip) throws Exception {
+        JSONObject datos = new JSONObject();
+        datos.put("usuario_id", usuarioEliminadoId);
+        datos.put("nombre", nombreUsuario);
+        return registrarAccion(usuarioId, "USUARIO_ELIMINADO", "Usuario", usuarioEliminadoId, null, datos, ip);
+    }
+
+    // ==================== ACCIONES DE PRODUCTOS ====================
+
     public static boolean registrarProductoCreado(int usuarioId, int productoId,
-                                                   String nombreProducto, String ip) throws Exception {
+                                                   String nombreProducto, double precio, int stock, String ip) throws Exception {
         JSONObject datos = new JSONObject();
         datos.put("producto_id", productoId);
         datos.put("nombre", nombreProducto);
+        datos.put("precio", precio);
+        datos.put("stock", stock);
         return registrarAccion(usuarioId, "PRODUCTO_CREADO", "Producto", productoId, null, datos, ip);
     }
 
@@ -171,6 +190,59 @@ public class AuditoriaDAO {
                             datosAnteriores, datosNuevos, ip);
     }
 
+    public static boolean registrarProductoEliminado(int usuarioId, int productoId, String nombreProducto, String ip) throws Exception {
+        JSONObject datos = new JSONObject();
+        datos.put("producto_id", productoId);
+        datos.put("nombre", nombreProducto);
+        return registrarAccion(usuarioId, "PRODUCTO_ELIMINADO", "Producto", productoId, null, datos, ip);
+    }
+
+    // ==================== ACCIONES DE CATEGORÍAS ====================
+
+    public static boolean registrarCategoriaCreada(int usuarioId, int categoriaId, String nombreCategoria, String ip) throws Exception {
+        JSONObject datos = new JSONObject();
+        datos.put("categoria_id", categoriaId);
+        datos.put("nombre", nombreCategoria);
+        return registrarAccion(usuarioId, "CATEGORIA_CREADA", "Categoria", categoriaId, null, datos, ip);
+    }
+
+    public static boolean registrarCategoriaEditada(int usuarioId, int categoriaId,
+                                                     JSONObject datosAnteriores, JSONObject datosNuevos, String ip) throws Exception {
+        return registrarAccion(usuarioId, "CATEGORIA_EDITADA", "Categoria", categoriaId,
+                            datosAnteriores, datosNuevos, ip);
+    }
+
+    public static boolean registrarCategoriaEliminada(int usuarioId, int categoriaId, String nombreCategoria, String ip) throws Exception {
+        JSONObject datos = new JSONObject();
+        datos.put("categoria_id", categoriaId);
+        datos.put("nombre", nombreCategoria);
+        return registrarAccion(usuarioId, "CATEGORIA_ELIMINADA", "Categoria", categoriaId, null, datos, ip);
+    }
+
+    // ==================== ACCIONES DE PROVEEDORES ====================
+
+    public static boolean registrarProveedorCreado(int usuarioId, int proveedorId, String nombreProveedor, String ip) throws Exception {
+        JSONObject datos = new JSONObject();
+        datos.put("proveedor_id", proveedorId);
+        datos.put("nombre", nombreProveedor);
+        return registrarAccion(usuarioId, "PROVEEDOR_CREADO", "Proveedor", proveedorId, null, datos, ip);
+    }
+
+    public static boolean registrarProveedorEditado(int usuarioId, int proveedorId,
+                                                     JSONObject datosAnteriores, JSONObject datosNuevos, String ip) throws Exception {
+        return registrarAccion(usuarioId, "PROVEEDOR_EDITADO", "Proveedor", proveedorId,
+                            datosAnteriores, datosNuevos, ip);
+    }
+
+    public static boolean registrarProveedorEliminado(int usuarioId, int proveedorId, String nombreProveedor, String ip) throws Exception {
+        JSONObject datos = new JSONObject();
+        datos.put("proveedor_id", proveedorId);
+        datos.put("nombre", nombreProveedor);
+        return registrarAccion(usuarioId, "PROVEEDOR_ELIMINADO", "Proveedor", proveedorId, null, datos, ip);
+    }
+
+    // ==================== ACCIONES DE VENTAS ====================
+
     public static boolean registrarVentaCreada(int usuarioId, int ventaId,
                                                int clienteId, double montoTotal, String ip) throws Exception {
         JSONObject datos = new JSONObject();
@@ -180,7 +252,28 @@ public class AuditoriaDAO {
         return registrarAccion(usuarioId, "VENTA_CREADA", "Venta", ventaId, null, datos, ip);
     }
 
-    public static boolean registrarCambioPassword(int usuarioId, String ip) throws Exception {
-        return registrarAccion(usuarioId, "PASSWORD_CAMBIADA", "Usuario", usuarioId, null, null, ip);
+    public static boolean registrarVentaAnulada(int usuarioId, int ventaId, String motivo, String ip) throws Exception {
+        JSONObject datos = new JSONObject();
+        datos.put("venta_id", ventaId);
+        datos.put("motivo", motivo);
+        return registrarAccion(usuarioId, "VENTA_ANULADA", "Venta", ventaId, null, datos, ip);
+    }
+
+    // ==================== ACCIONES DE CONFIGURACIÓN ====================
+
+    public static boolean registrarConfiguracionCambiada(int usuarioId, String configKey,
+                                                          String valorAnterior, String valorNuevo, String ip) throws Exception {
+        JSONObject anteriores = new JSONObject();
+        anteriores.put(configKey, valorAnterior);
+        JSONObject nuevos = new JSONObject();
+        nuevos.put(configKey, valorNuevo);
+        return registrarAccion(usuarioId, "CONFIGURACION_CAMBIADA", "Configuracion", null,
+                            anteriores, nuevos, ip);
+    }
+
+    public static boolean registrarBackupRealizado(int usuarioId, String nombreBackup, String ip) throws Exception {
+        JSONObject datos = new JSONObject();
+        datos.put("backup", nombreBackup);
+        return registrarAccion(usuarioId, "BACKUP_REALIZADO", "Sistema", null, null, datos, ip);
     }
 }

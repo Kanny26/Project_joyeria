@@ -174,25 +174,21 @@
     <div class="dash-row dash-row--stats">
         <div class="stat-card">
             <div class="stat-card__ico stat-card__ico--rose"><i class="fas fa-wallet"></i></div>
-            <button class="stat-card__menu"><i class="fas fa-ellipsis-v"></i></button>
             <p class="stat-card__lbl">Ingresos del mes</p>
             <p class="stat-card__val"><%= ingresosFmt %></p>
         </div>
         <div class="stat-card">
             <div class="stat-card__ico stat-card__ico--lavender"><i class="fas fa-file-invoice-dollar"></i></div>
-            <button class="stat-card__menu"><i class="fas fa-ellipsis-v"></i></button>
             <p class="stat-card__lbl">Ventas del mes</p>
             <p class="stat-card__val"><%= ventasFmt %></p>
         </div>
         <div class="stat-card">
             <div class="stat-card__ico stat-card__ico--amber"><i class="fas fa-truck"></i></div>
-            <button class="stat-card__menu"><i class="fas fa-ellipsis-v"></i></button>
             <p class="stat-card__lbl">Proveedores activos</p>
             <p class="stat-card__val"><%= proveedoresActivos %></p>
         </div>
         <div class="stat-card">
             <div class="stat-card__ico stat-card__ico--mint"><i class="fas fa-users"></i></div>
-            <button class="stat-card__menu"><i class="fas fa-ellipsis-v"></i></button>
             <p class="stat-card__lbl">Usuarios registrados</p>
             <p class="stat-card__val"><%= totalUsuarios %></p>
         </div>

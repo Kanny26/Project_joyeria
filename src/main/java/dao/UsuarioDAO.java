@@ -283,13 +283,52 @@ public class UsuarioDAO {
      * Obtiene un usuario por ID con información relacionada.
      */
     public Usuario obtenerUsuarioPorId(int id) {
-        return null;
-    }
+        String sql = """
+            SELECT u.usuario_id, u.nombre, u.estado, u.fecha_creacion, r.cargo,
+                   GROUP_CONCAT(DISTINCT t.telefono) AS telefonos,
+                   GROUP_CONCAT(DISTINCT c.email)    AS correos
+            FROM Usuario u
+            LEFT JOIN Usuario_Rol ur ON ur.usuario_id = u.usuario_id
+            LEFT JOIN Rol r          ON r.rol_id = ur.rol_id
+            LEFT JOIN Telefono_Usuario t ON u.usuario_id = t.usuario_id
+            LEFT JOIN Correo_Usuario c   ON u.usuario_id = c.usuario_id
+            WHERE u.usuario_id = ?
+            GROUP BY u.usuario_id, u.nombre, u.estado, u.fecha_creacion, r.cargo
+            """;
 
-    /**
+        try (Connection conn = ConexionDB.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    Usuario u = new Usuario();
+                    u.setUsuarioId(rs.getInt("usuario_id"));
+                    u.setNombre(rs.getString("nombre"));
+                    u.setEstado(rs.getBoolean("estado"));
+                    u.setFechaCreacion(rs.getDate("fecha_creacion"));
+                    u.setRol(rs.getString("cargo"));
+                    u.setTelefono(rs.getString("telefonos"));
+                    u.setCorreo(rs.getString("correos"));
+                    return u;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }/**
      * Cuenta total de usuarios.
      */
     public int contarUsuarios() {
+        String sql = "SELECT COUNT(*) FROM Usuario";
+        try (Connection conn = ConexionDB.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) return rs.getInt(1);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return 0;
     }
 
@@ -297,6 +336,14 @@ public class UsuarioDAO {
      * Cuenta usuarios activos.
      */
     public int contarUsuariosActivos() {
+        String sql = "SELECT COUNT(*) FROM Usuario WHERE estado = 1";
+        try (Connection conn = ConexionDB.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) return rs.getInt(1);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return 0;
     }
 
@@ -305,19 +352,74 @@ public class UsuarioDAO {
      */
     private void registrarAuditoria(Connection conn, int usuarioId, String accion, String entidad,
                                     int entidadId, String datosAnteriores, String datosNuevos) throws SQLException {
+        String sql = """
+            INSERT INTO Auditoria(usuario_id, accion, entidad, entidad_id, datos_anteriores, datos_nuevos, fecha)
+            VALUES (?, ?, ?, ?, ?, ?, NOW())
+            """;
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, usuarioId);
+            ps.setString(2, accion);
+            ps.setString(3, entidad);
+            ps.setInt(4, entidadId);
+            ps.setString(5, datosAnteriores);
+            ps.setString(6, datosNuevos);
+            ps.executeUpdate();
+        }
     }
 
     /**
      * Valida si un texto es JSON.
      */
     private boolean esJsonValido(String texto) {
-        return false;
+        if (texto == null || texto.trim().isEmpty()) return false;
+        try {
+            new org.json.JSONObject(texto);
+            return true;
+        } catch (Exception e) {
+            try {
+                new org.json.JSONArray(texto);
+                return true;
+            } catch (Exception e2) {
+                return false;
+            }
+        }
     }
 
     /**
-     * Método pendiente.
+     * Obtiene historial de usuarios con su desempeño.
      */
     public List<Map<String, Object>> obtenerHistorialUsuariosConDesempeno() {
-        return null;
+        List<Map<String, Object>> lista = new ArrayList<>();
+        String sql = """
+            SELECT u.usuario_id, u.nombre, u.estado, u.fecha_creacion, r.cargo,
+                   a.accion, a.entidad, a.fecha AS fecha_auditoria,
+                   a.datos_anteriores, a.datos_nuevos
+            FROM Usuario u
+            LEFT JOIN Usuario_Rol ur  ON ur.usuario_id = u.usuario_id
+            LEFT JOIN Rol r           ON r.rol_id = ur.rol_id
+            LEFT JOIN Auditoria a     ON a.usuario_id = u.usuario_id
+            ORDER BY a.fecha DESC
+            """;
+        try (Connection conn = ConexionDB.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                Map<String, Object> fila = new LinkedHashMap<>();
+                fila.put("usuario_id",       rs.getInt("usuario_id"));
+                fila.put("nombre",           rs.getString("nombre"));
+                fila.put("estado",           rs.getBoolean("estado"));
+                fila.put("fecha_creacion",   rs.getDate("fecha_creacion"));
+                fila.put("cargo",            rs.getString("cargo"));
+                fila.put("accion",           rs.getString("accion"));
+                fila.put("entidad",          rs.getString("entidad"));
+                fila.put("fecha_auditoria",  rs.getTimestamp("fecha_auditoria"));
+                fila.put("datos_anteriores", rs.getString("datos_anteriores"));
+                fila.put("datos_nuevos",     rs.getString("datos_nuevos"));
+                lista.add(fila);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return lista;
     }
 }

@@ -16,13 +16,11 @@ public class MetodoPagoServlet extends HttpServlet {
 
     private MetodoPagoDAO metodoPagoDAO;
 
-    // init() se ejecuta una vez al cargar el servlet; aquí se instancia el DAO.
     @Override
     public void init() {
         metodoPagoDAO = new MetodoPagoDAO();
     }
 
-    // Carga la lista de métodos de pago y hace forward al JSP con el tab correcto activo.
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -42,30 +40,25 @@ public class MetodoPagoServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // El parámetro "action" viene del campo oculto en el formulario y define la operación.
         String action = request.getParameter("action");
         try {
             if ("guardar".equals(action)) {
                 String nombre = request.getParameter("nombre");
-                // Validación: el nombre es obligatorio antes de guardar.
                 if (nombre == null || nombre.trim().isEmpty())
                     throw new Exception("El nombre del método de pago es obligatorio.");
 
                 MetodoPago mp = new MetodoPago();
                 mp.setNombre(nombre.trim());
                 metodoPagoDAO.guardar(mp);
-                // sendRedirect evita que al refrescar la página se reenvíe el formulario.
                 response.sendRedirect(request.getContextPath() + "/MetodoPagoServlet?msg=creado");
 
             } else if ("actualizar".equals(action)) {
                 String idStr  = request.getParameter("id");
                 String nombre = request.getParameter("nombre");
-                // Validación: se necesitan id y nombre para actualizar.
                 if (idStr == null || nombre == null || nombre.trim().isEmpty())
                     throw new Exception("Datos inválidos para actualizar.");
 
                 MetodoPago mp = new MetodoPago();
-                // parseInt convierte el String del parámetro a int; lanza excepción si no es numérico.
                 mp.setMetodoPagoId(Integer.parseInt(idStr));
                 mp.setNombre(nombre.trim());
                 metodoPagoDAO.actualizar(mp);
@@ -75,7 +68,17 @@ public class MetodoPagoServlet extends HttpServlet {
                 String idStr = request.getParameter("id");
                 if (idStr == null) throw new Exception("No se recibió el ID para eliminar.");
 
-                metodoPagoDAO.eliminar(Integer.parseInt(idStr));
+                int id = Integer.parseInt(idStr);
+
+                // Validación previa: evita el error de BD con un mensaje claro al usuario
+                if (metodoPagoDAO.tieneAbonos(id)) {
+                    throw new Exception(
+                        "No se puede eliminar este método de pago porque ya está " +
+                        "siendo usado en uno o más abonos registrados."
+                    );
+                }
+
+                metodoPagoDAO.eliminar(id);
                 response.sendRedirect(request.getContextPath() + "/MetodoPagoServlet?msg=eliminado");
 
             } else {
@@ -83,8 +86,6 @@ public class MetodoPagoServlet extends HttpServlet {
             }
 
         } catch (Exception e) {
-            // forward mantiene los atributos del request, permitiendo pasar el error al JSP.
-            // Con sendRedirect la petición termina y se pierde el atributo "error".
             request.setAttribute("error", e.getMessage());
             try {
                 request.setAttribute("metodosPago", metodoPagoDAO.listarTodos());
