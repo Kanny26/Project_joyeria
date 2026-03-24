@@ -124,7 +124,7 @@ public class RecuperarPasswordServlet extends HttpServlet {
         String codigoStr = String.format("%06d", codigo);
         boolean enviado = EmailService.enviarCodigoRecuperacion(correo, nombreUsuario, codigoStr);
         if (!enviado) {
-            System.err.println("⚠ Código generado pero correo no enviado. Código: " + codigoStr);
+            System.err.println("Código generado pero correo no enviado. Código: " + codigoStr);
         }
 
         // Guardar en sesión para los siguientes pasos

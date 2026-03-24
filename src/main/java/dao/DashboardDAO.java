@@ -8,13 +8,21 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * transforma datos operativos de joyería en indicadores de decisión
+ * (ingresos, ventas, pendientes y alertas) para administración y vendedores.
+ */
 public class DashboardDAO {
 
     // ══════════════════════════════════════════════════════
     //  STATS ADMIN
     // ══════════════════════════════════════════════════════
 
-    /** Suma de todos los pagos 'confirmado' del mes actual */
+    /**
+     * Suma de todos los pagos con estado {@code confirmado} del mes calendario actual.
+     *
+     * @return total de ingresos o cero si falla o no hay datos
+     */
     public BigDecimal getIngresosMes() {
         String sql = """
             SELECT COALESCE(SUM(pv.monto), 0)
@@ -31,7 +39,11 @@ public class DashboardDAO {
         } catch (Exception e) { e.printStackTrace(); return BigDecimal.ZERO; }
     }
 
-    /** Total facturado (suma de detalles) en ventas del mes */
+    /**
+     * Total facturado (suma de líneas de detalle) en ventas del mes actual.
+     *
+     * @return suma de subtotales o cero
+     */
     public BigDecimal getVentasMes() {
         String sql = """
             SELECT COALESCE(SUM(dv.precio_unitario * dv.cantidad), 0)
@@ -57,7 +69,11 @@ public class DashboardDAO {
         } catch (Exception e) { e.printStackTrace(); return 0; }
     }
 
-    /** Total de usuarios registrados */
+    /**
+     * Total de filas en la tabla {@code Usuario}.
+     *
+     * @return cantidad de usuarios o cero si falla
+     */
     public int getTotalUsuarios() {
         String sql = "SELECT COUNT(*) FROM Usuario";
         try (Connection c = ConexionDB.getConnection();
@@ -71,7 +87,12 @@ public class DashboardDAO {
     //  STATS VENDEDOR
     // ══════════════════════════════════════════════════════
 
-    /** Ventas realizadas por el vendedor en el mes actual */
+    /**
+     * Ventas distintas del vendedor en el mes actual.
+     *
+     * @param usuarioId ID del usuario vendedor
+     * @return número de ventas o cero si falla
+     */
     public int getVentasMesVendedor(int usuarioId) {
         String sql = """
             SELECT COUNT(DISTINCT v.venta_id)
@@ -89,7 +110,12 @@ public class DashboardDAO {
         } catch (Exception e) { e.printStackTrace(); return 0; }
     }
 
-    /** Ingresos confirmados generados por el vendedor en el mes */
+    /**
+     * Suma de pagos confirmados de las ventas del vendedor en el mes actual.
+     *
+     * @param usuarioId ID del vendedor
+     * @return total de ingresos o cero
+     */
     public BigDecimal getIngresosMesVendedor(int usuarioId) {
         String sql = """
             SELECT COALESCE(SUM(pv.monto), 0)
@@ -109,7 +135,12 @@ public class DashboardDAO {
         } catch (Exception e) { e.printStackTrace(); return BigDecimal.ZERO; }
     }
 
-    /** Casos postventa con estado abierto del vendedor */
+    /**
+     * Cuenta pagos de venta en estado {@code pendiente} asociados al vendedor (indicador de saldo/casos abiertos).
+     *
+     * @param usuarioId ID del vendedor
+     * @return cantidad de registros o cero
+     */
     public int getCasosAbiertosVendedor(int usuarioId) {
         String sql = """
             SELECT COUNT(*)
@@ -127,7 +158,12 @@ public class DashboardDAO {
         } catch (Exception e) { e.printStackTrace(); return 0; }
     }
 
-    /** Promedio de ingreso por venta del vendedor en el mes */
+    /**
+     * Promedio de valor de venta (total detalle / número de ventas) del vendedor en el mes.
+     *
+     * @param usuarioId ID del vendedor
+     * @return promedio o cero si no hay ventas o falla la consulta
+     */
     public BigDecimal getPromedioVentaVendedor(int usuarioId) {
         String sql = """
             SELECT COALESCE(
@@ -148,12 +184,11 @@ public class DashboardDAO {
         } catch (Exception e) { e.printStackTrace(); return BigDecimal.ZERO; }
     }
 
-    // ══════════════════════════════════════════════════════
-    //  NOTIFICACIONES REALES
-    //  Cada notif: { "tipo": "amber|rose|lavender", "icono": "fa-...", "texto": "..." }
-    // ══════════════════════════════════════════════════════
-
-    /** Notificaciones globales para el Admin */
+    /**
+     * Arma la lista de notificaciones para el administrador (texto, icono y color).
+     *
+     * @return lista de mapas con claves {@code tipo}, {@code icono}, {@code texto}
+     */
     public List<Map<String, String>> getNotificacionesAdmin() {
         List<Map<String, String>> lista = new ArrayList<>();
 
@@ -184,7 +219,12 @@ public class DashboardDAO {
         return lista;
     }
 
-    /** Notificaciones personalizadas para el Vendedor */
+    /**
+     * Notificaciones para un vendedor concreto (pendientes, ventas hoy, ventas del mes).
+     *
+     * @param usuarioId ID del vendedor
+     * @return lista de mapas con {@code tipo}, {@code icono}, {@code texto}
+     */
     public List<Map<String, String>> getNotificacionesVendedor(int usuarioId) {
         List<Map<String, String>> lista = new ArrayList<>();
 
@@ -215,10 +255,10 @@ public class DashboardDAO {
         return lista;
     }
 
-    // ══════════════════════════════════════════════════════
-    //  HELPERS PRIVADOS
-    // ══════════════════════════════════════════════════════
-
+    /**
+     * @param sql consulta que devuelve un único entero (COUNT)
+     * @return primer valor entero o 0 si falla
+     */
     private int contarSQL(String sql) {
         try (Connection c = ConexionDB.getConnection();
              PreparedStatement ps = c.prepareStatement(sql);
@@ -227,6 +267,11 @@ public class DashboardDAO {
         } catch (Exception e) { e.printStackTrace(); return 0; }
     }
 
+    /**
+     * @param sql consulta con un parámetro entero en el primer {@code ?}
+     * @param param valor a enlazar
+     * @return resultado del COUNT o 0
+     */
     private int contarSQLParam(String sql, int param) {
         try (Connection c = ConexionDB.getConnection();
              PreparedStatement ps = c.prepareStatement(sql)) {
@@ -237,9 +282,21 @@ public class DashboardDAO {
         } catch (Exception e) { e.printStackTrace(); return 0; }
     }
 
+    /**
+     * Construye el texto de la notificación a partir del conteo.
+     */
     @FunctionalInterface
     interface MensajeBuilder { String build(int n); }
 
+    /**
+     * Si el conteo es positivo, añade una entrada a la lista de notificaciones.
+     *
+     * @param lista destino
+     * @param count valor del contador
+     * @param tipo estilo (p. ej. amber, rose)
+     * @param icono clase Font Awesome
+     * @param msg generador del mensaje
+     */
     private void agregarNotif(List<Map<String, String>> lista, int count,
                                String tipo, String icono, MensajeBuilder msg) {
         if (count > 0) {
@@ -251,6 +308,9 @@ public class DashboardDAO {
         }
     }
 
+    /**
+     * Alias de {@link #agregarNotif(List, int, String, String, MensajeBuilder)} para llamadas con SQL parametrizado.
+     */
     private void agregarNotifParam(List<Map<String, String>> lista, int count,
                                     String tipo, String icono, MensajeBuilder msg) {
         agregarNotif(lista, count, tipo, icono, msg);

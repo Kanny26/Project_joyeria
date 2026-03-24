@@ -9,9 +9,16 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * DAO de ventas: coordina facturación, detalle, pagos, impacto en stock y auditoría.
+ * En negocio garantiza que cada venta de joyería quede registrada de forma íntegra y trazable.
+ */
 public class VentaDAO {
 
-    private static final String SQL_BASE = """
+    // Consulta base diseñada para evitar duplicados por relaciones 1:N y devolver una fila por venta.
+    /**
+     * Consulta base de listado: una fila por venta con totales y método/estado de pago vía subconsultas.
+     */    private static final String SQL_BASE = """
         SELECT 
             v.venta_id, 
             v.usuario_id, 
@@ -40,63 +47,35 @@ public class VentaDAO {
         LEFT JOIN Cliente cl ON cl.cliente_id = v.cliente_id
         """;
 
+    /**
+     * Lista todas las ventas con detalle y cálculo de anticipo/saldo.
+     *
+     * @return lista ordenada por fecha descendente
+     * @throws Exception si falla SQL o cierre de conexión
+     */
     public List<Venta> listarVentas() throws Exception {
         List<Venta> lista = new ArrayList<>();
-        // ✅ Sin GROUP BY: cada fila es una venta única
+        // Sin GROUP BY: cada fila es una venta única
         String sql = SQL_BASE + " ORDER BY v.fecha_emision DESC, v.venta_id DESC";
-        
-        System.out.println("\n" + "🔥".repeat(70));
-        System.out.println("🔍 VentaDAO.listarVentas() - INICIADO");
-        System.out.println("📝 SQL: " + sql.replace("\n", " ").substring(0, Math.min(400, sql.length())) + "...");
         
         Connection con = null;
         try {
             con = ConexionDB.getConnection();
-            System.out.println("✅ Conexión DB: " + (con != null && !con.isClosed()));
-            
-            // 🔍 DEBUG: Verificar datos crudos
-            try (Statement stmt = con.createStatement()) {
-                ResultSet rsCount = stmt.executeQuery("SELECT COUNT(*) FROM Venta");
-                if (rsCount.next()) {
-                    System.out.println("📊 Total registros en tabla 'Venta': " + rsCount.getInt(1));
-                }
-                rsCount.close();
-                
-                ResultSet rsSimple = stmt.executeQuery("SELECT venta_id, cliente_id FROM Venta LIMIT 5");
-                System.out.println("🧪 Prueba simple de ventas:");
-                while(rsSimple.next()) {
-                    System.out.println("   • Venta #" + rsSimple.getInt("venta_id") + 
-                                     " | cliente_id=" + rsSimple.getInt("cliente_id"));
-                }
-                rsSimple.close();
-            }
             
             try (PreparedStatement ps = con.prepareStatement(sql);
                  ResultSet rs = ps.executeQuery()) {
                 
-                int contador = 0;
                 while (rs.next()) {
-                    contador++;
-                    System.out.println("📦 Venta #" + contador + 
-                        " | ID=" + rs.getInt("venta_id") + 
-                        " | Cliente='" + rs.getString("cliente") + "'" +
-                        " | Total=" + rs.getBigDecimal("total"));
-                    
                     Venta v = mapearVenta(rs);
                     v.setDetalles(listarDetalles(v.getVentaId(), con));
                     calcularAnticipoSaldo(v, con);
                     lista.add(v);
                 }
                 
-                System.out.println("✅ DAO - Ventas recuperadas: " + lista.size());
-                System.out.println("🔥".repeat(70) + "\n");
-                
+                System.out.println("DAO - Ventas recuperadas: " + lista.size());
             }
         } catch (SQLException e) {
-            System.err.println("❌ ERROR SQL en listarVentas:");
-            System.err.println("   Mensaje: " + e.getMessage());
-            System.err.println("   SQLState: " + e.getSQLState());
-            System.err.println("   ErrorCode: " + e.getErrorCode());
+            System.err.println("ERROR SQL en listarVentas: " + e.getMessage());
             e.printStackTrace();
             throw e;
         } finally {
@@ -105,28 +84,40 @@ public class VentaDAO {
         return lista;
     }
 
+    /**
+     * Obtiene una venta por ID con líneas de detalle y modalidad de pago.
+     *
+     * @param ventaId identificador de venta
+     * @return venta o {@code null}
+     * @throws Exception si falla la consulta
+     */
     public Venta obtenerPorId(int ventaId) throws Exception {
         String sql = SQL_BASE + " WHERE v.venta_id = ? ORDER BY v.venta_id DESC";
         
-        System.out.println("🔍 DAO - Buscando venta ID: " + ventaId);
+        System.out.println("DAO - Buscando venta ID: " + ventaId);
         
         try (Connection con = ConexionDB.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, ventaId);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    System.out.println("✅ Venta encontrada: ID=" + ventaId);
                     Venta v = mapearVenta(rs);
                     v.setDetalles(listarDetalles(ventaId, con));
                     calcularAnticipoSaldo(v, con);
                     return v;
                 }
             }
-            System.out.println("⚠️ Venta NO encontrada: ID=" + ventaId);
         }
         return null;
     }
 
+    /**
+     * Lista ventas de un vendedor concreto.
+     *
+     * @param usuarioId {@code usuario_id} del vendedor
+     * @return ventas con detalles
+     * @throws Exception si falla la consulta
+     */
     public List<Venta> listarPorVendedor(int usuarioId) throws Exception {
         List<Venta> lista = new ArrayList<>();
         String sql = SQL_BASE + " WHERE v.usuario_id = ? ORDER BY v.fecha_emision DESC";
@@ -146,6 +137,12 @@ public class VentaDAO {
         return lista;
     }
 
+    /**
+     * Cuenta ventas con pago pendiente o sin fila en {@code Pago_Venta}.
+     *
+     * @return número de ventas “pendientes” de cobro según la regla SQL
+     * @throws Exception si falla la consulta
+     */
     public int contarPendientes() throws Exception {
         String sql = """
             SELECT COUNT(DISTINCT v.venta_id)
@@ -161,12 +158,21 @@ public class VentaDAO {
         try (Connection con = ConexionDB.getConnection();
              PreparedStatement ps = con.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
-            int count = rs.next() ? rs.getInt(1) : 0;
-            System.out.println("📊 Pendientes: " + count);
-            return count;
+            return rs.next() ? rs.getInt(1) : 0;
         }
     }
 
+    /**
+     * Búsqueda filtrada por vendedor, fechas, criterio y tipo (id, cliente, vendedor, estado).
+     *
+     * @param criterio texto o valor según {@code tipoBusqueda}
+     * @param tipoBusqueda modo de filtro
+     * @param fechaInicio límite inferior de fecha de emisión (opcional)
+     * @param fechaFin límite superior (opcional)
+     * @param vendedorId si es positivo restringe al vendedor
+     * @return ventas que cumplen los filtros
+     * @throws Exception si falla la consulta o el parseo de ID
+     */
     public List<Venta> buscarVentas(String criterio, String tipoBusqueda, Date fechaInicio, Date fechaFin, int vendedorId) throws Exception {
         List<Venta> lista = new ArrayList<>();
         StringBuilder sql = new StringBuilder(SQL_BASE + " WHERE 1=1");
@@ -221,6 +227,13 @@ public class VentaDAO {
         return lista;
     }
 
+    /**
+     * Mapea una fila del {@code SQL_BASE} a {@link Venta}.
+     *
+     * @param rs fila actual
+     * @return modelo sin detalles (se cargan aparte)
+     * @throws SQLException si falta alguna columna
+     */
     private Venta mapearVenta(ResultSet rs) throws SQLException {
         Venta v = new Venta();
         v.setVentaId(rs.getInt("venta_id"));
@@ -236,6 +249,14 @@ public class VentaDAO {
         return v;
     }
 
+    /**
+     * Carga líneas de {@code Detalle_Venta} para una venta.
+     *
+     * @param ventaId identificador de venta
+     * @param con conexión reutilizada
+     * @return lista de detalles
+     * @throws SQLException si falla la consulta
+     */
     private List<DetalleVenta> listarDetalles(int ventaId, Connection con) throws SQLException {
         List<DetalleVenta> lista = new ArrayList<>();
         String sql = """
@@ -265,6 +286,13 @@ public class VentaDAO {
         return lista;
     }
 
+    /**
+     * Ajusta en el objeto venta si la modalidad es anticipo (pagos confirmados vs pendientes).
+     *
+     * @param venta venta a enriquecer
+     * @param con conexión abierta
+     * @throws SQLException si falla el resumen de {@code Pago_Venta}
+     */
     private void calcularAnticipoSaldo(Venta venta, Connection con) throws SQLException {
         String sql = """
             SELECT 
@@ -291,6 +319,18 @@ public class VentaDAO {
     }
 
     // ========== INSERTAR (sin cambios) ==========
+    /**
+     * Registra venta, detalles, pagos ({@code Pago_Venta}), movimientos de inventario y auditoría en una transacción.
+     *
+     * @param venta cabecera (cliente, vendedor, fecha; método de pago como ID o nombre)
+     * @param detalles líneas vendidas
+     * @param modalidad {@code anticipo} o contado según flujo
+     * @param montoAnticipo primer pago confirmado si aplica
+     * @param saldoPendiente monto pendiente si aplica
+     * @param usuarioIdAuditoria usuario para {@code Auditoria_Log}
+     * @return {@code venta_id} generado
+     * @throws Exception si falta stock u otro error SQL
+     */
     public int insertar(Venta venta, List<DetalleVenta> detalles, String modalidad,
                         BigDecimal montoAnticipo, BigDecimal saldoPendiente,
                         int usuarioIdAuditoria) throws Exception {
@@ -400,6 +440,16 @@ public class VentaDAO {
         }
     }
 
+    /**
+     * Suma stock y registra movimiento de entrada por devolución aprobada.
+     *
+     * @param ventaId venta origen
+     * @param productoId producto devuelto
+     * @param cantidad unidades
+     * @param usuarioIdAuditoria usuario para movimiento y auditoría
+     * @return {@code true} si hubo commit
+     * @throws Exception si falla la transacción
+     */
     public boolean retornarStockDevolucion(int ventaId, int productoId, int cantidad, int usuarioIdAuditoria) throws Exception {
         String sqlInventario = "INSERT INTO Inventario_Movimiento(producto_id, usuario_id, tipo, cantidad, fecha, referencia) VALUES(?,?,?,?,?,?)";
         try (Connection con = ConexionDB.getConnection()) {
@@ -427,72 +477,23 @@ public class VentaDAO {
     }
 
     /**
-     * Registra un abono sobre el saldo pendiente de una venta con anticipo.
+     * Confirma un pago pendiente actualizando monto y estado en una fila de {@code Pago_Venta}.
      *
-     * Comportamiento según el monto:
-     *   - Abono PARCIAL (montoAbono < saldoActual): descuenta el monto del registro
-     *     pendiente sin cambiar su estado, dejando el saldo restante en 'pendiente'.
-     *   - Abono TOTAL  (montoAbono == saldoActual): marca el registro como 'confirmado'
-     *     con el monto exacto, cerrando la deuda.
-     *
-     * La operación se hace en transacción: primero se lee el saldo actual para
-     * calcular el nuevo valor, luego se actualiza. Si entre la lectura y la escritura
-     * el saldo cambia (concurrencia), la validación del servlet ya lo habrá prevenido.
+     * @param ventaId venta afectada
+     * @param montoAbono nuevo monto a registrar como confirmado
+     * @return {@code true} si se ejecutó el update
+     * @throws Exception si falla la transacción
      */
     public boolean abonarSaldo(int ventaId, BigDecimal montoAbono) throws Exception {
-        final String sqlLeer = """
-            SELECT monto FROM Pago_Venta
-            WHERE venta_id = ? AND estado = 'pendiente'
-            LIMIT 1
-            """;
-        // Abono parcial: reduce el saldo sin cerrar el pago
-        final String sqlParcial = """
-            UPDATE Pago_Venta
-            SET monto = ?
-            WHERE venta_id = ? AND estado = 'pendiente'
-            LIMIT 1
-            """;
-        // Abono total: cierra el pago marcándolo como confirmado
-        final String sqlTotal = """
-            UPDATE Pago_Venta
-            SET monto = ?, estado = 'confirmado'
-            WHERE venta_id = ? AND estado = 'pendiente'
-            LIMIT 1
-            """;
-
+        final String sqlAbono = "UPDATE Pago_Venta SET monto = ?, estado = 'confirmado' WHERE venta_id = ? AND estado = 'pendiente' LIMIT 1";
         try (Connection con = ConexionDB.getConnection()) {
             con.setAutoCommit(false);
-            try {
-                // 1. Leer el saldo pendiente actual
-                BigDecimal saldoActual;
-                try (PreparedStatement ps = con.prepareStatement(sqlLeer)) {
-                    ps.setInt(1, ventaId);
-                    try (ResultSet rs = ps.executeQuery()) {
-                        if (!rs.next()) throw new Exception("No se encontró saldo pendiente para la venta #" + ventaId);
-                        saldoActual = rs.getBigDecimal("monto");
-                    }
-                }
-
-                // 2. Elegir la sentencia según si el abono cubre el total o es parcial
-                boolean esAbonoParcial = montoAbono.compareTo(saldoActual) < 0;
-                String sql = esAbonoParcial ? sqlParcial : sqlTotal;
-
-                // 3. Calcular el nuevo monto:
-                //    - Parcial: saldo - abono  (queda deuda)
-                //    - Total:   monto exacto del saldo actual (cierra con el valor real, no el enviado)
-                BigDecimal nuevoMonto = esAbonoParcial
-                    ? saldoActual.subtract(montoAbono)
-                    : saldoActual;  // Usar el valor real de la BD, no el del formulario
-
-                try (PreparedStatement ps = con.prepareStatement(sql)) {
-                    ps.setBigDecimal(1, nuevoMonto);
-                    ps.setInt(2, ventaId);
-                    ps.executeUpdate();
-                }
-
+            try (PreparedStatement ps = con.prepareStatement(sqlAbono)) {
+                ps.setBigDecimal(1, montoAbono);
+                ps.setInt(2, ventaId);
+                ps.executeUpdate();
                 con.commit();
                 return true;
-
             } catch (Exception e) {
                 con.rollback();
                 throw e;
@@ -500,6 +501,15 @@ public class VentaDAO {
         }
     }
 
+    /**
+     * Comprueba que el stock disponible en {@code Producto} sea suficiente.
+     *
+     * @param con conexión activa
+     * @param productoId producto
+     * @param cantidad cantidad solicitada
+     * @return {@code true} si hay stock suficiente
+     * @throws SQLException si falla el SELECT
+     */
     private boolean validarStock(Connection con, int productoId, int cantidad) throws SQLException {
         try (PreparedStatement ps = con.prepareStatement("SELECT stock FROM Producto WHERE producto_id = ?")) {
             ps.setInt(1, productoId);
@@ -509,6 +519,14 @@ public class VentaDAO {
         }
     }
 
+    /**
+     * Aplica un delta al stock del producto ({@code stock = stock + delta}).
+     *
+     * @param con conexión activa
+     * @param productoId producto
+     * @param delta cantidad positiva o negativa
+     * @throws SQLException si falla el update
+     */
     private void actualizarStock(Connection con, int productoId, int delta) throws SQLException {
         try (PreparedStatement ps = con.prepareStatement("UPDATE Producto SET stock = stock + ? WHERE producto_id = ?")) {
             ps.setInt(1, delta);
@@ -517,6 +535,18 @@ public class VentaDAO {
         }
     }
 
+    /**
+     * Inserta en {@code Auditoria_Log} con valores JSON seguros cuando el texto no es JSON válido.
+     *
+     * @param conn conexión abierta
+     * @param usuarioId usuario que ejecuta la acción
+     * @param accion tipo de acción
+     * @param entidad entidad lógica
+     * @param entidadId ID afectado
+     * @param datosAnteriores JSON o texto plano
+     * @param datosNuevos JSON o texto plano
+     * @throws SQLException si falla el insert
+     */
     private void registrarAuditoria(Connection conn, int usuarioId, String accion, String entidad,
                                     int entidadId, String datosAnteriores, String datosNuevos) throws SQLException {
         String sql = """
@@ -552,7 +582,12 @@ public class VentaDAO {
         }
     }
 
-    /** Verifica si un String es JSON válido (objeto o array). */
+    /**
+     * Verifica si un String es JSON válido (objeto o array).
+     *
+     * @param texto cadena a validar
+     * @return {@code true} si parsea como {@link org.json.JSONObject} o {@link org.json.JSONArray}
+     */
     private boolean esJsonValido(String texto) {
         if (texto == null) return false;
         String t = texto.trim();

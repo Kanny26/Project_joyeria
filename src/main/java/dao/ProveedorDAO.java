@@ -8,9 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * ProveedorDAO maneja todas las operaciones de base de datos relacionadas con proveedores.
- * Incluye consultas, inserciones, actualizaciones y eliminación lógica.
- * Cada operación que modifica datos usa transacciones para garantizar la integridad.
+ * DAO de proveedores: administra relación comercial con proveedores, sus contactos y materiales asociados.
+ * El diseño transaccional asegura que datos maestros y auditoría queden consistentes en cada operación.
  */
 public class ProveedorDAO {
 
@@ -21,6 +20,8 @@ public class ProveedorDAO {
      * Para cada proveedor, también carga sus teléfonos, correos y materiales asociados.
      * Si alguna de estas cargas secundarias falla, se asigna una lista vacía en lugar de
      * detener toda la consulta.
+     *
+     * @return lista de proveedores (puede estar vacía si hay error crítico al listar)
      */
     public List<Proveedor> listarProveedores() {
         List<Proveedor> lista = new ArrayList<>();
@@ -49,6 +50,9 @@ public class ProveedorDAO {
     /**
      * Busca un proveedor por su ID único.
      * Devuelve null si no se encuentra, lo que el servlet usa para redirigir al listado.
+     *
+     * @param id identificador del proveedor
+     * @return el proveedor con datos relacionados o {@code null}
      */
     public Proveedor obtenerPorId(Integer id) {
         String sql = """
@@ -83,6 +87,11 @@ public class ProveedorDAO {
      *
      * El símbolo % alrededor del término permite buscar coincidencias parciales (LIKE).
      * Si el filtro es "todos", se pasa el mismo parámetro dos veces a la consulta SQL.
+     *
+     * @param q texto de búsqueda
+     * @param filtro {@code nombre}, {@code materiales} u otro valor para “todos”
+     * @return lista de proveedores (puede estar vacía)
+     * @throws Exception si falla la consulta (en algunos casos se captura internamente y retorna lista vacía)
      */
     public List<Proveedor> buscar(String q, String filtro) throws Exception {
         String sql;
@@ -165,6 +174,10 @@ public class ProveedorDAO {
      * Verifica si el documento ya está usado por OTRO proveedor diferente al que se está editando.
      * La condición "proveedor_id <> ?" excluye al proveedor actual de la validación,
      * permitiendo que conserve su propio documento sin error de duplicado.
+     *
+     * @param documento documento a comprobar
+     * @param proveedorIdActual ID del proveedor que se está editando (excluido del conteo)
+     * @return {@code true} si otro proveedor distinto ya usa ese documento
      */
     public boolean existeDocumentoParaOtro(String documento, int proveedorIdActual) {
         String sql = "SELECT COUNT(*) FROM Proveedor WHERE documento = ? AND proveedor_id <> ?";
@@ -195,6 +208,13 @@ public class ProveedorDAO {
      *
      * Las listas se insertan en lote (addBatch/executeBatch) para mayor eficiencia.
      * Los correos se convierten a minúsculas para evitar duplicados por capitalización.
+     *
+     * @param p datos del proveedor a insertar
+     * @param telefonos lista de teléfonos (puede ser vacía)
+     * @param correos lista de correos
+     * @param materialesIds IDs de materiales que suministra
+     * @param usuarioId usuario que origina la auditoría
+     * @return {@code true} si la transacción terminó bien
      */
     public boolean guardar(Proveedor p, List<String> telefonos, List<String> correos, List<Integer> materialesIds, int usuarioId) {
         Connection conn = null;
@@ -272,7 +292,7 @@ public class ProveedorDAO {
                 }
             }
 
-            // ■■ RF38: Registro de auditoría — deja constancia de quién creó el proveedor ■■
+            // RF38: Registro de auditoría — deja constancia de quién creó el proveedor
             registrarAuditoria(conn, usuarioId, "CREAR", "Proveedor", idGenerado, null, p.getNombre());
 
             conn.commit();
@@ -305,6 +325,13 @@ public class ProveedorDAO {
      * La estrategia para teléfonos, correos y materiales es "eliminar todo e insertar de nuevo"
      * (DELETE + INSERT), lo que simplifica el manejo de cambios en las listas.
      * Esto funciona correctamente dentro de la transacción.
+     *
+     * @param p proveedor con ID y campos editables
+     * @param telefonos lista nueva de teléfonos
+     * @param correos lista nueva de correos
+     * @param materialesIds materiales asociados
+     * @param usuarioId usuario para auditoría
+     * @return {@code true} si la actualización fue exitosa
      */
     public boolean actualizar(Proveedor p, List<String> telefonos, List<String> correos, List<Integer> materialesIds, int usuarioId) {
         Connection conn = null;
@@ -408,6 +435,9 @@ public class ProveedorDAO {
     /**
      * Verifica si un número de teléfono ya está registrado en CUALQUIER proveedor.
      * Se usa al crear un nuevo proveedor para evitar duplicados globales.
+     *
+     * @param telefono número a normalizar con {@code trim()} en la consulta
+     * @return {@code true} si el teléfono ya existe
      */
     public boolean existeTelefonoProveedor(String telefono) {
         String sql = "SELECT COUNT(*) FROM Telefono_Proveedor WHERE telefono = ?";
@@ -424,6 +454,10 @@ public class ProveedorDAO {
     /**
      * Verifica si un teléfono ya lo usa OTRO proveedor distinto al que se está editando.
      * Así el proveedor actual puede conservar su propio teléfono sin error de duplicado.
+     *
+     * @param telefono número a comprobar
+     * @param proveedorId ID del proveedor actual (excluido)
+     * @return {@code true} si otro proveedor distinto ya usa ese teléfono
      */
     public boolean existeTelefonoParaOtro(String telefono, int proveedorId) {
         String sql = "SELECT COUNT(*) FROM Telefono_Proveedor WHERE telefono = ? AND proveedor_id != ?";
@@ -441,6 +475,9 @@ public class ProveedorDAO {
     /**
      * Verifica si un correo ya está registrado en CUALQUIER proveedor.
      * El correo se normaliza a minúsculas antes de comparar para evitar falsos negativos.
+     *
+     * @param correo correo electrónico
+     * @return {@code true} si ya existe en algún proveedor
      */
     public boolean existeCorreoProveedor(String correo) {
         String sql = "SELECT COUNT(*) FROM Correo_Proveedor WHERE email = ?";
@@ -456,6 +493,10 @@ public class ProveedorDAO {
 
     /**
      * Verifica si un correo ya lo usa OTRO proveedor diferente al que se está editando.
+     *
+     * @param correo correo a comprobar
+     * @param proveedorId ID del proveedor actual (excluido)
+     * @return {@code true} si otro proveedor distinto ya usa ese correo
      */
     public boolean existeCorreoParaOtroProveedor(String correo, int proveedorId) {
         String sql = "SELECT COUNT(*) FROM Correo_Proveedor WHERE email = ? AND proveedor_id != ?";
@@ -475,6 +516,10 @@ public class ProveedorDAO {
     /**
      * Cambia el estado activo/inactivo de un proveedor sin eliminarlo físicamente.
      * Se usa desde el botón toggle de la lista de proveedores.
+     *
+     * @param id identificador del proveedor
+     * @param estado nuevo valor de activo/inactivo
+     * @return {@code true} si se actualizó al menos una fila
      */
     public boolean actualizarEstado(Integer id, Boolean estado) {
         String sql = "UPDATE Proveedor SET estado = ? WHERE proveedor_id = ?";
@@ -490,10 +535,14 @@ public class ProveedorDAO {
     }
 
     /**
-     * ■■ RF13: Eliminación lógica — marca el proveedor como inactivo (estado = 0).
+     * RF13: Eliminación lógica — marca el proveedor como inactivo (estado = 0).
      * El registro no se borra físicamente de la base de datos, solo se desactiva.
      * Esto permite mantener el historial y reactivar el proveedor si es necesario.
      * Registra la operación en auditoría con la acción "ELIMINAR".
+     *
+     * @param id {@code proveedor_id}
+     * @param usuarioId usuario que origina el registro de auditoría
+     * @return {@code true} si la transacción terminó bien
      */
     public boolean eliminar(Integer id, int usuarioId) {
         Connection conn = null;
@@ -532,6 +581,10 @@ public class ProveedorDAO {
      * Convierte una fila del ResultSet en un objeto Proveedor.
      * El campo minimo_compra se lee como String primero para controlar el caso
      * en que el valor no sea un número válido (NumberFormatException).
+     *
+     * @param rs fila actual del {@link ResultSet}
+     * @return objeto {@link Proveedor} poblado
+     * @throws SQLException si falta alguna columna esperada
      */
     private Proveedor mapearProveedor(ResultSet rs) throws SQLException {
         Proveedor p = new Proveedor();
@@ -548,6 +601,10 @@ public class ProveedorDAO {
         return p;
     }
 
+    /**
+     * @param proveedorId ID del proveedor
+     * @return lista de teléfonos (puede estar vacía)
+     */
     private List<String> obtenerTelefonos(Integer proveedorId) {
         List<String> lista = new ArrayList<>();
         String sql = "SELECT telefono FROM Telefono_Proveedor WHERE proveedor_id = ?";
@@ -574,6 +631,10 @@ public class ProveedorDAO {
         return lista;
     }
 
+    /**
+     * @param proveedorId ID del proveedor
+     * @return materiales vinculados en {@code Proveedor_Material}
+     */
     private List<Material> obtenerMateriales(Integer proveedorId) {
         List<Material> lista = new ArrayList<>();
         String sql = """
@@ -623,6 +684,15 @@ public class ProveedorDAO {
      * Las comillas en los valores se escapan para evitar JSON inválido.
      * Esta función recibe la conexión activa para que el registro quede
      * dentro de la misma transacción que la operación principal.
+     *
+     * @param conn conexión abierta (misma transacción)
+     * @param usuarioId usuario que ejecuta la acción
+     * @param accion texto de acción (CREAR, EDITAR, ELIMINAR, etc.)
+     * @param entidad nombre lógico de la entidad
+     * @param entidadId ID del registro afectado
+     * @param datosAnteriores JSON simple con valor anterior o {@code null}
+     * @param datosNuevos JSON simple con valor nuevo o {@code null}
+     * @throws SQLException si falla el insert
      */
     private void registrarAuditoria(Connection conn, int usuarioId, String accion, String entidad, 
             int entidadId, String datosAnteriores, String datosNuevos) throws SQLException {

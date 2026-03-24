@@ -22,6 +22,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * Registro de compras a proveedores en AAC27; CompraDAO y ProveedorDAO; JSP bajo /Administrador/proveedores/.
+ */
 @WebServlet("/CompraServlet")
 @MultipartConfig
 public class CompraServlet extends HttpServlet {
@@ -31,7 +34,11 @@ public class CompraServlet extends HttpServlet {
     private CategoriaDAO  categoriaDAO;
     private MetodoPagoDAO metodoPagoDAO;
 
-    // Se instancian los DAOs una sola vez al iniciar el servlet
+    /**
+     * Inicializa el servlet e instancia los DAO de compra, producto, categoría y método de pago.
+     *
+     * @throws ServletException si el contenedor no puede completar la inicialización
+     */
     @Override
     public void init() throws ServletException {
         compraDAO     = new CompraDAO();
@@ -43,9 +50,12 @@ public class CompraServlet extends HttpServlet {
     // ==================== GET ====================
 
     /**
-     * Maneja las peticiones GET del módulo de compras.
-     * Incluye mostrar el formulario, ver detalles, eliminar una compra
-     * y dos endpoints que responden en JSON para el selector dinámico de productos.
+     * Formulario de nueva compra, detalle, eliminación o endpoints JSON de categorías/productos según {@code action}.
+     *
+     * @param request  petición HTTP (sesión de administrador requerida)
+     * @param response respuesta HTTP (forward, redirect o JSON)
+     * @throws ServletException si falla el despacho a la vista
+     * @throws IOException      si ocurre un error de E/S
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -75,9 +85,12 @@ public class CompraServlet extends HttpServlet {
     // ==================== POST ====================
 
     /**
-     * Procesa el guardado de una nueva compra.
-     * Responde siempre en JSON porque el formulario lo envía via fetch (AJAX),
-     * lo que permite mostrar el resultado con SweetAlert sin recargar la página.
+     * Persiste una nueva compra ({@code guardarCompra}) y responde en JSON para el flujo AJAX del formulario.
+     *
+     * @param request  petición HTTP con {@code UTF-8} y datos del formulario multipart
+     * @param response respuesta HTTP JSON ({@code ok}, error escapado)
+     * @throws ServletException si falla el despacho en manejo de error genérico
+     * @throws IOException      si ocurre un error de E/S
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)

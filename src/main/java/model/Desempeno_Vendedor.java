@@ -65,7 +65,7 @@ public class Desempeno_Vendedor {
     /*=============================== MÉTODOS AUXILIARES ===============================*/
     
     /**
-     * ■■ RF36: Calcula automáticamente la comisión ganada
+     * RF36: Calcula automáticamente la comisión ganada
      * basado en ventas_totales × comision_porcentaje / 100
      */
     public void calcularComisionGanada() {
@@ -77,7 +77,7 @@ public class Desempeno_Vendedor {
     }
     
     /**
-     * ■■ RF36: Valida que la comisión no exceda el 20%
+     * RF36: Valida que la comisión no exceda el 20%
      * según política de la empresa
      */
     public boolean validarComision() {

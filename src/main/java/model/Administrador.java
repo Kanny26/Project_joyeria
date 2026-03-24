@@ -1,9 +1,10 @@
 package model;
 
 /**
- * Clase modelo Administrador
- * Representa la entidad Administrador dentro del sistema AAC27
- * Contiene la información básica necesaria para la autenticación y gestión del administrador
+ * Clase modelo Administrador.
+ * Representa la entidad Administrador dentro del sistema AAC27.
+ * Contiene la información básica necesaria para la autenticación y gestión del administrador.
+ * Los DAO cargan y guardan estos datos; los controladores los usan en el flujo de login y administración.
  */
 public class Administrador {
 
@@ -16,8 +17,7 @@ public class Administrador {
     // Contraseña del administrador
     private String pass;
 
-    //Constructor vacío necesario para JSP y mapeos automáticos
-   
+    /** Constructor sin argumentos; usado por JSP y mapeos. */
     public Administrador() {
     }
 
@@ -40,16 +40,19 @@ public class Administrador {
        =============================== */
 
     // Retorna el id del administrador
+    /** @return identificador del administrador */
     public int getId() {
         return id;
     }
 
     // Retorna el nombre del administrador
+    /** @return nombre del administrador */
     public String getNombre() {
         return nombre;
     }
 
     // Retorna la contraseña del administrador
+    /** @return contraseña del administrador */
     public String getPass() {
         return pass;
     }
@@ -59,16 +62,19 @@ public class Administrador {
        =============================== */
 
     // Asigna el id del administrador
+    /** @param id identificador del administrador */
     public void setId(int id) {
         this.id = id;
     }
 
     // Asigna el nombre del administrador
+    /** @param nombre nombre del administrador */
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
 
     // Asigna la contraseña del administrador
+    /** @param pass contraseña del administrador */
     public void setPass(String pass) {
         this.pass = pass;
     }

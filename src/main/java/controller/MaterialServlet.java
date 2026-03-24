@@ -10,19 +10,30 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * delega en MaterialDAO y reenvía a /Administrador/org-categorias.jsp (pestaña materiales).
+ */
 @WebServlet("/MaterialServlet")
 public class MaterialServlet extends HttpServlet {
 
     private MaterialDAO materialDAO;
 
-    // init() se ejecuta una sola vez al cargar el servlet.
+    /**
+     * Inicializa el servlet e instancia el DAO de materiales.
+     */
     @Override
     public void init() {
         materialDAO = new MaterialDAO();
     }
 
-    // Carga la lista de materiales y hace forward al JSP unificado con tab activo.
-    // El parámetro tab=materiales le indica a org-categorias.jsp cuál tab mostrar abierto.
+    /**
+     * Carga el listado de materiales y hace forward al JSP unificado con {@code tab=materiales}.
+     *
+     * @param request  petición HTTP
+     * @param response respuesta HTTP hacia el cliente
+     * @throws ServletException si falla el despacho a la vista
+     * @throws IOException      si ocurre un error de E/S
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -38,6 +49,14 @@ public class MaterialServlet extends HttpServlet {
         }
     }
 
+    /**
+     * Ejecuta guardar, actualizar o eliminar según {@code action}; ante error hace forward con mensaje.
+     *
+     * @param request  petición HTTP con {@code action} y datos del formulario
+     * @param response respuesta HTTP (redirect en éxito, forward con error)
+     * @throws ServletException si falla el despacho a la vista
+     * @throws IOException      si ocurre un error de E/S
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {

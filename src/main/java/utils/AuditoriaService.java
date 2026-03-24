@@ -50,7 +50,7 @@ public class AuditoriaService {
         try (Connection conn = ConexionDB.getConnection()) {
             registrarAccion(conn, usuarioId, accion, entidad, entidadId, datosAnteriores, datosNuevos);
         } catch (Exception e) {
-            System.err.println("⚠ Error al registrar auditoría: " + e.getMessage());
+            System.err.println("Error al registrar auditoría: " + e.getMessage());
             // No lanzar excepción para no interrumpir el flujo principal
         }
     }

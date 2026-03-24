@@ -8,16 +8,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Maneja las operaciones de base de datos para la tabla Subcategoria.
- *
- * CAMBIO PRINCIPAL: tieneProductosActivos() ya NO busca en Producto.subcategoria_id
- * (esa columna fue eliminada). Ahora consulta la tabla Producto_Subcategoria,
- * que es la que relaciona productos con sus subcategorías en la BD nueva.
+ * DAO de subcategorías: permite clasificar finamente productos de joyería dentro de cada categoría.
+ * Trabaja con la tabla puente para mantener relaciones N:M limpias y evitar datos huérfanos.
  */
 public class SubcategoriaDAO {
 
     /**
      * Retorna todas las subcategorías ordenadas por nombre.
+     *
+     * @return lista (posiblemente vacía si hay error)
      */
     public List<Subcategoria> listarTodas() {
         List<Subcategoria> lista = new ArrayList<>();
@@ -39,6 +38,9 @@ public class SubcategoriaDAO {
 
     /**
      * Busca una subcategoría por su ID.
+     *
+     * @param id {@code subcategoria_id}
+     * @return el registro o {@code null}
      */
     public Subcategoria obtenerPorId(int id) {
         Subcategoria s = null;
@@ -65,6 +67,10 @@ public class SubcategoriaDAO {
      * CAMBIO: antes buscaba en Producto.subcategoria_id (columna eliminada).
      * Ahora busca en Producto_Subcategoria haciendo JOIN con Producto
      * para verificar que el producto esté activo (estado = 1).
+     *
+     * @param subcategoriaId identificador de subcategoría
+     * @return {@code true} si hay al menos un producto activo enlazado
+     * @throws Exception si falla la consulta
      */
     public boolean tieneProductosActivos(int subcategoriaId) throws Exception {
         String sql = """
@@ -85,6 +91,10 @@ public class SubcategoriaDAO {
 
     /**
      * Inserta una nueva subcategoría.
+     *
+     * @param s objeto con nombre
+     * @return {@code true} si se insertó una fila
+     * @throws Exception si falla el insert
      */
     public boolean guardar(Subcategoria s) throws Exception {
         String sql = "INSERT INTO Subcategoria (nombre) VALUES (?)";
@@ -97,6 +107,10 @@ public class SubcategoriaDAO {
 
     /**
      * Actualiza el nombre de una subcategoría existente.
+     *
+     * @param s registro con ID y nombre
+     * @return {@code true} si se actualizó
+     * @throws Exception si falla el update
      */
     public boolean actualizar(Subcategoria s) throws Exception {
         String sql = "UPDATE Subcategoria SET nombre = ? WHERE subcategoria_id = ?";
@@ -117,6 +131,10 @@ public class SubcategoriaDAO {
      * Al eliminar la subcategoría, MySQL borra automáticamente las filas
      * correspondientes en Producto_Subcategoria gracias al ON DELETE CASCADE
      * definido en esa tabla, sin dejar datos huérfanos.
+     *
+     * @param id {@code subcategoria_id}
+     * @return {@code true} si se eliminó
+     * @throws Exception si hay productos activos o restricción de integridad
      */
     public boolean eliminar(int id) throws Exception {
         if (tieneProductosActivos(id)) {

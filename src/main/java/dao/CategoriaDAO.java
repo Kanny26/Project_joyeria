@@ -11,21 +11,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Gestiona toda la comunicación entre la aplicación y la tabla Categoria.
- * CAMBIO: se eliminó subcategoria_id de Categoria en la BD.
- * Ahora listarCategorias() y obtenerPorId() ya NO leen subcategoria_id,
- * y guardar()/actualizar() tampoco lo escriben.
- * Se agrega obtenerSubcategoriasDisponibles() para cargar el catálogo
- * de combos válidos desde Categoria_Subcategoria.
+ * DAO de categorías para catálogo de joyería: organiza familias de producto y sus subcategorías válidas.
+ * Sirve para que formularios y listados trabajen con relaciones coherentes entre categoría principal y
+ * opciones derivadas, evitando combinaciones inválidas al registrar productos.
  */
 public class CategoriaDAO {
 
     /**
      * Retorna todas las categorías ordenadas alfabéticamente.
      * CAMBIO: el SELECT ya no incluye subcategoria_id (no existe en la BD nueva).
+     *
+     * @return lista de categorías (posiblemente vacía si hay error)
      */
     public List<Categoria> listarCategorias() {
         List<Categoria> lista = new ArrayList<>();
+        // Consulta de negocio: trae categorías visibles del catálogo y ORDER BY nombre mejora la experiencia
+        // del usuario al mostrar listas alfabéticas en formularios.
         String sql = "SELECT categoria_id, nombre, icono FROM Categoria ORDER BY nombre ASC";
         try (Connection con = ConexionDB.getConnection();
              PreparedStatement ps = con.prepareStatement(sql);
@@ -46,6 +47,9 @@ public class CategoriaDAO {
     /**
      * Busca una categoría por ID.
      * CAMBIO: igual que listarCategorias(), sin subcategoria_id.
+     *
+     * @param id {@code categoria_id}
+     * @return categoría o {@code null}
      */
     public Categoria obtenerPorId(int id) {
         Categoria c = null;
@@ -72,6 +76,9 @@ public class CategoriaDAO {
      * consultando la tabla Categoria_Subcategoria.
      * Se usa en el servlet para poblar el select de subcategorías al registrar
      * o editar un producto, filtrando solo las opciones válidas para esa categoría.
+     *
+     * @param categoriaId categoría padre
+     * @return subcategorías permitidas para esa categoría
      */
     public List<Subcategoria> obtenerSubcategoriasDisponibles(int categoriaId) {
         List<Subcategoria> lista = new ArrayList<>();
@@ -101,6 +108,10 @@ public class CategoriaDAO {
 
     /**
      * Verifica si una categoría tiene productos activos antes de eliminarla.
+     *
+     * @param categoriaId identificador de categoría
+     * @return {@code true} si existe al menos un producto activo
+     * @throws Exception si falla la consulta
      */
     public boolean tieneProductosActivos(int categoriaId) throws Exception {
         String sql = "SELECT COUNT(*) FROM Producto WHERE categoria_id = ? AND estado = 1";
@@ -117,6 +128,10 @@ public class CategoriaDAO {
     /**
      * Inserta una nueva categoría.
      * CAMBIO: el INSERT ya no incluye subcategoria_id.
+     *
+     * @param c datos de nombre e icono
+     * @return {@code true} si se insertó
+     * @throws Exception si falla la transacción
      */
     public boolean guardar(Categoria c) throws Exception {
         String sql = "INSERT INTO Categoria (nombre, icono) VALUES (?, ?)";
@@ -142,6 +157,10 @@ public class CategoriaDAO {
     /**
      * Actualiza nombre e icono de una categoría existente.
      * CAMBIO: el UPDATE ya no incluye subcategoria_id.
+     *
+     * @param c categoría con ID
+     * @return {@code true} si se actualizó
+     * @throws Exception si falla la transacción
      */
     public boolean actualizar(Categoria c) throws Exception {
         String sql = "UPDATE Categoria SET nombre = ?, icono = ? WHERE categoria_id = ?";
@@ -167,6 +186,10 @@ public class CategoriaDAO {
 
     /**
      * Elimina una categoría si no tiene productos activos.
+     *
+     * @param id {@code categoria_id}
+     * @return {@code true} si se eliminó
+     * @throws Exception si hay productos activos u otro error
      */
     public boolean eliminar(int id) throws Exception {
         if (tieneProductosActivos(id)) {

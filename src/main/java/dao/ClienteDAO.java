@@ -8,16 +8,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Registra o recupera un cliente usando la tabla Cliente del SQL.
- * Si el cliente ya existe por nombre, retorna su ID.
- * Si no existe, lo crea como nuevo Cliente + Telefono_Cliente + Correo_Cliente.
+ * Acceso a Cliente, Telefono_Cliente y Correo_Cliente en AAC27.
+ * La usan los controladores al registrar ventas; ConexionDB y el modelo Cliente.
  */
 public class ClienteDAO {
 
+    /**
+     * Busca por nombre exacto; si no existe, inserta cliente y datos de contacto en transacción.
+     *
+     * @param nombre nombre del cliente (clave lógica en esta búsqueda)
+     * @param telefono teléfono opcional
+     * @param email correo opcional
+     * @return {@code cliente_id} existente o recién generado
+     * @throws Exception si falla la transacción de alta
+     */
     public int registrarOObtenerCliente(String nombre, String telefono, String email) throws Exception {
         try (Connection con = ConexionDB.getConnection()) {
 
-            // 1. Buscar cliente por nombre
+            //1. Buscar cliente por nombre: primero buscamos por nombre para no crear dos veces el mismo cliente
+            // durante el registro de una venta.
             String sqlBuscar = """
                 SELECT c.cliente_id
                 FROM Cliente c
@@ -25,6 +34,8 @@ public class ClienteDAO {
                 LIMIT 1
                 """;
             try (PreparedStatement ps = con.prepareStatement(sqlBuscar)) {
+                // setString envía el nombre real digitado por el vendedor; PreparedStatement evita
+                // inyección SQL al tratarlo como dato y no como fragmento ejecutable.
                 ps.setString(1, nombre);
                 try (ResultSet rs = ps.executeQuery()) {
                     if (rs.next()) return rs.getInt("cliente_id");
@@ -78,6 +89,11 @@ public class ClienteDAO {
         }
     }
 
+    /**
+     * Lista clientes con teléfonos y correos agregados en una sola consulta.
+     *
+     * @return lista ordenada por nombre; puede estar vacía si hay error
+     */
     public List<Cliente> listarClientes() {
         List<Cliente> lista = new ArrayList<>();
         String sql = """

@@ -1,21 +1,17 @@
 package controller;
 
-// Importación de clases DAO para acceso a datos
 import dao.PostventaDAO;
 import dao.VentaDAO;
 
-// Importación de modelos
 import model.Administrador;
 import model.CasoPostventa;
 import model.Venta;
 
-// Librerías necesarias para Servlets
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.IOException;
 
-// Colecciones
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,7 +36,6 @@ import java.util.List;
 })
 public class AdminVentaServlet extends HttpServlet {
 
-    // Objetos DAO para interactuar con la base de datos
     private VentaDAO ventaDAO;
     private PostventaDAO postventaDAO;
 
@@ -69,9 +64,7 @@ public class AdminVentaServlet extends HttpServlet {
         try {
             switch (ruta) {
 
-                /**
-                 * LISTAR TODAS LAS VENTAS
-                 */
+                // Obtener todas las ventas
                 case "/Administrador/ventas/listar": {
 
                     // Obtener todas las ventas
@@ -99,9 +92,7 @@ public class AdminVentaServlet extends HttpServlet {
                     break;
                 }
 
-                /**
-                 * LISTAR TODOS LOS CASOS DE POSTVENTA
-                 */
+                // Listar todos los casos de postventa
                 case "/Administrador/postventa/listar": {
                     List<CasoPostventa> casos = postventaDAO.listarTodos();
 
@@ -110,9 +101,7 @@ public class AdminVentaServlet extends HttpServlet {
                     break;
                 }
 
-                /**
-                 * VER DETALLE DE UNA VENTA
-                 */
+                // Ver detalle de una venta
                 case "/Administrador/ventas/ver": {
                     int id = parseId(req.getParameter("id"));
 
@@ -129,9 +118,7 @@ public class AdminVentaServlet extends HttpServlet {
                     break;
                 }
 
-                /**
-                 * BUSCAR VENTAS POR CRITERIO, TIPO Y RANGO DE FECHAS
-                 */
+                // Buscar ventas por criterio, tipo y rango de fechas
                 case "/Administrador/ventas/buscar": {
 
                     // Obtener parámetros de búsqueda
@@ -158,9 +145,7 @@ public class AdminVentaServlet extends HttpServlet {
                     break;
                 }
 
-                /**
-                 * VER DETALLE DE UN CASO POSTVENTA
-                 */
+                // Ver detalle de un caso postventa
                 case "/Administrador/postventa/ver": {
                     int casoId = parseId(req.getParameter("id"));
 
@@ -176,9 +161,7 @@ public class AdminVentaServlet extends HttpServlet {
                     break;
                 }
 
-                /**
-                 * RUTA NO ENCONTRADA
-                 */
+                // Ruta no reconocida
                 default:
                     resp.sendError(HttpServletResponse.SC_NOT_FOUND);
             }

@@ -8,18 +8,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Maneja las operaciones de base de datos para la tabla Material.
- * Los materiales se muestran como filtro de búsqueda en categoria.jsp
- * y se gestionan en el tab "Materiales" de org-categorias.jsp.
- *
- * NOTA: Este archivo no estaba incluido en el proyecto original. Fue generado
- * siguiendo la estructura y los métodos que MaterialServlet espera llamar.
+ * DAO de materiales para catálogo de joyería: define de qué insumos están hechos los productos
+ * (oro, plata, etc.), dato clave para filtros comerciales y para consistencia del inventario lógico.
  */
 public class MaterialDAO {
 
     /**
      * Retorna todos los materiales ordenados por nombre.
      * En caso de error retorna lista vacía para que el JSP no falle al iterar.
+     *
+     * @return lista de materiales (posiblemente vacía si hay error)
      */
     public List<Material> listarMateriales() {
         List<Material> lista = new ArrayList<>();
@@ -41,7 +39,9 @@ public class MaterialDAO {
 
     /**
      * Busca un material por su ID.
-     * Retorna null si no existe.
+     *
+     * @param id {@code material_id}
+     * @return el material o {@code null} si no existe
      */
     public Material obtenerPorId(int id) {
         Material m = null;
@@ -64,7 +64,10 @@ public class MaterialDAO {
 
     /**
      * Inserta un nuevo material.
-     * Lanza excepción si falla para que el servlet la capture y muestre al usuario.
+     *
+     * @param m objeto con nombre a insertar
+     * @return {@code true} si se insertó al menos una fila
+     * @throws Exception si falla el insert (el servlet puede mostrar el mensaje)
      */
     public boolean guardar(Material m) throws Exception {
         String sql = "INSERT INTO Material (nombre) VALUES (?)";
@@ -95,6 +98,10 @@ public class MaterialDAO {
      * La BD lanza un error de "foreign key constraint" si hay productos que usan este material.
      * Se detecta ese caso específico (código MySQL 1451) y se traduce a un mensaje humano
      * para que el usuario entienda qué está pasando sin ver texto técnico.
+     *
+     * @param id {@code material_id}
+     * @return {@code true} si se eliminó una fila
+     * @throws Exception si hay productos que referencian el material (mensaje legible) u otro error SQL
      */
     public boolean eliminar(int id) throws Exception {
         String sql = "DELETE FROM Material WHERE material_id = ?";

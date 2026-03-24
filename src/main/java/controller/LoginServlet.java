@@ -13,15 +13,20 @@ import java.io.IOException;
 import java.util.Map;
 
 /**
- * Maneja el inicio de sesión unificado para todos los roles del sistema.
- *
- * Atiende peticiones POST desde el formulario de /inicio-sesion.jsp.
- * Después de validar las credenciales, crea la sesión y redirige al panel
- * correspondiente según el rol (administrador, superadministrador o vendedor).
+ * Inicio de sesión en AAC27 (joyería). Valida con AuthDAO y redirige a el dashboard según el rol.
+ * El formulario es inicio-sesion.jsp; solo se implementa doPost.
  */
 @WebServlet("/loginUnificado")
 public class LoginServlet extends HttpServlet {
 
+    /**
+     * Valida credenciales, renueva la sesión para mitigar fijación de sesión y redirige al panel por rol.
+     *
+     * @param request  petición HTTP con {@code usuario} y {@code password}
+     * @param response respuesta HTTP (redirect al panel o forward a login con error)
+     * @throws ServletException si falla el despacho a la vista
+     * @throws IOException      si ocurre un error de E/S
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {

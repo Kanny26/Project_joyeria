@@ -10,27 +10,36 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ SubcategoriaDAO; reenvía a /Administrador/org-categorias.jsp (pestaña subcategorías).
+ */
 @WebServlet("/SubcategoriaServlet")
 public class SubCategoriaServlet extends HttpServlet {
 
     private SubcategoriaDAO subcategoriaDAO;
 
-    // init() se ejecuta una sola vez al cargar el servlet.
-    // El DAO se instancia aquí para reutilizarlo en todas las peticiones.
+    /**
+     * Inicializa el servlet e instancia el DAO de subcategorías.
+     */
     @Override
     public void init() {
         subcategoriaDAO = new SubcategoriaDAO();
     }
 
-    // El doGet carga la lista de subcategorías y hace forward al JSP unificado
-    // con el parámetro tab=subcategorias para que se active el tab correcto.
-    // NOTA: forward no cambia la URL del navegador, pero los atributos del request
-    // llegan al JSP y están disponibles con request.getAttribute().
+    /**
+     * Carga el listado de subcategorías y hace forward al JSP unificado con {@code tab=subcategorias}.
+     *
+     * @param request  petición HTTP
+     * @param response respuesta HTTP hacia el cliente
+     * @throws ServletException si falla el despacho a la vista
+     * @throws IOException      si ocurre un error de E/S
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
             request.setAttribute("subcategorias", subcategoriaDAO.listarTodas());
+            // forward mantiene la misma petición: el JSP lee los atributos sin cambiar la URL visible
             request.getRequestDispatcher("/Administrador/org-categorias.jsp?tab=subcategorias")
                     .forward(request, response);
         } catch (Exception e) {
@@ -39,6 +48,14 @@ public class SubCategoriaServlet extends HttpServlet {
         }
     }
 
+    /**
+     * Ejecuta guardar, actualizar o eliminar según {@code action}; ante error hace forward con mensaje.
+     *
+     * @param request  petición HTTP con {@code action} y datos del formulario
+     * @param response respuesta HTTP (redirect en éxito, forward con error)
+     * @throws ServletException si falla el despacho a la vista
+     * @throws IOException      si ocurre un error de E/S
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {

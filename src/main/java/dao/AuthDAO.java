@@ -11,8 +11,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Maneja la validación de credenciales de usuario para el inicio de sesión.
- * Solo retorna datos si el usuario existe, está activo y la contraseña es correcta.
+ * Aquí validamos credenciales contra tablas de usuario/rol, permitiendo ingreso solo a cuentas
+ * activas y con contraseña correcta (hash BCrypt), para proteger el módulo administrativo de joyería.
  */
 public class AuthDAO {
     private static final Logger LOGGER = Logger.getLogger(AuthDAO.class.getName());
@@ -21,10 +21,16 @@ public class AuthDAO {
      * Verifica si el nombre de usuario y la contraseña son correctos.
      * Retorna un mapa con id, nombre y rol si la autenticación es exitosa,
      * o null si las credenciales son incorrectas o el usuario está inactivo.
+     *
+     * @param nombre nombre de usuario en la tabla {@code Usuario}
+     * @param password contraseña en texto plano (se compara con BCrypt al hash almacenado)
+     * @return mapa con claves {@code id}, {@code nombre}, {@code rol} o {@code null} si no hay acceso
      */
     public Map<String, Object> validar(String nombre, String password) {
-        // La consulta trae el hash de la contraseña y el rol del usuario.
-        // El filtro "estado = 1" impide que usuarios inactivos puedan ingresar.
+        // Esta consulta resuelve la validación de acceso en negocio: identifica al usuario de joyería
+        // y trae su rol para decidir qué módulos puede ver después del login.
+        // INNER JOIN Usuario_Rol + Rol vincula cuenta y cargo; WHERE u.nombre filtra al usuario
+        // digitado y WHERE u.estado = 1 evita acceso de cuentas desactivadas.
         String sql = """
             SELECT u.usuario_id, u.nombre, u.pass, r.cargo 
             FROM Usuario u 
@@ -42,8 +48,8 @@ public class AuthDAO {
             if (rs.next()) {
                 String passBD = rs.getString("pass");
 
-                // BCrypt.checkpw compara la contraseña ingresada contra el hash almacenado.
-                // Nunca se comparan contraseñas en texto plano; BCrypt lo hace de forma segura.
+                // Comparamos contraseña digitada vs hash guardado: nunca se lee ni se guarda texto plano.
+                // Así se controla el riesgo de exposición de credenciales ante fuga de base de datos.
                 if (BCrypt.checkpw(password, passBD)) {
                     Map<String, Object> datos = new HashMap<>();
                     datos.put("id", rs.getInt("usuario_id"));
@@ -53,12 +59,13 @@ public class AuthDAO {
                 }
             }
         } catch (Exception e) {
-            // Se registra el error en el log del servidor sin exponer detalles al usuario
+            // El catch controla fallas de conexión/consulta y garantiza respuesta segura al negocio:
+            // se registra diagnóstico técnico en servidor, sin revelar detalles sensibles al usuario final.
             LOGGER.log(Level.SEVERE, "Error en autenticación", e);
         }
 
-        // Retorna null tanto si el usuario no existe como si la contraseña es incorrecta.
-        // Esto es intencional: no se debe indicar cuál de los dos falló (seguridad).
+        // Retornamos null cuando no hay autenticación válida: esto evita decir si falló usuario o clave,
+        // reduciendo el riesgo de enumeración de cuentas en intentos maliciosos.
         return null;
     }
 }

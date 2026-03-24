@@ -80,7 +80,7 @@ public class UsuarioDAO {
 
         if (usuario.getCorreo() != null && !usuario.getCorreo().trim().isEmpty()) {
             if (existeCorreo(usuario.getCorreo())) {
-                System.err.println("■ ERROR: Correo ya existe: " + usuario.getCorreo());
+                System.err.println("ERROR: Correo ya existe: " + usuario.getCorreo());
                 return false;
             }
         }

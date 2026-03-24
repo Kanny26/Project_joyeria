@@ -25,7 +25,7 @@ public class EmailService {
         try {
             Properties config = cargarConfiguracion();
             if (config == null) {
-                System.err.println("⚠ No se encontró email.properties. Correo NO enviado.");
+                System.err.println("No se encontró email.properties. Correo NO enviado.");
                 return false;
             }
 
@@ -54,11 +54,11 @@ public class EmailService {
                           "text/html; charset=UTF-8");
 
             Transport.send(msg);
-            System.out.println("✓ Correo enviado a: " + destinatario);
+            System.out.println("Correo enviado a: " + destinatario);
             return true;
 
         } catch (Exception e) {
-            System.err.println("✗ Error al enviar correo a " + destinatario + ": " + e.getMessage());
+            System.err.println("Error al enviar correo a " + destinatario + ": " + e.getMessage());
             e.printStackTrace();
             return false;
         }
@@ -81,7 +81,7 @@ public class EmailService {
 
         // Intento 3: ruta absoluta dentro del WAR
         if (is == null) {
-            System.err.println("⚠ email.properties no encontrado en classpath.");
+            System.err.println("email.properties no encontrado en classpath.");
             System.err.println("Solución: mueve email.properties a src/main/resources/");
             return null;
         }
@@ -90,11 +90,11 @@ public class EmailService {
             Properties p = new Properties();
             p.load(is);
             is.close();
-            System.out.println("✓ email.properties cargado correctamente.");
+            System.out.println("email.properties cargado correctamente.");
             System.out.println("Remitente configurado: " + p.getProperty("mail.from"));
             return p;
         } catch (Exception e) {
-            System.err.println("✗ Error leyendo email.properties: " + e.getMessage());
+            System.err.println("Error leyendo email.properties: " + e.getMessage());
             return null;
         }
     }
@@ -183,7 +183,7 @@ public class EmailService {
         try {
             Properties config = cargarConfiguracion();
             if (config == null) {
-                System.err.println("⚠ No se encontró email.properties. Correo de recuperación NO enviado.");
+                System.err.println("No se encontró email.properties. Correo de recuperación NO enviado.");
                 return false;
             }
 
@@ -211,11 +211,11 @@ public class EmailService {
             msg.setContent(buildHtmlRecuperacion(nombreUsuario, codigo), "text/html; charset=UTF-8");
 
             Transport.send(msg);
-            System.out.println("✓ Correo de recuperación enviado a: " + destinatario);
+            System.out.println("Correo de recuperación enviado a: " + destinatario);
             return true;
 
         } catch (Exception e) {
-            System.err.println("✗ Error al enviar correo de recuperación a " + destinatario + ": " + e.getMessage());
+            System.err.println("Error al enviar correo de recuperación a " + destinatario + ": " + e.getMessage());
             e.printStackTrace();
             return false;
         }

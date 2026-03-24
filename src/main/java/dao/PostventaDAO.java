@@ -1,15 +1,11 @@
 package dao;
 
-// Clase para manejar la conexión a la base de datos
 import config.ConexionDB;
 
-// Modelo que representa un caso de postventa
 import model.CasoPostventa;
 
-// Librerías SQL
 import java.sql.*;
 
-// Colecciones
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,16 +16,8 @@ import java.util.List;
 public class PostventaDAO {
 
     /**
-     * Consulta base reutilizable.
-     * 
-     * Esta consulta une múltiples tablas para obtener toda la información
-     * relevante de un caso de postventa en una sola ejecución:
-     * - Caso_Postventa (principal)
-     * - Venta
-     * - Usuario (vendedor)
-     * - Cliente
-     * - Producto (mediante subconsulta)
-     * - Historial (última observación)
+     * Consulta base reutilizable que une Caso_Postventa, Venta, Usuario, Cliente,
+     * Producto (subconsulta) e Historial (última observación).
      */
     private static final String SQL_BASE = """
         SELECT 

@@ -7,6 +7,10 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * DAO de productos: concentra operaciones de catálogo, precio y stock para el negocio de joyería.
+ * Aquí se garantiza consistencia entre producto, subcategorías e inventario durante altas y ediciones.
+ */
 public class ProductoDAO {
 
     // ─────────────────────────────────────────────────────────────────────────
@@ -15,6 +19,9 @@ public class ProductoDAO {
     //   subcategoria_nombres → "Compromiso, Aniversario, Uso Diario"  (para mostrar)
     //   subcategoria_ids_str → "2,6,12"                               (para preseleccionar checkboxes)
     // ─────────────────────────────────────────────────────────────────────────
+    /**
+     * SQL base de listado/detalle: une material, categoría y proveedor y agrega subcategorías vía {@code GROUP_CONCAT}.
+     */
     private static final String SELECT_BASE = """
         SELECT
             p.producto_id, p.codigo, p.nombre, p.descripcion, p.stock,
@@ -42,6 +49,13 @@ public class ProductoDAO {
     // ─────────────────────────────────────────────────────────────────────────
     // LISTAR POR CATEGORÍA
     // ─────────────────────────────────────────────────────────────────────────
+    /**
+     * Lista productos activos de una categoría, ordenados por código.
+     *
+     * @param categoriaId identificador de la categoría
+     * @return lista de {@link Producto}; puede estar vacía
+     * @throws Exception si falla la consulta a la base de datos
+     */
     public List<Producto> listarPorCategoria(int categoriaId) throws Exception {
         List<Producto> lista = new ArrayList<>();
         String sql = SELECT_BASE
@@ -59,6 +73,12 @@ public class ProductoDAO {
     // ─────────────────────────────────────────────────────────────────────────
     // LISTAR DISPONIBLES (para ventas — sin BLOB, sin subcategorías)
     // ─────────────────────────────────────────────────────────────────────────
+    /**
+     * Lista productos con stock mayor que cero y estado activo (vista ventas: sin BLOB ni subcategorías).
+     *
+     * @return lista para el punto de venta; puede estar vacía
+     * @throws Exception si falla la consulta
+     */
     public List<Producto> listarProductosDisponibles() throws Exception {
         List<Producto> lista = new ArrayList<>();
         String sql = """
@@ -95,6 +115,13 @@ public class ProductoDAO {
     // ─────────────────────────────────────────────────────────────────────────
     // OBTENER POR ID
     // ─────────────────────────────────────────────────────────────────────────
+    /**
+     * Obtiene un producto completo por su ID (incluye datos de joins y subcategorías agregadas).
+     *
+     * @param id {@code producto_id}
+     * @return el producto o {@code null} si no existe
+     * @throws Exception si falla la consulta
+     */
     public Producto obtenerPorId(int id) throws Exception {
         String sql = SELECT_BASE + " WHERE p.producto_id = ?";
         try (Connection con = ConexionDB.getConnection();
@@ -110,6 +137,13 @@ public class ProductoDAO {
     // ─────────────────────────────────────────────────────────────────────────
     // OBTENER CON STOCK (para validación en ventas — sin BLOB)
     // ─────────────────────────────────────────────────────────────────────────
+    /**
+     * Carga precios y stock para validar una venta sin traer imágenes BLOB.
+     *
+     * @param productoId identificador del producto
+     * @return producto con stock y precios o {@code null}
+     * @throws Exception si falla la consulta
+     */
     public Producto obtenerProductoConStock(int productoId) throws Exception {
         String sql = """
             SELECT p.producto_id, p.codigo, p.nombre, p.descripcion, p.stock,
@@ -149,6 +183,13 @@ public class ProductoDAO {
     // todos los IDs de subcategoría que vengan en p.getSubcategoriaIds().
     // Todo dentro de la misma transacción.
     // ─────────────────────────────────────────────────────────────────────────
+    /**
+     * Inserta un producto nuevo, genera código, y asocia subcategorías en la misma transacción.
+     *
+     * @param p datos del producto (incluye listas de subcategorías)
+     * @param usuarioId reservado para trazabilidad futura (p. ej. auditoría)
+     * @throws Exception si falla validación de negocio o la base de datos
+     */
     public void guardar(Producto p, int usuarioId) throws Exception {
         if (p.getPrecioVenta().compareTo(p.getPrecioUnitario()) < 0)
             throw new Exception("El precio de venta no puede ser menor al precio de costo.");
@@ -231,6 +272,13 @@ public class ProductoDAO {
     // CAMBIO: borra las subcategorías anteriores y reinserta las nuevas,
     // todo dentro de la misma transacción.
     // ─────────────────────────────────────────────────────────────────────────
+    /**
+     * Actualiza datos del producto y reemplaza las filas de {@code Producto_Subcategoria} en una transacción.
+     *
+     * @param p producto con ID y campos editables
+     * @param usuarioId reservado para trazabilidad
+     * @throws Exception si falla validación o la escritura en BD
+     */
     public void actualizar(Producto p, int usuarioId) throws Exception {
         if (p.getPrecioVenta().compareTo(p.getPrecioUnitario()) < 0)
             throw new Exception("El precio de venta no puede ser menor al precio de costo.");
@@ -315,6 +363,13 @@ public class ProductoDAO {
     // ─────────────────────────────────────────────────────────────────────────
     // AJUSTE MANUAL DE STOCK
     // ─────────────────────────────────────────────────────────────────────────
+    /**
+     * Fija el stock absoluto del producto (ajuste manual).
+     *
+     * @param productoId identificador del producto
+     * @param nuevoStock valor final de stock
+     * @throws Exception si falla el {@code UPDATE}
+     */
     public void actualizarStock(int productoId, int nuevoStock) throws Exception {
         String sql = "UPDATE Producto SET stock = ? WHERE producto_id = ?";
         try (Connection con = ConexionDB.getConnection();
@@ -328,6 +383,16 @@ public class ProductoDAO {
     // ─────────────────────────────────────────────────────────────────────────
     // REGISTRAR MOVIMIENTO DE INVENTARIO
     // ─────────────────────────────────────────────────────────────────────────
+    /**
+     * Inserta un registro en {@code Inventario_Movimiento}.
+     *
+     * @param productoId producto afectado
+     * @param usuarioId usuario que origina el movimiento
+     * @param tipo tipo de movimiento (p. ej. entrada/salida)
+     * @param cantidad unidades
+     * @param referencia texto de referencia (compra, venta, etc.)
+     * @throws Exception si falla el insert
+     */
     public void registrarMovimiento(int productoId, int usuarioId,
                                     String tipo, int cantidad,
                                     String referencia) throws Exception {
@@ -347,6 +412,13 @@ public class ProductoDAO {
         }
     }
 
+    /**
+     * Suma las cantidades compradas del producto en {@code detalle_compra} (entradas por compras).
+     *
+     * @param productoId identificador del producto
+     * @return total de unidades en líneas de compra; 0 si no hay filas
+     * @throws Exception si falla la consulta
+     */
     public int obtenerTotalEntradasPorCompras(int productoId) throws Exception {
         String sql = "SELECT COALESCE(SUM(cantidad), 0) FROM detalle_compra WHERE producto_id = ?";
         try (Connection con = ConexionDB.getConnection();
@@ -361,6 +433,13 @@ public class ProductoDAO {
     // ─────────────────────────────────────────────────────────────────────────
     // ELIMINACIÓN LÓGICA
     // ─────────────────────────────────────────────────────────────────────────
+    /**
+     * Desactiva el producto y registra salida de inventario si había stock.
+     *
+     * @param id {@code producto_id}
+     * @param usuarioId usuario para el movimiento de inventario
+     * @throws Exception si falla la transacción
+     */
     public void eliminar(int id, int usuarioId) throws Exception {
         String sqlEstado     = "UPDATE Producto SET estado = 0 WHERE producto_id = ?";
         String sqlInventario = """
@@ -395,6 +474,13 @@ public class ProductoDAO {
         }
     }
 
+    /**
+     * Indica si la categoría tiene al menos un producto con {@code estado = 1}.
+     *
+     * @param categoriaId identificador de categoría
+     * @return {@code true} si existe algún producto activo en esa categoría
+     * @throws Exception si falla la consulta
+     */
     public boolean tieneProductosActivos(int categoriaId) throws Exception {
         String sql = "SELECT COUNT(*) FROM Producto WHERE categoria_id = ? AND estado = 1";
         try (Connection con = ConexionDB.getConnection();
@@ -409,6 +495,14 @@ public class ProductoDAO {
     // ─────────────────────────────────────────────────────────────────────────
     // BÚSQUEDA GLOBAL
     // ─────────────────────────────────────────────────────────────────────────
+    /**
+     * Busca productos activos en todo el catálogo según término y tipo de filtro.
+     *
+     * @param termino texto a buscar (se combina con {@code LIKE} según filtro)
+     * @param filtro {@code nombre}, {@code material}, {@code stock}, {@code subcategoria} u otro para “todos”
+     * @return lista de coincidencias
+     * @throws Exception si falla la consulta
+     */
     public List<Producto> buscarGlobal(String termino, String filtro) throws Exception {
         List<Producto> lista = new ArrayList<>();
         String sql = buildSearchSql(false, filtro);
@@ -425,6 +519,15 @@ public class ProductoDAO {
     // ─────────────────────────────────────────────────────────────────────────
     // BÚSQUEDA EN CATEGORÍA
     // ─────────────────────────────────────────────────────────────────────────
+    /**
+     * Igual que {@link #buscarGlobal(String, String)} pero restringido a una categoría.
+     *
+     * @param categoriaId categoría donde buscar
+     * @param termino texto de búsqueda
+     * @param filtro tipo de campo (nombre, material, etc.)
+     * @return lista de productos que cumplen el criterio
+     * @throws Exception si falla la consulta
+     */
     public List<Producto> buscarEnCategoria(int categoriaId, String termino,
                                              String filtro) throws Exception {
         List<Producto> lista = new ArrayList<>();
@@ -439,6 +542,13 @@ public class ProductoDAO {
         return lista;
     }
 
+    /**
+     * Arma el SQL de búsqueda según si se filtra por categoría y el tipo de campo.
+     *
+     * @param porCategoria si es {@code true}, añade {@code p.categoria_id = ?}
+     * @param filtro modo de búsqueda (nombre, material, stock, subcategoria, u omisión para “todos”)
+     * @return sentencia SQL lista para {@link PreparedStatement}
+     */
     private String buildSearchSql(boolean porCategoria, String filtro) {
         // CAMBIO: para filtro "subcategoria" se busca en la subconsulta EXISTS,
         // ya que p.subcategoria_id ya no existe.
@@ -496,6 +606,16 @@ public class ProductoDAO {
         return sb.toString();
     }
 
+    /**
+     * Asigna parámetros al {@link PreparedStatement} según el filtro elegido.
+     *
+     * @param ps sentencia ya preparada
+     * @param start índice del primer {@code ?} a enlazar
+     * @param termino texto de búsqueda
+     * @param filtro modo (nombre, material, etc.)
+     * @param categoriaId si es positivo se enlaza primero la categoría
+     * @throws SQLException si falla el bind
+     */
     private void bindParams(PreparedStatement ps, int start, String termino,
                             String filtro, int categoriaId) throws SQLException {
         int i = start;
@@ -518,6 +638,13 @@ public class ProductoDAO {
     // CAMBIO: se leen subcategoria_nombres y subcategoria_ids_str en lugar
     // de subcategoria_id y subcategoria_nombre.
     // ─────────────────────────────────────────────────────────────────────────
+    /**
+     * Convierte una fila del resultado en {@link Producto}, incluyendo lista de IDs de subcategoría.
+     *
+     * @param rs fila actual del {@link ResultSet}
+     * @return objeto modelo rellenado
+     * @throws SQLException si falta alguna columna esperada
+     */
     private Producto mapearProducto(ResultSet rs) throws SQLException {
         Producto p = new Producto();
         p.setProductoId(rs.getInt("producto_id"));
@@ -560,6 +687,14 @@ public class ProductoDAO {
         return p;
     }
 
+    /**
+     * Lee el stock actual usando una conexión ya abierta (p. ej. dentro de una transacción).
+     *
+     * @param con conexión activa
+     * @param productoId identificador del producto
+     * @return stock numérico o 0 si no hay fila
+     * @throws Exception si falla la consulta
+     */
     private int obtenerStockActual(Connection con, int productoId) throws Exception {
         String sql = "SELECT stock FROM Producto WHERE producto_id = ?";
         try (PreparedStatement ps = con.prepareStatement(sql)) {
@@ -570,6 +705,14 @@ public class ProductoDAO {
         }
     }
 
+    /**
+     * Genera un código de producto con prefijo tomado de la categoría y número correlativo.
+     *
+     * @param con conexión activa (misma transacción que el insert)
+     * @param categoriaId categoría del producto
+     * @return código tipo prefijo + dos dígitos
+     * @throws SQLException si falla la lectura de categoría o último código
+     */
     private String generarCodigo(Connection con, int categoriaId) throws SQLException {
         String prefijo = "PRD";
         String sqlPrefijo = "SELECT UPPER(LEFT(nombre, 3)) AS p FROM Categoria WHERE categoria_id = ?";

@@ -9,6 +9,10 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * registra abastecimiento, impacto en inventario y pagos asociados.
+ * El enfoque transaccional garantiza consistencia: o se guarda todo el proceso de compra, o no se guarda nada.
+ */
 public class CompraDAO {
 
     /*
@@ -23,6 +27,13 @@ public class CompraDAO {
      *   5. (si crédito) Insertar en Credito_Compra
      *   6. (si crédito y anticipo > 0) Insertar abono inicial en Abono_Credito
      */
+    /**
+     * Persiste una compra completa en una sola transacción (cabecera, detalle, inventario, pago y crédito si aplica).
+     *
+     * @param compra datos de la compra con detalles y banderas de crédito
+     * @return {@code true} si se hizo commit
+     * @throws Exception si falla algún paso (se hace rollback)
+     */
     public boolean insertarConTransaccion(Compra compra) throws Exception {
         Connection con = null;
         try {
@@ -34,8 +45,8 @@ public class CompraDAO {
 
             insertarDetalles(con, compraId, compra.getDetalles());
 
-            // CORRECCIÓN 1: se pasa el adminId desde la compra para registrarlo
-            // en Inventario_Movimiento. Si no hay usuario disponible, se puede pasar null.
+            // En negocio necesitamos trazabilidad de quién registró la entrada de inventario;
+            // por eso se propaga usuarioId hacia Inventario_Movimiento.
             registrarEntradaInventario(con, compra.getDetalles(),
                     "Compra #" + compraId, compra.getUsuarioId());
 
@@ -74,23 +85,14 @@ public class CompraDAO {
         }
     }
 
-    /*
-     * CORRECCIÓN PRINCIPAL: actualiza el stock e inserta el movimiento de inventario.
+    /**
+     * Actualiza stock y precio de costo por cada línea y registra movimiento de inventario.
      *
-     * Bug 1 (causa principal): el UPDATE tenía "AND estado = 1" en el WHERE.
-     * Si el producto estaba marcado como inactivo (estado = 0), el UPDATE no afectaba
-     * ninguna fila y el stock nunca se actualizaba. Se eliminó esa condición porque
-     * al registrar una compra se debe actualizar el stock independientemente del estado.
-     *
-     * Bug 2: executeBatch() no verifica si algún UPDATE afectó 0 filas.
-     * Ahora se valida el resultado de cada UPDATE y se lanza excepción si falla,
-     * lo que fuerza el rollback y evita que la compra quede guardada sin stock actualizado.
-     *
-     * Bug 3: el INSERT de inventario usaba addBatch() pero si fallaba silenciosamente
-     * el UPDATE de stock nunca se ejecutaba. Ahora ambas operaciones se hacen fila por fila
-     * con executeUpdate() para detectar errores de inmediato.
-     *
-     * usuarioId puede ser null si no hay usuario de sistema disponible (la columna lo permite).
+     * @param con conexión activa (misma transacción)
+     * @param detalles líneas de la compra
+     * @param referencia texto para {@code Inventario_Movimiento}
+     * @param usuarioId usuario para el movimiento o {@code null}
+     * @throws SQLException si un UPDATE no afecta filas u otro error SQL
      */
     private void registrarEntradaInventario(Connection con,
                                              List<DetalleCompra> detalles,
@@ -151,6 +153,12 @@ public class CompraDAO {
 
     // ── Paso 1: cabecera de compra ─────────────────────────────────────────────
 
+    /**
+     * @param con conexión activa
+     * @param c datos de cabecera (proveedor, fechas)
+     * @return {@code compra_id} generado
+     * @throws SQLException si no se obtienen claves
+     */
     private int insertarCompra(Connection con, Compra c) throws SQLException {
         String sql = """
             INSERT INTO Compra (proveedor_id, fecha_compra, fecha_entrega)
@@ -170,6 +178,12 @@ public class CompraDAO {
 
     // ── Paso 2: líneas de detalle ──────────────────────────────────────────────
 
+    /**
+     * @param con conexión activa
+     * @param compraId ID de la cabecera
+     * @param detalles líneas de producto
+     * @throws SQLException si falla el batch
+     */
     private void insertarDetalles(Connection con, int compraId,
                                    List<DetalleCompra> detalles) throws SQLException {
         String sql = """
@@ -190,6 +204,14 @@ public class CompraDAO {
 
     // ── Paso 4: registro de pago ───────────────────────────────────────────────
 
+    /**
+     * @param con conexión activa
+     * @param compraId compra asociada
+     * @param metodoPagoId método de pago
+     * @param monto importe del pago
+     * @param estado {@code confirmado} o {@code pendiente} según el caso
+     * @throws SQLException si falla el insert
+     */
     private void insertarPagoCompra(Connection con, int compraId,
                                      int metodoPagoId, BigDecimal monto,
                                      String estado) throws SQLException {
@@ -208,6 +230,17 @@ public class CompraDAO {
 
     // ── Paso 5: crédito asociado ───────────────────────────────────────────────
 
+    /**
+     * @param con conexión activa
+     * @param compraId compra asociada
+     * @param montoTotal monto total del crédito
+     * @param saldoPendiente saldo restante
+     * @param fechaInicio inicio del crédito
+     * @param fechaVencimiento vencimiento
+     * @param estado estado del crédito en la BD
+     * @return {@code credito_id} generado
+     * @throws SQLException si no se obtienen claves
+     */
     private int insertarCreditoCompra(Connection con, int compraId,
                                        BigDecimal montoTotal, BigDecimal saldoPendiente,
                                        java.util.Date fechaInicio, java.util.Date fechaVencimiento,
@@ -234,6 +267,14 @@ public class CompraDAO {
 
     // ── Paso 6: abono inicial del crédito ──────────────────────────────────────
 
+    /**
+     * @param con conexión activa
+     * @param creditoId crédito al que pertenece el abono
+     * @param metodoPagoId método de pago del abono
+     * @param montoAbono importe
+     * @param estado estado del abono
+     * @throws SQLException si falla el insert
+     */
     private void insertarAbonoCredito(Connection con, int creditoId,
                                        int metodoPagoId, BigDecimal montoAbono,
                                        String estado) throws SQLException {
@@ -252,7 +293,13 @@ public class CompraDAO {
 
     // ── Consultas ──────────────────────────────────────────────────────────────
 
-    /** Busca una compra por su ID incluyendo detalles, pago y crédito si aplica. */
+    /**
+     * Busca una compra por su ID incluyendo detalles, pago y crédito si aplica.
+     *
+     * @param compraId identificador de la compra
+     * @return objeto {@link Compra} cargado o {@code null}
+     * @throws Exception si falla la consulta
+     */
     public Compra obtenerPorId(int compraId) throws Exception {
         String sql = """
             SELECT c.compra_id, c.proveedor_id,
@@ -295,7 +342,14 @@ public class CompraDAO {
         }
     }
 
-    /** Retorna los productos detallados de una compra. */
+    /**
+     * Retorna los productos detallados de una compra.
+     *
+     * @param con conexión activa
+     * @param compraId ID de compra
+     * @return lista de líneas
+     * @throws SQLException si falla la consulta
+     */
     private List<DetalleCompra> obtenerDetalles(Connection con, int compraId) throws SQLException {
         String sql = """
             SELECT dc.detalle_compra_id, dc.producto_id, dc.precio_unitario, dc.cantidad,
@@ -324,7 +378,13 @@ public class CompraDAO {
         return lista;
     }
 
-    /** Retorna todas las compras de un proveedor ordenadas por fecha descendente. */
+    /**
+     * Retorna todas las compras de un proveedor ordenadas por fecha descendente.
+     *
+     * @param proveedorId identificador del proveedor
+     * @return lista de compras con detalles cargados
+     * @throws Exception si falla la consulta
+     */
     public List<Compra> listarPorProveedor(int proveedorId) throws Exception {
         String sql = """
             SELECT c.compra_id, c.proveedor_id,
@@ -357,7 +417,13 @@ public class CompraDAO {
         return lista;
     }
 
-    /** Elimina una compra. Los detalles y pagos se eliminan por CASCADE en la BD. */
+    /**
+     * Elimina una compra. Los detalles y pagos se eliminan por CASCADE en la BD.
+     *
+     * @param compraId identificador de la compra
+     * @return {@code true} si se borró una fila
+     * @throws Exception si falla el delete
+     */
     public boolean eliminarConTransaccion(int compraId) throws Exception {
         String sql = "DELETE FROM Compra WHERE compra_id = ?";
         try (Connection con = ConexionDB.getConnection();

@@ -34,17 +34,16 @@ public abstract class TransaccionesDAO {
                 return false;
             }
 
-            conexion.setAutoCommit(false); // INICIO TRANSACCIÓN
+            conexion.setAutoCommit(false);
             
-            // Ejecutar operación
             boolean resultado = operacion.ejecutar(conexion);
             
             if (resultado) {
-                conexion.commit(); // CONFIRMAR
+                conexion.commit();
                 System.out.println("Transacción completada exitosamente");
                 return true;
             } else {
-                conexion.rollback(); // REVERTIR
+                conexion.rollback();
                 System.out.println("Transacción revertida por error de lógica");
                 return false;
             }
@@ -52,7 +51,7 @@ public abstract class TransaccionesDAO {
         } catch (SQLException e) {
             try {
                 if (conexion != null) {
-                    conexion.rollback(); // REVERTIR EN EXCEPCIÓN
+                    conexion.rollback();
                     System.err.println("Transacción revertida por excepción SQL: " + e.getMessage());
                 }
             } catch (SQLException rollbackEx) {
@@ -63,7 +62,7 @@ public abstract class TransaccionesDAO {
         } finally {
             try {
                 if (conexion != null) {
-                    // Buena práctica: devolver el autocommit a true antes de cerrar
+                    // Restaurar autocommit antes de cerrar
                     conexion.setAutoCommit(true);
                     conexion.close();
                 }
