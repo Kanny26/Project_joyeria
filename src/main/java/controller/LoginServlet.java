@@ -20,7 +20,12 @@ import java.util.Map;
 public class LoginServlet extends HttpServlet {
 
     /**
-     * Valida credenciales, renueva la sesión para mitigar fijación de sesión y redirige al panel por rol.
+     * Procesa la autenticación de usuarios mediante validación de credenciales.
+     * Verifica el nombre de usuario y contraseña contra la base de datos, gestiona
+     * la creación segura de sesiones y redirige al panel correspondiente según el rol.
+     *
+     * Implementa medidas de seguridad como prevención de fijación de sesión,
+     * configuración de tiempo de inactividad y cabeceras anti-caché para páginas protegidas.
      *
      * @param request  petición HTTP con {@code usuario} y {@code password}
      * @param response respuesta HTTP (redirect al panel o forward a login con error)

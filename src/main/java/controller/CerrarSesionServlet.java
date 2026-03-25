@@ -10,7 +10,6 @@ import java.io.IOException;
 
 /**
  * Cierra la sesión del usuario de forma segura.
- *
  * Elimina los atributos de sesión uno por uno antes de invalidarla,
  * y configura cabeceras para que el navegador no pueda volver a las páginas
  * protegidas usando el botón "Atrás" después de cerrar sesión.
@@ -18,6 +17,17 @@ import java.io.IOException;
 @WebServlet("/CerrarSesionServlet")
 public class CerrarSesionServlet extends HttpServlet {
 
+    /**
+     * Maneja las peticiones GET para cerrar la sesión.
+     * Obtiene la sesión activa si existe, elimina sus atributos,
+     * la invalida y redirige al usuario a la página de inicio.
+     * También configura cabeceras anti-caché para evitar acceso a páginas protegidas.
+     *
+     * @param request objeto HttpServletRequest que contiene la petición del cliente
+     * @param response objeto HttpServletResponse para enviar la respuesta al cliente
+     * @throws ServletException si ocurre un error en el procesamiento del servlet
+     * @throws IOException si ocurre un error de entrada/salida durante el manejo
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -47,6 +57,16 @@ public class CerrarSesionServlet extends HttpServlet {
         response.sendRedirect(request.getContextPath() + "/index.jsp");
     }
 
+    /**
+     * Maneja las peticiones POST para cerrar la sesión.
+     * Delega la lógica al método doGet para mantener un comportamiento consistente
+     * independientemente del método HTTP utilizado.
+     *
+     * @param request objeto HttpServletRequest que contiene la petición del cliente
+     * @param response objeto HttpServletResponse para enviar la respuesta al cliente
+     * @throws ServletException si ocurre un error en el procesamiento del servlet
+     * @throws IOException si ocurre un error de entrada/salida durante el manejo
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {

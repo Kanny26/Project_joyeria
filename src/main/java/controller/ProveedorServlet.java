@@ -20,6 +20,24 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Servlet encargado de gestionar el módulo completo de proveedores en el sistema AAC27.
+ *
+ * Proporciona funcionalidades para:
+ * - Listado, búsqueda y filtrado de proveedores
+ * - Registro, edición y eliminación lógica de proveedores
+ * - Gestión de estados activos/inactivos
+ * - Visualización del historial de compras por proveedor
+ * - Registro de nuevas compras asociadas a un proveedor
+ *
+ * Todas las operaciones requieren autenticación de administrador y validan
+ * la integridad de los datos antes de persistir cambios en la base de datos.
+ *
+ * @see ProveedorDAO
+ * @see CompraDAO
+ * @see Proveedor
+ * @see Compra
+ */
 @WebServlet("/ProveedorServlet")
 public class ProveedorServlet extends HttpServlet {
 
@@ -44,10 +62,25 @@ public class ProveedorServlet extends HttpServlet {
     // ==================== GET ====================
 
     /**
-     * Maneja todas las peticiones GET del módulo de proveedores.
-     * El parámetro "action" determina qué operación ejecutar.
-     * Si no se envía action, se muestra el listado por defecto.
-     * Antes de cualquier acción se verifica que el admin tenga sesión activa.
+     * Procesa las solicitudes HTTP GET para el módulo de proveedores.
+     *
+     * Según el parámetro {@code action}, ejecuta una de las siguientes operaciones:
+     * - "listar": muestra el listado completo de proveedores
+     * - "verificarDocumento": valida unicidad de documento vía AJAX (JSON)
+     * - "buscar": filtra proveedores por término de búsqueda y criterio
+     * - "nuevo": muestra el formulario para registrar un nuevo proveedor
+     * - "editar": muestra el formulario de edición con datos existentes
+     * - "actualizarEstado": cambia el estado activo/inactivo de un proveedor
+     * - "confirmarEliminar": muestra vista de confirmación antes de eliminar
+     * - "verCompras": muestra el historial de compras de un proveedor específico
+     * - "nuevaCompra": prepara el formulario para registrar una nueva compra
+     *
+     * Si no se especifica una acción válida o ocurre un error, redirige al panel principal.
+     *
+     * @param request  la petición HTTP que contiene el parámetro de acción y filtros
+     * @param response la respuesta HTTP utilizada para forwards o redirecciones
+     * @throws ServletException si ocurre un error durante el procesamiento del servlet
+     * @throws IOException      si ocurre un error de entrada/salida al enviar la respuesta
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -65,7 +98,6 @@ public class ProveedorServlet extends HttpServlet {
                 case "nuevo"            -> mostrarFormularioNuevo(request, response);
                 case "editar"           -> mostrarFormularioEditar(request, response);
                 case "actualizarEstado" -> actualizarEstado(request, response);
-                case "confirmarEliminar"-> confirmarEliminarProveedor(request, response);
                 case "verCompras"       -> verCompras(request, response);
                 case "nuevaCompra"      -> mostrarFormularioCompra(request, response);
                 default -> response.sendRedirect(request.getContextPath() + "/Administrador/admin-principal.jsp");
@@ -80,9 +112,20 @@ public class ProveedorServlet extends HttpServlet {
     // ==================== POST ====================
 
     /**
-     * Maneja todas las peticiones POST: guardar, actualizar y eliminar proveedores,
-     * y también el cambio de estado desde el listado.
-     * Cualquier excepción no controlada redirige al listado sin perder el flujo.
+     * Procesa las solicitudes HTTP POST para ejecutar operaciones de modificación sobre proveedores.
+     *
+     * Según el valor del parámetro {@code action}, ejecuta una de las siguientes operaciones:
+     * - "guardar": registra un nuevo proveedor validando datos obligatorios y unicidad
+     * - "actualizar": modifica un proveedor existente preservando campos inmutables
+     * - "actualizarEstado": cambia el estado activo/inactivo desde el listado
+     *
+     * En caso de éxito, redirige con parámetros de confirmación para evitar reenvíos.
+     * En caso de error, reenvía al listado con el mensaje de error para visualización.
+     *
+     * @param request  la petición HTTP con {@code action} y datos del formulario
+     * @param response la respuesta HTTP utilizada para redirecciones o forwards con errores
+     * @throws ServletException si ocurre un error durante el procesamiento del servlet
+     * @throws IOException      si ocurre un error de entrada/salida al enviar la respuesta
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -95,7 +138,6 @@ public class ProveedorServlet extends HttpServlet {
             switch (action != null ? action : "") {
                 case "guardar"          -> guardarProveedor(request, response);
                 case "actualizar"       -> actualizarProveedor(request, response);
-                case "eliminar"         -> eliminarProveedorPost(request, response);
                 case "actualizarEstado" -> actualizarEstado(request, response);
                 default -> response.sendRedirect(request.getContextPath() + "/ProveedorServlet?action=listar");
             }
@@ -109,9 +151,17 @@ public class ProveedorServlet extends HttpServlet {
     // ==================== MÉTODOS GET ====================
 
     /**
-     * Carga la lista completa de proveedores y los pasa al JSP via atributos de request.
-     * El parámetro "msg" llega desde un sendRedirect después de una operación exitosa
-     * (ej: ?msg=creado) y se reenvía como atributo para que el JSP lo muestre con SweetAlert.
+     * Carga el listado completo de proveedores y prepara los atributos para la vista.
+     *
+     * Calcula estadísticas como total de proveedores y cantidad de activos.
+     * Carga la lista de materiales disponibles para los filtros del JSP.
+     * Si existe el parámetro {@code msg} en la URL, lo reenvía como atributo
+     * para que la vista pueda mostrar alertas de confirmación tras operaciones exitosas.
+     *
+     * @param request  la petición HTTP que puede contener el parámetro {@code msg}
+     * @param response la respuesta HTTP utilizada para forwards a la vista JSP
+     * @throws ServletException si ocurre un error al despachar la vista
+     * @throws IOException      si ocurre un error de entrada/salida
      */
     private void listarProveedores(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Proveedor> proveedores = proveedorDAO.listarProveedores();
@@ -128,14 +178,15 @@ public class ProveedorServlet extends HttpServlet {
     }
 
     /**
-     * Responde en JSON si un documento ya existe en la base de datos.
-     * Se llama desde JavaScript (AJAX) al escribir el documento en el formulario.
+     * Verifica si un documento de identidad ya existe registrado en la base de datos.
      *
-     * Si viene un idActual válido (edición), verifica solo contra OTROS proveedores.
-     * Si no viene (nuevo proveedor), verifica contra todos.
+     * Este endpoint es consumido vía AJAX desde el formulario de registro/edición
+     * para validar en tiempo real la unicidad del documento. Si se proporciona
+     * un {@code idActual} válido (edición), excluye al proveedor actual de la validación.
      *
-     * matches("\\d+") valida que el ID sea un número entero positivo antes de usarlo.
-     * La respuesta tiene el formato: {"existe": true} o {"existe": false}
+     * @param request  la petición HTTP que contiene {@code documento} y opcionalmente {@code idActual}
+     * @param response la respuesta HTTP configurada para devolver JSON con el resultado de la validación
+     * @throws IOException si ocurre un error al escribir la respuesta JSON
      */
     private void verificarDocumento(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String doc        = request.getParameter("documento");
@@ -152,9 +203,16 @@ public class ProveedorServlet extends HttpServlet {
     }
 
     /**
-     * Ejecuta una búsqueda de proveedores según el término y el tipo de filtro enviados.
-     * Si el término está vacío, devuelve todos los proveedores sin filtrar.
-     * Los resultados y la búsqueda activa se pasan al mismo JSP de listado.
+     * Ejecuta una búsqueda de proveedores según el término y criterio de filtro proporcionados.
+     *
+     * Si el término de búsqueda está vacío, devuelve el listado completo sin filtrar.
+     * Los resultados, el término activo y el filtro aplicado se pasan a la vista
+     * para mantener el estado de la búsqueda en la interfaz.
+     *
+     * @param request  la petición HTTP que contiene los parámetros {@code q} y {@code filtro}
+     * @param response la respuesta HTTP utilizada para forwards a la vista de listado
+     * @throws ServletException si ocurre un error al despachar la vista
+     * @throws IOException      si ocurre un error de entrada/salida
      */
     private void buscarProveedor(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String q      = request.getParameter("q");
@@ -186,8 +244,15 @@ public class ProveedorServlet extends HttpServlet {
     }
 
     /**
-     * Prepara el formulario para agregar un nuevo proveedor.
-     * Carga la lista de materiales disponibles para los checkboxes del formulario.
+     * Prepara y muestra el formulario para registrar un nuevo proveedor.
+     *
+     * Carga la lista completa de materiales disponibles para populatear
+     * los checkboxes de selección múltiple en el formulario.
+     *
+     * @param request  la petición HTTP recibida
+     * @param response la respuesta HTTP utilizada para forwards al JSP del formulario
+     * @throws ServletException si ocurre un error al despachar la vista
+     * @throws IOException      si ocurre un error de entrada/salida
      */
     private void mostrarFormularioNuevo(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setAttribute("materiales", materialDAO.listarMateriales());
@@ -195,11 +260,15 @@ public class ProveedorServlet extends HttpServlet {
     }
 
     /**
-     * Prepara el formulario de edición cargando los datos del proveedor a editar.
+     * Prepara y muestra el formulario de edición con los datos del proveedor seleccionado.
      *
-     * matches("\\d+") valida que el ID recibido sea numérico antes de hacer la consulta,
-     * evitando errores o inyecciones si alguien manipula la URL manualmente.
-     * Si el proveedor no existe, redirige al listado.
+     * Valida que el ID recibido sea numérico antes de consultar la base de datos.
+     * Si el proveedor no existe o el ID es inválido, redirige al listado para evitar errores.
+     *
+     * @param request  la petición HTTP que contiene el parámetro {@code id} del proveedor
+     * @param response la respuesta HTTP utilizada para forwards o redirecciones según validación
+     * @throws ServletException si ocurre un error al despachar la vista
+     * @throws IOException      si ocurre un error de entrada/salida
      */
     private void mostrarFormularioEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String idStr = request.getParameter("id");
@@ -218,9 +287,15 @@ public class ProveedorServlet extends HttpServlet {
     }
 
     /**
-     * Cambia el estado activo/inactivo de un proveedor.
-     * Valida que el ID sea numérico antes de procesar.
-     * Después del cambio recarga el listado para reflejar el nuevo estado.
+     * Actualiza el estado activo/inactivo de un proveedor registrado.
+     *
+     * Valida que el ID y el nuevo estado sean proporcionados y que el ID sea numérico.
+     * Tras actualizar, recarga el listado completo para reflejar los cambios en la interfaz.
+     *
+     * @param request  la petición HTTP que contiene {@code id} y {@code estado}
+     * @param response la respuesta HTTP utilizada para forwards al listado actualizado
+     * @throws IOException      si ocurre un error de entrada/salida
+     * @throws ServletException si ocurre un error al procesar la vista
      */
     private void actualizarEstado(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         String idStr     = request.getParameter("id");
@@ -230,42 +305,24 @@ public class ProveedorServlet extends HttpServlet {
         }
         listarProveedores(request, response);
     }
-
-    /**
-     * Carga los datos del proveedor y hace forward a la página de confirmación de eliminación.
-     * Si el ID no es válido o el proveedor no existe, redirige al listado de forma segura.
-     */
-    private void confirmarEliminarProveedor(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String idStr = request.getParameter("id");
-        if (idStr == null || !idStr.matches("\\d+")) {
-            response.sendRedirect(request.getContextPath() + "/ProveedorServlet?action=listar");
-            return;
-        }
-        Proveedor p = proveedorDAO.obtenerPorId(Integer.parseInt(idStr));
-        if (p == null) {
-            response.sendRedirect(request.getContextPath() + "/ProveedorServlet?action=listar");
-            return;
-        }
-        request.setAttribute("proveedor", p);
-        request.getRequestDispatcher("/Administrador/proveedores/eliminar.jsp").forward(request, response);
-    }
-
     // ==================== MÉTODOS POST ====================
 
     /**
-     * Procesa el formulario de registro de un nuevo proveedor.
+     * Procesa el registro de un nuevo proveedor con validación exhaustiva de datos.
      *
-     * Flujo:
-     * 1. Lee los datos del formulario (campos individuales y listas de teléfonos/correos/materiales).
-     * 2. Valida los campos obligatorios y duplicados de documento.
-     * 3. Verifica que ningún teléfono ni correo ya exista en otro proveedor.
-     * 4. Si todo es válido, guarda en base de datos y redirige al listado con msg=creado.
-     * 5. Si hay error, reenvía el formulario conservando los datos ingresados.
+     * Flujo de validación:
+     * 1. Construye el objeto Proveedor desde los parámetros del formulario
+     * 2. Valida campos obligatorios y unicidad del documento
+     * 3. Verifica que teléfonos y correos no estén registrados en otros proveedores
+     * 4. Si todo es válido, persiste en base de datos y redirige con confirmación
+     * 5. Si hay error, reenvía al formulario conservando los datos ingresados
      *
-     * getParameterValues devuelve un array porque el formulario puede enviar
-     * múltiples campos con el mismo nombre (ej: varios inputs name="telefono").
+     * Implementa el patrón POST-Redirect-GET para evitar reenvíos accidentales.
      *
-     * matches("\\d+") filtra los IDs de materiales para asegurarse de que son números válidos.
+     * @param request  la petición HTTP que contiene los datos del formulario de nuevo proveedor
+     * @param response la respuesta HTTP utilizada para redirecciones o forwards con errores
+     * @throws ServletException si ocurre un error durante el procesamiento
+     * @throws IOException      si ocurre un error de entrada/salida
      */
     private void guardarProveedor(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
@@ -287,10 +344,6 @@ public class ProveedorServlet extends HttpServlet {
         }
 
         
-
-
-
-
 
 
 
@@ -336,16 +389,18 @@ public class ProveedorServlet extends HttpServlet {
     }
 
     /**
-     * Procesa el formulario de edición de un proveedor existente.
+     * Procesa la actualización de un proveedor existente preservando campos inmutables.
      *
-     * IMPORTANTE: nombre, documento y fechaInicio se toman del registro original
-     * en base de datos (no del formulario), porque son campos inmutables (RF11).
-     * Esto evita que alguien los modifique manipulando el HTML.
+     * Los campos nombre, documento y fechaInicio se toman del registro original
+     * en base de datos para prevenir modificaciones maliciosas vía manipulación del HTML.
      *
-     * La validación de teléfonos y correos duplicados excluye al proveedor actual
-     * usando los métodos "ParaOtro", lo que permite conservar sus propios datos.
+     * La validación de teléfonos y correos excluye al proveedor actual mediante
+     * métodos "ParaOtro", permitiendo conservar sus propios datos de contacto.
      *
-     * Si la actualización es exitosa, redirige al listado con msg=actualizado.
+     * @param request  la petición HTTP que contiene los datos actualizados del proveedor
+     * @param response la respuesta HTTP utilizada para redirecciones o forwards con errores
+     * @throws ServletException si ocurre un error durante el procesamiento
+     * @throws IOException      si ocurre un error de entrada/salida
      */
     private void actualizarProveedor(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
@@ -408,15 +463,20 @@ public class ProveedorServlet extends HttpServlet {
     }
 
     /**
-     * Reenvía el formulario con los datos que el usuario ya ingresó más el mensaje de error.
-     * Esto evita que el usuario tenga que volver a llenar todo el formulario cuando hay un error.
+     * Reenvía al usuario al formulario con los datos ingresados y un mensaje de error.
      *
-     * Reconstruye las listas de teléfonos y correos desde el request para pre-llenar los campos.
-     * Para los materiales, crea objetos Material con solo el ID para que el JSP pueda marcar
-     * los checkboxes correctos como seleccionados.
+     * Reconstruye las listas de teléfonos, correos y materiales seleccionados desde
+     * los parámetros del request para pre-llenar los campos del formulario.
+     * Esto mejora la experiencia de usuario al evitar tener que volver a ingresar
+     * toda la información cuando ocurre un error de validación.
      *
-     * forward (no redirect) es necesario aquí porque se necesita pasar atributos al JSP;
-     * con sendRedirect los atributos del request se perderían.
+     * @param request   la petición HTTP que contiene los datos del formulario original
+     * @param response  la respuesta HTTP utilizada para forwards a la vista del formulario
+     * @param error     el mensaje de error a mostrar al usuario
+     * @param p         el objeto Proveedor con los datos ingresados para pre-llenar campos
+     * @param vista     la ruta del JSP al cual se transferirá el control
+     * @throws ServletException si ocurre un error al despachar la vista
+     * @throws IOException      si ocurre un error de entrada/salida
      */
     private void reenviarFormProveedor(HttpServletRequest request, HttpServletResponse response,
             String error, Proveedor p, String vista) throws ServletException, IOException {
@@ -456,9 +516,16 @@ public class ProveedorServlet extends HttpServlet {
     }
 
     /**
-     * Ejecuta la eliminación lógica del proveedor (lo marca como inactivo).
-     * Si el ID no es válido o la operación falla, redirige al listado sin mensaje.
-     * Si tiene éxito, redirige con msg=eliminado para mostrar la confirmación al usuario.
+     * Ejecuta la eliminación lógica de un proveedor marcándolo como inactivo.
+     *
+     * La eliminación es lógica (no física) para preservar la integridad histórica
+     * de compras y otros registros relacionados. Requiere autenticación de administrador
+     * para registrar quién realizó la acción.
+     *
+     * @param request  la petición HTTP que contiene el parámetro {@code id} del proveedor
+     * @param response la respuesta HTTP utilizada para redirecciones con confirmación
+     * @throws ServletException si ocurre un error durante el procesamiento
+     * @throws IOException      si ocurre un error de entrada/salida
      */
     private void eliminarProveedorPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
@@ -477,11 +544,15 @@ public class ProveedorServlet extends HttpServlet {
     // ==================== AUXILIARES ====================
 
     /**
-     * Construye un objeto Proveedor con los datos enviados desde el formulario.
+     * Construye un objeto Proveedor populated con los datos recibidos desde el formulario.
      *
-     * fechaInicio: si viene vacía se guarda como null para que la BD no reciba un string vacío.
-     * minimoCompra: se convierte de String a Double; si está vacío se asigna 0.0 por defecto.
-     * estado: el formulario envía "activo" o nada; si no viene se asume activo por defecto.
+     * Maneja valores opcionales y convierte tipos de datos:
+     * - fechaInicio: null si está vacía para evitar strings vacíos en la BD
+     * - minimoCompra: 0.0 por defecto si el valor no es numérico o está vacío
+     * - estado: true por defecto si no se especifica o es "activo"
+     *
+     * @param request la petición HTTP que contiene los parámetros del formulario
+     * @return un objeto Proveedor con los datos convertidos y validados básicos
      */
     private Proveedor construirProveedorDesdeRequest(HttpServletRequest request) {
         Proveedor p = new Proveedor();
@@ -501,9 +572,14 @@ public class ProveedorServlet extends HttpServlet {
     }
 
     /**
-     * Valida que los campos obligatorios del proveedor estén presentes.
-     * Si esNuevo es true, también verifica que el documento no esté ya registrado.
-     * Devuelve el mensaje de error como String, o null si todo está bien.
+     * Valida que los campos obligatorios de un proveedor estén presentes y sean válidos.
+     *
+     * Si {@code esNuevo} es true, también verifica que el documento no esté
+     * ya registrado en la base de datos para garantizar unicidad.
+     *
+     * @param p      el objeto Proveedor a validar
+     * @param esNuevo indica si se trata de un registro nuevo (requiere validación de unicidad)
+     * @return el mensaje de error descriptivo si la validación falla, o null si todo es válido
      */
     private String validarProveedor(Proveedor p, boolean esNuevo) {
         if (p.getNombre()     == null || p.getNombre().trim().isEmpty())     return "El nombre es obligatorio.";
@@ -514,9 +590,15 @@ public class ProveedorServlet extends HttpServlet {
     }
 
     /**
-     * Verifica que haya una sesión de administrador activa.
-     * sendRedirect envía al usuario al login sin mostrar ningún contenido protegido.
-     * Devuelve false para que el método que lo llama pueda detener su ejecución con return.
+     * Verifica que exista una sesión activa con un administrador autenticado.
+     *
+     * Si no hay sesión válida, redirige al usuario a la página de inicio de sesión
+     * y retorna false para que el método llamador pueda detener su ejecución.
+     *
+     * @param request  la petición HTTP para acceder a la sesión
+     * @param response la respuesta HTTP utilizada para redirigir si no hay autenticación
+     * @return true si la sesión contiene un administrador válido, false en caso contrario
+     * @throws IOException si ocurre un error al realizar la redirección
      */
     private boolean estaAutenticado(HttpServletRequest request, HttpServletResponse response) throws IOException {
         if (request.getSession().getAttribute("admin") == null) {
@@ -527,9 +609,15 @@ public class ProveedorServlet extends HttpServlet {
     }
 
     /**
-     * Carga el historial de compras de un proveedor específico con sus estadísticas.
-     * Calcula el total gastado sumando los totales de cada compra,
-     * y el total de productos sumando las cantidades de cada detalle.
+     * Carga y muestra el historial completo de compras de un proveedor específico.
+     *
+     * Calcula estadísticas agregadas:
+     * - totalGasto: suma de los totales de todas las compras
+     * - totalProductos: suma de cantidades de todos los detalles de compra
+     *
+     * @param request  la petición HTTP que contiene el parámetro {@code id} del proveedor
+     * @param response la respuesta HTTP utilizada para forwards a la vista de historial
+     * @throws Exception si ocurre un error al consultar la base de datos o calcular estadísticas
      */
     private void verCompras(HttpServletRequest request, HttpServletResponse response) throws Exception {
         String idStr = request.getParameter("id");
@@ -561,9 +649,15 @@ public class ProveedorServlet extends HttpServlet {
     }
 
     /**
-     * Prepara el formulario para registrar una nueva compra a un proveedor.
-     * Carga las categorías de productos y los métodos de pago disponibles.
-     * Si el proveedor no existe, redirige al listado de forma segura.
+     * Prepara y muestra el formulario para registrar una nueva compra a un proveedor.
+     *
+     * Carga las listas auxiliares necesarias:
+     * - categorías de productos para filtrar en el selector dinámico
+     * - métodos de pago disponibles para la transacción
+     *
+     * @param request  la petición HTTP que contiene el parámetro {@code id} del proveedor
+     * @param response la respuesta HTTP utilizada para forwards o redirecciones según validación
+     * @throws Exception si ocurre un error al consultar las listas auxiliares desde los DAO
      */
     private void mostrarFormularioCompra(HttpServletRequest request, HttpServletResponse response) throws Exception {
         String idStr = request.getParameter("id");

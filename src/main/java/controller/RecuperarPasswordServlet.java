@@ -11,15 +11,25 @@ import java.io.IOException;
 import java.sql.*;
 
 /**
- * Servlet que maneja el flujo completo de recuperación de contraseña:
- *   POST /recuperar?paso=1  → valida correo, genera código INT, envía email
- *   POST /recuperar?paso=2  → valida el código de 6 dígitos (INT)
- *   POST /recuperar?paso=3  → guarda la nueva contraseña
+ * Servlet que maneja el flujo completo de recuperación de contraseña.
+ * Implementa un proceso de tres pasos:
+ *   POST /recuperar?paso=1  → valida correo, genera código numérico, envía email
+ *   POST /recuperar?paso=2  → valida el código de 6 dígitos ingresado por el usuario
+ *   POST /recuperar?paso=3  → guarda la nueva contraseña en la base de datos
  */
 @WebServlet("/recuperar")
 public class RecuperarPasswordServlet extends HttpServlet {
 
-    // ─── GET: mostrar las páginas JSP ───────────────────────────────────────
+    //  GET: mostrar las páginas JSP
+    /**
+     * Maneja las peticiones GET para mostrar las vistas del flujo de recuperación.
+     * Muestra la página correspondiente según el paso actual.
+     *
+     * @param req objeto HttpServletRequest que contiene el parámetro paso
+     * @param resp objeto HttpServletResponse para enviar la respuesta
+     * @throws ServletException si ocurre un error en el procesamiento
+     * @throws IOException si ocurre un error de entrada/salida
+     */
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
@@ -39,7 +49,15 @@ public class RecuperarPasswordServlet extends HttpServlet {
         }
     }
 
-    // ─── POST: lógica de cada paso ───────────────────────────────────────────
+    // POST: lógica de cada paso 
+    /**
+     * Maneja las peticiones POST delegando la lógica según el paso actual.
+     *
+     * @param req objeto HttpServletRequest que contiene el parámetro paso
+     * @param resp objeto HttpServletResponse para enviar la respuesta
+     * @throws ServletException si ocurre un error en el procesamiento
+     * @throws IOException si ocurre un error de entrada/salida
+     */
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
@@ -51,10 +69,18 @@ public class RecuperarPasswordServlet extends HttpServlet {
         else if ("3".equals(paso)) { paso3_guardarPassword(req, resp); }
         else { resp.sendRedirect(req.getContextPath() + "/Recuperar_pass/ing-correo.jsp"); }
     }
-
-    // ════════════════════════════════════════════════════════════════════════
     // PASO 1 — Validar correo y enviar código (INT de 6 dígitos)
-    // ════════════════════════════════════════════════════════════════════════
+   
+    /**
+     * Paso 1: Valida el correo ingresado, genera un código de 6 dígitos,
+     * lo almacena en la base de datos con expiración de 15 minutos y lo envía por email.
+     * Por seguridad, no revela si el correo existe o no en el sistema.
+     *
+     * @param req petición HTTP con el parámetro correo
+     * @param resp respuesta HTTP
+     * @throws ServletException si ocurre un error en el procesamiento
+     * @throws IOException si ocurre un error de entrada/salida
+     */
     private void paso1_enviarCodigo(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
@@ -132,10 +158,19 @@ public class RecuperarPasswordServlet extends HttpServlet {
 
         resp.sendRedirect(req.getContextPath() + "/recuperar?paso=2");
     }
-
-    // ════════════════════════════════════════════════════════════════════════
+    
     // PASO 2 — Validar el código de 6 dígitos (comparación directa como INT)
-    // ════════════════════════════════════════════════════════════════════════
+    
+    /**
+     * Paso 2: Valida el código de 6 dígitos ingresado por el usuario.
+     * Compara el código directamente con el almacenado en la base de datos
+     * y verifica que no haya expirado.
+     *
+     * @param req petición HTTP con el parámetro codigo
+     * @param resp respuesta HTTP
+     * @throws ServletException si ocurre un error en el procesamiento
+     * @throws IOException si ocurre un error de entrada/salida
+     */
     private void paso2_validarCodigo(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
@@ -194,10 +229,18 @@ public class RecuperarPasswordServlet extends HttpServlet {
         // (No necesitamos guardar token, el usuario_id en sesión es suficiente)
         resp.sendRedirect(req.getContextPath() + "/recuperar?paso=3");
     }
-
-    // ════════════════════════════════════════════════════════════════════════
-    // PASO 3 — Guardar nueva contraseña
-    // ════════════════════════════════════════════════════════════════════════
+	// PASO 3 — Guardar nueva contraseña
+    
+    /**
+     * Paso 3: Guarda la nueva contraseña después de validar que cumple
+     * los requisitos de seguridad. Hashea la contraseña con BCrypt,
+     * actualiza el registro del usuario y limpia la sesión de recuperación.
+     *
+     * @param req petición HTTP con los parámetros passNueva y passConfirm
+     * @param resp respuesta HTTP
+     * @throws ServletException si ocurre un error en el procesamiento
+     * @throws IOException si ocurre un error de entrada/salida
+     */
     private void paso3_guardarPassword(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
@@ -255,7 +298,18 @@ public class RecuperarPasswordServlet extends HttpServlet {
         resp.sendRedirect(req.getContextPath() + "/inicio-sesion.jsp?msg=password_actualizado");
     }
 
-    // ─── Helper para reenvío con error ───────────────────────────────────────
+    // Helper para reenvío con error 
+    
+    /**
+     * Helper que establece un mensaje de error y reenvía a la vista especificada.
+     *
+     * @param req petición HTTP
+     * @param resp respuesta HTTP
+     * @param vista ruta de la vista JSP a la que reenviar
+     * @param error mensaje de error a mostrar al usuario
+     * @throws ServletException si ocurre un error en el reenvío
+     * @throws IOException si ocurre un error de entrada/salida
+     */
     private void reenviar(HttpServletRequest req, HttpServletResponse resp, String vista, String error)
             throws ServletException, IOException {
         req.setAttribute("error", error);

@@ -7,16 +7,24 @@ import java.util.Properties;
 
 /**
  * Gestiona la conexión a la base de datos MySQL.
- * Carga la configuración desde un archivo properties o usa valores por defecto.
+ * Esta clase proporciona una conexión única configurada mediante un archivo de propiedades
+ * o valores predeterminados para desarrollo local. Implementa un patrón de carga estática
+ * que garantiza que la configuración esté disponible antes de cualquier intento de conexión.
  */
 public class ConexionDB {
     private static String URL;
     private static String USER;
     private static String PASS;
 
-    // Bloque estático: se ejecuta una sola vez al cargar la clase.
-    // Carga las credenciales desde db.properties si está disponible,
-    // sino usa valores por defecto para entorno de desarrollo local.
+    /**
+     * Bloque estático de inicialización que se ejecuta una sola vez al cargar la clase.
+     * Carga las credenciales desde db.properties si el archivo está disponible en el classpath.
+     * En caso de no encontrar el archivo, utiliza valores por defecto para entorno de desarrollo local.
+     * También registra el driver JDBC de MySQL para permitir las conexiones.
+     * 
+     * @throws ExceptionInInitializerError si ocurre algún error durante la inicialización,
+     *         incluyendo problemas al cargar el archivo de propiedades o al registrar el driver.
+     */
     static {
         try {
             Properties prop = new Properties();
@@ -41,7 +49,13 @@ public class ConexionDB {
         }
     }
 
-    // Método público para obtener una nueva conexión a la base de datos
+    /**
+     * Obtiene una nueva conexión activa a la base de datos utilizando la configuración cargada.
+     * 
+     * @return una conexión activa a la base de datos MySQL
+     * @throws Exception si ocurre un error al establecer la conexión, incluyendo problemas
+     *         de red, credenciales incorrectas o driver no disponible
+     */
     public static Connection getConnection() throws Exception {
         return DriverManager.getConnection(URL, USER, PASS);
     }

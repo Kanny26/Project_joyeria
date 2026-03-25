@@ -7,22 +7,29 @@ import java.sql.*;
 import java.util.*;
 
 /**
- * Lectura e inserción en la tabla Auditoria_Log de AAC27.
- * Controladores y otros DAO usan los métodos estáticos; ConexionDB para conexión y JSONObject para datos anteriores/nuevos.
+ * DAO para operaciones de lectura e inserción en la tabla Auditoria_Log de AAC27.
+ * Esta clase centraliza el registro de eventos de auditoría del sistema, permitiendo
+ * trazabilidad de acciones como logins, creación/edición de entidades y operaciones críticas.
+ * Los métodos estáticos permiten su uso directo desde controladores y otros DAO sin
+ * necesidad de instanciar la clase. Utiliza ConexionDB para gestión de conexiones y
+ * JSONObject para serializar estados anteriores y nuevos de las entidades auditadas.
  */
 public class AuditoriaDAO {
 
     /**
-     * Método central que inserta un registro de auditoría.
+     * Método central que inserta un registro de auditoría en la base de datos.
+     * Este método es el punto único de entrada para registrar cualquier evento
+     * auditable en el sistema, garantizando consistencia en el formato de los logs.
      *
-     * @param usuarioId       ID del usuario (0 = anónimo, ej: LOGIN_FALLIDO)
-     * @param accion          Tipo de acción, ej: "LOGIN_EXITOSO", "PRODUCTO_CREADO"
-     * @param entidad         Entidad afectada, ej: "Usuario", "Producto"
-     * @param entidadId       ID del registro afectado (null si no aplica)
-     * @param datosAnteriores Estado antes del cambio (null si no aplica)
-     * @param datosNuevos     Estado después del cambio (null si no aplica)
-     * @param direccionIp     IP del cliente
-     * @return true si se guardó correctamente
+     * @param usuarioId ID del usuario que realiza la acción (0 = anónimo, ej: LOGIN_FALLIDO)
+     * @param accion Tipo de acción realizada, ej: "LOGIN_EXITOSO", "PRODUCTO_CREADO"
+     * @param entidad Nombre de la entidad afectada, ej: "Usuario", "Producto", "Venta"
+     * @param entidadId ID del registro específico afectado (null si la acción no apunta a un registro)
+     * @param datosAnteriores Estado de la entidad antes del cambio en formato JSON (null si no aplica)
+     * @param datosNuevos Estado de la entidad después del cambio en formato JSON (null si no aplica)
+     * @param direccionIp Dirección IP del cliente desde donde se originó la operación
+     * @return true si el registro se insertó correctamente en la base de datos, false en caso contrario
+     * @throws Exception si ocurre un error inesperado durante el proceso de registro
      */
     public static boolean registrarAccion(
             int usuarioId,
@@ -44,14 +51,25 @@ public class AuditoriaDAO {
         // Esta sentencia INSERT resuelve una necesidad de negocio clave: dejar evidencia verificable
         // de operaciones (login, creación, edición, ventas) para reconstruir el historial del sistema.
         // La lista de columnas define exactamente qué se audita.
+        // Consulta SQL: INSERT en tabla Auditoria_Log
+        // Tabla destino: Auditoria_Log (almacena todos los eventos de auditoría del sistema)
+        // Columnas insertadas:
+        //   - usuario_id: FK hacia tabla Usuario (nullable para acciones anónimas)
+        //   - accion: tipo de evento de negocio registrado
+        //   - entidad: nombre lógico de la entidad afectada por la acción
+        //   - entidad_id: ID del registro específico modificado (nullable)
+        //   - datos_anteriores: JSON con el estado previo de la entidad (nullable)
+        //   - datos_nuevos: JSON con el estado posterior de la entidad (nullable)
+        //   - direccion_ip: dirección IP de origen para trazabilidad de seguridad
+        // Valores parametrizados (?) para prevenir SQL Injection y permitir reutilización del plan de ejecución
         String sql = "INSERT INTO Auditoria_Log " +
                     // Lista exacta de columnas destino en la tabla de auditoría.
                     "(usuario_id, accion, entidad, entidad_id, datos_anteriores, datos_nuevos, direccion_ip) " +
                     // Valores parametrizados para evitar SQL Injection y reutilizar el plan de ejecución.
                     "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-        // try-with-resources abre y cierra automáticamente conexión y statement,
-        // evitando fugas de recursos aunque ocurra un error SQL.
+        // try-with-resources: garantiza el cierre automático de Connection y PreparedStatement
+        // incluso si ocurre una excepción, previniendo fugas de recursos de base de datos
         try (Connection con = ConexionDB.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
 
@@ -109,26 +127,49 @@ public class AuditoriaDAO {
         }
     }
 
-    // ==================== CONSULTA PRINCIPAL ====================
+    // CONSULTA PRINCIPAL 
 
     /**
      * Retorna todos los registros de auditoría ordenados del más reciente al más antiguo.
-     * Incluye el nombre del usuario que realizó la acción (o "Anónimo" si no aplica).
+     * Incluye el nombre del usuario que realizó la acción (o "Anónimo" si no aplica)
+     * mediante un LEFT JOIN con la tabla Usuario.
      * Solo debe llamarse desde roles: superadministrador y administrador.
      *
-     * Cada mapa contiene:
-     *   log_id, usuario_nombre, accion, entidad, entidad_id,
-     *   datos_anteriores, datos_nuevos, direccion_ip, fecha_hora
+     * Cada mapa en la lista representa una fila del log y contiene las siguientes claves:
+     *   - log_id: identificador único del evento de auditoría
+     *   - usuario_nombre: nombre del usuario o "Anónimo" si no hay usuario asociado
+     *   - accion: tipo de acción realizada (LOGIN_EXITOSO, PRODUCTO_CREADO, etc.)
+     *   - entidad: nombre de la entidad afectada (Usuario, Producto, Venta, etc.)
+     *   - entidad_id: ID del registro específico afectado (puede ser null)
+     *   - datos_anteriores: JSON con el estado previo de la entidad (puede ser null)
+     *   - datos_nuevos: JSON con el estado posterior de la entidad (puede ser null)
+     *   - direccion_ip: dirección IP de origen de la operación
+     *   - fecha_hora: timestamp exacto de cuando ocurrió el evento
      *
-     * @return lista de mapas con los campos del log
-     * @throws Exception si falla la consulta (errores SQL pueden quedar solo en consola)
+     * @return lista de mapas con los campos del log de auditoría, ordenados por fecha descendente
+     * @throws Exception si falla la consulta (los errores SQL se registran en consola y se retorna lista vacía)
      */
     public List<Map<String, Object>> listarLogs() throws Exception {
         // Lista donde cada elemento representa una fila del log de auditoría.
         List<Map<String, Object>> lista = new ArrayList<>();
 
-        // Esta consulta recupera todos los logs de auditoría con el nombre del usuario.
-        // Incluye LEFT JOIN para conservar también registros anónimos (sin usuario_id).
+        // Consulta SQL: SELECT con JOIN para recuperar logs de auditoría con información de usuario
+        // Tablas involucradas:
+        //   - Auditoria_Log (alias 'al'): tabla principal con todos los eventos de auditoría
+        //   - Usuario (alias 'u'): tabla de usuarios para obtener el nombre legible
+        // Tipo de JOIN: LEFT JOIN para conservar registros anónimos (usuario_id NULL en Auditoria_Log)
+        // Condiciones del JOIN: al.usuario_id = u.usuario_id (relación FK hacia Usuario)
+        // Columnas seleccionadas:
+        //   - al.log_id: PK del evento de auditoría
+        //   - COALESCE(u.nombre, 'Anónimo') AS usuario_nombre: nombre del usuario o valor por defecto
+        //   - al.accion: tipo de evento registrado
+        //   - al.entidad: entidad afectada por la acción
+        //   - al.entidad_id: ID del registro específico modificado
+        //   - al.datos_anteriores: JSON con estado previo (para auditoría de cambios)
+        //   - al.datos_nuevos: JSON con estado posterior (para auditoría de cambios)
+        //   - al.direccion_ip: IP de origen para trazabilidad de seguridad
+        //   - al.fecha_hora: timestamp del evento para ordenamiento cronológico
+        // Ordenamiento: ORDER BY al.fecha_hora DESC (más recientes primero para UX en pantallas de admin)
         String sql = """
                 -- SELECT: columnas que se mostrarán en la vista de auditoría
                 SELECT
@@ -158,14 +199,15 @@ public class AuditoriaDAO {
                 ORDER BY al.fecha_hora DESC
                 """;
 
-        // Se abre conexión y se ejecuta la consulta.
-        // ResultSet se cierra automáticamente al salir del bloque.
+        // try-with-resources: abre y cierra automáticamente Connection, PreparedStatement y ResultSet
+        // Esto garantiza que los recursos de base de datos se liberen incluso si ocurre una excepción
         try (Connection con = ConexionDB.getConnection();
              PreparedStatement ps = con.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
 
             // Recorremos cada fila del resultado para transformarla a Map<String, Object>.
             while (rs.next()) {
+                // LinkedHashMap mantiene el orden de inserción, útil para preservar orden de columnas en UI
                 Map<String, Object> fila = new LinkedHashMap<>();
                 // Recupera log_id para identificar cada evento en pantalla.
                 fila.put("log_id",           rs.getInt("log_id"));
@@ -198,14 +240,19 @@ public class AuditoriaDAO {
         return lista;
     }
 
-    // ==================== ACCIONES ESPECÍFICAS ====================
+    // ACCIONES ESPECÍFICAS 
 
     /**
-     * @param usuarioId usuario autenticado
-     * @param usuario nombre de usuario (texto libre en JSON)
-     * @param ip dirección IP del cliente
+     * Registra un evento de login exitoso en el log de auditoría.
+     * Método de conveniencia que delega en registrarAccion con parámetros preconfigurados
+     * para el caso específico de autenticación correcta.
+     *
+     * @param usuarioId ID del usuario que inició sesión exitosamente
+     * @param usuario nombre de usuario (texto libre almacenado en JSON para legibilidad del log)
+     * @param ip dirección IP del cliente desde donde se realizó el login
      * @return resultado de {@link #registrarAccion(int, String, String, Integer, JSONObject, JSONObject, String)}
-     * @throws Exception si falla el registro
+     *         true si se registró correctamente, false en caso contrario
+     * @throws Exception si falla el registro por errores de base de datos o conexión
      */
     public static boolean registrarLoginExitoso(int usuarioId, String usuario, String ip) throws Exception {
         // Armamos JSON de datos_nuevos con información mínima útil para trazabilidad.
@@ -219,10 +266,14 @@ public class AuditoriaDAO {
     }
 
     /**
-     * @param usuario nombre intentado
-     * @param ip IP del cliente
-     * @return {@code true} si se insertó el log
-     * @throws Exception si falla el insert
+     * Registra un evento de login fallido en el log de auditoría.
+     * Método de conveniencia para rastrear intentos de acceso no autorizados.
+     * Se registra con usuarioId = 0 (anónimo) ya que no hay usuario autenticado.
+     *
+     * @param usuario nombre de usuario intentado en el login fallido
+     * @param ip dirección IP del cliente desde donde se originó el intento
+     * @return {@code true} si se insertó el log correctamente, false en caso contrario
+     * @throws Exception si falla el insert por errores de base de datos o conexión
      */
     public static boolean registrarLoginFallido(String usuario, String ip) throws Exception {
         // Se registra intento fallido aunque no exista usuario autenticado.
@@ -236,12 +287,16 @@ public class AuditoriaDAO {
     }
 
     /**
-     * @param usuarioId usuario que crea el producto
-     * @param productoId ID del nuevo producto
-     * @param nombreProducto nombre legible
-     * @param ip IP del cliente
-     * @return {@code true} si se registró
-     * @throws Exception si falla
+     * Registra la creación de un nuevo producto en el log de auditoría.
+     * Método de conveniencia que encapsula los parámetros específicos para eventos
+     * de creación de productos, facilitando la consistencia en el registro.
+     *
+     * @param usuarioId ID del usuario que realizó la creación del producto
+     * @param productoId ID técnico del nuevo producto creado (PK en tabla Producto)
+     * @param nombreProducto nombre legible del producto para facilitar identificación en logs
+     * @param ip dirección IP del cliente desde donde se originó la operación
+     * @return {@code true} si se registró el evento correctamente, false en caso contrario
+     * @throws Exception si falla el registro por errores de base de datos o conexión
      */
     public static boolean registrarProductoCreado(int usuarioId, int productoId,
                                                    String nombreProducto, String ip) throws Exception {
@@ -256,13 +311,16 @@ public class AuditoriaDAO {
     }
 
     /**
-     * @param usuarioId usuario que edita
-     * @param productoId ID del producto
-     * @param datosAnteriores JSON antes del cambio
-     * @param datosNuevos JSON después del cambio
-     * @param ip IP del cliente
-     * @return {@code true} si se registró
-     * @throws Exception si falla
+     * Registra la edición de un producto existente en el log de auditoría.
+     * Incluye ambos estados (antes y después) para permitir auditoría completa del cambio.
+     *
+     * @param usuarioId ID del usuario que realizó la edición
+     * @param productoId ID del producto que fue modificado
+     * @param datosAnteriores JSON con el estado del producto antes de la edición
+     * @param datosNuevos JSON con el estado del producto después de la edición
+     * @param ip dirección IP del cliente desde donde se originó la operación
+     * @return {@code true} si se registró el evento correctamente, false en caso contrario
+     * @throws Exception si falla el registro por errores de base de datos o conexión
      */
     public static boolean registrarProductoEditado(int usuarioId, int productoId,
                                                     JSONObject datosAnteriores,
@@ -273,13 +331,17 @@ public class AuditoriaDAO {
     }
 
     /**
-     * @param usuarioId vendedor que registra la venta
-     * @param ventaId ID de la venta
-     * @param clienteId cliente asociado
-     * @param montoTotal total reportado
-     * @param ip IP del cliente
-     * @return {@code true} si se registró
-     * @throws Exception si falla
+     * Registra la creación de una nueva venta en el log de auditoría.
+     * Método de conveniencia para eventos de registro de ventas, incluyendo
+     * datos clave para trazabilidad financiera y operativa.
+     *
+     * @param usuarioId ID del vendedor/usuario que registró la venta
+     * @param ventaId ID técnico de la venta creada (PK en tabla Venta)
+     * @param clienteId ID del cliente asociado a la venta
+     * @param montoTotal monto total de la operación para auditoría financiera
+     * @param ip dirección IP del cliente desde donde se originó la operación
+     * @return {@code true} si se registró el evento correctamente, false en caso contrario
+     * @throws Exception si falla el registro por errores de base de datos o conexión
      */
     public static boolean registrarVentaCreada(int usuarioId, int ventaId,
                                                int clienteId, double montoTotal, String ip) throws Exception {
@@ -296,10 +358,14 @@ public class AuditoriaDAO {
     }
 
     /**
-     * @param usuarioId usuario que cambió la contraseña
-     * @param ip IP del cliente
-     * @return {@code true} si se registró
-     * @throws Exception si falla
+     * Registra un cambio de contraseña de usuario en el log de auditoría.
+     * Método de conveniencia para eventos de seguridad críticos.
+     * No almacena la contraseña ni datos sensibles, solo la acción y metadatos de contexto.
+     *
+     * @param usuarioId ID del usuario que cambió su contraseña
+     * @param ip dirección IP del cliente desde donde se originó el cambio
+     * @return {@code true} si se registró el evento correctamente, false en caso contrario
+     * @throws Exception si falla el registro por errores de base de datos o conexión
      */
     public static boolean registrarCambioPassword(int usuarioId, String ip) throws Exception {
         // Registra cambio de contraseña sin exponer datos sensibles.

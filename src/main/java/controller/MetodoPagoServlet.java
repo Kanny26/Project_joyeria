@@ -12,7 +12,14 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * MetodoPagoDAO; reenvía a /Administrador/org-categorias.jsp (pestaña métodos de pago).
+ * Servlet encargado de gestionar los métodos de pago disponibles en el sistema.
+ *
+ * Proporciona operaciones CRUD para métodos de pago y coordina su visualización
+ * en la vista unificada de organización de categorías. Las operaciones de modificación
+ * se realizan mediante POST con redirección tras éxito para evitar reenvíos de formulario.
+ *
+ * @see MetodoPagoDAO
+ * @see MetodoPago
  */
 @WebServlet("/MetodoPagoServlet")
 public class MetodoPagoServlet extends HttpServlet {
@@ -20,7 +27,9 @@ public class MetodoPagoServlet extends HttpServlet {
     private MetodoPagoDAO metodoPagoDAO;
 
     /**
-     * Inicializa el servlet e instancia el DAO de métodos de pago.
+     * Inicializa el servlet creando la instancia del DAO para métodos de pago.
+     * Este método se ejecuta una única vez cuando el servlet es cargado por el contenedor,
+     * permitiendo reutilizar la instancia del DAO en todas las peticiones posteriores.
      */
     @Override
     public void init() {
@@ -28,12 +37,16 @@ public class MetodoPagoServlet extends HttpServlet {
     }
 
     /**
-     * Carga el listado de métodos de pago y hace forward al JSP unificado con {@code tab=metodosPago}.
+     * Procesa las solicitudes HTTP GET para listar los métodos de pago registrados.
      *
-     * @param request  petición HTTP
-     * @param response respuesta HTTP hacia el cliente
-     * @throws ServletException si falla el despacho a la vista
-     * @throws IOException      si ocurre un error de E/S
+     * Recupera la lista completa desde la base de datos, la almacena como atributo
+     * de la petición y transfiere el control a la vista unificada de administración,
+     * indicando que se debe mostrar la pestaña de métodos de pago.
+     *
+     * @param request  la petición HTTP recibida del cliente
+     * @param response la respuesta HTTP que se enviará al cliente tras procesar la vista
+     * @throws ServletException si ocurre un error durante el despacho a la vista JSP
+     * @throws IOException      si ocurre un error de entrada/salida al procesar la petición o respuesta
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -52,10 +65,18 @@ public class MetodoPagoServlet extends HttpServlet {
     }
 
     /**
-     * Ejecuta guardar, actualizar o eliminar según {@code action}; ante error hace forward con mensaje.
+     * Procesa las solicitudes HTTP POST para ejecutar operaciones de modificación sobre métodos de pago.
      *
-     * @param request  petición HTTP con {@code action} y datos del formulario
-     * @param response respuesta HTTP (redirect en éxito, forward con error)
+     * Según el valor del parámetro {@code action}, ejecuta una de las siguientes operaciones:
+     * - "guardar": crea un nuevo método de pago validando que el nombre no esté vacío
+     * - "actualizar": modifica un método existente validando ID y nombre
+     * - "eliminar": remueve un método de pago validando que se proporcione su ID
+     *
+     * En caso de éxito, redirige con un parámetro de confirmación para evitar reenvíos.
+     * En caso de error, realiza forward a la vista con el mensaje de error para su visualización.
+     *
+     * @param request  la petición HTTP con {@code action} y datos del formulario
+     * @param response la respuesta HTTP (redirect en éxito, forward con error)
      * @throws ServletException si falla el despacho a la vista
      * @throws IOException      si ocurre un error de E/S
      */

@@ -23,7 +23,20 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Registro de compras a proveedores en AAC27; CompraDAO y ProveedorDAO; JSP bajo /Administrador/proveedores/.
+ * Servlet encargado de gestionar el registro de compras a proveedores en el sistema AAC27.
+ *
+ * Proporciona funcionalidades para:
+ * - Crear nuevas compras con múltiples productos y detalles
+ * - Visualizar el detalle de una compra específica
+ * - Obtener listas de categorías y productos en formato JSON para carga dinámica en formularios
+ *
+ * Las operaciones se realizan mediante peticiones GET y POST, con validación de sesión de administrador
+ * y respuestas adaptadas según el tipo de solicitud (HTML o JSON).
+ *
+ * @see CompraDAO
+ * @see ProductoDAO
+ * @see CategoriaDAO
+ * @see MetodoPagoDAO
  */
 @WebServlet("/CompraServlet")
 @MultipartConfig
@@ -50,7 +63,15 @@ public class CompraServlet extends HttpServlet {
     // ==================== GET ====================
 
     /**
-     * Formulario de nueva compra, detalle, eliminación o endpoints JSON de categorías/productos según {@code action}.
+     * Procesa las solicitudes HTTP GET para gestionar compras.
+     *
+     * Según el parámetro {@code action}, ejecuta una de las siguientes operaciones:
+     * - "nueva": muestra el formulario para registrar una nueva compra
+     * - "detalle": muestra el detalle completo de una compra existente
+     * - "obtenerCategorias": devuelve la lista de categorías en formato JSON
+     * - "obtenerProductosPorCategoria": devuelve productos filtrados por categoría y proveedor en JSON
+     *
+     * Si no se especifica una acción válida o ocurre un error, redirige al listado de proveedores.
      *
      * @param request  petición HTTP (sesión de administrador requerida)
      * @param response respuesta HTTP (forward, redirect o JSON)
@@ -70,7 +91,6 @@ public class CompraServlet extends HttpServlet {
             switch (action) {
                 case "nueva"                        -> mostrarFormularioNueva(request, response);
                 case "detalle"                      -> verDetalle(request, response);
-                case "eliminar"                     -> eliminarCompra(request, response);
                 case "obtenerCategorias"            -> obtenerCategoriasJSON(request, response);
                 case "obtenerProductosPorCategoria" -> obtenerProductosPorCategoriaJSON(request, response);
                 default -> response.sendRedirect(
@@ -85,7 +105,15 @@ public class CompraServlet extends HttpServlet {
     // ==================== POST ====================
 
     /**
-     * Persiste una nueva compra ({@code guardarCompra}) y responde en JSON para el flujo AJAX del formulario.
+     * Procesa las solicitudes HTTP POST para persistir nuevas compras.
+     *
+     * Actualmente maneja la acción {@code guardarCompra}, que recibe los datos del formulario
+     * multipart, valida la información, construye el objeto Compra con sus detalles y lo persiste
+     * mediante una transacción. La respuesta se devuelve en formato JSON para compatibilidad con
+     * el flujo AJAX del formulario.
+     *
+     * En caso de error, se responde con un objeto JSON que contiene el mensaje de error escapado
+     * para evitar romper la estructura del JSON.
      *
      * @param request  petición HTTP con {@code UTF-8} y datos del formulario multipart
      * @param response respuesta HTTP JSON ({@code ok}, error escapado)
@@ -116,8 +144,16 @@ public class CompraServlet extends HttpServlet {
     }
 
     /**
-     * Prepara el formulario de nueva compra cargando los métodos de pago disponibles.
-     * Valida que el ID de proveedor sea numérico antes de continuar.
+     * Prepara y muestra el formulario para registrar una nueva compra.
+     *
+     * Carga la lista de métodos de pago disponibles y valida que el ID del proveedor
+     * sea numérico antes de continuar. Acepta el ID del proveedor mediante los parámetros
+     * {@code proveedorId} o {@code id} para mayor flexibilidad en la construcción de enlaces.
+     *
+     * @param request  la petición HTTP que contiene el ID del proveedor
+     * @param response la respuesta HTTP utilizada para redirigir o forwards al JSP del formulario
+     * @throws ServletException si ocurre un error al despachar la vista
+     * @throws IOException      si ocurre un error de entrada/salida
      */
     private void mostrarFormularioNueva(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -151,24 +187,21 @@ public class CompraServlet extends HttpServlet {
     }
 
     /**
-     * Procesa y guarda una nueva compra con todos sus detalles.
-     * Responde en JSON: {"ok":true, "proveedorId":X} si tuvo éxito.
+     * Procesa y guarda una nueva compra con todos sus detalles en una transacción.
      *
-     * CORRECCIÓN: ahora se obtiene el ID del administrador en sesión y se lo pasa
-     * al objeto Compra para que el DAO pueda registrarlo en Inventario_Movimiento.
-     * Antes el usuarioId nunca llegaba al DAO y se insertaba NULL en esa columna,
-     * lo que podía causar fallo si la columna no era nullable en la instalación del cliente.
+     * Valida exhaustivamente los datos recibidos:
+     * - ID de proveedor presente y numérico
+     * - Fechas en formato yyyy-MM-dd y coherencia temporal (entrega >= compra)
+     * - Método de pago seleccionado
+     * - Para compras a crédito: fecha de vencimiento obligatoria y anticipo <= total
+     * - Al menos un producto válido con precio y cantidad mayores a cero
      *
-     * Validaciones:
-     *   - ID de proveedor presente y numérico
-     *   - Fechas en formato yyyy-MM-dd (parse lanza ParseException si el formato es incorrecto)
-     *   - Fecha de entrega no puede ser anterior a la de compra
-     *   - Método de pago seleccionado
-     *   - Si es crédito: fecha de vencimiento obligatoria y posterior a la de compra,
-     *     anticipo no puede superar el total
-     *   - Al menos un producto válido con precio y cantidad mayores a 0
+     * Registra el ID del administrador en sesión para auditoría en la tabla Inventario_Movimiento.
+     * Responde en formato JSON: {"ok":true, "proveedorId":X} si la operación fue exitosa.
      *
-     * isBlank() es equivalente a isEmpty() pero también detecta strings con solo espacios.
+     * @param request  la petición HTTP que contiene los datos del formulario de compra
+     * @param response la respuesta HTTP utilizada para devolver el resultado en formato JSON
+     * @throws Exception si ocurre un error de validación, persistencia o formato de datos
      */
     private void guardarCompra(HttpServletRequest request, HttpServletResponse response)
             throws Exception {
@@ -309,6 +342,13 @@ public class CompraServlet extends HttpServlet {
 
     /**
      * Carga y muestra el detalle completo de una compra específica.
+     *
+     * Valida que el ID de la compra sea numérico y que el registro exista en la base de datos.
+     * Si la validación falla, redirige al listado de proveedores para evitar errores en la vista.
+     *
+     * @param request  la petición HTTP que contiene el ID de la compra y del proveedor
+     * @param response la respuesta HTTP utilizada para forwards a la vista de detalle
+     * @throws Exception si ocurre un error al consultar la base de datos
      */
     private void verDetalle(HttpServletRequest request, HttpServletResponse response)
             throws Exception {
@@ -332,24 +372,15 @@ public class CompraServlet extends HttpServlet {
     }
 
     /**
-     * Elimina una compra y redirige al historial del proveedor con msg=eliminado.
-     */
-    private void eliminarCompra(HttpServletRequest request, HttpServletResponse response)
-            throws Exception {
-
-        String idStr          = request.getParameter("id");
-        String proveedorIdStr = request.getParameter("proveedorId");
-
-        if (idStr != null && idStr.matches("\\d+"))
-            compraDAO.eliminarConTransaccion(Integer.parseInt(idStr));
-
-        response.sendRedirect(request.getContextPath()
-                + "/ProveedorServlet?action=verCompras&id=" + proveedorIdStr + "&msg=eliminado");
-    }
-
-    /**
-     * Retorna la lista de categorías en JSON para el selector dinámico del formulario.
-     * Si falla, devuelve "[]" para no romper el flujo del JavaScript.
+     * Devuelve la lista de categorías disponibles en formato JSON.
+     *
+     * Este endpoint es consumido por JavaScript para poblar dinámicamente el selector
+     * de categorías en el formulario de nueva compra. En caso de error, devuelve un
+     * array vacío para no interrumpir el flujo del cliente.
+     *
+     * @param request  la petición HTTP (no utiliza parámetros)
+     * @param response la respuesta HTTP configurada con contenido JSON y codificación UTF-8
+     * @throws IOException si ocurre un error al escribir la respuesta JSON
      */
     private void obtenerCategoriasJSON(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
@@ -375,9 +406,15 @@ public class CompraServlet extends HttpServlet {
     }
 
     /**
-     * Retorna los productos de una categoría filtrados por proveedor, en JSON.
-     * Solo muestra productos cuyo proveedor_id coincida con el proveedor activo.
-     * Si proveedorId es 0 o no viene, muestra todos los de la categoría sin filtrar.
+     * Devuelve los productos de una categoría filtrados por proveedor en formato JSON.
+     *
+     * Si se proporciona un {@code proveedorId} válido, solo se incluyen productos
+     * asociados a ese proveedor. Si el ID es 0 o no se especifica, se retornan todos
+     * los productos de la categoría sin filtrar.
+     *
+     * @param request  la petición HTTP que contiene {@code categoriaId} y opcionalmente {@code proveedorId}
+     * @param response la respuesta HTTP configurada con contenido JSON y codificación UTF-8
+     * @throws IOException si ocurre un error al escribir la respuesta JSON
      */
     private void obtenerProductosPorCategoriaJSON(HttpServletRequest request,
                                                    HttpServletResponse response)
@@ -438,8 +475,16 @@ public class CompraServlet extends HttpServlet {
     }
 
     /**
-     * Verifica que haya una sesión de administrador activa.
-     * Si la petición espera JSON, responde con error 401 en JSON en lugar de redirigir.
+     * Verifica que exista una sesión activa con un administrador autenticado.
+     *
+     * Si la petición espera una respuesta JSON (cabecera Accept: application/json),
+     * responde con un error HTTP 401 en formato JSON. De lo contrario, redirige
+     * al usuario a la página de inicio de sesión.
+     *
+     * @param req la petición HTTP para acceder a la sesión
+     * @param res la respuesta HTTP utilizada para redirigir o devolver error JSON
+     * @return true si la sesión es válida y contiene un administrador, false en caso contrario
+     * @throws IOException si ocurre un error al escribir la respuesta o realizar la redirección
      */
     private boolean estaAutenticado(HttpServletRequest req, HttpServletResponse res)
             throws IOException {
@@ -459,8 +504,15 @@ public class CompraServlet extends HttpServlet {
     }
 
     /**
-     * Escapa caracteres especiales para incluir texto de forma segura dentro de un JSON.
-     * Sin esto, una comilla o salto de línea en el nombre de un producto rompería el JSON.
+     * Escapa caracteres especiales para incluir texto de forma segura dentro de una cadena JSON.
+     *
+     * Previene que caracteres como comillas, saltos de línea o tabuladores en los datos
+     * de entrada rompan la estructura del JSON generado. Este método debe aplicarse a
+     * cualquier valor de texto que se inserte dinámicamente en una respuesta JSON.
+     *
+     * @param t la cadena de texto a escapar
+     * @return la cadena con los caracteres especiales reemplazados por sus secuencias de escape JSON,
+     *         o una cadena vacía si el valor de entrada es null
      */
     private String esc(String t) {
         if (t == null) return "";

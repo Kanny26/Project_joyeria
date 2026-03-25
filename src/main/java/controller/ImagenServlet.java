@@ -17,11 +17,27 @@ public class ImagenServlet extends HttpServlet {
 
     private ProductoDAO productoDAO;
 
+    /**
+     * Inicializa el servlet instanciando el objeto de acceso a datos de productos.
+     * Este método es llamado automáticamente por el contenedor de servlets
+     * cuando el servlet es cargado por primera vez.
+     */
     @Override
     public void init() {
         productoDAO = new ProductoDAO();
     }
 
+    /**
+     * Maneja las peticiones GET para servir imágenes de productos.
+     * Extrae el ID del producto de la URL, consulta la imagen en la base de datos
+     * y la envía al cliente con los encabezados HTTP apropiados.
+     * Si el producto no existe o no tiene imagen, sirve una imagen por defecto.
+     *
+     * @param request objeto HttpServletRequest que contiene la petición del cliente
+     * @param response objeto HttpServletResponse para enviar la imagen al cliente
+     * @throws ServletException si ocurre un error en el procesamiento del servlet
+     * @throws IOException si ocurre un error de entrada/salida durante el manejo
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -91,6 +107,9 @@ public class ImagenServlet extends HttpServlet {
      * Valida y normaliza el tipo MIME recibido de la BD.
      * Solo permite tipos de imagen conocidos para evitar valores inesperados en la cabecera HTTP.
      * Si el tipo no es reconocido, retorna image/jpeg como valor seguro por defecto.
+     *
+     * @param tipoGuardado el tipo MIME almacenado en la base de datos para la imagen
+     * @return el tipo MIME normalizado y validado para usar en la respuesta HTTP
      */
     private String resolverTipoMime(String tipoGuardado) {
         if (tipoGuardado == null) return "image/jpeg";
@@ -108,10 +127,10 @@ public class ImagenServlet extends HttpServlet {
     /**
      * Sirve la imagen por defecto (default.png) cuando no hay imagen del producto.
      * Si tampoco existe el archivo default.png, retorna un GIF transparente de 1x1 pixel
-     * como último recurso para que la etiqueta <img> del HTML no quede rota.
+     * como último recurso para que la etiqueta img del HTML no quede rota.
      *
-     * isCommitted() verifica si los headers HTTP ya fueron enviados; si es así,
-     * no se puede modificar la respuesta y se sale sin hacer nada.
+     * @param response el objeto HttpServletResponse donde se escribirá la imagen por defecto
+     * @throws IOException si ocurre un error al leer el archivo o escribir en la respuesta
      */
     private void servirImagenDefault(HttpServletResponse response) throws IOException {
         if (response.isCommitted()) return;

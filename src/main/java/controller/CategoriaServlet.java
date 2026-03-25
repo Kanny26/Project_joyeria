@@ -18,6 +18,14 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * Servlet encargado de la gestión de categorías y productos del catálogo.
+ *
+ * Maneja operaciones CRUD para categorías, incluyendo búsqueda de productos,
+ * filtrado por criterios y gestión de archivos de iconos. También coordina
+ * la carga de listas auxiliares (materiales, subcategorías, métodos de pago)
+ * necesarias para la interfaz de administración.
+ */
 @WebServlet("/CategoriaServlet")
 // @MultipartConfig es necesario para recibir archivos en formularios (enctype="multipart/form-data").
 // Define límites de tamaño para evitar que suban archivos demasiado grandes:
@@ -48,6 +56,13 @@ public class CategoriaServlet extends HttpServlet {
         metodoPagoDAO   = new MetodoPagoDAO();
     }
 
+    /**
+     * Carga todas las listas necesarias para la vista de gestión completa del catálogo.
+     * Incluye categorías, subcategorías, materiales y métodos de pago.
+     *
+     * @param request la petición HTTP a la que se le agregarán los atributos con las listas
+     * @throws Exception si ocurre un error al consultar la base de datos desde los DAO
+     */
     // Carga todas las listas necesarias para org-categorias.jsp (gestión del catálogo completo).
     // Se llama tanto al cargar la página normalmente como al volver de un error.
     private void cargarListasGestion(HttpServletRequest request) throws Exception {
@@ -57,12 +72,29 @@ public class CategoriaServlet extends HttpServlet {
         request.setAttribute("metodosPago",   metodoPagoDAO.listarTodos());
     }
 
+    /**
+     * Carga las listas auxiliares utilizadas en los filtros de búsqueda de categorías.
+     * Incluye materiales y subcategorías para los elementos select del formulario.
+     *
+     * @param request la petición HTTP a la que se le agregarán los atributos con las listas de filtros
+     * @throws Exception si ocurre un error al consultar la base de datos desde los DAO
+     */
     // Carga solo materiales y subcategorías, usados en los selects de filtro de categoria.jsp.
     private void cargarFiltros(HttpServletRequest request) throws Exception {
         request.setAttribute("materiales",    materialDAO.listarMateriales());
         request.setAttribute("subcategorias", subcategoriaDAO.listarTodas());
     }
 
+    /**
+     * Procesa las solicitudes HTTP GET para mostrar vistas de categorías y productos.
+     * Maneja búsqueda global, búsqueda dentro de categoría, listado por categoría
+     * y la vista principal de gestión de categorías.
+     *
+     * @param request  la petición HTTP que contiene parámetros de búsqueda y filtros
+     * @param response la respuesta HTTP utilizada para redirigir o forwards a las vistas JSP
+     * @throws ServletException si ocurre un error durante el procesamiento del servlet
+     * @throws IOException      si ocurre un error de entrada/salida al enviar la respuesta
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -147,6 +179,15 @@ public class CategoriaServlet extends HttpServlet {
         }
     }
 
+    /**
+     * Procesa las solicitudes HTTP POST para ejecutar operaciones de modificación en categorías.
+     * Delega la lógica a los métodos específicos según el valor del parámetro "action".
+     *
+     * @param request  la petición HTTP que contiene los datos del formulario y el parámetro de acción
+     * @param response la respuesta HTTP utilizada para redirigir tras completar la operación
+     * @throws ServletException si ocurre un error durante el procesamiento del servlet
+     * @throws IOException      si ocurre un error de entrada/salida al enviar la respuesta
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -187,6 +228,10 @@ public class CategoriaServlet extends HttpServlet {
      * Después de guardar, se usa sendRedirect (en lugar de forward) para evitar que
      * al refrescar la página se reenvíe el formulario. El parámetro msg=creado en la URL
      * le indica al JSP qué mensaje de éxito mostrar.
+     *
+     * @param request  la petición HTTP que contiene los datos del formulario de nueva categoría
+     * @param response la respuesta HTTP utilizada para redirigir tras guardar exitosamente
+     * @throws Exception si ocurre un error al procesar el archivo o persistir la categoría
      */
     private void guardarCategoria(HttpServletRequest request, HttpServletResponse response) throws Exception {
         String nombre = request.getParameter("nombre");
@@ -210,6 +255,10 @@ public class CategoriaServlet extends HttpServlet {
      * Validación: si no llegan id o nombre, se lanza excepción con mensaje claro.
      * Integer.parseInt(idStr) convierte el String del parámetro a int; si no es un número
      * válido lanzaría NumberFormatException, que el catch del doPost captura.
+     *
+     * @param request  la petición HTTP que contiene los datos actualizados de la categoría
+     * @param response la respuesta HTTP utilizada para redirigir tras actualizar exitosamente
+     * @throws Exception si los datos recibidos son inválidos o ocurre un error al persistir los cambios
      */
     private void actualizarCategoria(HttpServletRequest request, HttpServletResponse response) throws Exception {
         String idStr  = request.getParameter("id");
@@ -228,6 +277,10 @@ public class CategoriaServlet extends HttpServlet {
     /**
      * Elimina una categoría. El DAO valida internamente que no tenga productos activos
      * antes de ejecutar el DELETE; si los tiene, lanza excepción con mensaje descriptivo.
+     *
+     * @param request  la petición HTTP que contiene el ID de la categoría a eliminar
+     * @param response la respuesta HTTP utilizada para redirigir tras eliminar exitosamente
+     * @throws Exception si el ID no es proporcionado o si la categoría tiene productos asociados
      */
     private void eliminarCategoria(HttpServletRequest request, HttpServletResponse response) throws Exception {
         String idStr = request.getParameter("id");
@@ -236,6 +289,16 @@ public class CategoriaServlet extends HttpServlet {
         response.sendRedirect(request.getContextPath() + "/CategoriaServlet?msg=eliminado&tab=categorias");
     }
 
+    /**
+     * Ejecuta un forward interno hacia la vista JSP especificada.
+     * Este método auxiliar centraliza la lógica de despacho para evitar repetición de código.
+     *
+     * @param req  la petición HTTP que contiene los atributos a pasar a la vista
+     * @param res  la respuesta HTTP que se enviará tras procesar la vista
+     * @param path la ruta del recurso JSP al cual se transferirá el control
+     * @throws ServletException si ocurre un error durante el despacho a la vista
+     * @throws IOException      si ocurre un error de entrada/salida al procesar la vista
+     */
     // Método auxiliar que encapsula el forward para no repetir la misma línea en cada caso.
     // forward transfiere el control al JSP indicado, manteniendo los atributos del request.
     private void forward(HttpServletRequest req, HttpServletResponse res, String path)
@@ -243,6 +306,14 @@ public class CategoriaServlet extends HttpServlet {
         req.getRequestDispatcher(path).forward(req, res);
     }
 
+    /**
+     * Convierte una cadena vacía o compuesta solo por espacios en null.
+     * Este método simplifica las validaciones posteriores al permitir verificar
+     * únicamente si el valor es null en lugar de combinar múltiples condiciones.
+     *
+     * @param s es la cadena de texto a evaluar
+     * @return null si la cadena es nula, vacía o solo espacios; de lo contrario, la cadena recortada sin espacios extras
+     */
     // Convierte un parámetro vacío o con solo espacios en null.
     // Esto simplifica las condiciones: en lugar de verificar (s == null || s.isEmpty()),
     // basta con verificar (s == null).

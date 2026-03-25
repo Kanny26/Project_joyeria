@@ -10,10 +10,8 @@ import java.util.Map;
 
 /**
  * Muestra el registro de auditoría del sistema.
- *
  * Solo es accesible para usuarios con sesión activa de administrador o superadministrador.
  * Consulta todos los logs de la tabla Auditoria_Log y los pasa a la vista JSP.
- *
  * El log de auditoría registra quién hizo qué y cuándo en el sistema
  * (creación de ventas, cambios de contraseña, edición de usuarios, etc.).
  */
@@ -22,11 +20,26 @@ public class AuditoriaServlet extends HttpServlet {
 
     private AuditoriaDAO auditoriaDAO;
 
+    /**
+     * Inicializa el servlet instanciando el objeto de acceso a datos de auditoría.
+     * Este método es llamado automáticamente por el contenedor de servlets
+     * cuando el servlet es cargado por primera vez.
+     */
     @Override
     public void init() {
         auditoriaDAO = new AuditoriaDAO();
     }
 
+    /**
+     * Maneja las peticiones GET al servlet de auditoría.
+     * Verifica que el usuario tenga una sesión activa con rol de administrador
+     * o superadministrador, consulta los logs y los envía a la vista JSP.
+     *
+     * @param req objeto HttpServletRequest que contiene la petición del cliente
+     * @param resp objeto HttpServletResponse para enviar la respuesta al cliente
+     * @throws ServletException si ocurre un error en el procesamiento del servlet
+     * @throws IOException si ocurre un error de entrada/salida durante el manejo
+     */
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {

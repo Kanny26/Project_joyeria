@@ -11,7 +11,14 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- SubcategoriaDAO; reenvía a /Administrador/org-categorias.jsp (pestaña subcategorías).
+ * Servlet encargado de gestionar las subcategorías del catálogo de productos.
+ *
+ * Proporciona operaciones CRUD para subcategorías y coordina su visualización
+ * en la vista unificada de organización de categorías. Las operaciones de modificación
+ * se realizan mediante POST con redirección tras éxito para evitar reenvíos de formulario.
+ *
+ * @see SubcategoriaDAO
+ * @see Subcategoria
  */
 @WebServlet("/SubcategoriaServlet")
 public class SubCategoriaServlet extends HttpServlet {
@@ -19,7 +26,9 @@ public class SubCategoriaServlet extends HttpServlet {
     private SubcategoriaDAO subcategoriaDAO;
 
     /**
-     * Inicializa el servlet e instancia el DAO de subcategorías.
+     * Inicializa el servlet creando la instancia del DAO para subcategorías.
+     * Este método se ejecuta una única vez cuando el servlet es cargado por el contenedor,
+     * permitiendo reutilizar la instancia del DAO en todas las peticiones posteriores.
      */
     @Override
     public void init() {
@@ -27,12 +36,16 @@ public class SubCategoriaServlet extends HttpServlet {
     }
 
     /**
-     * Carga el listado de subcategorías y hace forward al JSP unificado con {@code tab=subcategorias}.
+     * Procesa las solicitudes HTTP GET para listar las subcategorías registradas.
      *
-     * @param request  petición HTTP
-     * @param response respuesta HTTP hacia el cliente
-     * @throws ServletException si falla el despacho a la vista
-     * @throws IOException      si ocurre un error de E/S
+     * Recupera la lista completa desde la base de datos, la almacena como atributo
+     * de la petición y transfiere el control a la vista unificada de administración,
+     * indicando que se debe mostrar la pestaña de subcategorías.
+     *
+     * @param request  la petición HTTP recibida del cliente
+     * @param response la respuesta HTTP que se enviará al cliente tras procesar la vista
+     * @throws ServletException si ocurre un error durante el despacho a la vista JSP
+     * @throws IOException      si ocurre un error de entrada/salida al procesar la petición o respuesta
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -49,10 +62,18 @@ public class SubCategoriaServlet extends HttpServlet {
     }
 
     /**
-     * Ejecuta guardar, actualizar o eliminar según {@code action}; ante error hace forward con mensaje.
+     * Procesa las solicitudes HTTP POST para ejecutar operaciones de modificación sobre subcategorías.
      *
-     * @param request  petición HTTP con {@code action} y datos del formulario
-     * @param response respuesta HTTP (redirect en éxito, forward con error)
+     * Según el valor del parámetro {@code action}, ejecuta una de las siguientes operaciones:
+     * - "guardar": crea una nueva subcategoría validando que el nombre no esté vacío
+     * - "actualizar": modifica una subcategoría existente validando ID y nombre
+     * - "eliminar": remueve una subcategoría validando que se proporcione su ID
+     *
+     * En caso de éxito, redirige con un parámetro de confirmación para evitar reenvíos.
+     * En caso de error, realiza forward a la vista con el mensaje de error para su visualización.
+     *
+     * @param request  la petición HTTP con {@code action} y datos del formulario
+     * @param response la respuesta HTTP (redirect en éxito, forward con error)
      * @throws ServletException si falla el despacho a la vista
      * @throws IOException      si ocurre un error de E/S
      */

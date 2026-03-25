@@ -20,6 +20,17 @@ import java.io.IOException;
 @WebFilter(urlPatterns = {"/vendedor/*", "/Administrador/*"})
 public class AuthFilter implements Filter {
 
+    /**
+     * Procesa cada petición HTTP para validar la autenticación del usuario.
+     * Verifica que el usuario tenga una sesión activa con los atributos de rol
+     * correspondientes según la ruta solicitada.
+     *
+     * @param request  la petición servlet que se va a procesar
+     * @param response la respuesta servlet que se enviará al cliente
+     * @param chain    la cadena de filtros para continuar el procesamiento
+     * @throws IOException      si ocurre un error de entrada/salida durante el procesamiento
+     * @throws ServletException si ocurre un error durante la ejecución del filtro
+     */
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {

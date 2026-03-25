@@ -11,7 +11,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * delega en MaterialDAO y reenvía a /Administrador/org-categorias.jsp (pestaña materiales).
+ * Controlador para la gestión de materiales del sistema.
+ * Permite listar, guardar, actualizar y eliminar materiales.
+ * Delega en MaterialDAO y reenvía a /Administrador/org-categorias.jsp (pestaña materiales).
  */
 @WebServlet("/MaterialServlet")
 public class MaterialServlet extends HttpServlet {
@@ -20,6 +22,8 @@ public class MaterialServlet extends HttpServlet {
 
     /**
      * Inicializa el servlet e instancia el DAO de materiales.
+     * Este método es llamado automáticamente por el contenedor de servlets
+     * cuando el servlet es cargado por primera vez.
      */
     @Override
     public void init() {
@@ -27,7 +31,8 @@ public class MaterialServlet extends HttpServlet {
     }
 
     /**
-     * Carga el listado de materiales y hace forward al JSP unificado con {@code tab=materiales}.
+     * Carga el listado de materiales y hace forward al JSP unificado con tab=materiales.
+     * En caso de error, establece un mensaje de error y muestra la vista igualmente.
      *
      * @param request  petición HTTP
      * @param response respuesta HTTP hacia el cliente
@@ -50,9 +55,11 @@ public class MaterialServlet extends HttpServlet {
     }
 
     /**
-     * Ejecuta guardar, actualizar o eliminar según {@code action}; ante error hace forward con mensaje.
+     * Ejecuta guardar, actualizar o eliminar según action.
+     * En caso de éxito redirige con un mensaje de confirmación.
+     * En caso de error hace forward con el mensaje correspondiente.
      *
-     * @param request  petición HTTP con {@code action} y datos del formulario
+     * @param request  petición HTTP con action y datos del formulario
      * @param response respuesta HTTP (redirect en éxito, forward con error)
      * @throws ServletException si falla el despacho a la vista
      * @throws IOException      si ocurre un error de E/S

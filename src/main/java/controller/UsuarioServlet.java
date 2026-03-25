@@ -10,12 +10,18 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Controlador para la gestión de usuarios del sistema.
+ * Permite listar, crear, editar y visualizar el historial de usuarios.
+ * Incluye validaciones robustas de datos y verificación de permisos por rol.
+ * Solo accesible para administradores y superadministradores.
+ */
 @WebServlet("/UsuarioServlet")
 public class UsuarioServlet extends HttpServlet {
 
     private UsuarioDAO usuarioDAO;
 
-    // ==================== PATRONES DE VALIDACIÓN ====================
+    // VALIDACIÓN 
 
     // Nombre de usuario: solo letras (con o sin tilde), sin espacios ni números.
     // Máximo 10 caracteres. Se usa como nombre de login, por eso debe ser limpio.
@@ -39,12 +45,28 @@ public class UsuarioServlet extends HttpServlet {
     private static final String MSG_TELEFONO_VACIO  = "El teléfono es obligatorio.";
     private static final String MSG_TELEFONO_FORMATO = "El teléfono solo puede contener números, debe iniciar con 3 y tener entre 10 y 15 dígitos.";
 
+    /**
+     * Inicializa el servlet instanciando el objeto de acceso a datos de usuarios.
+     * Este método es llamado automáticamente por el contenedor de servlets
+     * cuando el servlet es cargado por primera vez.
+     */
     @Override
     public void init() {
         usuarioDAO = new UsuarioDAO();
     }
 
-    // ==================== GET ====================
+    // GET 
+    
+    /**
+     * Maneja las peticiones GET para operaciones de visualización.
+     * Verifica autenticación y permisos de administrador.
+     * Soporta las siguientes acciones: listar, nuevo, editar, historial, verificarCorreo.
+     *
+     * @param req objeto HttpServletRequest que contiene los parámetros de la petición
+     * @param resp objeto HttpServletResponse para enviar la respuesta
+     * @throws ServletException si ocurre un error en el procesamiento
+     * @throws IOException si ocurre un error de entrada/salida
+     */
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setCharacterEncoding("UTF-8");
@@ -107,7 +129,17 @@ public class UsuarioServlet extends HttpServlet {
         }
     }
 
-    // ==================== POST ====================
+    // POST 
+    
+    /**
+     * Maneja las peticiones POST para operaciones de modificación.
+     * Verifica autenticación y permisos antes de procesar agregar o editar usuarios.
+     *
+     * @param req objeto HttpServletRequest que contiene los datos del formulario
+     * @param resp objeto HttpServletResponse para enviar la respuesta
+     * @throws ServletException si ocurre un error en el procesamiento
+     * @throws IOException si ocurre un error de entrada/salida
+     */
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setCharacterEncoding("UTF-8");
@@ -131,7 +163,7 @@ public class UsuarioServlet extends HttpServlet {
 
         String accion = req.getParameter("accion");
 
-        /* ========== AGREGAR ========== */
+        /*AGREGAR  */
         if ("agregar".equals(accion)) {
             String nombre     = req.getParameter("nombre");
             String correo     = req.getParameter("correo");
@@ -309,14 +341,36 @@ public class UsuarioServlet extends HttpServlet {
         }
     }
 
-    // Reenvía a una vista de formulario con un mensaje de error (usado en agregar)
+    /**
+     * Reenvía a una vista de formulario con un mensaje de error.
+     * Utilizado en el flujo de agregar usuario.
+     *
+     * @param req petición HTTP
+     * @param resp respuesta HTTP
+     * @param mensaje mensaje de error a mostrar al usuario
+     * @param vista ruta de la vista JSP a la que reenviar
+     * @throws ServletException si ocurre un error en el reenvío
+     * @throws IOException si ocurre un error de entrada/salida
+     */
     private void reenviarConError(HttpServletRequest req, HttpServletResponse resp, String mensaje, String vista)
             throws ServletException, IOException {
         req.setAttribute("error", mensaje);
         req.getRequestDispatcher(vista).forward(req, resp);
     }
 
-    // Variante para editar: también requiere pasar el objeto usuario para repoblar el formulario
+    /**
+     * Variante de reenviarConError para el flujo de edición.
+     * También requiere pasar el objeto usuario actual para repoblar el formulario
+     * con los datos que ya tenía antes del error.
+     *
+     * @param req petición HTTP
+     * @param resp respuesta HTTP
+     * @param mensaje mensaje de error a mostrar al usuario
+     * @param usuario objeto Usuario con los datos actuales para repoblar el formulario
+     * @param vista ruta de la vista JSP a la que reenviar
+     * @throws ServletException si ocurre un error en el reenvío
+     * @throws IOException si ocurre un error de entrada/salida
+     */
     private void reenviarConErrorEditar(HttpServletRequest req, HttpServletResponse resp,
                                         String mensaje, Usuario usuario, String vista)
             throws ServletException, IOException {

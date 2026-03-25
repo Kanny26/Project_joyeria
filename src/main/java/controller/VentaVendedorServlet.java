@@ -36,6 +36,13 @@ import java.util.List;
  *   - Descargar facturas en PDF
  *
  * El parámetro "action" en la URL determina qué operación se ejecuta.
+ * Todas las operaciones requieren autenticación válida de vendedor y validan
+ * que el usuario solo pueda acceder a sus propios registros.
+ *
+ * @see VentaDAO
+ * @see ProductoDAO
+ * @see PostventaDAO
+ * @see PDFGenerator
  */
 @WebServlet("/VentaVendedorServlet")
 public class VentaVendedorServlet extends HttpServlet {
@@ -49,7 +56,13 @@ public class VentaVendedorServlet extends HttpServlet {
     private CategoriaDAO categoriaDAO;
     private MetodoPagoDAO metodoPagoDAO;
 
-    /** Inicializa todos los DAOs una vez al cargar el servlet. */
+    /**
+     * Inicializa el servlet creando las instancias de todos los DAOs necesarios.
+     * Este método se ejecuta una única vez cuando el servlet es cargado por el contenedor,
+     * permitiendo reutilizar las instancias en todas las peticiones posteriores.
+     *
+     * @throws ServletException si el contenedor no puede completar la inicialización
+     */
     @Override
     public void init() throws ServletException {
         ventaDAO      = new VentaDAO();
@@ -62,6 +75,26 @@ public class VentaVendedorServlet extends HttpServlet {
 
     // ── Peticiones GET ────────────────────────────────────────────────────────
 
+    /**
+     * Procesa las solicitudes HTTP GET para el módulo de ventas del vendedor.
+     *
+     * Según el parámetro {@code action}, ejecuta una de las siguientes operaciones:
+     * - "nueva": muestra el formulario para registrar una nueva venta
+     * - "verVenta": muestra el detalle de una venta específica con control de acceso
+     * - "misVentas": lista todas las ventas registradas por el vendedor en sesión
+     * - "registrarPostventa": muestra el formulario para crear un caso postventa
+     * - "misCasos": lista todos los casos postventa del vendedor
+     * - "obtenerCategorias": devuelve categorías en JSON para carga dinámica
+     * - "obtenerProductosPorCategoria": devuelve productos filtrados por categoría en JSON
+     * - "descargarFactura": genera y envía la factura de una venta en formato PDF
+     *
+     * Si no se especifica una acción válida o ocurre un error, redirige al listado de ventas.
+     *
+     * @param req  la petición HTTP que contiene el parámetro de acción y otros datos
+     * @param resp la respuesta HTTP utilizada para forwards, redirecciones o respuestas JSON/PDF
+     * @throws ServletException si ocurre un error durante el procesamiento del servlet
+     * @throws IOException      si ocurre un error de entrada/salida al enviar la respuesta
+     */
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
@@ -93,6 +126,22 @@ public class VentaVendedorServlet extends HttpServlet {
 
     // ── Peticiones POST ───────────────────────────────────────────────────────
 
+    /**
+     * Procesa las solicitudes HTTP POST para ejecutar operaciones de modificación en ventas y postventa.
+     *
+     * Según el valor del parámetro {@code action}, ejecuta una de las siguientes operaciones:
+     * - "guardarVenta": registra una nueva venta validando stock, reglas de crédito y datos del cliente
+     * - "abonar": procesa un abono a una venta con saldo pendiente
+     * - "guardarPostventa": registra un nuevo caso postventa (cambio, devolución o reclamo)
+     *
+     * Configura la codificación UTF-8 para manejar correctamente caracteres especiales.
+     * En caso de error, realiza forward a la vista con el mensaje de error para su visualización.
+     *
+     * @param req  la petición HTTP con {@code action} y datos del formulario
+     * @param resp la respuesta HTTP utilizada para redirecciones o forwards con errores
+     * @throws ServletException si ocurre un error durante el procesamiento del servlet
+     * @throws IOException      si ocurre un error de entrada/salida al enviar la respuesta
+     */
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
@@ -120,9 +169,14 @@ public class VentaVendedorServlet extends HttpServlet {
     // ── Respuestas JSON (para el formulario dinámico de productos) ────────────
 
     /**
-     * Retorna la lista de categorías en formato JSON.
-     * Este endpoint es llamado por el JavaScript del formulario de nueva venta
-     * para cargar las categorías sin recargar la página.
+     * Devuelve la lista de categorías disponibles en formato JSON.
+     *
+     * Este endpoint es consumido por JavaScript del formulario de nueva venta
+     * para poblar dinámicamente el selector de categorías sin recargar la página.
+     * Configura cabeceras anti-caché para evitar que el navegador almacene respuestas obsoletas.
+     *
+     * @param resp la respuesta HTTP configurada con contenido JSON y codificación UTF-8
+     * @throws IOException si ocurre un error al escribir la respuesta JSON
      */
     private void obtenerCategoriasJSON(HttpServletResponse resp) throws IOException {
         resp.setContentType("application/json;charset=UTF-8");
@@ -147,10 +201,15 @@ public class VentaVendedorServlet extends HttpServlet {
     }
 
     /**
-     * Retorna los productos de una categoría en formato JSON.
-     * El JavaScript del formulario llama este endpoint al seleccionar una categoría.
+     * Devuelve los productos de una categoría específica en formato JSON.
      *
-     * matches("\\d+") verifica que el parámetro sea un número antes de usarlo.
+     * El JavaScript del formulario llama este endpoint al seleccionar una categoría
+     * para cargar dinámicamente los productos disponibles. Valida que el parámetro
+     * {@code categoriaId} sea numérico antes de consultar la base de datos.
+     *
+     * @param req  la petición HTTP que contiene el parámetro {@code categoriaId}
+     * @param resp la respuesta HTTP configurada con contenido JSON y codificación UTF-8
+     * @throws IOException si ocurre un error al escribir la respuesta JSON
      */
     private void obtenerProductosPorCategoriaJSON(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
@@ -188,7 +247,17 @@ public class VentaVendedorServlet extends HttpServlet {
 
     // ── Vistas GET ────────────────────────────────────────────────────────────
 
-    /** Prepara los datos necesarios y muestra el formulario de nueva venta. */
+    /**
+     * Prepara los datos necesarios y muestra el formulario para registrar una nueva venta.
+     *
+     * Carga las listas de categorías y métodos de pago disponibles para populatear
+     * los selectores del formulario antes de transferir el control a la vista JSP.
+     *
+     * @param req  la petición HTTP recibida del vendedor
+     * @param resp la respuesta HTTP utilizada para forwards a la vista del formulario
+     * @throws ServletException si ocurre un error al despachar la vista
+     * @throws IOException      si ocurre un error de entrada/salida
+     */
     private void mostrarFormularioNueva(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         cargarAtributosFormulario(req);
@@ -196,9 +265,16 @@ public class VentaVendedorServlet extends HttpServlet {
     }
 
     /**
-     * Carga categorías y métodos de pago en el request.
-     * Se separa en un método propio porque se necesita tanto al abrir el formulario
-     * como al regresar a él después de un error de validación.
+     * Carga las listas auxiliares necesarias para el formulario de nueva venta.
+     *
+     * Recupera desde la base de datos:
+     * - Categorías de productos para el selector dinámico
+     * - Métodos de pago disponibles para la transacción
+     *
+     * Este método se utiliza tanto al abrir el formulario inicialmente como al
+     * reenviarlo tras un error de validación, para conservar los datos cargados.
+     *
+     * @param req la petición HTTP a la que se le agregarán los atributos con las listas
      */
     private void cargarAtributosFormulario(HttpServletRequest req) {
         try {
@@ -213,7 +289,17 @@ public class VentaVendedorServlet extends HttpServlet {
         }
     }
 
-    /** Carga y muestra todas las ventas registradas por el vendedor en sesión. */
+    /**
+     * Carga y muestra todas las ventas registradas por el vendedor autenticado en sesión.
+     *
+     * Recupera el objeto Usuario del vendedor desde la sesión y consulta la base de datos
+     * para obtener únicamente las ventas asociadas a su ID. Los resultados se pasan a la vista
+     * mediante atributos de la petición.
+     *
+     * @param req  la petición HTTP para acceder a la sesión del vendedor
+     * @param resp la respuesta HTTP utilizada para forwards a la vista de listado
+     * @throws Exception si ocurre un error al consultar la base de datos
+     */
     private void listarMisVentas(HttpServletRequest req, HttpServletResponse resp) throws Exception {
         Usuario vendedor = getVendedor(req);
         if (vendedor == null) {
@@ -226,15 +312,31 @@ public class VentaVendedorServlet extends HttpServlet {
     }
 
     /**
-     * Verifica que la venta pertenece al vendedor que la solicita.
-     * Esto evita que un vendedor pueda ver ventas de otro vendedor manipulando la URL.
+     * Verifica que una venta pertenezca al vendedor que solicita acceder a ella.
+     *
+     * Este método implementa un control de acceso a nivel de aplicación para prevenir
+     * que un vendedor pueda visualizar ventas de otros usuarios manipulando parámetros en la URL.
+     *
+     * @param venta    el objeto Venta a verificar
+     * @param vendedor el objeto Usuario del vendedor en sesión
+     * @return true si la venta existe, el vendedor existe y sus IDs coinciden; false en caso contrario
      */
     private boolean esVentaDelVendedor(Venta venta, Usuario vendedor) {
         if (venta == null || vendedor == null) return false;
         return venta.getUsuarioId() == vendedor.getUsuarioId();
     }
 
-    /** Muestra el detalle de una venta verificando que pertenezca al vendedor en sesión. */
+    /**
+     * Muestra el detalle completo de una venta específica con control de acceso.
+     *
+     * Valida que el ID de la venta sea válido y que pertenezca al vendedor autenticado.
+     * Si el parámetro {@code imprimir} está presente, marca la vista para mostrar
+     * una versión optimizada para impresión.
+     *
+     * @param req  la petición HTTP que contiene el parámetro {@code id} de la venta
+     * @param resp la respuesta HTTP utilizada para forwards o errores HTTP
+     * @throws Exception si ocurre un error al consultar la base de datos
+     */
     private void verVenta(HttpServletRequest req, HttpServletResponse resp) throws Exception {
         int id = parseId(req.getParameter("id"));
         if (id <= 0) { resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "ID de venta inválido"); return; }
@@ -253,7 +355,16 @@ public class VentaVendedorServlet extends HttpServlet {
         req.getRequestDispatcher("/vendedor/ver_venta.jsp").forward(req, resp);
     }
 
-    /** Carga la venta y muestra el formulario para registrar un caso postventa. */
+    /**
+     * Carga los datos de una venta y muestra el formulario para registrar un caso postventa.
+     *
+     * Valida que el ID de la venta sea válido y que pertenezca al vendedor autenticado
+     * antes de permitir el registro de un caso postventa asociado.
+     *
+     * @param req  la petición HTTP que contiene el parámetro {@code ventaId}
+     * @param resp la respuesta HTTP utilizada para forwards o errores HTTP
+     * @throws Exception si ocurre un error al consultar la base de datos
+     */
     private void mostrarFormularioPostventa(HttpServletRequest req, HttpServletResponse resp) throws Exception {
         int ventaId      = parseId(req.getParameter("ventaId"));
         if (ventaId <= 0) { resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "ID de venta inválido"); return; }
@@ -271,8 +382,15 @@ public class VentaVendedorServlet extends HttpServlet {
     }
 
     /**
-     * Carga y muestra todos los casos postventa del vendedor en sesión.
-     * El atributo "casos" que se pone en el request es leído por casos_postventa.jsp.
+     * Carga y muestra todos los casos postventa registrados por el vendedor en sesión.
+     *
+     * Recupera el objeto Usuario del vendedor y consulta la base de datos para obtener
+     * únicamente los casos asociados a su ID. El atributo {@code casos} se pasa a la vista
+     * con el nombre exacto esperado por el JSP.
+     *
+     * @param req  la petición HTTP para acceder a la sesión del vendedor
+     * @param resp la respuesta HTTP utilizada para forwards a la vista de listado
+     * @throws Exception si ocurre un error al consultar la base de datos
      */
     private void listarMisCasos(HttpServletRequest req, HttpServletResponse resp) throws Exception {
         Usuario vendedor = getVendedor(req);
@@ -286,7 +404,20 @@ public class VentaVendedorServlet extends HttpServlet {
         req.getRequestDispatcher("/vendedor/casos_postventa.jsp").forward(req, resp);
     }
 
-    /** Genera y envía la factura de una venta en formato PDF. */
+    /**
+     * Genera y envía la factura de una venta en formato PDF para descarga.
+     *
+     * Valida que la venta exista y pertenezca al vendedor autenticado antes de generar
+     * el documento. Configura las cabeceras HTTP apropiadas para forzar la descarga
+     * del archivo PDF con un nombre descriptivo.
+     *
+     * Si falla la generación del PDF, muestra la vista de detalle de venta con la opción
+     * de impresión alternativa como respaldo.
+     *
+     * @param req  la petición HTTP que contiene el parámetro {@code id} de la venta
+     * @param resp la respuesta HTTP configurada para enviar el contenido PDF o forwards de respaldo
+     * @throws Exception si ocurre un error al consultar la base de datos o generar el PDF
+     */
     private void descargarFacturaPDF(HttpServletRequest req, HttpServletResponse resp) throws Exception {
         int ventaId      = parseId(req.getParameter("id"));
         if (ventaId <= 0) { resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "ID de venta inválido"); return; }
@@ -318,12 +449,23 @@ public class VentaVendedorServlet extends HttpServlet {
     // ── Guardar venta ─────────────────────────────────────────────────────────
 
     /**
-     * Procesa el formulario de nueva venta:
-     * 1. Valida todos los campos del cliente y de la venta.
-     * 2. Arma la lista de productos del carrito.
-     * 3. Valida reglas de negocio (stock, mínimo para crédito, anticipo válido).
-     * 4. Guarda la venta en la base de datos.
-     * 5. Redirige a la página de confirmación.
+     * Procesa el formulario de nueva venta con validación exhaustiva de datos y reglas de negocio.
+     *
+     * Flujo de procesamiento:
+     * 1. Valida campos obligatorios del cliente y de la transacción
+     * 2. Construye la lista de detalles de venta desde arrays paralelos del formulario
+     * 3. Verifica stock disponible para cada producto antes de permitir la venta
+     * 4. Aplica reglas de negocio: crédito solo para compras > $250.000, anticipo válido
+     * 5. Registra o recupera el cliente en la base de datos
+     * 6. Persiste la venta con sus detalles, modalidad y saldos en una transacción
+     * 7. Redirige a la vista de confirmación con el ID de venta generado
+     *
+     * En caso de error de validación, reenvía al formulario original conservando
+     * los datos ingresados y mostrando el mensaje de error correspondiente.
+     *
+     * @param req  la petición HTTP que contiene los datos del formulario de nueva venta
+     * @param resp la respuesta HTTP utilizada para forwards con errores o redirecciones de éxito
+     * @throws Exception si ocurre un error de validación, persistencia o formato de datos
      */
     private void guardarVenta(HttpServletRequest req, HttpServletResponse resp) throws Exception {
         String nombreCliente   = req.getParameter("clienteNombre");
@@ -441,10 +583,16 @@ public class VentaVendedorServlet extends HttpServlet {
     // ── Procesar abono ────────────────────────────────────────────────────────
 
     /**
-     * Registra un abono a una venta con saldo pendiente.
-     * Verifica que el monto no supere el saldo y que la venta pertenezca al vendedor.
-     * Tras el abono exitoso, usa sendRedirect con "exito=abono" en la URL para que
-     * el JSP de destino muestre el mensaje de éxito sin repetir el POST si se recarga.
+     * Registra un abono parcial al saldo pendiente de una venta a crédito.
+     *
+     * Valida que los datos del abono sean correctos, que la venta pertenezca
+     * al vendedor autenticado y que el monto no supere el saldo pendiente actual.
+     * Tras persistir el abono, redirige con un parámetro de éxito para evitar
+     * que el usuario procese el mismo abono múltiples veces al refrescar la página.
+     *
+     * @param req  la petición HTTP que contiene {@code ventaId} y {@code montoAbono}
+     * @param resp la respuesta HTTP utilizada para forwards con errores o redirecciones de éxito
+     * @throws Exception si ocurre un error de validación, persistencia o formato de datos
      */
     private void procesarAbono(HttpServletRequest req, HttpServletResponse resp) throws Exception {
         int ventaId     = parseId(req.getParameter("ventaId"));
@@ -477,11 +625,20 @@ public class VentaVendedorServlet extends HttpServlet {
     // ── Guardar postventa ─────────────────────────────────────────────────────
 
     /**
-     * Procesa el formulario de nuevo caso postventa:
-     * 1. Valida los datos del formulario.
-     * 2. Verifica que el tipo sea válido (cambio, devolucion, reclamo).
-     * 3. Registra el caso en la base de datos.
-     * 4. Muestra la página de confirmación con el resumen del caso.
+     * Procesa el formulario de nuevo caso postventa con validación de datos y reglas de negocio.
+     *
+     * Flujo de procesamiento:
+     * 1. Valida que los parámetros obligatorios estén presentes y sean válidos
+     * 2. Verifica que la venta exista y pertenezca al vendedor autenticado
+     * 3. Valida que el tipo de caso sea uno de los permitidos: cambio, devolución o reclamo
+     * 4. Construye el objeto CasoPostventa con los datos del formulario
+     * 5. Persiste el caso en la base de datos y redirige a la vista de confirmación
+     *
+     * En caso de error, reenvía al formulario original con el mensaje de error correspondiente.
+     *
+     * @param req  la petición HTTP que contiene los datos del formulario de postventa
+     * @param resp la respuesta HTTP utilizada para forwards con errores o redirecciones de éxito
+     * @throws Exception si ocurre un error de validación, persistencia o formato de datos
      */
     private void guardarPostventa(HttpServletRequest req, HttpServletResponse resp) throws Exception {
         int ventaId        = parseId(req.getParameter("ventaId"));
@@ -534,9 +691,16 @@ public class VentaVendedorServlet extends HttpServlet {
     // ── Métodos auxiliares ────────────────────────────────────────────────────
 
     /**
-     * Verifica que el vendedor esté logueado.
-     * Las rutas JSON retornan un error 401 en vez de redirigir, porque el JavaScript
-     * no puede seguir redirecciones HTML.
+     * Verifica que exista una sesión activa con un vendedor autenticado.
+     *
+     * Para endpoints JSON, responde con error HTTP 401 en formato JSON en lugar
+     * de redirigir, ya que el JavaScript del cliente no puede seguir redirecciones HTML.
+     * Para peticiones normales, redirige a la página de inicio de sesión.
+     *
+     * @param req  la petición HTTP para acceder a la sesión
+     * @param resp la respuesta HTTP utilizada para redirigir o devolver error JSON
+     * @return true si la sesión contiene un vendedor válido, false en caso contrario
+     * @throws IOException si ocurre un error al escribir la respuesta o realizar la redirección
      */
     private boolean estaAutenticado(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         HttpSession session = req.getSession(false); // false: no crea sesión nueva si no existe
@@ -554,7 +718,12 @@ public class VentaVendedorServlet extends HttpServlet {
         return true;
     }
 
-    /** Obtiene el objeto Usuario del vendedor desde la sesión activa. */
+    /**
+     * Obtiene el objeto Usuario del vendedor desde la sesión HTTP activa.
+     *
+     * @param req la petición HTTP para acceder a la sesión
+     * @return el objeto Usuario del vendedor si la sesión es válida, null en caso contrario
+     */
     private Usuario getVendedor(HttpServletRequest req) {
         HttpSession session = req.getSession(false);
         if (session == null) return null;
@@ -562,9 +731,13 @@ public class VentaVendedorServlet extends HttpServlet {
     }
 
     /**
-     * Convierte un String a entero de forma segura.
-     * matches("\\d+") verifica que solo contenga dígitos antes de convertir.
-     * Retorna -1 si es nulo o no es un número válido.
+     * Convierte un parámetro de tipo String a entero de forma segura.
+     *
+     * Valida que el valor contenga únicamente dígitos antes de intentar la conversión.
+     * Retorna -1 como valor indicador de error si el parámetro es nulo, vacío o no numérico.
+     *
+     * @param param el valor de parámetro a convertir
+     * @return el valor entero si la conversión es exitosa, -1 si el parámetro es inválido
      */
     private int parseId(String param) {
         if (param == null || !param.matches("\\d+")) return -1;
@@ -572,9 +745,17 @@ public class VentaVendedorServlet extends HttpServlet {
     }
 
     /**
-     * Reenvía al formulario de origen con un mensaje de error.
-     * Si el formulario destino es el de registrar venta, también carga de nuevo
-     * los datos del formulario (categorías y métodos de pago) para que no queden vacíos.
+     * Reenvía al usuario al formulario de origen con un mensaje de error descriptivo.
+     *
+     * Si el formulario destino es el de registrar venta, recarga adicionalmente las listas
+     * de categorías y métodos de pago para que los selectores no queden vacíos tras el error.
+     *
+     * @param req     la petición HTTP a la que se le agregará el atributo de error
+     * @param resp    la respuesta HTTP utilizada para forwards a la vista del formulario
+     * @param mensaje el texto del mensaje de error a mostrar al usuario
+     * @param vista   la ruta del JSP al cual se transferirá el control
+     * @throws ServletException si ocurre un error al despachar la vista
+     * @throws IOException      si ocurre un error de entrada/salida
      */
     private void reenviarConError(HttpServletRequest req, HttpServletResponse resp,
                                   String mensaje, String vista)
@@ -587,8 +768,15 @@ public class VentaVendedorServlet extends HttpServlet {
     }
 
     /**
-     * Escapa caracteres especiales para que el texto sea seguro dentro de un JSON.
-     * Evita que comillas, barras inversas u otros caracteres rompan la estructura JSON.
+     * Escapa caracteres especiales para incluir texto de forma segura dentro de una cadena JSON.
+     *
+     * Previene que caracteres como comillas, barras inversas, saltos de línea o tabuladores
+     * en los datos de entrada rompan la estructura del JSON generado. Este método debe aplicarse
+     * a cualquier valor de texto que se inserte dinámicamente en una respuesta JSON.
+     *
+     * @param text la cadena de texto a escapar
+     * @return la cadena con los caracteres especiales reemplazados por sus secuencias de escape JSON,
+     *         o una cadena vacía si el valor de entrada es null
      */
     private String escapeJson(String text) {
         if (text == null) return "";
@@ -602,7 +790,12 @@ public class VentaVendedorServlet extends HttpServlet {
                    .replace("\t", "\\t");
     }
 
-    /** Libera los DAOs cuando el servidor destruye el servlet. */
+    /**
+     * Libera las referencias a los DAOs cuando el contenedor destruye el servlet.
+     *
+     * Este método es llamado automáticamente por el contenedor de servlets durante
+     * el proceso de shutdown, permitiendo una liberación ordenada de recursos.
+     */
     @Override
     public void destroy() {
         ventaDAO      = null;

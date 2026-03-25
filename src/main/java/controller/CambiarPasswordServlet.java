@@ -12,16 +12,26 @@ import java.sql.ResultSet;
 
 /**
  * Permite al usuario autenticado cambiar su propia contraseña.
- *
  * Responde siempre en JSON porque el formulario es enviado vía AJAX (fetch),
  * lo que permite actualizar la UI sin recargar la página.
- *
  * Funciona tanto para vendedores como para administradores,
  * identificando el tipo de sesión activa para obtener el ID correcto del usuario.
  */
 @WebServlet("/CambiarPasswordServlet")
 public class CambiarPasswordServlet extends HttpServlet {
 
+    /**
+     * Maneja las peticiones POST para el cambio de contraseña.
+     * Verifica la sesión activa, valida los datos ingresados,
+     * comprueba la contraseña actual contra el hash almacenado,
+     * y actualiza con la nueva contraseña si todo es correcto.
+     * 
+     * @param request objeto HttpServletRequest que contiene los parámetros passActual,
+     *                passNueva y passConfirm enviados desde el formulario
+     * @param response objeto HttpServletResponse para enviar la respuesta en formato JSON
+     * @throws ServletException si ocurre un error en el procesamiento del servlet
+     * @throws IOException si ocurre un error de entrada/salida durante el manejo
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -141,7 +151,13 @@ public class CambiarPasswordServlet extends HttpServlet {
         }
     }
 
-    // Retorna true si el texto es null, vacío o solo contiene espacios en blanco
+    /**
+     * Verifica si una cadena de texto es nula, vacía o contiene solo espacios en blanco.
+     * 
+     * @param s la cadena de texto a validar
+     * @return true si la cadena es null, está vacía o solo contiene espacios en blanco;
+     *         false en caso contrario
+     */
     private boolean isBlank(String s) {
         return s == null || s.trim().isEmpty();
     }

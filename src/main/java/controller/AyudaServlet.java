@@ -18,8 +18,19 @@ import services.EmailService;
  */
 @WebServlet("/AyudaServlet")
 public class AyudaServlet extends HttpServlet {
+
     private static final long serialVersionUID = 1L;
 
+    /**
+     * Procesa las solicitudes POST del formulario de contacto de soporte técnico.
+     * Extrae los datos del formulario, envía la consulta al equipo de soporte mediante
+     * el servicio de correo electrónico y redirige al usuario con un indicador de estado.
+     *
+     * @param request  la petición HTTP que contiene los parámetros del formulario de ayuda
+     * @param response la respuesta HTTP utilizada para redirigir al usuario con el estado del envío
+     * @throws ServletException si ocurre un error durante el procesamiento del servlet
+     * @throws IOException      si ocurre un error de entrada/salida al enviar la respuesta o el correo
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {

@@ -18,6 +18,12 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Controlador para la gestión completa de productos.
+ * Permite crear, leer, actualizar y eliminar productos, así como ajustar stock.
+ * Soporta subida de imágenes y asignación de múltiples subcategorías.
+ * Requiere autenticación de administrador para todas las operaciones.
+ */
 @WebServlet("/ProductoServlet")
 @MultipartConfig(
     fileSizeThreshold = 1024 * 1024,
@@ -32,6 +38,11 @@ public class ProductoServlet extends HttpServlet {
     private SubcategoriaDAO subcategoriaDAO;
     private ProveedorDAO    proveedorDAO;
 
+    /**
+     * Inicializa el servlet instanciando todos los DAO necesarios.
+     * Este método es llamado automáticamente por el contenedor de servlets
+     * cuando el servlet es cargado por primera vez.
+     */
     @Override
     public void init() {
         productoDAO     = new ProductoDAO();
@@ -44,6 +55,17 @@ public class ProductoServlet extends HttpServlet {
     // ══════════════════════════════════════════════════════════
     // GET
     // ══════════════════════════════════════════════════════════
+    
+    /**
+     * Maneja las peticiones GET para operaciones de visualización.
+     * Verifica autenticación y redirige según el parámetro action.
+     * Acciones soportadas: nuevo, ver, editar, confirmarEliminar.
+     *
+     * @param request  petición HTTP con parámetro action
+     * @param response respuesta HTTP
+     * @throws ServletException si ocurre un error en el procesamiento
+     * @throws IOException      si ocurre un error de E/S
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -67,9 +89,18 @@ public class ProductoServlet extends HttpServlet {
         }
     }
 
-    // ══════════════════════════════════════════════════════════
     // POST
-    // ══════════════════════════════════════════════════════════
+    
+    /**
+     * Maneja las peticiones POST para operaciones de modificación.
+     * Verifica autenticación y procesa según el parámetro action.
+     * Acciones soportadas: guardar, actualizar, eliminar, ajustarStock.
+     *
+     * @param request  petición HTTP con parámetro action y datos del formulario
+     * @param response respuesta HTTP
+     * @throws ServletException si ocurre un error en el procesamiento
+     * @throws IOException      si ocurre un error de E/S
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -94,9 +125,18 @@ public class ProductoServlet extends HttpServlet {
         }
     }
 
-    // ══════════════════════════════════════════════════════════
     // GUARDAR NUEVO PRODUCTO
-    // ══════════════════════════════════════════════════════════
+    
+    /**
+     * Crea un nuevo producto con los datos enviados desde el formulario.
+     * Valida los datos, procesa la imagen y guarda en base de datos.
+     * En caso de éxito redirige a la vista de categoría con mensaje de confirmación.
+     * En caso de error muestra nuevamente el formulario con el mensaje correspondiente.
+     *
+     * @param request  petición HTTP con los datos del producto
+     * @param response respuesta HTTP
+     * @throws Exception si ocurre un error durante el proceso
+     */
     private void guardarProducto(HttpServletRequest request, HttpServletResponse response)
             throws Exception {
         Administrador admin = (Administrador) request.getSession().getAttribute("admin");
@@ -122,9 +162,18 @@ public class ProductoServlet extends HttpServlet {
         }
     }
 
-    // ══════════════════════════════════════════════════════════
     // ACTUALIZAR PRODUCTO
-    // ══════════════════════════════════════════════════════════
+    
+    /**
+     * Actualiza un producto existente con los datos enviados desde el formulario.
+     * Valida los datos, procesa la nueva imagen si se proporciona, y actualiza en base de datos.
+     * En caso de éxito redirige a la vista de categoría con mensaje de confirmación.
+     * En caso de error muestra nuevamente el formulario con el mensaje correspondiente.
+     *
+     * @param request  petición HTTP con los datos del producto
+     * @param response respuesta HTTP
+     * @throws Exception si ocurre un error durante el proceso
+     */
     private void actualizarProducto(HttpServletRequest request, HttpServletResponse response)
             throws Exception {
         String idStr = request.getParameter("productoId");
@@ -155,12 +204,20 @@ public class ProductoServlet extends HttpServlet {
         }
     }
 
-    // ══════════════════════════════════════════════════════════
     // CONSTRUIR Producto desde request
     // CAMBIO: se leen los IDs de subcategoría como array de parámetros
     // (getParameterValues), porque el formulario envía múltiples checkboxes
     // o un select múltiple con el mismo nombre "subcategoriaIds".
-    // ══════════════════════════════════════════════════════════
+    
+    /**
+     * Construye un objeto Producto a partir de los parámetros recibidos en la petición.
+     * Extrae datos básicos, lista de subcategorías y la imagen si se envió.
+     *
+     * @param request petición HTTP que contiene los datos del producto
+     * @return objeto Producto poblado con los datos de la petición
+     * @throws IOException      si ocurre un error al leer la imagen
+     * @throws ServletException si ocurre un error al procesar la parte del archivo
+     */
     private Producto construirProductoDesdeRequest(HttpServletRequest request)
             throws IOException, ServletException {
         Producto p = new Producto();
@@ -197,9 +254,15 @@ public class ProductoServlet extends HttpServlet {
         return p;
     }
 
-    // ══════════════════════════════════════════════════════════
     // VALIDACIÓN SERVER-SIDE
-    // ══════════════════════════════════════════════════════════
+    
+    /**
+     * Valida los datos de un producto antes de guardar o actualizar.
+     * Verifica campos obligatorios, relaciones y reglas de negocio de precios.
+     *
+     * @param p el producto a validar
+     * @return null si el producto es válido, o un mensaje de error en caso contrario
+     */
     private String validarProducto(Producto p) {
         if (p.getNombre() == null || p.getNombre().isBlank())
             return "El nombre del producto es obligatorio.";
@@ -222,9 +285,17 @@ public class ProductoServlet extends HttpServlet {
         return null;
     }
 
-    // ══════════════════════════════════════════════════════════
-    // AJUSTE MANUAL DE STOCK (AJAX)
-    // ══════════════════════════════════════════════════════════
+    // AJUSTE MANUAL DE STOCK
+    
+    /**
+     * Realiza un ajuste manual de stock para un producto.
+     * Actualiza la cantidad disponible y registra el movimiento en auditoría.
+     * Responde en formato JSON para consumo vía AJAX.
+     *
+     * @param request  petición HTTP con productoId, nuevoStock, cantidad, tipo y motivo
+     * @param response respuesta HTTP en formato JSON con estado de la operación
+     * @throws IOException si ocurre un error al escribir la respuesta
+     */
     private void ajustarStock(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         response.setContentType("application/json;charset=UTF-8");
@@ -252,9 +323,16 @@ public class ProductoServlet extends HttpServlet {
         }
     }
 
-    // ══════════════════════════════════════════════════════════
     // ELIMINAR (POST)
-    // ══════════════════════════════════════════════════════════
+    
+    /**
+     * Elimina un producto de forma lógica (soft delete).
+     * Marca el producto como eliminado y registra la acción en auditoría.
+     *
+     * @param request  petición HTTP con el parámetro id del producto a eliminar
+     * @param response respuesta HTTP que redirige a la vista de confirmación
+     * @throws Exception si ocurre un error durante la eliminación
+     */
     private void eliminarProductoPost(HttpServletRequest request, HttpServletResponse response)
             throws Exception {
         String idStr = request.getParameter("id");
@@ -268,12 +346,19 @@ public class ProductoServlet extends HttpServlet {
         }
     }
 
-    // ══════════════════════════════════════════════════════════
     // HELPERS DE NAVEGACIÓN
     // CAMBIO: mostrarFormularioNuevo y mostrarFormularioEditar ahora cargan
     // las subcategorías disponibles FILTRADAS por la categoría del producto,
     // usando categoriaDAO.obtenerSubcategoriasDisponibles(categoriaId).
-    // ══════════════════════════════════════════════════════════
+    
+    /**
+     * Muestra el formulario para crear un nuevo producto.
+     * Carga la categoría seleccionada, materiales, proveedores y subcategorías filtradas.
+     *
+     * @param request  petición HTTP con el parámetro categoria
+     * @param response respuesta HTTP
+     * @throws Exception si ocurre un error al cargar los datos
+     */
     private void mostrarFormularioNuevo(HttpServletRequest request, HttpServletResponse response)
             throws Exception {
         String catIdStr = request.getParameter("categoria");
@@ -292,6 +377,13 @@ public class ProductoServlet extends HttpServlet {
                .forward(request, response);
     }
 
+    /**
+     * Muestra los detalles completos de un producto.
+     *
+     * @param request  petición HTTP con el parámetro id del producto
+     * @param response respuesta HTTP
+     * @throws Exception si ocurre un error al cargar el producto
+     */
     private void verProducto(HttpServletRequest request, HttpServletResponse response)
             throws Exception {
         Producto p = obtenerProductoPorParam(request, response);
@@ -302,6 +394,14 @@ public class ProductoServlet extends HttpServlet {
         }
     }
 
+    /**
+     * Muestra el formulario para editar un producto existente.
+     * Carga los datos actuales del producto junto con materiales, proveedores y subcategorías filtradas.
+     *
+     * @param request  petición HTTP con el parámetro id del producto
+     * @param response respuesta HTTP
+     * @throws Exception si ocurre un error al cargar los datos
+     */
     private void mostrarFormularioEditar(HttpServletRequest request, HttpServletResponse response)
             throws Exception {
         Producto p = obtenerProductoPorParam(request, response);
@@ -316,6 +416,13 @@ public class ProductoServlet extends HttpServlet {
         }
     }
 
+    /**
+     * Muestra la vista de confirmación antes de eliminar un producto.
+     *
+     * @param request  petición HTTP con el parámetro id del producto
+     * @param response respuesta HTTP
+     * @throws Exception si ocurre un error al cargar el producto
+     */
     private void confirmarEliminar(HttpServletRequest request, HttpServletResponse response)
             throws Exception {
         Producto p = obtenerProductoPorParam(request, response);
@@ -325,6 +432,16 @@ public class ProductoServlet extends HttpServlet {
         }
     }
 
+    /**
+     * Reenvía al formulario de nuevo producto con los datos previamente ingresados
+     * y un mensaje de error, para que el usuario pueda corregir.
+     *
+     * @param request  petición HTTP
+     * @param response respuesta HTTP
+     * @param p        producto con los datos ingresados
+     * @param error    mensaje de error a mostrar
+     * @throws Exception si ocurre un error al cargar los datos
+     */
     private void reenviarFormularioNuevo(HttpServletRequest request, HttpServletResponse response,
                                           Producto p, String error) throws Exception {
         request.setAttribute("error",        error);
@@ -338,7 +455,13 @@ public class ProductoServlet extends HttpServlet {
                .forward(request, response);
     }
 
-    /** Helper: carga atributos comunes para los formularios de edición con error. */
+    /**
+     * Helper: carga atributos comunes para los formularios de edición con error.
+     *
+     * @param request petición HTTP
+     * @param p       producto a editar
+     * @throws Exception si ocurre un error al cargar los datos
+     */
     private void cargarAtributosFormulario(HttpServletRequest request, Producto p)
             throws Exception {
         request.setAttribute("producto",     p);
@@ -348,9 +471,17 @@ public class ProductoServlet extends HttpServlet {
             categoriaDAO.obtenerSubcategoriasDisponibles(p.getCategoriaId()));
     }
 
-    // ══════════════════════════════════════════════════════════
     // AUTENTICACIÓN
-    // ══════════════════════════════════════════════════════════
+    
+    /**
+     * Verifica si el usuario tiene una sesión activa como administrador.
+     * Si no está autenticado, redirige a la página de inicio de sesión.
+     *
+     * @param request  petición HTTP
+     * @param response respuesta HTTP
+     * @return true si el usuario está autenticado como administrador, false en caso contrario
+     * @throws IOException si ocurre un error al redirigir
+     */
     private boolean estaAutenticado(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         HttpSession session = request.getSession(false);
@@ -361,6 +492,14 @@ public class ProductoServlet extends HttpServlet {
         return true;
     }
 
+    /**
+     * Obtiene un producto por su ID a partir del parámetro de la petición.
+     *
+     * @param request  petición HTTP con el parámetro id
+     * @param response respuesta HTTP
+     * @return el producto encontrado, o null si no existe o el ID es inválido
+     * @throws Exception si ocurre un error al consultar la base de datos
+     */
     private Producto obtenerProductoPorParam(HttpServletRequest request,
                                               HttpServletResponse response) throws Exception {
         String idStr = request.getParameter("id");
@@ -371,14 +510,27 @@ public class ProductoServlet extends HttpServlet {
         return productoDAO.obtenerPorId(Integer.parseInt(idStr));
     }
 
-    // ══════════════════════════════════════════════════════════
     // PARSERS UTILITARIOS
-    // ══════════════════════════════════════════════════════════
+    
+    /**
+     * Convierte un String a entero de forma segura.
+     *
+     * @param valor el String a convertir
+     * @param def   valor por defecto si la conversión falla
+     * @return el valor convertido o el valor por defecto
+     */
     private int parsearInt(String valor, int def) {
         if (valor == null || valor.isBlank()) return def;
         try { return Integer.parseInt(valor.trim()); } catch (Exception e) { return def; }
     }
 
+    /**
+     * Convierte un String a BigDecimal de forma segura.
+     *
+     * @param valor el String a convertir
+     * @param def   valor por defecto si la conversión falla
+     * @return el valor convertido o el valor por defecto
+     */
     private BigDecimal parsearBigDecimal(String valor, BigDecimal def) {
         if (valor == null || valor.isBlank()) return def;
         try { return new BigDecimal(valor.trim()); } catch (Exception e) { return def; }

@@ -40,8 +40,8 @@ public class AdminVentaServlet extends HttpServlet {
     private PostventaDAO postventaDAO;
 
     /**
-     * Método init: se ejecuta al iniciar el servlet.
-     * Inicializa los DAO.
+     * Inicializa el servlet creando las instancias de los DAO necesarios.
+     * Este método se ejecuta una única vez cuando el servlet es cargado por el contenedor.
      */
     @Override
     public void init() {
@@ -50,7 +50,14 @@ public class AdminVentaServlet extends HttpServlet {
     }
 
     /**
-     * Método doGet: maneja las solicitudes GET
+     * Procesa las solicitudes HTTP GET para las diferentes rutas del módulo de administrador.
+     * Maneja operaciones de lectura: listado de ventas, búsqueda, visualización de detalles
+     * y gestión de casos de postventa.
+     *
+     * @param req  la petición HTTP que contiene los parámetros de la solicitud
+     * @param resp la respuesta HTTP que se enviará al cliente
+     * @throws ServletException si ocurre un error durante el procesamiento del servlet
+     * @throws IOException      si ocurre un error de entrada/salida
      */
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -176,7 +183,14 @@ public class AdminVentaServlet extends HttpServlet {
     }
 
     /**
-     * Método doPost: maneja actualizaciones (estado de postventa)
+     * Procesa las solicitudes HTTP POST para actualizar el estado de casos de postventa.
+     * Valida la sesión del administrador, verifica los parámetros recibidos y persiste
+     * los cambios en la base de datos.
+     *
+     * @param req  la petición HTTP que contiene los datos del formulario
+     * @param resp la respuesta HTTP que se enviará al cliente
+     * @throws ServletException si ocurre un error durante el procesamiento del servlet
+     * @throws IOException      si ocurre un error de entrada/salida
      */
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -241,7 +255,12 @@ public class AdminVentaServlet extends HttpServlet {
     }
 
     /**
-     * Valida que exista una sesión activa de administrador
+     * Verifica que exista una sesión activa con un administrador autenticado.
+     *
+     * @param req  la petición HTTP para acceder a la sesión
+     * @param resp la respuesta HTTP para realizar redirección si no hay sesión
+     * @return true si la sesión es válida y contiene un administrador, false en caso contrario
+     * @throws IOException si ocurre un error al realizar la redirección
      */
     private boolean validarSesionAdmin(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         HttpSession session = req.getSession(false);
@@ -254,7 +273,10 @@ public class AdminVentaServlet extends HttpServlet {
     }
 
     /**
-     * Convierte un parámetro a entero de forma segura
+     * Convierte un parámetro de tipo String a entero de forma segura.
+     *
+     * @param param el valor de parámetro a convertir
+     * @return el valor entero si la conversión es exitosa, -1 si el parámetro es nulo, vacío o no numérico
      */
     private int parseId(String param) {
         if (param == null || !param.matches("\\d+")) return -1;
@@ -266,7 +288,10 @@ public class AdminVentaServlet extends HttpServlet {
     }
 
     /**
-     * Convierte una fecha en formato String (yyyy-MM-dd) a Date
+     * Convierte una cadena de texto con formato de fecha a objeto Date.
+     *
+     * @param s la cadena de fecha en formato yyyy-MM-dd
+     * @return el objeto Date resultante, o null si la cadena es nula, vacía o tiene formato inválido
      */
     private java.util.Date parseFecha(String s) {
         if (s == null || s.isBlank()) return null;
